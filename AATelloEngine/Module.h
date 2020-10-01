@@ -28,19 +28,19 @@ public:
 		return true;
 	}
 
-	virtual update_status PreUpdate(float dt)
+	virtual bool PreUpdate(float dt)
 	{
-		return UPDATE_CONTINUE;
+		return true;
 	}
 
-	virtual update_status Update(float dt)
+	virtual bool Update(float dt)
 	{
-		return UPDATE_CONTINUE;
+		return true;
 	}
 
-	virtual update_status PostUpdate(float dt)
+	virtual bool PostUpdate(float dt)
 	{
-		return UPDATE_CONTINUE;
+		return true;
 	}
 
 	virtual bool CleanUp()

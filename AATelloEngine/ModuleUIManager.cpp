@@ -37,8 +37,6 @@ bool ModuleUIManager::Start()
      IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -49,23 +47,35 @@ bool ModuleUIManager::Start()
 }
 
 
-update_status ModuleUIManager::PreUpdate(float dt)
+bool ModuleUIManager::PreUpdate(float dt)
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(App->window->window);
     ImGui::NewFrame();
 
-    // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     
+    
+    //Ui creation
+    ImGui::Begin("Hello Imgui");
+    
+    ImGui::Text("It seems it works.");
+    ImGui::Text("Click to close me");
+    ImGui::SameLine();
+    if (ImGui::Button("Button"))
+        return false;
+
+    ImGui::End();
+
     ImGui::ShowDemoWindow();
-	return UPDATE_CONTINUE;
+
+	return true;
 }
 
-update_status ModuleUIManager::PostUpdate(float dt)
+bool ModuleUIManager::PostUpdate(float dt)
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    return UPDATE_CONTINUE;
+    return true;
 }
 
 // Called before quitting

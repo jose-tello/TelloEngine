@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ModuleInput.h"
 
+#include "Imgui/imgui_impl_sdl.h"
+
 #define MAX_KEYS 300
 
 ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -34,7 +36,7 @@ bool ModuleInput::Init()
 }
 
 // Called every draw update
-update_status ModuleInput::PreUpdate(float dt)
+bool ModuleInput::PreUpdate(float dt)
 {
 	SDL_PumpEvents();
 
@@ -88,6 +90,8 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		ImGui_ImplSDL2_ProcessEvent(&e);	//Catch inputs for ui
+
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
@@ -115,9 +119,9 @@ update_status ModuleInput::PreUpdate(float dt)
 	}
 
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
-		return UPDATE_STOP;
+		return false;
 
-	return UPDATE_CONTINUE;
+	return true;
 }
 
 // Called before quitting

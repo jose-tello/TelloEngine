@@ -37,7 +37,7 @@ public:
 	~Application();
 
 	bool Init();
-	update_status Update();
+	bool Update();
 	bool CleanUp();
 	bool Draw();
 	bool Reset();
