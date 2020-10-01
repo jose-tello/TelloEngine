@@ -2,12 +2,14 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 
+#include "Glew/include/GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "Glew/libs/glew/glew32.lib") /* link Microsoft OpenGL lib   */
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled), renderer(nullptr)
 {}
@@ -41,7 +43,7 @@ bool ModuleRenderer3D::Init()
 		glLoadIdentity();
 
 		//Check for error
-		GLenum error = glGetError();
+		GLenum error = glewInit();
 		if(error != GL_NO_ERROR)
 		{
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
@@ -200,4 +202,10 @@ bool ModuleRenderer3D::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* 
 	}
 
 	return ret;
+}
+
+
+SDL_GLContext* ModuleRenderer3D::GetContext()
+{
+	return &context;
 }
