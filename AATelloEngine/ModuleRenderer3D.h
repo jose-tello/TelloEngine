@@ -1,5 +1,6 @@
 #pragma once
 #include "Module.h"
+#include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
 #include "SDL/include/SDL_rect.h"
