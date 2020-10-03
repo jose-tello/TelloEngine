@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModuleWindow.h"
 
 #include "Primitive.h"
 
@@ -144,7 +146,6 @@ bool ModuleRenderer3D::PostUpdate(float dt)
 {
 	//We iterate through all the windows we have & Render for every single one
 
-	App->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
 	return true;

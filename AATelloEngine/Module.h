@@ -73,8 +73,6 @@ public:
 
 	}
 
-	virtual bool Draw() { return true; }
-
 	virtual bool Reset() { return true; }
 
 public:

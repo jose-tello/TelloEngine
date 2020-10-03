@@ -1,12 +1,16 @@
 #include "Application.h"
 
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModuleUIManager.h"
+
 
 Application::Application()
 {
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
-	audio = new ModuleAudio(this, true);
-	tex = new ModuleTextures(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this, true);
 	uiManager = new ModuleUIManager(this, true);
@@ -18,8 +22,6 @@ Application::Application()
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
-	AddModule(audio);
-	AddModule(tex);
 
 	// Scenes
 	AddModule(camera);
@@ -112,18 +114,6 @@ bool Application::CleanUp()
 	for (int i = numModules - 1; i >= 0 && ret == true; i--)
 	{
 		ret = list_modules[i]->CleanUp();
-	}
-	return ret;
-}
-
-bool Application::Draw()
-{
-	bool ret = true;
-	int numModules = list_modules.size();
-
-	for (int i = 0; i < numModules && ret == true; i++)
-	{
-		ret = list_modules[i]->Draw();
 	}
 	return ret;
 }

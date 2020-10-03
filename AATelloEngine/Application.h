@@ -4,23 +4,20 @@
 #include "Globals.h"
 #include "p2Defs.h"
 #include "Timer.h"
-#include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModuleUIManager.h"
 
-#include "ModuleTextures.h"
+class Module;
+class ModuleWindow;
+class ModuleInput;
+class ModuleRenderer3D;
+class ModuleCamera3D;
+class ModuleUIManager;
+
 
 class Application
 {
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
-	ModuleAudio* audio;
-	ModuleTextures* tex;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModuleUIManager* uiManager;
@@ -39,7 +36,6 @@ public:
 	bool Init();
 	bool Update();
 	bool CleanUp();
-	bool Draw();
 	bool Reset();
 
 
