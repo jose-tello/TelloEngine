@@ -20,22 +20,6 @@ void log(const char file[], int line, const char* format, ...);
 
 typedef unsigned int uint;
 
-enum ContactType
-{
-	CNT_UNKNOWN = -1,
-
-	CNT_MAP,
-	CNT_GROUND,
-	CNT_BIG_BOOST,
-	CNT_LITTLE_BOOST,
-	CNT_VEHICLE,
-	CNT_VEHICLE_SENSOR,
-	CNT_BLUE_GOAL,
-	CNT_ORANGE_GOAL,
-	CNT_BALL,
-
-	CNT_MAX
-};
 
 // Configuration -----------
 #define SCREEN_SIZE 1
@@ -44,4 +28,4 @@ enum ContactType
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
-#define TITLE "Collyra Engine"
+#define TITLE "AATello Engine"
