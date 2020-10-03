@@ -1,13 +1,12 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleCamera3D.h"
+
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	CalculateViewMatrix();
-
 	X = vec3(1.0f, 0.0f, 0.0f);
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
@@ -15,10 +14,16 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 
+	CalculateViewMatrix();
 }
 
 ModuleCamera3D::~ModuleCamera3D()
 {}
+
+bool ModuleCamera3D::Init()
+{
+	return true;
+}
 
 // -----------------------------------------------------------------
 bool ModuleCamera3D::Start()

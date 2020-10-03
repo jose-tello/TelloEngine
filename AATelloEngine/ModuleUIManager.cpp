@@ -1,8 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleUIManager.h"
-#include "ModuleRenderer3D.h"
 #include "ModuleWindow.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleUIManager.h"
 
 #include "Glew/include/GL/glew.h"
 #include "SDL/include/SDL_opengl.h"
@@ -13,7 +13,7 @@
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
 
-
+#include "MathGeoLib/include/MathGeoLib.h"
 #pragma comment (lib, "Glew/libs/glew/glew32.lib") /* link Microsoft OpenGL lib   */
 ModuleUIManager::ModuleUIManager(Application* app, bool start_enabled) : Module(app, start_enabled)
 {}
@@ -25,7 +25,9 @@ ModuleUIManager::~ModuleUIManager()
 // Called before render is available
 bool ModuleUIManager::Init()
 {
-
+    int i;
+    LCG random = LCG::LCG();
+    i = random.Int(1, 99);
     
 	
 	return true;

@@ -14,6 +14,7 @@ public:
 	ModuleCamera3D(Application* app, bool start_enabled = true);
 	~ModuleCamera3D();
 
+	bool Init();
 	bool Start();
 	bool Update(float dt);
 	bool CleanUp();

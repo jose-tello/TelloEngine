@@ -3,6 +3,7 @@
 #include "Globals.h"
 
 #define MAX_MOUSE_BUTTONS 5
+#define MAX_KEYS 300
 
 enum KEY_STATE
 {
@@ -23,43 +24,18 @@ public:
 	bool PreUpdate(float dt);
 	bool CleanUp();
 
-	KEY_STATE GetKey(int id) const
-	{
-		return keyboard[id];
-	}
+	KEY_STATE GetKey(int id) const;
+	KEY_STATE GetMouseButton(int id) const;
 
-	KEY_STATE GetMouseButton(int id) const
-	{
-		return mouse_buttons[id];
-	}
+	int GetMouseX() const;
+	int GetMouseY() const;
+	int GetMouseZ() const;
 
-	int GetMouseX() const
-	{
-		return mouse_x;
-	}
-
-	int GetMouseY() const
-	{
-		return mouse_y;
-	}
-
-	int GetMouseZ() const
-	{
-		return mouse_z;
-	}
-
-	int GetMouseXMotion() const
-	{
-		return mouse_x_motion;
-	}
-
-	int GetMouseYMotion() const
-	{
-		return mouse_y_motion;
-	}
+	int GetMouseXMotion() const;
+	int GetMouseYMotion() const;
 
 private:
-	KEY_STATE* keyboard;
+	KEY_STATE keyboard[MAX_KEYS];
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
 	int mouse_x;
 	int mouse_y;

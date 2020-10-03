@@ -5,11 +5,10 @@
 
 #include "Imgui/imgui_impl_sdl.h"
 
-#define MAX_KEYS 300
+
 
 ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
 	memset(mouse_buttons, KEY_IDLE, sizeof(KEY_STATE) * MAX_MOUSE_BUTTONS);
 }
@@ -17,7 +16,6 @@ ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, sta
 // Destructor
 ModuleInput::~ModuleInput()
 {
-	delete[] keyboard;
 }
 
 // Called before render is available
@@ -131,4 +129,40 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+
+KEY_STATE ModuleInput::GetKey(int id) const
+{
+	return keyboard[id];
+}
+
+KEY_STATE ModuleInput::GetMouseButton(int id) const
+{
+	return mouse_buttons[id];
+}
+
+int ModuleInput::GetMouseX() const
+{
+	return mouse_x;
+}
+
+int ModuleInput::GetMouseY() const
+{
+	return mouse_y;
+}
+
+int ModuleInput::GetMouseZ() const
+{
+	return mouse_z;
+}
+
+int ModuleInput::GetMouseXMotion() const
+{
+	return mouse_x_motion;
+}
+
+int ModuleInput::GetMouseYMotion() const
+{
+	return mouse_y_motion;
 }
