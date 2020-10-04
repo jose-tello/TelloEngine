@@ -7,6 +7,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	renderer3D = new ModuleRenderer3D();
 	ui = new M_UI();
 	camera = new ModuleCamera3D();
+	console = new M_Console();
 
 	// Main Modules
 	AddModule(window);
@@ -14,6 +15,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(camera);
 	
 	// Renderer last!
+	AddModule(console);
 	AddModule(ui);
 	AddModule(renderer3D);
 	

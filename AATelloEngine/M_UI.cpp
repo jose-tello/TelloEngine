@@ -107,7 +107,6 @@ UPDATE_STATUS M_UI::PreUpdate(float dt)
 
 		float bright = brightness;
 		App->window->SetWindowBrightness(bright / 100);
-
 	}
 	
 	ImGui::End();

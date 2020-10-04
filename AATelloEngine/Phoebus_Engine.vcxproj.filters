@@ -78,6 +78,9 @@
     <ClInclude Include="Primitive.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="M_Console.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="Primitive.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="M_Console.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include "M_Renderer3D.h"
 #include "M_UI.h"
 #include "M_Camera3D.h"
+#include "M_Console.h"
 
 #include <vector>
 
@@ -18,6 +19,7 @@ public:
 	ModuleInput* input;
 	ModuleRenderer3D* renderer3D;
 	M_UI* ui;
+	M_Console* console;
 	ModuleCamera3D* camera;
 	bool debug;
 	bool renderPrimitives;
