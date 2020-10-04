@@ -1,18 +1,11 @@
 #include "Application.h"
 
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleCamera3D.h"
-#include "ModuleUIManager.h"
-#include "ModuleRenderer3D.h"
-
-Application::Application()
+Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
-	window = new ModuleWindow(this);
-	input = new ModuleInput(this);
-	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this, true);
-	uiManager = new ModuleUIManager(this, true);
+	window = new ModuleWindow();
+	input = new ModuleInput();
+	renderer3D = new ModuleRenderer3D();
+	renderer2D = new ModuleRenderer2D();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -21,42 +14,47 @@ Application::Application()
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
-
-	// Scenes
-	AddModule(camera);
-	AddModule(uiManager);
-
+	
 	// Renderer last!
+	AddModule(renderer2D);
 	AddModule(renderer3D);
+	
 }
 
 Application::~Application()
 {
-	list_modules.clear();
+	p2List_item<Module*>* item = list_modules.getLast();
+
+	while (item != NULL)
+	{
+		delete item->data;
+		item = item->prev;
+	}
 }
 
 bool Application::Init()
 {
 	bool ret = true;
 
+	App = this;
+
 	// Call Init() in all modules
-	int numModules = list_modules.size();
+	p2List_item<Module*>* item = list_modules.getFirst();
 
-	for (int i = 0; i < numModules; i++)
+	while (item != NULL && ret == true)
 	{
-		ret = list_modules[i]->Init();
-
+		ret = item->data->Init();
+		item = item->next;
 	}
 
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
+	item = list_modules.getFirst();
 
-	for (int i = 0; i < numModules; i++)
+	while (item != NULL && ret == true)
 	{
-		if (list_modules[i]->IsEnabled())
-		{
-			ret = list_modules[i]->Start();
-		}
+		ret = item->data->Start();
+		item = item->next;
 	}
 
 	ms_timer.Start();
@@ -76,29 +74,33 @@ void Application::FinishUpdate()
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
-bool Application::Update()
+update_status Application::Update()
 {
-	bool ret = true;
+	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 
-	//PreUpdate
-	int numModules = list_modules.size();
+	p2List_item<Module*>* item = list_modules.getFirst();
 
-	for (int i = 0; i < numModules && ret == true; i++)
+	while (item != NULL && ret == UPDATE_CONTINUE)
 	{
-		ret = list_modules[i]->PreUpdate(dt);
+		ret = item->data->PreUpdate(dt);
+		item = item->next;
 	}
 
-	//Update
-	for (int i = 0; i < numModules && ret == true; i++)
+	item = list_modules.getFirst();
+
+	while (item != NULL && ret == UPDATE_CONTINUE)
 	{
-		ret = list_modules[i]->Update(dt);
+		ret = item->data->Update(dt);
+		item = item->next;
 	}
 
-	//PostUpdate
-	for (int i = 0; i < numModules && ret == true; i++)
+	item = list_modules.getFirst();
+
+	while (item != NULL && ret == UPDATE_CONTINUE)
 	{
-		ret = list_modules[i]->PostUpdate(dt);
+		ret = item->data->PostUpdate(dt);
+		item = item->next;
 	}
 
 	FinishUpdate();
@@ -108,30 +110,19 @@ bool Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	int numModules = list_modules.size();
+	p2List_item<Module*>* item = list_modules.getLast();
 
-	for (int i = numModules - 1; i >= 0 && ret == true; i--)
+	while (item != NULL && ret == true)
 	{
-		ret = list_modules[i]->CleanUp();
+		ret = item->data->CleanUp();
+		item = item->prev;
 	}
-	return ret;
-}
-
-bool Application::Reset()
-{
-	bool ret = true;
-	int numModules = list_modules.size();
-
-
-	for (int i = 0; i < numModules && ret == true; i++)
-	{
-		ret = list_modules[i]->Reset();
-	}
-
 	return ret;
 }
 
 void Application::AddModule(Module* mod)
 {
-	list_modules.push_back(mod);
+	list_modules.add(mod);
 }
+
+Application* App = nullptr;

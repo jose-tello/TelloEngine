@@ -6,8 +6,7 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
-
-enum class MAIN_STATES
+enum main_states
 {
 	MAIN_CREATION,
 	MAIN_START,
@@ -18,53 +17,55 @@ enum class MAIN_STATES
 
 int main(int argc, char ** argv)
 {
-	LOG("Starting game '%s'...", TITLE);
+	LOG("Starting '%s'...", TITLE);
 
 	int main_return = EXIT_FAILURE;
-	MAIN_STATES state = MAIN_STATES::MAIN_CREATION;
+	main_states state = MAIN_CREATION;
 	Application* App = NULL;
 
-	while (state != MAIN_STATES::MAIN_EXIT)
+	while (state != MAIN_EXIT)
 	{
 		switch (state)
 		{
-		case MAIN_STATES::MAIN_CREATION:
+		case MAIN_CREATION:
 
 			LOG("-------------- Application Creation --------------");
 			App = new Application();
-			state = MAIN_STATES::MAIN_START;
+			state = MAIN_START;
 			break;
 
-		case MAIN_STATES::MAIN_START:
+		case MAIN_START:
 
 			LOG("-------------- Application Init --------------");
 			if (App->Init() == false)
 			{
 				LOG("Application Init exits with ERROR");
-				state = MAIN_STATES::MAIN_EXIT;
+				state = MAIN_EXIT;
 			}
 			else
 			{
-				state = MAIN_STATES::MAIN_UPDATE;
+				state = MAIN_UPDATE;
 				LOG("-------------- Application Update --------------");
 			}
 
 			break;
 
-		case MAIN_STATES::MAIN_UPDATE:
+		case MAIN_UPDATE:
 		{
 			int update_return = App->Update();
 
-			if (update_return == false)
+			if (update_return == UPDATE_ERROR)
 			{
-				LOG("Application Update exits");
-				state = MAIN_STATES::MAIN_FINISH;
+				LOG("Application Update exits with ERROR");
+				state = MAIN_EXIT;
 			}
 
+			if (update_return == UPDATE_STOP)
+				state = MAIN_FINISH;
 		}
 			break;
 
-		case MAIN_STATES::MAIN_FINISH:
+		case MAIN_FINISH:
 
 			LOG("-------------- Application CleanUp --------------");
 			if (App->CleanUp() == false)
@@ -74,7 +75,7 @@ int main(int argc, char ** argv)
 			else
 				main_return = EXIT_SUCCESS;
 
-			state = MAIN_STATES::MAIN_EXIT;
+			state = MAIN_EXIT;
 
 			break;
 
@@ -82,6 +83,6 @@ int main(int argc, char ** argv)
 	}
 
 	delete App;
-	LOG("Exiting game '%s'...\n", TITLE);
+	LOG("Exiting '%s'...\n", TITLE);
 	return main_return;
 }

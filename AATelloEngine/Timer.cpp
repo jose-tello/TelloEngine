@@ -7,6 +7,9 @@
 
 // ---------------------------------------------
 Timer::Timer()
+	: running(false)
+	, started_at(0)
+	, stopped_at(0)
 {
 	Start();
 }
@@ -23,12 +26,6 @@ void Timer::Stop()
 {
 	running = false;
 	stopped_at = SDL_GetTicks();
-}
-
-// ---------------------------------------------
-void Timer::ReStart()
-{
-	running = true;
 }
 
 // ---------------------------------------------

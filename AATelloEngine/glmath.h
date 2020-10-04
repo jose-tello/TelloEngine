@@ -219,15 +219,6 @@ public:
 	{
 		x /= num; y /= num; z /= num; return *this;
 	}
-
-	bool operator != (const vec3& u)
-	{
-		return !(x != u.x && y != u.y && z != u.z);
-	}
-	bool operator == (const vec3& u)
-	{
-		return (x == u.x && y == u.y && z == u.z);
-	}
 	vec3& operator /= (const vec3 &u)
 	{
 		x /= u.x; y /= u.y; z /= u.z; return *this;

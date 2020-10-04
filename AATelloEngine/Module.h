@@ -1,26 +1,22 @@
 #pragma once
 
-class Application;
-
-#include <string>
+class  PhysBody3D;
 
 class Module
 {
-private:
+private :
 	bool enabled;
 
 public:
-	Application* App;
-
-	Module(Application* parent, bool start_enabled = true) : App(parent)
+	Module(bool start_enabled = true) : enabled(start_enabled)
 	{}
 
 	virtual ~Module()
 	{}
 
-	virtual bool Init()
+	virtual bool Init() 
 	{
-		return true;
+		return true; 
 	}
 
 	virtual bool Start()
@@ -28,55 +24,25 @@ public:
 		return true;
 	}
 
-	virtual bool PreUpdate(float dt)
+	virtual update_status PreUpdate(float dt)
 	{
-		return true;
+		return UPDATE_CONTINUE;
 	}
 
-	virtual bool Update(float dt)
+	virtual update_status Update(float dt)
 	{
-		return true;
+		return UPDATE_CONTINUE;
 	}
 
-	virtual bool PostUpdate(float dt)
+	virtual update_status PostUpdate(float dt)
 	{
-		return true;
+		return UPDATE_CONTINUE;
 	}
 
-	virtual bool CleanUp()
-	{
-		return true;
+	virtual bool CleanUp() 
+	{ 
+		return true; 
 	}
 
-	bool IsEnabled() const
-	{
-		return enabled;
-	}
-
-	void Enable()
-	{
-		if (enabled == false)
-		{
-			enabled = true;
-			Start();
-		}
-	}
-
-	void Disable()
-	{
-
-		if (enabled == true)
-		{
-			enabled = false;
-			CleanUp();
-		}
-
-	}
-
-	virtual bool Reset() { return true; }
-
-public:
-
-	std::string				name;
-
+	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2) {}
 };

@@ -2,7 +2,7 @@
 #pragma once
 #include "glmath.h"
 #include "Color.h"
-
+#include "PhysBody3D.h"
 
 enum PrimitiveTypes
 {
@@ -11,35 +11,29 @@ enum PrimitiveTypes
 	Primitive_Plane,
 	Primitive_Cube,
 	Primitive_Sphere,
-	Primitive_Cylinder,
-	Primitive_Sensor
+	Primitive_Cylinder
 };
 
 class Primitive
 {
 public:
-
 	Primitive();
 
+	void Update();
 	virtual void	Render() const;
-	virtual void	InnerRender() const;
 	void			SetPos(float x, float y, float z);
 	void			SetRotation(float angle, const vec3 &u);
 	void			Scale(float x, float y, float z);
-	void			SetInvisible(bool inVisible);
-
 	PrimitiveTypes	GetType() const;
-	void			Update();
 
-public:
-	
+
 	Color color;
 	mat4x4 transform;
 	bool axis,wire;
-	//PhysBody3D* body = nullptr;
-	bool isInvisible;
+	PhysBody3D body;
 
 protected:
+	virtual void InnerRender() const;
 	PrimitiveTypes type;
 };
 
@@ -47,23 +41,24 @@ protected:
 class Cube : public Primitive
 {
 public :
-	Cube();
-	Cube(float sizeX, float sizeY, float sizeZ);
+	Cube(const vec3& size = vec3(1.f,1.f,1.f), float mass = 1.f);	
+	vec3 GetSize() const;
+protected:
 	void InnerRender() const;
-public:
+private:
 	vec3 size;
-	bool isActivated;
-	float innerTimer;
 };
 
 // ============================================
 class Sphere : public Primitive
 {
 public:
-	Sphere();
-	Sphere(float radius);
+	Sphere(float radius = 1.f, float mass = 1.f);
+
+	float GetRadius() const;
+protected:
 	void InnerRender() const;
-public:
+private:
 	float radius;
 };
 
@@ -71,10 +66,13 @@ public:
 class Cylinder : public Primitive
 {
 public:
-	Cylinder();
-	Cylinder(float radius, float height);
+	Cylinder(float radius = 1.f, float height = 2.f, float mass = 1.f);
+
+	float GetRadius() const;
+	float GetHeight() const;
+protected:
 	void InnerRender() const;
-public:
+private:
 	float radius;
 	float height;
 };
@@ -84,7 +82,12 @@ class Line : public Primitive
 {
 public:
 	Line();
-	Line(float x, float y, float z);
+	Line(const vec3& A, const vec3& B);
+
+	vec3 GetOrigin() const;
+	vec3 GetDestination() const;
+
+protected:
 	void InnerRender() const;
 public:
 	vec3 origin;
@@ -95,10 +98,11 @@ public:
 class Plane : public Primitive
 {
 public:
-	Plane();
-	Plane(float x, float y, float z, float d);
+	Plane(const vec3& normal = vec3(0,1,0));
+
+	vec3 GetNormal() const;
+protected:
 	void InnerRender() const;
-public:
+private:
 	vec3 normal;
-	float constant;
 };

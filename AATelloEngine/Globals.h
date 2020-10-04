@@ -2,7 +2,7 @@
 
 // Warning disabled ---
 #pragma warning( disable : 4577 ) // Warning that exceptions are disabled
-#pragma warning( disable : 4530 )
+#pragma warning( disable : 4530 ) // Warning that exceptions are disabled
 
 #include <windows.h>
 #include <stdio.h>
@@ -20,28 +20,24 @@ void log(const char file[], int line, const char* format, ...);
 
 typedef unsigned int uint;
 
-enum ContactType
+enum update_status
 {
-	CNT_UNKNOWN = -1,
-
-	CNT_MAP,
-	CNT_GROUND,
-	CNT_BIG_BOOST,
-	CNT_LITTLE_BOOST,
-	CNT_VEHICLE,
-	CNT_VEHICLE_SENSOR,
-	CNT_BLUE_GOAL,
-	CNT_ORANGE_GOAL,
-	CNT_BALL,
-
-	CNT_MAX
+	UPDATE_CONTINUE = 1,
+	UPDATE_STOP,
+	UPDATE_ERROR
 };
 
 // Configuration -----------
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 #define SCREEN_SIZE 1
 #define WIN_FULLSCREEN false
 #define WIN_RESIZABLE true
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
-#define TITLE "Collyra Engine"
+#define TITLE "Phoebus Engine"
+
+class Application;
+
+extern Application* App;

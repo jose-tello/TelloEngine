@@ -1,17 +1,13 @@
 #pragma once
 
-#include <vector>
+#include "p2List.h"
 #include "Globals.h"
-#include "p2Defs.h"
 #include "Timer.h"
-
-class Module;
-class ModuleWindow;
-class ModuleInput;
-class ModuleRenderer3D;
-class ModuleCamera3D;
-class ModuleUIManager;
-
+#include "Module.h"
+#include "M_Window.h"
+#include "M_Input.h"
+#include "M_Renderer3D.h"
+#include "M_UI.h"
 
 class Application
 {
@@ -19,14 +15,14 @@ public:
 	ModuleWindow* window;
 	ModuleInput* input;
 	ModuleRenderer3D* renderer3D;
-	ModuleCamera3D* camera;
-	ModuleUIManager* uiManager;
-
+	ModuleRenderer2D* renderer2D;
+	bool debug;
+	bool renderPrimitives;
 private:
 
 	Timer	ms_timer;
 	float	dt;
-	std::vector<Module*> list_modules;
+	p2List<Module*> list_modules;
 
 public:
 
@@ -34,12 +30,8 @@ public:
 	~Application();
 
 	bool Init();
-	bool Update();
+	update_status Update();
 	bool CleanUp();
-	bool Reset();
-
-
-
 
 private:
 
