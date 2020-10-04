@@ -63,7 +63,19 @@ void M_Console::AddLog(const char* fmt, ...) IM_FMTARGS(2)
 
 void M_Console::ExecuteCommand(const char* command)
 {
-	AddLog("# %s\n", command);
+	AddLog("# %s\n", command);;
+
+	historyPos = -1;
+
+	/*for (int i = history.size(); i >= 0 ; i--)
+	{
+		if (stricmp(history[i], command) == 0)
+		{
+			free(history[i]);
+			history.erase(history.begin() + i);
+			break;
+		}
+	}*/
 
 	if (stricmp(command, "clear") == 0)
 	{
