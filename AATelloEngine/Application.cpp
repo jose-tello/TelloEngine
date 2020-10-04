@@ -5,30 +5,26 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	window = new ModuleWindow();
 	input = new ModuleInput();
 	renderer3D = new ModuleRenderer3D();
-	renderer2D = new ModuleRenderer2D();
-
-	// The order of calls is very important!
-	// Modules will Init() Start() and Update in this order
-	// They will CleanUp() in reverse order
+	ui = new M_UI();
+	camera = new ModuleCamera3D();
 
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
+	AddModule(camera);
 	
 	// Renderer last!
-	AddModule(renderer2D);
+	AddModule(ui);
 	AddModule(renderer3D);
 	
 }
 
 Application::~Application()
 {
-	p2List_item<Module*>* item = list_modules.getLast();
-
-	while (item != NULL)
+	for (int i = modulesVec.size() - 1; i >= 0; i--)
 	{
-		delete item->data;
-		item = item->prev;
+		delete modulesVec[i];
+		modulesVec[i] = nullptr;
 	}
 }
 
@@ -39,22 +35,19 @@ bool Application::Init()
 	App = this;
 
 	// Call Init() in all modules
-	p2List_item<Module*>* item = list_modules.getFirst();
+	int numModules = modulesVec.size();
 
-	while (item != NULL && ret == true)
+	for (int i = 0; i < numModules && ret == true; i++)
 	{
-		ret = item->data->Init();
-		item = item->next;
+		ret = modulesVec[i]->Init();
 	}
 
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
-	item = list_modules.getFirst();
 
-	while (item != NULL && ret == true)
+	for (int i = 0; i < numModules && ret == true; i++)
 	{
-		ret = item->data->Start();
-		item = item->next;
+		ret = modulesVec[i]->Start();
 	}
 
 	ms_timer.Start();
@@ -74,33 +67,26 @@ void Application::FinishUpdate()
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
-update_status Application::Update()
+UPDATE_STATUS Application::Update()
 {
-	update_status ret = UPDATE_CONTINUE;
+	UPDATE_STATUS ret = UPDATE_STATUS::UPDATE_CONTINUE;
 	PrepareUpdate();
 
-	p2List_item<Module*>* item = list_modules.getFirst();
+	int numModules = modulesVec.size();
 
-	while (item != NULL && ret == UPDATE_CONTINUE)
+	for (int i = 0; i < numModules && ret == UPDATE_STATUS::UPDATE_CONTINUE; i++)
 	{
-		ret = item->data->PreUpdate(dt);
-		item = item->next;
+		ret = modulesVec[i]->PreUpdate(dt);
 	}
 
-	item = list_modules.getFirst();
-
-	while (item != NULL && ret == UPDATE_CONTINUE)
+	for (int i = 0; i < numModules && ret == UPDATE_STATUS::UPDATE_CONTINUE; i++)
 	{
-		ret = item->data->Update(dt);
-		item = item->next;
+		ret = modulesVec[i]->Update(dt);
 	}
 
-	item = list_modules.getFirst();
-
-	while (item != NULL && ret == UPDATE_CONTINUE)
+	for (int i = 0; i < numModules && ret == UPDATE_STATUS::UPDATE_CONTINUE; i++)
 	{
-		ret = item->data->PostUpdate(dt);
-		item = item->next;
+		ret = modulesVec[i]->PostUpdate(dt);
 	}
 
 	FinishUpdate();
@@ -110,19 +96,17 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	p2List_item<Module*>* item = list_modules.getLast();
 
-	while (item != NULL && ret == true)
+	for (int i = modulesVec.size() - 1; i >= 0 && ret == true; i--)
 	{
-		ret = item->data->CleanUp();
-		item = item->prev;
+		ret = modulesVec[i]->CleanUp();
 	}
 	return ret;
 }
 
 void Application::AddModule(Module* mod)
 {
-	list_modules.add(mod);
+	modulesVec.push_back(mod);
 }
 
 Application* App = nullptr;

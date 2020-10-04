@@ -2,9 +2,10 @@
 #include "Module.h"
 #include "Globals.h"
 
+#define MAX_KEYS 300
 #define MAX_MOUSE_BUTTONS 5
 
-enum KEY_STATE
+enum class KEY_STATE : int
 {
 	KEY_IDLE = 0,
 	KEY_DOWN,
@@ -20,8 +21,8 @@ public:
 	~ModuleInput();
 
 	bool Init();
-	update_status PreUpdate(float dt) override;
-	update_status Update(float dt) override;
+	UPDATE_STATUS PreUpdate(float dt) override;
+	UPDATE_STATUS Update(float dt) override;
 	bool CleanUp();
 
 	KEY_STATE GetKey(int id) const
@@ -60,7 +61,7 @@ public:
 	}
 
 private:
-	KEY_STATE* keyboard;
+	KEY_STATE keyboard[MAX_KEYS];
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
 	int mouse_x;
 	int mouse_y;

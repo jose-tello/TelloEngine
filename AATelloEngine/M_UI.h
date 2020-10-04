@@ -3,15 +3,15 @@
 #include "Globals.h"
 #include "glmath.h"
 
-class ModuleRenderer2D : public Module
+class M_UI : public Module
 {
 public:
-	ModuleRenderer2D(bool start_enabled = true);
-	~ModuleRenderer2D();
+	M_UI(bool start_enabled = true);
+	~M_UI();
 
 	bool Init();
-	update_status PreUpdate(float dt) override;
-	update_status PostUpdate(float dt) override;
+	UPDATE_STATUS PreUpdate(float dt) override;
+	UPDATE_STATUS PostUpdate(float dt) override;
 	bool CleanUp();
 
 	void OnResize(int width, int height);

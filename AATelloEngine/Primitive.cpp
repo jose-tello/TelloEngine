@@ -3,15 +3,11 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "Primitive.h"
-#include "glut/glut.h"
-#include "Globals.h"
-#include "Application.h"
-
-#pragma comment (lib, "glut/glut32.lib")
 
 // ------------------------------------------------------------
 Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
 {}
+
 
 // ------------------------------------------------------------
 PrimitiveTypes Primitive::GetType() const
@@ -19,10 +15,12 @@ PrimitiveTypes Primitive::GetType() const
 	return type;
 }
 
+
 void Primitive::Update()
 {
-	body.GetTransform(&transform);
+	
 }
+
 
 // ------------------------------------------------------------
 void Primitive::Render() const
@@ -30,7 +28,7 @@ void Primitive::Render() const
 	glPushMatrix();
 	glMultMatrixf(transform.M);
 
-	if (axis == true)
+	if(axis == true)
 	{
 		// Draw Axis Grid
 		glLineWidth(2.0f);
@@ -62,10 +60,9 @@ void Primitive::Render() const
 		glLineWidth(1.0f);
 	}
 
-
 	glColor3f(color.r, color.g, color.b);
 
-	if (wire || App->renderPrimitives == false)
+	if(wire)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -75,13 +72,14 @@ void Primitive::Render() const
 	glPopMatrix();
 }
 
+
 // ------------------------------------------------------------
 void Primitive::InnerRender() const
 {
 	glPointSize(5.0f);
 
 	glBegin(GL_POINTS);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 	glVertex3f(0.0f, 0.0f, 0.0f);
 
 	glEnd();
@@ -89,38 +87,40 @@ void Primitive::InnerRender() const
 	glPointSize(1.0f);
 }
 
+
 // ------------------------------------------------------------
 void Primitive::SetPos(float x, float y, float z)
 {
 	transform.translate(x, y, z);
-	body.SetTransform(&transform);
 }
+
 
 // ------------------------------------------------------------
 void Primitive::SetRotation(float angle, const vec3 &u)
 {
 	transform.rotate(angle, u);
-	body.SetTransform(&transform);
 }
+
 
 // ------------------------------------------------------------
 void Primitive::Scale(float x, float y, float z)
 {
 	transform.scale(x, y, z);
-	body.SetTransform(&transform);
 }
 
-// CUBE ============================================
 
-Cube::Cube(const vec3& _size, float mass) : Primitive(), size(_size)
+// CUBE ============================================
+Cube::Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
-vec3 Cube::GetSize() const
+
+Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
 {
-	return size;
+	type = PrimitiveTypes::Primitive_Cube;
 }
+
 
 void Cube::InnerRender() const
 {	
@@ -169,48 +169,41 @@ void Cube::InnerRender() const
 	glEnd();
 }
 
-// SPHERE ============================================
 
-Sphere::Sphere(float _radius, float mass) : Primitive(), radius(_radius)
+// SPHERE ============================================
+Sphere::Sphere() : Primitive(), radius(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
-	body.SetBody(this, mass);
 }
 
-float Sphere::GetRadius() const
+
+Sphere::Sphere(float radius) : Primitive(), radius(radius)
 {
-	return radius;
+	type = PrimitiveTypes::Primitive_Sphere;
 }
+
 
 void Sphere::InnerRender() const
 {
-	glutSolidSphere(radius, 25, 25);
+	
 }
 
 
 // CYLINDER ============================================
-Cylinder::Cylinder(float radius, float height, float mass) : Primitive(), radius(radius), height(height)
+Cylinder::Cylinder() : Primitive(), radius(1.0f), height(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-float Cylinder::GetRadius() const
+
+Cylinder::Cylinder(float radius, float height) : Primitive(), radius(radius), height(height)
 {
-	return radius;
+	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-float Cylinder::GetHeight() const
-{
-	return height;
-}
 
 void Cylinder::InnerRender() const
 {
-	glPushMatrix();
-	mat4x4 rotateMat = IdentityMatrix;
-	rotateMat.rotate(0.f, vec3(0, 0, 1));
-	glMultMatrixf(&rotateMat);
-
 	int n = 30;
 
 	// Cylinder Bottom
@@ -243,9 +236,8 @@ void Cylinder::InnerRender() const
 		glVertex3f(-height*0.5f, radius * cos(a), radius * sin(a) );
 	}
 	glEnd();
-
-	glPopMatrix();
 }
+
 
 // LINE ==================================================
 Line::Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
@@ -253,20 +245,12 @@ Line::Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
 	type = PrimitiveTypes::Primitive_Line;
 }
 
-Line::Line(const vec3& A, const vec3& B) : Primitive(), origin(A), destination(B)
+
+Line::Line(float x, float y, float z) : Primitive(), origin(0, 0, 0), destination(x, y, z)
 {
 	type = PrimitiveTypes::Primitive_Line;
 }
 
-vec3 Line::GetOrigin() const
-{
-	return origin;
-}
-
-vec3 Line::GetDestination() const
-{
-	return destination;
-}
 
 void Line::InnerRender() const
 {
@@ -283,14 +267,14 @@ void Line::InnerRender() const
 }
 
 // PLANE ==================================================
-Plane::Plane(const vec3& _normal) : Primitive(), normal(_normal)
+Plane::Plane() : Primitive(), normal(0, 1, 0), constant(1)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-vec3 Plane::GetNormal() const
+Plane::Plane(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
 {
-	return normal;
+	type = PrimitiveTypes::Primitive_Plane;
 }
 
 void Plane::InnerRender() const

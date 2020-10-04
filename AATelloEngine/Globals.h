@@ -20,7 +20,7 @@ void log(const char file[], int line, const char* format, ...);
 
 typedef unsigned int uint;
 
-enum update_status
+enum class UPDATE_STATUS : int
 {
 	UPDATE_CONTINUE = 1,
 	UPDATE_STOP,

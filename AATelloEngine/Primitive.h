@@ -1,8 +1,8 @@
-
 #pragma once
 #include "glmath.h"
 #include "Color.h"
-#include "PhysBody3D.h"
+
+class PhysBody3D;
 
 enum PrimitiveTypes
 {
@@ -17,23 +17,26 @@ enum PrimitiveTypes
 class Primitive
 {
 public:
+
 	Primitive();
 
 	void Update();
 	virtual void	Render() const;
+	virtual void	InnerRender() const;
 	void			SetPos(float x, float y, float z);
 	void			SetRotation(float angle, const vec3 &u);
 	void			Scale(float x, float y, float z);
 	PrimitiveTypes	GetType() const;
+	
 
-
+public:
+	
 	Color color;
 	mat4x4 transform;
 	bool axis,wire;
-	PhysBody3D body;
-
+	//puntero a Physbody3D
+	PhysBody3D *body;
 protected:
-	virtual void InnerRender() const;
 	PrimitiveTypes type;
 };
 
@@ -41,11 +44,10 @@ protected:
 class Cube : public Primitive
 {
 public :
-	Cube(const vec3& size = vec3(1.f,1.f,1.f), float mass = 1.f);	
-	vec3 GetSize() const;
-protected:
+	Cube();
+	Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
-private:
+public:
 	vec3 size;
 };
 
@@ -53,12 +55,10 @@ private:
 class Sphere : public Primitive
 {
 public:
-	Sphere(float radius = 1.f, float mass = 1.f);
-
-	float GetRadius() const;
-protected:
+	Sphere();
+	Sphere(float radius);
 	void InnerRender() const;
-private:
+public:
 	float radius;
 };
 
@@ -66,13 +66,10 @@ private:
 class Cylinder : public Primitive
 {
 public:
-	Cylinder(float radius = 1.f, float height = 2.f, float mass = 1.f);
-
-	float GetRadius() const;
-	float GetHeight() const;
-protected:
+	Cylinder();
+	Cylinder(float radius, float height);
 	void InnerRender() const;
-private:
+public:
 	float radius;
 	float height;
 };
@@ -82,12 +79,7 @@ class Line : public Primitive
 {
 public:
 	Line();
-	Line(const vec3& A, const vec3& B);
-
-	vec3 GetOrigin() const;
-	vec3 GetDestination() const;
-
-protected:
+	Line(float x, float y, float z);
 	void InnerRender() const;
 public:
 	vec3 origin;
@@ -98,11 +90,10 @@ public:
 class Plane : public Primitive
 {
 public:
-	Plane(const vec3& normal = vec3(0,1,0));
-
-	vec3 GetNormal() const;
-protected:
+	Plane();
+	Plane(float x, float y, float z, float d);
 	void InnerRender() const;
-private:
+public:
 	vec3 normal;
+	float constant;
 };

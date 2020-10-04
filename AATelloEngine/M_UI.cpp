@@ -12,15 +12,15 @@
 
 
 
-ModuleRenderer2D::ModuleRenderer2D(bool start_enabled)
+M_UI::M_UI(bool start_enabled)
 {
 }
 
-ModuleRenderer2D::~ModuleRenderer2D()
+M_UI::~M_UI()
 {
 }
 
-bool ModuleRenderer2D::Init()
+bool M_UI::Init()
 {
 	bool ret = true;
 
@@ -56,9 +56,8 @@ bool ModuleRenderer2D::Init()
 	return ret;
 }
 
-update_status ModuleRenderer2D::PreUpdate(float dt)
+UPDATE_STATUS M_UI::PreUpdate(float dt)
 {
-	update_status status = UPDATE_CONTINUE;
 
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
@@ -109,13 +108,11 @@ update_status ModuleRenderer2D::PreUpdate(float dt)
 
    
 
-	return status;
+	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
-update_status ModuleRenderer2D::PostUpdate(float dt)
+UPDATE_STATUS M_UI::PostUpdate(float dt)
 {
-	update_status status = UPDATE_CONTINUE;
-
     // Rendering
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -129,10 +126,10 @@ update_status ModuleRenderer2D::PostUpdate(float dt)
         SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
     }
 
-	return status;
+	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
-bool ModuleRenderer2D::CleanUp()
+bool M_UI::CleanUp()
 {
 	bool ret = true;
 
@@ -145,6 +142,6 @@ bool ModuleRenderer2D::CleanUp()
 	return ret;
 }
 
-void ModuleRenderer2D::OnResize(int width, int height)
+void M_UI::OnResize(int width, int height)
 {
 }

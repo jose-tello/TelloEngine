@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "M_Renderer3D.h"
+#include "Primitive.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -110,24 +111,29 @@ bool ModuleRenderer3D::Init()
 }
 
 // PreUpdate: clear buffer
-update_status ModuleRenderer3D::PreUpdate(float dt)
+UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-
+	glLoadMatrixf(App->camera->GetViewMatrix());
 	//glLoadMatrixf(mat4x4().M);
 
+	Plane p(0, 1, 0, 0);
+	float scale = 3; //change this to scale ground plane
+	p.Scale(scale, 0, scale);
+	p.axis = true;
+	p.Render();
 
-	return UPDATE_CONTINUE;
+	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
-update_status ModuleRenderer3D::PostUpdate(float dt)
+UPDATE_STATUS ModuleRenderer3D::PostUpdate(float dt)
 {
 	SDL_GL_SwapWindow(App->window->window);
-	return UPDATE_CONTINUE;
+	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
 // Called before quitting

@@ -2,18 +2,17 @@
 #include "Application.h"
 #include "M_Input.h"
 
-#define MAX_KEYS 300
+#include "imgui/imgui_impl_sdl.h"
 
 ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
 {
-	keyboard = new KEY_STATE[MAX_KEYS];
-	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
+	memset(keyboard, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
+	memset(mouse_buttons, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * MAX_MOUSE_BUTTONS);
 }
 
 // Destructor
 ModuleInput::~ModuleInput()
 {
-	delete[] keyboard;
 }
 
 // Called before render is available
@@ -33,7 +32,7 @@ bool ModuleInput::Init()
 }
 
 // Called every draw update
-update_status ModuleInput::PreUpdate(float dt)
+UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 {
 	SDL_PumpEvents();
 
@@ -43,17 +42,17 @@ update_status ModuleInput::PreUpdate(float dt)
 	{
 		if(keys[i] == 1)
 		{
-			if(keyboard[i] == KEY_IDLE)
-				keyboard[i] = KEY_DOWN;
+			if(keyboard[i] == KEY_STATE::KEY_IDLE)
+				keyboard[i] = KEY_STATE::KEY_DOWN;
 			else
-				keyboard[i] = KEY_REPEAT;
+				keyboard[i] = KEY_STATE::KEY_REPEAT;
 		}
 		else
 		{
-			if(keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
-				keyboard[i] = KEY_UP;
+			if(keyboard[i] == KEY_STATE::KEY_REPEAT || keyboard[i] == KEY_STATE::KEY_DOWN)
+				keyboard[i] = KEY_STATE::KEY_UP;
 			else
-				keyboard[i] = KEY_IDLE;
+				keyboard[i] = KEY_STATE::KEY_IDLE;
 		}
 	}
 
@@ -63,21 +62,21 @@ update_status ModuleInput::PreUpdate(float dt)
 	mouse_y /= SCREEN_SIZE;
 	mouse_z = 0;
 
-	for(int i = 0; i < 5; ++i)
+	for(int i = 0; i < MAX_MOUSE_BUTTONS; ++i)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if(mouse_buttons[i] == KEY_IDLE)
-				mouse_buttons[i] = KEY_DOWN;
+			if(mouse_buttons[i] == KEY_STATE::KEY_IDLE)
+				mouse_buttons[i] = KEY_STATE::KEY_DOWN;
 			else
-				mouse_buttons[i] = KEY_REPEAT;
+				mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
 		}
 		else
 		{
-			if(mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
-				mouse_buttons[i] = KEY_UP;
+			if(mouse_buttons[i] == KEY_STATE::KEY_REPEAT || mouse_buttons[i] == KEY_STATE::KEY_DOWN)
+				mouse_buttons[i] = KEY_STATE::KEY_UP;
 			else
-				mouse_buttons[i] = KEY_IDLE;
+				mouse_buttons[i] = KEY_STATE::KEY_IDLE;
 		}
 	}
 
@@ -87,6 +86,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		ImGui_ImplSDL2_ProcessEvent(&e);
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
@@ -113,21 +113,21 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 	}
 
-	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
-		return UPDATE_STOP;
+	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_STATE::KEY_UP)
+		return UPDATE_STATUS::UPDATE_STOP;
 
-	return UPDATE_CONTINUE;
+	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
-update_status ModuleInput::Update(float dt)
+UPDATE_STATUS ModuleInput::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
 		App->debug = !App->debug;
 
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_STATE::KEY_DOWN)
 		App->renderPrimitives = !App->renderPrimitives;
 
-	return UPDATE_CONTINUE;
+	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
 // Called before quitting

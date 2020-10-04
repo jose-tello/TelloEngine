@@ -1,7 +1,5 @@
 #pragma once
 
-class  PhysBody3D;
-
 class Module
 {
 private :
@@ -24,25 +22,23 @@ public:
 		return true;
 	}
 
-	virtual update_status PreUpdate(float dt)
+	virtual UPDATE_STATUS PreUpdate(float dt)
 	{
-		return UPDATE_CONTINUE;
+		return UPDATE_STATUS::UPDATE_CONTINUE;
 	}
 
-	virtual update_status Update(float dt)
+	virtual UPDATE_STATUS Update(float dt)
 	{
-		return UPDATE_CONTINUE;
+		return UPDATE_STATUS::UPDATE_CONTINUE;
 	}
 
-	virtual update_status PostUpdate(float dt)
+	virtual UPDATE_STATUS PostUpdate(float dt)
 	{
-		return UPDATE_CONTINUE;
+		return UPDATE_STATUS::UPDATE_CONTINUE;
 	}
 
 	virtual bool CleanUp() 
 	{ 
 		return true; 
 	}
-
-	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2) {}
 };
