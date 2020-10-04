@@ -17,17 +17,27 @@ public:
 
 	bool Init();
 	bool CleanUp();
+
 	int Width() const;
 	int Height() const;
 
 	void SetTitle(const char* title);
+	void SetWindowFullScreen(bool fullScreen);
+	void SetWindowFullScreenDesktop(bool fullScreenDesktop);
+	void SetWindowBrightness(float brightness);
+	void SetWindowResizable(bool resizable);
+	void SetWindowBorderless(bool borderless);
 
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
 
 	//The surface contained by the window
-	SDL_Surface* screen_surface;
+	SDL_Surface* screenSurface;
+
+private:
+	bool fullScreen;
+	bool fullScreenDesktop;
 };
 
 #endif // __ModuleWindow_H__

@@ -92,7 +92,6 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="M_Input.h" />
     <ClInclude Include="M_Window.h" />
-    <ClInclude Include="p2List.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>

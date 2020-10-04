@@ -2,10 +2,13 @@
 #include "Application.h"
 #include "M_Window.h"
 
-ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
+ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled),
+window(nullptr),
+screenSurface(nullptr),
+
+fullScreen(false),
+fullScreenDesktop(false)
 {
-	window = NULL;
-	screen_surface = NULL;
 }
 
 // Destructor
@@ -19,7 +22,7 @@ bool ModuleWindow::Init()
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
-	if(SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
@@ -35,29 +38,29 @@ bool ModuleWindow::Init()
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
-		if(WIN_FULLSCREEN == true)
+		if (WIN_FULLSCREEN == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(WIN_RESIZABLE == true)
+		if (WIN_RESIZABLE == true)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(WIN_BORDERLESS == true)
+		if (WIN_BORDERLESS == true)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if(WIN_FULLSCREEN_DESKTOP == true)
+		if (WIN_FULLSCREEN_DESKTOP == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
-		if(window == NULL)
+		if (window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
@@ -65,7 +68,7 @@ bool ModuleWindow::Init()
 		else
 		{
 			//Get window surface
-			screen_surface = SDL_GetWindowSurface(window);
+			screenSurface = SDL_GetWindowSurface(window);
 		}
 	}
 
@@ -78,7 +81,7 @@ bool ModuleWindow::CleanUp()
 	LOG("Destroying SDL window and quitting all SDL systems");
 
 	//Destroy window
-	if(window != NULL)
+	if (window != NULL)
 	{
 		SDL_DestroyWindow(window);
 	}
@@ -102,7 +105,76 @@ int ModuleWindow::Height() const
 	return h;
 }
 
+
 void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
+}
+
+
+void ModuleWindow::SetWindowFullScreen(bool fullScreen)
+{
+	if (fullScreen != this->fullScreen)
+	{
+		this->fullScreen = fullScreen;
+
+		if (fullScreen == true)
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+
+		else
+		{
+			if (fullScreenDesktop == true)
+				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+			else
+				SDL_SetWindowFullscreen(window, 0);
+		}
+	}
+}
+
+
+void ModuleWindow::SetWindowFullScreenDesktop(bool fullScreenDesktop)
+{
+	if (fullScreenDesktop != this->fullScreenDesktop)
+	{
+		this->fullScreenDesktop = fullScreenDesktop;
+
+		if (fullScreenDesktop == true)
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+		else
+		{
+			if (fullScreen == true)
+				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+
+			else
+				SDL_SetWindowFullscreen(window, 0);
+		}
+	}
+}
+
+
+void ModuleWindow::SetWindowBrightness(float brightness)
+{
+	SDL_SetWindowBrightness(window, brightness);
+}
+
+
+void ModuleWindow::SetWindowResizable(bool resizable)
+{
+	if (resizable == true)
+		SDL_SetWindowResizable(window, SDL_TRUE);
+	
+	else
+		SDL_SetWindowResizable(window, SDL_FALSE);
+}
+
+
+void ModuleWindow::SetWindowBorderless(bool borderless)
+{
+	if (borderless == true)
+		SDL_SetWindowBordered(window, SDL_TRUE);
+
+	else
+		SDL_SetWindowBordered(window, SDL_FALSE);
 }
