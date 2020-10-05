@@ -1,13 +1,14 @@
 #include "Globals.h"
 #include "Application.h"
 #include "M_Window.h"
+#include "M_Console.h"
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled),
-window(nullptr),
-screenSurface(nullptr),
+	window(nullptr),
+	screenSurface(nullptr),
 
-fullScreen(false),
-fullScreenDesktop(false)
+	fullScreen(false),
+	fullScreenDesktop(false)
 {
 }
 
@@ -19,12 +20,12 @@ ModuleWindow::~ModuleWindow()
 // Called before render is available
 bool ModuleWindow::Init()
 {
-	LOG("Init SDL window & surface");
+	App->console->AddLog("Log: Init SDL window & surface");
 	bool ret = true;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		App->console->AddLog("ERROR: SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	else
@@ -62,7 +63,7 @@ bool ModuleWindow::Init()
 
 		if (window == NULL)
 		{
-			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+			App->console->AddLog("ERROR: Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
 		}
 		else
@@ -78,7 +79,7 @@ bool ModuleWindow::Init()
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {
-	LOG("Destroying SDL window and quitting all SDL systems");
+	App->console->AddLog("Log: Destroying SDL window and quitting all SDL systems");
 
 	//Destroy window
 	if (window != NULL)
@@ -164,7 +165,7 @@ void ModuleWindow::SetWindowResizable(bool resizable)
 {
 	if (resizable == true)
 		SDL_SetWindowResizable(window, SDL_TRUE);
-	
+
 	else
 		SDL_SetWindowResizable(window, SDL_FALSE);
 }

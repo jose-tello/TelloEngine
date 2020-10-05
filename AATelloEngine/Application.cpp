@@ -43,6 +43,8 @@ bool Application::Init()
 
 	App = this;
 
+	console->AddLog("Application Init --------------");
+
 	// Call Init() in all modules
 	int numModules = modulesVec.size();
 
@@ -52,7 +54,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
+	console->AddLog("Application Start --------------");
 
 	for (int i = 0; i < numModules && ret == true; i++)
 	{
@@ -105,6 +107,7 @@ UPDATE_STATUS Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+	console->AddLog("Application clean up --------------");
 
 	for (int i = modulesVec.size() - 1; i >= 0 && ret == true; i--)
 	{

@@ -19,9 +19,12 @@ public:
 	UPDATE_STATUS PreUpdate(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
 
-private:
-	void ClearLog();
 	void AddLog(const char* fmt, ...) IM_FMTARGS(2);
+
+private:
+	
+	void ClearLog();
+	
 	void ExecuteCommand(const char* command);
 
 	static int TextEditCallbackStub(ImGuiInputTextCallbackData* data);
@@ -34,8 +37,6 @@ private:
 	char inputBuffer[INPUT_BUFFER_SIZE];
 	ImVector<char*> items;
 	ImVector<const char*> commands;
-	ImVector<char*> history;
-	int historyPos;
 
 	ImGuiTextFilter filter;
 	bool autoScroll;

@@ -2,9 +2,8 @@
 #include "Application.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
+#include "M_Console.h"
 
-
-#define CAR App->player->vehicle 
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 {
@@ -20,22 +19,6 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 ModuleCamera3D::~ModuleCamera3D()
 {}
 
-// -----------------------------------------------------------------
-bool ModuleCamera3D::Start()
-{
-	LOG("Setting up the camera");
-	bool ret = true;
-
-	return ret;
-}
-
-// -----------------------------------------------------------------
-bool ModuleCamera3D::CleanUp()
-{
-	LOG("Cleaning camera");
-
-	return true;
-}
 
 // -----------------------------------------------------------------
 UPDATE_STATUS ModuleCamera3D::Update(float dt)

@@ -12,7 +12,7 @@
 
 #include "M_Window.h"
 #include "M_Renderer3D.h"
-
+#include "M_Console.h"
 
 
 M_UI::M_UI(bool start_enabled) : Module(start_enabled),
@@ -60,6 +60,8 @@ bool M_UI::Init()
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init("#version 130"); //TODO: this is hardcoded. Deal with it.
+
+	App->console->AddLog("Log: ImGui initialized correctlly");
 
 	return ret;
 }
@@ -118,6 +120,7 @@ UPDATE_STATUS M_UI::PreUpdate(float dt)
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
+
 UPDATE_STATUS M_UI::PostUpdate(float dt)
 {
 	// Rendering
@@ -135,6 +138,7 @@ UPDATE_STATUS M_UI::PostUpdate(float dt)
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
+
 
 bool M_UI::CleanUp()
 {
