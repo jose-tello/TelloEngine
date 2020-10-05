@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "M_Input.h"
 
+#include "M_Renderer3D.h"
+
 #include "imgui/imgui_impl_sdl.h"
 
 ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)

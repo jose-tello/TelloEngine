@@ -3,12 +3,13 @@
 #include "Globals.h"
 #include "Timer.h"
 #include "Module.h"
-#include "M_Window.h"
-#include "M_Input.h"
-#include "M_Renderer3D.h"
-#include "M_UI.h"
-#include "M_Camera3D.h"
-#include "M_Console.h"
+
+class ModuleWindow;
+class ModuleInput;
+class ModuleRenderer3D;
+class M_UI;
+class M_Console;
+class ModuleCamera3D;
 
 #include <vector>
 

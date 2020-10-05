@@ -10,6 +10,9 @@
 #include "Application.h"
 #include "M_UI.h"
 
+#include "M_Window.h"
+#include "M_Renderer3D.h"
+
 
 
 M_UI::M_UI(bool start_enabled) : Module(start_enabled),

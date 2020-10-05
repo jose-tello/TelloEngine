@@ -1,6 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "M_Renderer3D.h"
+#include "M_Window.h"
+#include "M_Camera3D.h"
+
 #include "Primitive.h"
 
 #include "Glew/include/glew.h"

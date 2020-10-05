@@ -1,5 +1,12 @@
 #include "Application.h"
 
+#include "M_Window.h"
+#include "M_Input.h"
+#include "M_Renderer3D.h"
+#include "M_UI.h"
+#include "M_Camera3D.h"
+#include "M_Console.h"
+
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
 	window = new ModuleWindow();
