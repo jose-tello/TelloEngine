@@ -179,3 +179,15 @@ void ModuleWindow::SetWindowBorderless(bool borderless)
 	else
 		SDL_SetWindowBordered(window, SDL_FALSE);
 }
+
+
+void ModuleWindow::GetWindowMeasures(int& width, int& height) const
+{
+	SDL_GetWindowSize(window, &width, &height);
+}
+
+
+void ModuleWindow::SetWindowMeasures(int width, int height)
+{
+	SDL_SetWindowSize(window, width, height);
+}

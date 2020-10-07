@@ -6,6 +6,8 @@
 #include <vector>
 
 #define MAX_LOG_SIZE 80
+#define MAX_RESOLUTION_WIDTH 1920
+#define MAX_RESOLUTION_HEIGHT 1080
 
 class M_UI : public Module
 {
@@ -18,8 +20,6 @@ public:
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
 
-	void OnResize(int width, int height);
-
 public:
 
 	//App State
@@ -27,11 +27,12 @@ public:
 
 	
 	//Window
-	bool windowFullScreen;
-	bool windowFullScreenDesktop;
-	bool windowResizable;
-	bool windowBorderless;
+	bool winFullScreen;
+	bool winFullScreenDesktop;
+	bool winResizable;
+	bool winBorderless;
 	int  brightness;
 
-
+	int winWidth;
+	int winHeight;
 }; 

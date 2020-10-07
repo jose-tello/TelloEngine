@@ -28,6 +28,9 @@ public:
 	void SetWindowResizable(bool resizable);
 	void SetWindowBorderless(bool borderless);
 
+	void GetWindowMeasures(int& width, int& height) const;
+	void SetWindowMeasures(int width, int height);
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;

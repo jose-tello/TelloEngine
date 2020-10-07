@@ -16,18 +16,22 @@
 
 
 M_UI::M_UI(bool start_enabled) : Module(start_enabled),
-	windowFullScreen(false),
-	windowFullScreenDesktop(false),
-	windowResizable(false),
-	windowBorderless(true),
+	winFullScreen(false),
+	winFullScreenDesktop(false),
+	winResizable(false),
+	winBorderless(true),
 
-	brightness(100)
+	brightness(100),
+	winWidth(0),
+	winHeight(0)
 {
 }
+
 
 M_UI::~M_UI()
 {
 }
+
 
 bool M_UI::Init()
 {
@@ -63,8 +67,11 @@ bool M_UI::Init()
 
 	App->console->AddLog("Log: ImGui initialized correctlly");
 
+	App->window->GetWindowMeasures(winWidth, winHeight);
+
 	return ret;
 }
+
 
 UPDATE_STATUS M_UI::PreUpdate(float dt)
 {
@@ -77,6 +84,20 @@ UPDATE_STATUS M_UI::PreUpdate(float dt)
 
 	ImGui::Begin("Menu");                          // Create a window called "Hello, world!" and append into it.
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	if (ImGui::BeginMenu("Help")) 
+	{
+		if (ImGui::MenuItem("Documentation"))
+			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/wiki", NULL, NULL, SW_SHOWNORMAL);
+
+		if(ImGui::MenuItem("Download latest version"))
+			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/releases", NULL, NULL, SW_SHOWNORMAL);
+
+		if (ImGui::MenuItem("Report a bug"))
+			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/issues", NULL, NULL, SW_SHOWNORMAL);
+
+		ImGui::End();
+	}
 
 	if (ImGui::CollapsingHeader("Application state"))
 	{
@@ -95,23 +116,31 @@ UPDATE_STATUS M_UI::PreUpdate(float dt)
 
 	if (ImGui::CollapsingHeader("Window"))
 	{
-		ImGui::Checkbox("Full screen", &windowFullScreen);
+		ImGui::Checkbox("Full screen", &winFullScreen);
 		ImGui::SameLine();
-		ImGui::Checkbox("Full screen desktop", &windowFullScreenDesktop);
-		ImGui::Checkbox("Resizable", &windowResizable);
+		ImGui::Checkbox("Full screen desktop", &winFullScreenDesktop);
+		ImGui::Checkbox("Resizable", &winResizable);
 		ImGui::SameLine();
-		ImGui::Checkbox("Borderless", &windowBorderless);
+		ImGui::Checkbox("Borderless", &winBorderless);
 
 
 		ImGui::SliderInt("Brightness", &brightness, 1, 100);
+		ImGui::SliderInt("Width", &winWidth, 1, MAX_RESOLUTION_WIDTH);
+		ImGui::SliderInt("Height", &winHeight, 1, MAX_RESOLUTION_HEIGHT);
 		
-		App->window->SetWindowFullScreen(windowFullScreen);
-		App->window->SetWindowFullScreenDesktop(windowFullScreenDesktop);
-		App->window->SetWindowResizable(windowResizable);
-		App->window->SetWindowBorderless(windowBorderless);
+		App->window->SetWindowFullScreen(winFullScreen);
+		App->window->SetWindowFullScreenDesktop(winFullScreenDesktop);
+		App->window->SetWindowResizable(winResizable);
+		App->window->SetWindowBorderless(winBorderless);
 
-		float bright = brightness;
-		App->window->SetWindowBrightness(bright / 100);
+		float bright = brightness * 0.01;
+		App->window->SetWindowBrightness(bright);
+		App->window->SetWindowMeasures(winWidth, winHeight);
+	}
+
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+
 	}
 	
 	ImGui::End();
@@ -153,6 +182,3 @@ bool M_UI::CleanUp()
 	return ret;
 }
 
-void M_UI::OnResize(int width, int height)
-{
-}
