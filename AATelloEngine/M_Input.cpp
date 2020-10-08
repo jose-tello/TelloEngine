@@ -140,3 +140,75 @@ bool ModuleInput::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
+
+
+KEY_STATE ModuleInput::GetKey(int id) const
+{
+	return keyboard[id];
+}
+
+KEY_STATE ModuleInput::GetMouseButton(int id) const
+{
+	return mouse_buttons[id];
+}
+
+void ModuleInput::ReportKeyState(std::vector<std::string>& inputsLog) const
+{
+	char keyText[20];
+
+	for (int i = 0; i < MAX_KEYS; i++)
+	{
+		if (keyboard[i] == KEY_STATE::KEY_DOWN)
+		{
+			sprintf(keyText, "%i KEY_DOWN", i);
+			inputsLog.push_back(keyText);
+		}
+
+		else if (keyboard[i] == KEY_STATE::KEY_UP)
+		{
+			sprintf(keyText, "%i KEY_UP", i);
+			inputsLog.push_back(keyText);
+		}
+	}
+
+	for (int i = 0; i < MAX_MOUSE_BUTTONS; i++)
+	{
+		if (mouse_buttons[i] == KEY_STATE::KEY_DOWN)
+		{
+			sprintf(keyText, "%i MOUSE BUTTON_DOWN", i);
+			inputsLog.push_back(keyText);
+		}
+
+		if (mouse_buttons[i] == KEY_STATE::KEY_UP)
+		{
+			sprintf(keyText, "%i MOUSE BUTTON_UP", i);
+			inputsLog.push_back(keyText);
+		}
+	}
+}
+
+int ModuleInput::GetMouseX() const
+{
+	return mouse_x;
+}
+
+int ModuleInput::GetMouseY() const
+{
+	return mouse_y;
+}
+
+int ModuleInput::GetMouseZ() const
+{
+	return mouse_z;
+}
+
+int ModuleInput::GetMouseXMotion() const
+{
+	return mouse_x_motion;
+}
+
+int ModuleInput::GetMouseYMotion() const
+{
+	return mouse_y_motion;
+}
+

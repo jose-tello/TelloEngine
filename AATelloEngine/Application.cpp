@@ -23,9 +23,9 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	
 	// Renderer last!
 	AddModule(console);
-	AddModule(ui);
-	AddModule(renderer3D);
 	
+	AddModule(renderer3D);
+	AddModule(ui);
 }
 
 Application::~Application()

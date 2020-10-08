@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 
+#include <string>
 #define MAX_KEYS 300
 #define MAX_MOUSE_BUTTONS 5
 
@@ -25,40 +26,16 @@ public:
 	UPDATE_STATUS Update(float dt) override;
 	bool CleanUp();
 
-	KEY_STATE GetKey(int id) const
-	{
-		return keyboard[id];
-	}
+	KEY_STATE GetKey(int id) const;
+	KEY_STATE GetMouseButton(int id) const;
+	void ReportKeyState(std::vector<std::string>&) const;
+	
+	int GetMouseX() const;
+	int GetMouseY() const;
+	int GetMouseZ() const;
 
-	KEY_STATE GetMouseButton(int id) const
-	{
-		return mouse_buttons[id];
-	}
-
-	int GetMouseX() const
-	{
-		return mouse_x;
-	}
-
-	int GetMouseY() const
-	{
-		return mouse_y;
-	}
-
-	int GetMouseZ() const
-	{
-		return mouse_z;
-	}
-
-	int GetMouseXMotion() const
-	{
-		return mouse_x_motion;
-	}
-
-	int GetMouseYMotion() const
-	{
-		return mouse_y_motion;
-	}
+	int GetMouseXMotion() const;
+	int GetMouseYMotion() const;
 
 private:
 	KEY_STATE keyboard[MAX_KEYS];

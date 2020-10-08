@@ -4,6 +4,7 @@
 #include "glmath.h"
 
 #include <vector>
+#include <string>
 
 #define MAX_LOG_SIZE 80
 #define MAX_RESOLUTION_WIDTH 1920
@@ -16,7 +17,7 @@ public:
 	~M_UI();
 
 	bool Init();
-	UPDATE_STATUS PreUpdate(float dt);
+	UPDATE_STATUS Update(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
 	bool CleanUp();
 
@@ -35,4 +36,23 @@ public:
 
 	int winWidth;
 	int winHeight;
+
+	//Hardware
+	int cpuCores;
+
+	int maxRamMemory;
+	bool has3DNow;
+	bool hasAVX;
+	bool hasAVX2;
+	bool hasAltiVec;
+	bool hasMMX;
+	bool hasRDTSC;
+	bool hasSSE;
+	bool hasSSE2;
+	bool hasSSE3;
+	bool hasSSE41;
+	bool hasSSE42;
+
+	//Inputs
+	std::vector<std::string> inputsLog;
 }; 
