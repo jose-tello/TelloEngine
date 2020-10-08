@@ -156,9 +156,9 @@ UPDATE_STATUS M_UI::Update(float dt)
 
 		App->input->ReportKeyState(inputsLog);
 		
-		if (inputsLog.size() > MAX_LOG_SIZE)
+		if (inputsLog.size() > MAX_LOG_SIZE / 4)
 		{
-			int elementsToErase = inputsLog.size() - MAX_LOG_SIZE;
+			int elementsToErase = inputsLog.size() - MAX_LOG_SIZE / 4;
 			for (int i = 0; i < elementsToErase; i++)
 			{
 				inputsLog.erase(inputsLog.begin());
@@ -174,8 +174,6 @@ UPDATE_STATUS M_UI::Update(float dt)
 				ImGui::Text(inputsLog[i].c_str());
 			}
 		}
-		
-	
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
