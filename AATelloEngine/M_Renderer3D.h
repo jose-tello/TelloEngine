@@ -5,6 +5,7 @@
 
 class Primitive;
 class Cube;
+class Sphere;
 
 #define MAX_LIGHTS 8
 
@@ -31,4 +32,5 @@ public:
 
 	Primitive* cube;
 	Cube* cube2;
+	Sphere* sphere;
 };

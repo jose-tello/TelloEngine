@@ -147,10 +147,11 @@ bool ModuleRenderer3D::Init()
 
 	
 	vec3 pos(0, -5, -5);
-	vec3 pos2(13, -2, 0);
+	vec3 pos2(0, 0, -20);
 	vec3 rotation(1, 0, 0);
 	cube = new Primitive(vertexArray, sizeof(vertexArray), indexArray, sizeof(indexArray), pos, 0, rotation, 1.0f);
-	cube2 = new Cube(pos2, 45.f, rotation, 0.f, 1.f);
+	//cube2 = new Cube(pos2, 45.f, rotation, 0.f, 1.f);
+	sphere = new Sphere(1, 18, 36, pos2, 0.f, rotation);
 
 	return ret;
 }
@@ -170,10 +171,11 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 	p.Scale(scale, 0, scale);
 	p.axis = true;
 	p.Render();*/
-	cube->Draw();
-	cube2->Draw();
-
-	
+	//cube->Draw();
+	//cube2->Draw();
+	sphere->Draw();
+	Plane plane(0, 1, 0, 1);
+	plane.Draw();
 
 	
 
