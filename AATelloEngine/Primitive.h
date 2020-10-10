@@ -1,99 +1,32 @@
-#pragma once
+#include "Application.h"
 #include "glmath.h"
 #include "Color.h"
-
-class PhysBody3D;
-
-enum PrimitiveTypes
-{
-	Primitive_Point,
-	Primitive_Line,
-	Primitive_Plane,
-	Primitive_Cube,
-	Primitive_Sphere,
-	Primitive_Cylinder
-};
 
 class Primitive
 {
 public:
+	Primitive(float*, std::size_t, unsigned int*, std::size_t, vec3& position, float angle, vec3& rotation, float red = 0.f, 
+			  float green = 0.f, float blue = 1.f, float alpha = 1.f);
+	~Primitive();
 
-	Primitive();
+	void SetPosition(vec3& );
+	void SetRotation(float angle, vec3& );
+	void Draw() const;
 
-	void Update();
-	virtual void	Render() const;
-	virtual void	InnerRender() const;
-	void			SetPos(float x, float y, float z);
-	void			SetRotation(float angle, const vec3 &u);
-	void			Scale(float x, float y, float z);
-	PrimitiveTypes	GetType() const;
-	
+private:
+	unsigned int vertexId;
+	unsigned int indexId;
 
-public:
-	
-	Color color;
+	std::size_t vertexArrSize;
+	std::size_t indexArrSize;
+
 	mat4x4 transform;
-	bool axis,wire;
-	//puntero a Physbody3D
-	PhysBody3D *body;
-protected:
-	PrimitiveTypes type;
+	Color color;
 };
 
-// ============================================
+
 class Cube : public Primitive
 {
-public :
-	Cube();
-	Cube(float sizeX, float sizeY, float sizeZ);
-	void InnerRender() const;
 public:
-	vec3 size;
-};
-
-// ============================================
-class Sphere : public Primitive
-{
-public:
-	Sphere();
-	Sphere(float radius);
-	void InnerRender() const;
-public:
-	float radius;
-};
-
-// ============================================
-class Cylinder : public Primitive
-{
-public:
-	Cylinder();
-	Cylinder(float radius, float height);
-	void InnerRender() const;
-public:
-	float radius;
-	float height;
-};
-
-// ============================================
-class Line : public Primitive
-{
-public:
-	Line();
-	Line(float x, float y, float z);
-	void InnerRender() const;
-public:
-	vec3 origin;
-	vec3 destination;
-};
-
-// ============================================
-class Plane : public Primitive
-{
-public:
-	Plane();
-	Plane(float x, float y, float z, float d);
-	void InnerRender() const;
-public:
-	vec3 normal;
-	float constant;
+	Cube(vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
 };

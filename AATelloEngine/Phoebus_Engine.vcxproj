@@ -94,6 +94,7 @@
     <ClInclude Include="M_Input.h" />
     <ClInclude Include="M_Window.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="PrimitiveVertex.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>

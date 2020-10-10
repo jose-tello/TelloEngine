@@ -3,6 +3,9 @@
 #include "Globals.h"
 #include "glmath.h"
 
+class Primitive;
+class Cube;
+
 #define MAX_LIGHTS 8
 
 class ModuleRenderer3D : public Module
@@ -22,4 +25,10 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
+
+	uint vertexBuffer;
+	uint indexBuffer;
+
+	Primitive* cube;
+	Cube* cube2;
 };

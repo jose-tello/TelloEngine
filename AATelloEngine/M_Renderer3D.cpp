@@ -28,6 +28,40 @@ ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), 
 ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
+
+float vertexArray[] = {
+	0.f, 0.f, 0.f,
+	10.f, 0.f, 0.f,
+	10.f, 0.f, -10.f,
+	0, 0, -10.f,
+
+	0.f, 10.f, 0.f,
+	10.f, 10.f, 0.f,
+	10.f, 10.f, -10.f,
+	0.f, 10.f, -10.f
+};
+
+
+uint indexArray[] = {
+	4, 0, 1,
+	1, 5, 4,
+
+	4, 7, 3,
+	3, 0, 4,
+
+	2, 3, 7, 
+	7, 6, 2,
+
+	7, 4, 5,
+	5, 6, 7,
+
+	5, 1, 2,
+	2, 6, 5,
+
+	0, 3, 2,
+	2, 1, 0
+};
+
 // Called before render is available
 bool ModuleRenderer3D::Init()
 {
@@ -111,6 +145,13 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	
+	vec3 pos(0, -5, -5);
+	vec3 pos2(13, -2, 0);
+	vec3 rotation(1, 0, 0);
+	cube = new Primitive(vertexArray, sizeof(vertexArray), indexArray, sizeof(indexArray), pos, 0, rotation, 1.0f);
+	cube2 = new Cube(pos2, 45.f, rotation, 0.f, 1.f);
+
 	return ret;
 }
 
@@ -124,11 +165,17 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 	glLoadMatrixf(App->camera->GetViewMatrix());
 	//glLoadMatrixf(mat4x4().M);
 
-	Plane p(0, 1, 0, 0);
+	/*Plane p(0, 1, 0, 0);
 	float scale = 3; //change this to scale ground plane
 	p.Scale(scale, 0, scale);
 	p.axis = true;
-	p.Render();
+	p.Render();*/
+	cube->Draw();
+	cube2->Draw();
+
+	
+
+	
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
