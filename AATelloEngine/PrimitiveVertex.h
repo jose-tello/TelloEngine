@@ -4,14 +4,14 @@
 //Cube
 float cubeVertexArray[] = {
 	0.f, 0.f, 0.f,
-	10.f, 0.f, 0.f,
-	10.f, 0.f, -10.f,
-	0, 0, -10.f,
+	1.f, 0.f, 0.f,
+	1.f, 0.f, -1.f,
+	0, 0, -1.f,
 
-	0.f, 10.f, 0.f,
-	10.f, 10.f, 0.f,
-	10.f, 10.f, -10.f,
-	0.f, 10.f, -10.f
+	0.f, 1.f, 0.f,
+	1.f, 1.f, 0.f,
+	1.f, 1.f, -1.f,
+	0.f, 1.f, -1.f
 };
 
 
@@ -36,6 +36,27 @@ unsigned int cubeIndexArray[] = {
 };
 
 
+//Piramid
 
+float piramidVertex[] = {
+
+	0.f, 0.f, 0.f,
+	1.f, 0.f, 0.f,
+	1.f, 0.f, 1.f,
+	0.f, 0.f, 1.f,
+
+	.5f, 1.f, .5f
+};
+
+
+unsigned int piramidIndex[] = {
+	4, 1, 0,
+	4, 2, 1,
+	4, 3, 2,
+	4, 0, 3,
+
+	3, 0, 1,
+	1, 2, 3
+};
 
 #endif //__PRIMITIVE_VERTEX_H__

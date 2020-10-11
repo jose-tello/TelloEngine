@@ -106,6 +106,12 @@ Cube::Cube(vec3& position, float angle, vec3& rotation, float red, float green, 
 }
 
 
+Piramid::Piramid(vec3& position, float angle, vec3& rotation, float red, float green, float blue, float alpha) :
+	Primitive(piramidVertex, sizeof(piramidVertex), piramidIndex, sizeof(piramidIndex), position, angle, rotation, red, green, blue, alpha)
+{
+}
+
+
 Sphere::Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& position, float angle, vec3& rotation, float red, float green, float blue, float alpha) :
 	Primitive(position, angle, rotation, red, green, blue, alpha)
 {

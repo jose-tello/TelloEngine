@@ -146,12 +146,16 @@ bool ModuleRenderer3D::Init()
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	
-	vec3 pos(0, -5, -5);
-	vec3 pos2(0, 0, -20);
+	vec3 pos(-5, 3, -5);
+	vec3 pos2(0, 0, -15);
+	vec3 pos3(2, 0, -5);
 	vec3 rotation(1, 0, 0);
-	cube = new Primitive(vertexArray, sizeof(vertexArray), indexArray, sizeof(indexArray), pos, 0, rotation, 1.0f);
-	//cube2 = new Cube(pos2, 45.f, rotation, 0.f, 1.f);
-	sphere = new Sphere(1, 18, 36, pos2, 0.f, rotation);
+
+	cube = new Cube(pos, 45.f, rotation, 0.f, 1.f);
+	sphere = new Sphere(1, 10, 16, pos2, 0.f, rotation);
+	piramid = new Piramid(pos3, 0, rotation);
+
+	piramid->SetEscale(vec3(4, 4, 4));
 
 	return ret;
 }
@@ -164,16 +168,11 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
-	//glLoadMatrixf(mat4x4().M);
 
-	/*Plane p(0, 1, 0, 0);
-	float scale = 3; //change this to scale ground plane
-	p.Scale(scale, 0, scale);
-	p.axis = true;
-	p.Render();*/
-	//cube->Draw();
-	//cube2->Draw();
+	cube->Draw();
 	sphere->Draw();
+	piramid->Draw();
+
 	Plane plane(0, 1, 0, 1);
 	plane.Draw();
 

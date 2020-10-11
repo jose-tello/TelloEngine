@@ -37,6 +37,13 @@ public:
 };
 
 
+class Piramid : public Primitive
+{
+public:
+	Piramid(vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
+};
+
+
 class Sphere : public Primitive
 {
 public:

@@ -6,6 +6,7 @@
 class Primitive;
 class Cube;
 class Sphere;
+class Piramid;
 
 #define MAX_LIGHTS 8
 
@@ -30,7 +31,7 @@ public:
 	uint vertexBuffer;
 	uint indexBuffer;
 
-	Primitive* cube;
-	Cube* cube2;
+	Cube* cube;
 	Sphere* sphere;
+	Piramid* piramid;
 };
