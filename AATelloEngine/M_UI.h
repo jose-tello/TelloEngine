@@ -19,13 +19,15 @@ public:
 	bool Init();
 	UPDATE_STATUS Update(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
+
+	void CreateDockingWindow();
+
 	bool CleanUp();
 
 public:
 
 	//App State
 	std::vector<float> frameRateLog;
-
 	
 	//Window
 	bool winFullScreen;
