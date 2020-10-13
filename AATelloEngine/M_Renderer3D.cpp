@@ -3,6 +3,7 @@
 #include "M_Renderer3D.h"
 #include "M_Window.h"
 #include "M_Camera3D.h"
+#include "M_Editor.h"
 #include "M_Console.h"
 
 #include "Primitive.h"
@@ -184,7 +185,9 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UPDATE_STATUS ModuleRenderer3D::PostUpdate(float dt)
 {
-	//SDL_GL_SwapWindow(App->window->window);
+	App->ui->Draw();
+	SDL_GL_SwapWindow(App->window->window);
+
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 

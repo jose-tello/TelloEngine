@@ -8,7 +8,7 @@
 //...to here
 #include "Globals.h"
 #include "Application.h"
-#include "M_UI.h"
+#include "M_Editor.h"
 
 #include "M_Window.h"
 #include "M_Renderer3D.h"
@@ -16,7 +16,7 @@
 #include "M_Console.h"
 
 
-M_UI::M_UI(bool start_enabled) : Module(start_enabled),
+M_Editor::M_Editor(bool start_enabled) : Module(start_enabled),
 //Window
 	winFullScreen(false),
 	winFullScreenDesktop(false),
@@ -46,12 +46,12 @@ M_UI::M_UI(bool start_enabled) : Module(start_enabled),
 }
 
 
-M_UI::~M_UI()
+M_Editor::~M_Editor()
 {
 }
 
 
-bool M_UI::Init()
+bool M_Editor::Init()
 {
 	bool ret = true;
 
@@ -107,7 +107,7 @@ bool M_UI::Init()
 }
 
 
-UPDATE_STATUS M_UI::Update(float dt)
+UPDATE_STATUS M_Editor::Update(float dt)
 {
 
 	// Start the Dear ImGui frame
@@ -116,6 +116,9 @@ UPDATE_STATUS M_UI::Update(float dt)
 	ImGui::NewFrame();
 
 	CreateDockingWindow();
+
+	ImGui::Begin("Test", nullptr, ImGuiWindowFlags_NoBackground);
+	ImGui::End();
 
 	ImGui::Begin("Menu");                          // Create a window called "Hello, world!" and append into it.
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -252,19 +255,30 @@ UPDATE_STATUS M_UI::Update(float dt)
 }
 
 
-UPDATE_STATUS M_UI::PostUpdate(float dt)
+UPDATE_STATUS M_Editor::PostUpdate(float dt)
 {
-	// Rendering
-	/*ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	ImGui::Render(); ImGuiIO& io = ImGui::GetIO(); (void)io;
-	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-	glClear(GL_COLOR_BUFFER_BIT);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
+	//Draw();
+	//SDL_GL_SwapWindow(App->window->window);
+
+	return UPDATE_STATUS::UPDATE_CONTINUE;
+}
 
 
+bool M_Editor::CleanUp()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
+	return true;
+}
+
+
+void M_Editor::Draw()
+{
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
@@ -273,27 +287,10 @@ UPDATE_STATUS M_UI::PostUpdate(float dt)
 		ImGui::RenderPlatformWindowsDefault();
 		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 	}
-	SDL_GL_SwapWindow(App->window->window);
-
-	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
 
-bool M_UI::CleanUp()
-{
-	bool ret = true;
-
-	//TODO: Void functions, no return, no check possible. FIX!
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
-
-
-	return ret;
-}
-
-
-void M_UI::CreateDockingWindow()
+void M_Editor::CreateDockingWindow()
 {
 
 	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;

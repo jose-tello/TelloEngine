@@ -88,7 +88,7 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="M_Camera3D.h" />
     <ClInclude Include="M_Console.h" />
-    <ClInclude Include="M_UI.h" />
+    <ClInclude Include="M_Editor.h" />
     <ClInclude Include="M_Renderer3D.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="M_Input.h" />
@@ -112,7 +112,7 @@
     <ClCompile Include="M_Camera3D.cpp" />
     <ClCompile Include="M_Console.cpp" />
     <ClCompile Include="M_Input.cpp" />
-    <ClCompile Include="M_UI.cpp" />
+    <ClCompile Include="M_Editor.cpp" />
     <ClCompile Include="M_Renderer3D.cpp" />
     <ClCompile Include="M_Window.cpp" />
     <ClCompile Include="Primitive.cpp" />

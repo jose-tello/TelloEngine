@@ -7,7 +7,7 @@
 class ModuleWindow;
 class ModuleInput;
 class ModuleRenderer3D;
-class M_UI;
+class M_Editor;
 class M_Console;
 class ModuleCamera3D;
 
@@ -19,7 +19,7 @@ public:
 	ModuleWindow* window;
 	ModuleInput* input;
 	ModuleRenderer3D* renderer3D;
-	M_UI* ui;
+	M_Editor* ui;
 	M_Console* console;
 	ModuleCamera3D* camera;
 	bool debug;

@@ -10,19 +10,22 @@
 #define MAX_RESOLUTION_WIDTH 1920
 #define MAX_RESOLUTION_HEIGHT 1080
 
-class M_UI : public Module
+class M_Editor : public Module
 {
 public:
-	M_UI(bool start_enabled = true);
-	~M_UI();
+	M_Editor(bool start_enabled = true);
+	~M_Editor();
 
 	bool Init();
 	UPDATE_STATUS Update(float dt);
 	UPDATE_STATUS PostUpdate(float dt);
 
-	void CreateDockingWindow();
-
 	bool CleanUp();
+
+	void Draw();
+
+private:
+	void CreateDockingWindow();
 
 public:
 

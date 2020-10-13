@@ -3,7 +3,7 @@
 #include "M_Window.h"
 #include "M_Input.h"
 #include "M_Renderer3D.h"
-#include "M_UI.h"
+#include "M_Editor.h"
 #include "M_Camera3D.h"
 #include "M_Console.h"
 
@@ -12,7 +12,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	window = new ModuleWindow();
 	input = new ModuleInput();
 	renderer3D = new ModuleRenderer3D();
-	ui = new M_UI();
+	ui = new M_Editor();
 	camera = new ModuleCamera3D();
 	console = new M_Console();
 
