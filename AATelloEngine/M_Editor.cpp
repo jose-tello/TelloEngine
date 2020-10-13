@@ -17,6 +17,8 @@
 
 
 M_Editor::M_Editor(bool start_enabled) : Module(start_enabled),
+	applicationWindowOpen(true),
+
 //Window
 	winFullScreen(false),
 	winFullScreenDesktop(false),
@@ -117,12 +119,94 @@ UPDATE_STATUS M_Editor::Update(float dt)
 
 	CreateDockingWindow();
 
-	ImGui::Begin("Test", nullptr, ImGuiWindowFlags_NoBackground);
+	ImGui::Begin("Scene");
+	ImGui::Image((ImTextureID) App->renderer3D->textureBuffer, ImVec2(1024, 768), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::End();
 
-	ImGui::Begin("Menu");                          // Create a window called "Hello, world!" and append into it.
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	if (applicationWindowOpen == true)
+	{
+		ImGui::Begin("Application", &applicationWindowOpen);
 
+		CreateBmHelp();
+		CreateChApplicationState();
+		CreateChInput();
+		CreateChWindow();
+		CreateChHardware();
+
+		ImGui::End();
+	}
+	
+	
+	
+	
+
+	return UPDATE_STATUS::UPDATE_CONTINUE;
+}
+
+
+UPDATE_STATUS M_Editor::PostUpdate(float dt)
+{
+
+	return UPDATE_STATUS::UPDATE_CONTINUE;
+}
+
+
+bool M_Editor::CleanUp()
+{
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
+	return true;
+}
+
+
+void M_Editor::Draw()
+{
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
+		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+	}
+}
+
+
+void M_Editor::CreateDockingWindow()
+{
+
+	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->GetWorkPos());
+	ImGui::SetNextWindowSize(viewport->GetWorkSize());
+	ImGui::SetNextWindowViewport(viewport->ID);
+	windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("DockSpace", nullptr, windowFlags);
+	ImGui::PopStyleVar();
+
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+	{
+		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
+	}
+
+	ImGui::End();
+}
+
+
+void M_Editor::CreateBmHelp()
+{
 	if (ImGui::BeginMenu("Help"))
 	{
 		if (ImGui::MenuItem("Documentation"))
@@ -136,7 +220,11 @@ UPDATE_STATUS M_Editor::Update(float dt)
 
 		ImGui::End();
 	}
+}
 
+
+void M_Editor::CreateChApplicationState()
+{
 	if (ImGui::CollapsingHeader("Application state"))
 	{
 		frameRateLog.push_back(ImGui::GetIO().Framerate);
@@ -145,7 +233,11 @@ UPDATE_STATUS M_Editor::Update(float dt)
 
 		ImGui::PlotHistogram("##framerate", &frameRateLog.front(), frameRateLog.size(), 0, "FrameRate", 0.0f, 100.0f, ImVec2(310, 100));
 	}
+}
 
+
+void M_Editor::CreateChInput()
+{
 	if (ImGui::CollapsingHeader("Input"))
 	{
 		ImGui::Text("Mouse position: "); ImGui::SameLine();
@@ -159,7 +251,7 @@ UPDATE_STATUS M_Editor::Update(float dt)
 		ImGui::NewLine();
 
 		App->input->ReportKeyState(inputsLog);
-		
+
 		if (inputsLog.size() > MAX_LOG_SIZE / 4)
 		{
 			int elementsToErase = inputsLog.size() - MAX_LOG_SIZE / 4;
@@ -179,7 +271,11 @@ UPDATE_STATUS M_Editor::Update(float dt)
 			}
 		}
 	}
+}
 
+
+void M_Editor::CreateChWindow()
+{
 	if (ImGui::CollapsingHeader("Window"))
 	{
 		ImGui::Checkbox("Full screen", &winFullScreen);
@@ -203,7 +299,11 @@ UPDATE_STATUS M_Editor::Update(float dt)
 		App->window->SetWindowBrightness(bright);
 		App->window->SetWindowMeasures(winWidth, winHeight);
 	}
+}
 
+
+void M_Editor::CreateChHardware()
+{
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
 		ImGui::Text("CPU cache used: "); ImGui::SameLine();
@@ -248,71 +348,4 @@ UPDATE_STATUS M_Editor::Update(float dt)
 		if (hasSSE42 == true)
 			ImGui::BulletText("SSE42");
 	}
-
-	ImGui::End();
-
-	return UPDATE_STATUS::UPDATE_CONTINUE;
-}
-
-
-UPDATE_STATUS M_Editor::PostUpdate(float dt)
-{
-	//Draw();
-	//SDL_GL_SwapWindow(App->window->window);
-
-	return UPDATE_STATUS::UPDATE_CONTINUE;
-}
-
-
-bool M_Editor::CleanUp()
-{
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
-
-	return true;
-}
-
-
-void M_Editor::Draw()
-{
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-	}
-}
-
-
-void M_Editor::CreateDockingWindow()
-{
-
-	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->GetWorkPos());
-	ImGui::SetNextWindowSize(viewport->GetWorkSize());
-	ImGui::SetNextWindowViewport(viewport->ID);
-	windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("DockSpace", nullptr, windowFlags);
-	ImGui::PopStyleVar();
-
-	ImGuiIO& io = ImGui::GetIO();
-	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-	{
-		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
-	}
-
-	ImGui::End();
 }

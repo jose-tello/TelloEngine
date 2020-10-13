@@ -26,8 +26,17 @@ public:
 
 private:
 	void CreateDockingWindow();
+	
+	void CreateBmHelp();
+	void CreateChApplicationState();
+	void CreateChInput();
+	void CreateChWindow();
+	void CreateChHardware();
 
-public:
+private:
+
+	//App window
+	bool applicationWindowOpen;
 
 	//App State
 	std::vector<float> frameRateLog;

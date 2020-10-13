@@ -23,13 +23,18 @@ public:
 
 	void OnResize(int width, int height);
 
+private:
+	void GenerateFrameBuffer();
+	void DrawSceneTexture();
+
 public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
 
-	uint vertexBuffer;
-	uint indexBuffer;
+	uint frameBuffer;
+	uint textureBuffer;
+	uint depthBuffer;
 
 	Cube* cube;
 	Sphere* sphere;

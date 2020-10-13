@@ -170,14 +170,8 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
-	cube->Draw();
-	sphere->Draw();
-	piramid->Draw();
-
-	Plane plane(0, 1, 0, 1);
-	plane.Draw();
-
 	
+
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -185,6 +179,7 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UPDATE_STATUS ModuleRenderer3D::PostUpdate(float dt)
 {
+	DrawSceneTexture();
 	App->ui->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -213,4 +208,52 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	GenerateFrameBuffer();
+}
+
+
+void ModuleRenderer3D::GenerateFrameBuffer()
+{
+	int width, height;
+	App->window->GetWindowMeasures(width, height);
+
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	glGenTextures(1, &textureBuffer);
+	glBindTexture(GL_TEXTURE_2D, textureBuffer);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenRenderbuffers(1, &depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureBuffer, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+}
+
+
+void ModuleRenderer3D::DrawSceneTexture()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	cube->Draw();
+	sphere->Draw();
+	piramid->Draw();
+
+	Plane plane(0, 1, 0, 1);
+	plane.Draw();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
