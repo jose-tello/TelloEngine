@@ -7,19 +7,19 @@
 
 #include "imgui/imgui_impl_sdl.h"
 
-ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
+M_Input::M_Input(bool start_enabled) : Module(start_enabled)
 {
 	memset(keyboard, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
-	memset(mouse_buttons, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * MAX_MOUSE_BUTTONS);
+	memset(mouseButtons, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * MAX_MOUSE_BUTTONS);
 }
 
 // Destructor
-ModuleInput::~ModuleInput()
+M_Input::~M_Input()
 {
 }
 
 // Called before render is available
-bool ModuleInput::Init()
+bool M_Input::Init()
 {
 	App->console->AddLog("Log: Init SDL input event system");
 	bool ret = true;
@@ -35,7 +35,7 @@ bool ModuleInput::Init()
 }
 
 // Called every draw update
-UPDATE_STATUS ModuleInput::PreUpdate(float dt)
+UPDATE_STATUS M_Input::PreUpdate(float dt)
 {
 	SDL_PumpEvents();
 
@@ -69,17 +69,17 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if(mouse_buttons[i] == KEY_STATE::KEY_IDLE)
-				mouse_buttons[i] = KEY_STATE::KEY_DOWN;
+			if(mouseButtons[i] == KEY_STATE::KEY_IDLE)
+				mouseButtons[i] = KEY_STATE::KEY_DOWN;
 			else
-				mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
+				mouseButtons[i] = KEY_STATE::KEY_REPEAT;
 		}
 		else
 		{
-			if(mouse_buttons[i] == KEY_STATE::KEY_REPEAT || mouse_buttons[i] == KEY_STATE::KEY_DOWN)
-				mouse_buttons[i] = KEY_STATE::KEY_UP;
+			if(mouseButtons[i] == KEY_STATE::KEY_REPEAT || mouseButtons[i] == KEY_STATE::KEY_DOWN)
+				mouseButtons[i] = KEY_STATE::KEY_UP;
 			else
-				mouse_buttons[i] = KEY_STATE::KEY_IDLE;
+				mouseButtons[i] = KEY_STATE::KEY_IDLE;
 		}
 	}
 
@@ -122,7 +122,7 @@ UPDATE_STATUS ModuleInput::PreUpdate(float dt)
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
-UPDATE_STATUS ModuleInput::Update(float dt)
+UPDATE_STATUS M_Input::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
 		App->debug = !App->debug;
@@ -134,7 +134,7 @@ UPDATE_STATUS ModuleInput::Update(float dt)
 }
 
 // Called before quitting
-bool ModuleInput::CleanUp()
+bool M_Input::CleanUp()
 {
 	App->console->AddLog("Log: Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
@@ -142,17 +142,17 @@ bool ModuleInput::CleanUp()
 }
 
 
-KEY_STATE ModuleInput::GetKey(int id) const
+KEY_STATE M_Input::GetKey(int id) const
 {
 	return keyboard[id];
 }
 
-KEY_STATE ModuleInput::GetMouseButton(int id) const
+KEY_STATE M_Input::GetMouseButton(int id) const
 {
-	return mouse_buttons[id];
+	return mouseButtons[id];
 }
 
-void ModuleInput::ReportKeyState(std::vector<std::string>& inputsLog) const
+void M_Input::ReportKeyState(std::vector<std::string>& inputsLog) const
 {
 	char keyText[20];
 
@@ -173,13 +173,13 @@ void ModuleInput::ReportKeyState(std::vector<std::string>& inputsLog) const
 
 	for (int i = 0; i < MAX_MOUSE_BUTTONS; i++)
 	{
-		if (mouse_buttons[i] == KEY_STATE::KEY_DOWN)
+		if (mouseButtons[i] == KEY_STATE::KEY_DOWN)
 		{
 			sprintf(keyText, "%i MOUSE BUTTON_DOWN", i);
 			inputsLog.push_back(keyText);
 		}
 
-		if (mouse_buttons[i] == KEY_STATE::KEY_UP)
+		if (mouseButtons[i] == KEY_STATE::KEY_UP)
 		{
 			sprintf(keyText, "%i MOUSE BUTTON_UP", i);
 			inputsLog.push_back(keyText);
@@ -187,27 +187,27 @@ void ModuleInput::ReportKeyState(std::vector<std::string>& inputsLog) const
 	}
 }
 
-int ModuleInput::GetMouseX() const
+int M_Input::GetMouseX() const
 {
 	return mouse_x;
 }
 
-int ModuleInput::GetMouseY() const
+int M_Input::GetMouseY() const
 {
 	return mouse_y;
 }
 
-int ModuleInput::GetMouseZ() const
+int M_Input::GetMouseZ() const
 {
 	return mouse_z;
 }
 
-int ModuleInput::GetMouseXMotion() const
+int M_Input::GetMouseXMotion() const
 {
 	return mouse_x_motion;
 }
 
-int ModuleInput::GetMouseYMotion() const
+int M_Input::GetMouseYMotion() const
 {
 	return mouse_y_motion;
 }

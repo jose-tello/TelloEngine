@@ -5,7 +5,7 @@
 #include "Module.h"
 
 class ModuleWindow;
-class ModuleInput;
+class M_Input;
 class ModuleRenderer3D;
 class M_Editor;
 class M_Console;
@@ -17,7 +17,7 @@ class Application
 {
 public:
 	ModuleWindow* window;
-	ModuleInput* input;
+	M_Input* input;
 	ModuleRenderer3D* renderer3D;
 	M_Editor* ui;
 	M_Console* console;

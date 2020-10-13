@@ -14,17 +14,17 @@ enum class KEY_STATE : int
 	KEY_UP
 };
 
-class ModuleInput : public Module
+class M_Input : public Module
 {
 public:
 	
-	ModuleInput(bool start_enabled = true);
-	~ModuleInput();
+	M_Input(bool start_enabled = true);
+	~M_Input();
 
-	bool Init();
+	bool Init() override;
 	UPDATE_STATUS PreUpdate(float dt) override;
 	UPDATE_STATUS Update(float dt) override;
-	bool CleanUp();
+	bool CleanUp() override;
 
 	KEY_STATE GetKey(int id) const;
 	KEY_STATE GetMouseButton(int id) const;
@@ -39,7 +39,8 @@ public:
 
 private:
 	KEY_STATE keyboard[MAX_KEYS];
-	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
+	KEY_STATE mouseButtons[MAX_MOUSE_BUTTONS];
+
 	int mouse_x;
 	int mouse_y;
 	int mouse_z;

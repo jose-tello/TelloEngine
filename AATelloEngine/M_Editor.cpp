@@ -17,6 +17,8 @@
 
 
 M_Editor::M_Editor(bool start_enabled) : Module(start_enabled),
+	sceneWindowWidth(0),
+	sceneWindowHeight(0),
 	applicationWindowOpen(true),
 
 //Window
@@ -57,22 +59,16 @@ bool M_Editor::Init()
 {
 	bool ret = true;
 
-
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-	//io.ConfigFlags |= ImGuiBackendFlags_RendererHasViewports;
-																//io.ConfigViewportsNoAutoMerge = true;
-	//io.ConfigViewportsNoTaskBarIcon = true;
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -111,7 +107,6 @@ bool M_Editor::Init()
 
 UPDATE_STATUS M_Editor::Update(float dt)
 {
-
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -119,9 +114,7 @@ UPDATE_STATUS M_Editor::Update(float dt)
 
 	CreateDockingWindow();
 
-	ImGui::Begin("Scene");
-	ImGui::Image((ImTextureID) App->renderer3D->textureBuffer, ImVec2(1024, 768), ImVec2(0, 1), ImVec2(1, 0));
-	ImGui::End();
+	CreateSceneWindow();
 
 	if (applicationWindowOpen == true)
 	{
@@ -136,10 +129,6 @@ UPDATE_STATUS M_Editor::Update(float dt)
 		ImGui::End();
 	}
 	
-	
-	
-	
-
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
@@ -188,7 +177,7 @@ void M_Editor::CreateDockingWindow()
 	ImGui::SetNextWindowSize(viewport->GetWorkSize());
 	ImGui::SetNextWindowViewport(viewport->ID);
 	windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
+	windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("DockSpace", nullptr, windowFlags);
@@ -201,6 +190,25 @@ void M_Editor::CreateDockingWindow()
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
 	}
 
+	ImGui::End();
+}
+
+
+void M_Editor::CreateSceneWindow()
+{
+	//ImVec2 size = ImGui::GetWindowSize();
+	ImGui::Begin("Scene");
+	ImVec2 size = ImGui::GetWindowSize();
+
+	if (size.x != sceneWindowWidth || size.y != sceneWindowHeight)
+	{
+		sceneWindowWidth = size.x;
+		sceneWindowHeight = size.y;
+
+		App->renderer3D->OnResize(sceneWindowWidth, sceneWindowHeight);
+	}
+
+	ImGui::Image((ImTextureID)App->renderer3D->textureBuffer, ImVec2(sceneWindowWidth, sceneWindowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::End();
 }
 

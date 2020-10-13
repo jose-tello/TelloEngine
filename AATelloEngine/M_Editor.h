@@ -26,6 +26,8 @@ public:
 
 private:
 	void CreateDockingWindow();
+
+	void CreateSceneWindow();
 	
 	void CreateBmHelp();
 	void CreateChApplicationState();
@@ -34,6 +36,9 @@ private:
 	void CreateChHardware();
 
 private:
+	int sceneWindowWidth;
+	int sceneWindowHeight;
+
 
 	//App window
 	bool applicationWindowOpen;

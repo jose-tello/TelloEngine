@@ -10,7 +10,7 @@
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
 	window = new ModuleWindow();
-	input = new ModuleInput();
+	input = new M_Input();
 	renderer3D = new ModuleRenderer3D();
 	ui = new M_Editor();
 	camera = new ModuleCamera3D();

@@ -197,7 +197,7 @@ Sphere::Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& pos
 	glGenBuffers(1, (GLuint*)&(normalsId));
 	glBindBuffer(GL_NORMAL_ARRAY, normalsId);
 	glBufferData(GL_NORMAL_ARRAY, nSize, normals.data(), GL_STATIC_DRAW);
-
+	
 
 	glGenBuffers(1, (GLuint*)&(indexId));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
