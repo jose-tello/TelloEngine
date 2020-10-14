@@ -22,7 +22,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(camera);
 	
 	// Renderer last!
-	AddModule(console);
+	//AddModule(console);
 	
 	AddModule(renderer3D);
 	AddModule(ui);

@@ -76,6 +76,10 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="E_AppState.h" />
+    <ClInclude Include="E_Console.h" />
+    <ClInclude Include="E_Scene.h" />
+    <ClInclude Include="E_Window.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="imgui\imconfig.h" />
@@ -100,6 +104,10 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="E_AppState.cpp" />
+    <ClCompile Include="E_Console.cpp" />
+    <ClCompile Include="E_Scene.cpp" />
+    <ClCompile Include="E_Window.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />

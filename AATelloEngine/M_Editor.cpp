@@ -15,43 +15,36 @@
 #include "M_Input.h"
 #include "M_Console.h"
 
+#include "E_AppState.h"
+#include "E_Console.h"
+#include "E_Scene.h"
 
-M_Editor::M_Editor(bool start_enabled) : Module(start_enabled),
-	sceneWindowWidth(0),
-	sceneWindowHeight(0),
-	applicationWindowOpen(true),
 
-//Window
-	winFullScreen(false),
-	winFullScreenDesktop(false),
-	winResizable(false),
-	winBorderless(true),
-	
-	brightness(100),
-	winWidth(0),
-	winHeight(0),
-
-//Cpu
-	cpuCores(0),
-	maxRamMemory(0),
-
-	has3DNow(false),
-	hasAVX(false),
-	hasAVX2(false),
-	hasAltiVec(false),
-	hasMMX(false),
-	hasRDTSC(false),
-	hasSSE(false),
-	hasSSE2(false),
-	hasSSE3(false),
-	hasSSE41(false),
-	hasSSE42(false)
+M_Editor::M_Editor(bool start_enabled) : Module(start_enabled)
 {
+	E_Window* win;
+	win = new E_AppState(true);
+	windowsVec.push_back(win);
+
+	win = new E_Console(true);
+	windowsVec.push_back(win);
+
+	win = new E_Scene(true);
+	windowsVec.push_back(win);
 }
 
 
 M_Editor::~M_Editor()
 {
+	int size = windowsVec.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		delete windowsVec[i];
+		windowsVec[i] = nullptr;
+	}
+
+	windowsVec.clear();
 }
 
 
@@ -80,62 +73,34 @@ bool M_Editor::Init()
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
-	ImGui_ImplOpenGL3_Init("#version 130"); //TODO: this is hardcoded. Deal with it.
+	ImGui_ImplOpenGL3_Init("#version 130");
 
 	App->console->AddLog("Log: ImGui initialized correctlly");
 
-	App->window->GetWindowMeasures(winWidth, winHeight);
-
-	cpuCores = SDL_GetCPUCount();
-	maxRamMemory = SDL_GetSystemRAM();
-
-	has3DNow = SDL_Has3DNow();
-	hasAVX = SDL_HasAVX();
-	hasAVX2 = SDL_HasAVX2();
-	hasAltiVec = SDL_HasAltiVec();
-	hasMMX = SDL_HasMMX();
-	hasRDTSC = SDL_HasRDTSC();
-	hasSSE = SDL_HasSSE();
-	hasSSE2 = SDL_HasSSE2();
-	hasSSE3 = SDL_HasSSE3();
-	hasSSE41 = SDL_HasSSE41();
-	hasSSE42 = SDL_HasSSE42();
 
 	return ret;
+}
+
+
+bool M_Editor::Start()
+{
+	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
+		windowsVec[i]->Start();
+
+	return true;
 }
 
 
 UPDATE_STATUS M_Editor::Update(float dt)
 {
 	// Start the Dear ImGui frame
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();
-
-	CreateDockingWindow();
-
-	CreateSceneWindow();
-
-	if (applicationWindowOpen == true)
-	{
-		ImGui::Begin("Application", &applicationWindowOpen);
-
-		CreateBmHelp();
-		CreateChApplicationState();
-		CreateChInput();
-		CreateChWindow();
-		CreateChHardware();
-
-		ImGui::End();
-	}
 	
-	return UPDATE_STATUS::UPDATE_CONTINUE;
-}
 
+	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
+		windowsVec[i]->Update();
+	
 
-UPDATE_STATUS M_Editor::PostUpdate(float dt)
-{
-
+	
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
@@ -152,6 +117,15 @@ bool M_Editor::CleanUp()
 
 void M_Editor::Draw()
 {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
+
+	CreateDockingWindow();
+
+	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
+		windowsVec[i]->Draw();
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -191,169 +165,4 @@ void M_Editor::CreateDockingWindow()
 	}
 
 	ImGui::End();
-}
-
-
-void M_Editor::CreateSceneWindow()
-{
-	//ImVec2 size = ImGui::GetWindowSize();
-	ImGui::Begin("Scene");
-	ImVec2 size = ImGui::GetWindowSize();
-
-	if (size.x != sceneWindowWidth || size.y != sceneWindowHeight)
-	{
-		sceneWindowWidth = size.x;
-		sceneWindowHeight = size.y;
-
-		App->renderer3D->OnResize(sceneWindowWidth, sceneWindowHeight);
-	}
-
-	ImGui::Image((ImTextureID)App->renderer3D->textureBuffer, ImVec2(sceneWindowWidth, sceneWindowHeight), ImVec2(0, 1), ImVec2(1, 0));
-	ImGui::End();
-}
-
-
-void M_Editor::CreateBmHelp()
-{
-	if (ImGui::BeginMenu("Help"))
-	{
-		if (ImGui::MenuItem("Documentation"))
-			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/wiki", NULL, NULL, SW_SHOWNORMAL);
-
-		if (ImGui::MenuItem("Download latest version"))
-			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/releases", NULL, NULL, SW_SHOWNORMAL);
-
-		if (ImGui::MenuItem("Report a bug"))
-			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/issues", NULL, NULL, SW_SHOWNORMAL);
-
-		ImGui::End();
-	}
-}
-
-
-void M_Editor::CreateChApplicationState()
-{
-	if (ImGui::CollapsingHeader("Application state"))
-	{
-		frameRateLog.push_back(ImGui::GetIO().Framerate);
-		if (frameRateLog.size() > MAX_LOG_SIZE)
-			frameRateLog.erase(frameRateLog.begin());
-
-		ImGui::PlotHistogram("##framerate", &frameRateLog.front(), frameRateLog.size(), 0, "FrameRate", 0.0f, 100.0f, ImVec2(310, 100));
-	}
-}
-
-
-void M_Editor::CreateChInput()
-{
-	if (ImGui::CollapsingHeader("Input"))
-	{
-		ImGui::Text("Mouse position: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i x,	%i y", App->input->GetMouseX(), App->input->GetMouseY());
-
-		ImGui::Text("Mouse motion: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i x,	%i y", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-
-		ImGui::Separator();
-		ImGui::Text("Key and mouse inputs: \n");
-		ImGui::NewLine();
-
-		App->input->ReportKeyState(inputsLog);
-
-		if (inputsLog.size() > MAX_LOG_SIZE / 4)
-		{
-			int elementsToErase = inputsLog.size() - MAX_LOG_SIZE / 4;
-			for (int i = 0; i < elementsToErase; i++)
-			{
-				inputsLog.erase(inputsLog.begin());
-			}
-		}
-
-		if (inputsLog.empty() == false)
-		{
-			int logSize = inputsLog.size();
-
-			for (int i = 0; i < logSize; i++)
-			{
-				ImGui::Text(inputsLog[i].c_str());
-			}
-		}
-	}
-}
-
-
-void M_Editor::CreateChWindow()
-{
-	if (ImGui::CollapsingHeader("Window"))
-	{
-		ImGui::Checkbox("Full screen", &winFullScreen);
-		ImGui::SameLine();
-		ImGui::Checkbox("Full screen desktop", &winFullScreenDesktop);
-		ImGui::Checkbox("Resizable", &winResizable);
-		ImGui::SameLine();
-		ImGui::Checkbox("Borderless", &winBorderless);
-
-
-		ImGui::SliderInt("Brightness", &brightness, 1, 100);
-		ImGui::SliderInt("Width", &winWidth, 1, MAX_RESOLUTION_WIDTH);
-		ImGui::SliderInt("Height", &winHeight, 1, MAX_RESOLUTION_HEIGHT);
-
-		App->window->SetWindowFullScreen(winFullScreen);
-		App->window->SetWindowFullScreenDesktop(winFullScreenDesktop);
-		App->window->SetWindowResizable(winResizable);
-		App->window->SetWindowBorderless(winBorderless);
-
-		float bright = brightness * 0.01;
-		App->window->SetWindowBrightness(bright);
-		App->window->SetWindowMeasures(winWidth, winHeight);
-	}
-}
-
-
-void M_Editor::CreateChHardware()
-{
-	if (ImGui::CollapsingHeader("Hardware"))
-	{
-		ImGui::Text("CPU cache used: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i MB", SDL_GetCPUCacheLineSize());
-		//ImGui::SameLine();
-		//ImGui::TextColored(ImVec4(249, 215, 28, 1) 
-		ImGui::Text("CPU cores: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", cpuCores);
-
-		ImGui::Text("Caps: ");
-
-		if (has3DNow == true)
-			ImGui::BulletText("3DNow");
-
-		if (hasAVX == true)
-			ImGui::BulletText("AVX");
-
-		if (hasAVX2 == true)
-			ImGui::BulletText("AVX2");
-
-		if (hasAltiVec == true)
-			ImGui::BulletText("AltiVec");
-
-		if (hasMMX == true)
-			ImGui::BulletText("MMX");
-
-		if (hasRDTSC == true)
-			ImGui::BulletText("RDTSC");
-
-		if (hasSSE == true)
-			ImGui::BulletText("SSE");
-
-		if (hasSSE2 == true)
-			ImGui::BulletText("SSE2");
-
-		if (hasSSE3 == true)
-			ImGui::BulletText("SSE3");
-
-		if (hasSSE41 == true)
-			ImGui::BulletText("SSE41");
-
-		if (hasSSE42 == true)
-			ImGui::BulletText("SSE42");
-	}
 }

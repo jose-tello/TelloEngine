@@ -4,11 +4,12 @@
 #include "glmath.h"
 
 #include <vector>
-#include <string>
 
 #define MAX_LOG_SIZE 80
 #define MAX_RESOLUTION_WIDTH 1920
 #define MAX_RESOLUTION_HEIGHT 1080
+
+class E_Window;
 
 class M_Editor : public Module
 {
@@ -17,8 +18,9 @@ public:
 	~M_Editor();
 
 	bool Init();
+	bool Start();
+	
 	UPDATE_STATUS Update(float dt);
-	UPDATE_STATUS PostUpdate(float dt);
 
 	bool CleanUp();
 
@@ -27,51 +29,6 @@ public:
 private:
 	void CreateDockingWindow();
 
-	void CreateSceneWindow();
-	
-	void CreateBmHelp();
-	void CreateChApplicationState();
-	void CreateChInput();
-	void CreateChWindow();
-	void CreateChHardware();
-
 private:
-	int sceneWindowWidth;
-	int sceneWindowHeight;
-
-
-	//App window
-	bool applicationWindowOpen;
-
-	//App State
-	std::vector<float> frameRateLog;
-	
-	//Window
-	bool winFullScreen;
-	bool winFullScreenDesktop;
-	bool winResizable;
-	bool winBorderless;
-	int  brightness;
-
-	int winWidth;
-	int winHeight;
-
-	//Hardware
-	int cpuCores;
-
-	int maxRamMemory;
-	bool has3DNow;
-	bool hasAVX;
-	bool hasAVX2;
-	bool hasAltiVec;
-	bool hasMMX;
-	bool hasRDTSC;
-	bool hasSSE;
-	bool hasSSE2;
-	bool hasSSE3;
-	bool hasSSE41;
-	bool hasSSE42;
-
-	//Inputs
-	std::vector<std::string> inputsLog;
+	std::vector<E_Window*> windowsVec;
 }; 
