@@ -6,6 +6,11 @@ E_Console::E_Console(bool open) :
 	autoScroll(true),
 	scrollToBottom(false)
 {
+	memset(inputBuffer, 0, sizeof(inputBuffer));
+
+	commands.push_back("help");
+	commands.push_back("clear");
+	commands.push_back("classify");
 }
 
 E_Console::~E_Console()
@@ -108,15 +113,9 @@ bool E_Console::Draw()
 }
 
 
-void E_Console::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+void E_Console::AddLog(char* log)
 {
-	char buf[1024];
-	va_list args;
-	va_start(args, fmt);
-	vsnprintf(buf, IM_ARRAYSIZE(buf), fmt, args);
-	buf[IM_ARRAYSIZE(buf) - 1] = 0;
-	va_end(args);
-	items.push_back(strdup(buf));
+	items.push_back(strdup(log));
 }
 
 
@@ -127,9 +126,23 @@ void E_Console::ClearLog()
 	items.clear();
 }
 
+
+void E_Console::AddCommandLog(const char* fmt, ...) IM_FMTARGS(2)
+{
+	char buf[1024];
+	va_list args;
+	va_start(args, fmt);
+	vsnprintf(buf, IM_ARRAYSIZE(buf), fmt, args);
+	buf[IM_ARRAYSIZE(buf) - 1] = 0;
+	va_end(args);
+
+	AddLog(buf);
+}
+
+
 void E_Console::ExecuteCommand(const char* command)
 {
-	AddLog("# %s\n", command);;
+	AddCommandLog("# %s\n", command);
 
 	if (stricmp(command, "clear") == 0)
 	{
@@ -139,11 +152,11 @@ void E_Console::ExecuteCommand(const char* command)
 	{
 		AddLog("Commands:");
 		for (int i = 0; i < commands.size(); i++)
-			AddLog("- %s", commands[i]);
+			AddCommandLog("- %s", commands[i]);
 	}
 	else
 	{
-		AddLog("Unknown command: '%s'\n", command);
+		AddCommandLog("Unknown command: '%s'\n", command);
 	}
 
 	// On command input, we scroll to bottom even if AutoScroll==false
@@ -193,7 +206,7 @@ int E_Console::TextEditCallback(ImGuiInputTextCallbackData* data)
 		if (candidates.Size == 0)
 		{
 			// No match
-			AddLog("No match for \"%.*s\"!\n", (int)(word_end - word_start), word_start);
+			AddCommandLog("No match for \"%.*s\"!\n", (int)(word_end - word_start), word_start);
 		}
 		else if (candidates.Size == 1)
 		{
@@ -230,7 +243,7 @@ int E_Console::TextEditCallback(ImGuiInputTextCallbackData* data)
 			// List matches
 			AddLog("Possible matches:\n");
 			for (int i = 0; i < candidates.Size; i++)
-				AddLog("- %s\n", candidates[i]);
+				AddCommandLog("- %s\n", candidates[i]);
 		}
 
 		break;

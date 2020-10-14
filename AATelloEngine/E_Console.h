@@ -5,7 +5,11 @@
 
 #include "imgui/imgui.h"
 
+#include <string>
+
 #define INPUT_BUFFER_SIZE 256
+
+
 class E_Console : public E_Window
 {
 public:
@@ -14,9 +18,10 @@ public:
 
 	bool Draw() override;
 
-	void AddLog(const char* fmt, ...) IM_FMTARGS(2);
+	void AddLog(char* log);
 
 private:
+	void AddCommandLog(const char* fmt, ...) IM_FMTARGS(2);
 	void ClearLog();
 
 	void ExecuteCommand(const char* command);

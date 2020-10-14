@@ -1,9 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
-#include "M_Input.h"
 
+#include "M_Input.h"
 #include "M_Renderer3D.h"
-#include "M_Console.h"
+#include "M_Editor.h"
 
 #include "imgui/imgui_impl_sdl.h"
 
@@ -21,13 +21,13 @@ M_Input::~M_Input()
 // Called before render is available
 bool M_Input::Init()
 {
-	App->console->AddLog("Log: Init SDL input event system");
+	App->editor->AddLog("Log: Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
 
 	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
-		App->console->AddLog("ERROR: SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
+		App->editor->AddLog("ERROR: SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
@@ -136,7 +136,7 @@ UPDATE_STATUS M_Input::Update(float dt)
 // Called before quitting
 bool M_Input::CleanUp()
 {
-	App->console->AddLog("Log: Quitting SDL input event subsystem");
+	App->editor->AddLog("Log: Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }

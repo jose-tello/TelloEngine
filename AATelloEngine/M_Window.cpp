@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "M_Window.h"
-#include "M_Console.h"
+#include "M_Editor.h"
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled),
 	window(nullptr),
@@ -20,12 +20,12 @@ ModuleWindow::~ModuleWindow()
 // Called before render is available
 bool ModuleWindow::Init()
 {
-	App->console->AddLog("Log: Init SDL window & surface");
+	App->editor->AddLog("Log: Init SDL window & surface");
 	bool ret = true;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		App->console->AddLog("ERROR: SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		App->editor->AddLog("ERROR: SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	else
@@ -63,7 +63,7 @@ bool ModuleWindow::Init()
 
 		if (window == NULL)
 		{
-			App->console->AddLog("ERROR: Window could not be created! SDL_Error: %s\n", SDL_GetError());
+			App->editor->AddLog("ERROR: Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
 		}
 		else
@@ -79,7 +79,7 @@ bool ModuleWindow::Init()
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {
-	App->console->AddLog("Log: Destroying SDL window and quitting all SDL systems");
+	App->editor->AddLog("Log: Destroying SDL window and quitting all SDL systems");
 
 	//Destroy window
 	if (window != NULL)

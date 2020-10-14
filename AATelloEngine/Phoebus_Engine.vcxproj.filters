@@ -16,7 +16,7 @@
     <Filter Include="Sources\Tools\imgui">
       <UniqueIdentifier>{1603c5e7-f98d-473c-a885-9403ec26f73d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Containers\EditorWindows">
+    <Filter Include="Sources\EditorWindows">
       <UniqueIdentifier>{8229c63d-da0d-4e0e-a5f4-06b0be1cd0ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -78,9 +78,6 @@
     <ClInclude Include="Primitive.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="M_Console.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="PrimitiveVertex.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
@@ -88,16 +85,16 @@
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="E_Window.h">
-      <Filter>Sources\Containers\EditorWindows</Filter>
+      <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="E_Console.h">
-      <Filter>Sources\Containers\EditorWindows</Filter>
+      <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="E_Scene.h">
-      <Filter>Sources\Containers\EditorWindows</Filter>
+      <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="E_AppState.h">
-      <Filter>Sources\Containers\EditorWindows</Filter>
+      <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,23 +149,20 @@
     <ClCompile Include="Primitive.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="M_Console.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="M_Editor.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="E_Window.cpp">
-      <Filter>Sources\Containers\EditorWindows</Filter>
+      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="E_Console.cpp">
-      <Filter>Sources\Containers\EditorWindows</Filter>
+      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="E_Scene.cpp">
-      <Filter>Sources\Containers\EditorWindows</Filter>
+      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="E_AppState.cpp">
-      <Filter>Sources\Containers\EditorWindows</Filter>
+      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

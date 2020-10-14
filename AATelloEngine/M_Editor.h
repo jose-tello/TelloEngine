@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "glmath.h"
 
+#include "imgui/imgui.h"
 #include <vector>
 
 #define MAX_LOG_SIZE 80
@@ -21,10 +22,11 @@ public:
 	bool Start();
 	
 	UPDATE_STATUS Update(float dt);
+	void Draw();
 
 	bool CleanUp();
-
-	void Draw();
+	
+	void AddLog(const char* fmt, ...) IM_FMTARGS(2);
 
 private:
 	void CreateDockingWindow();

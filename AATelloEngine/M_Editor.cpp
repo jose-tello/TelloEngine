@@ -13,7 +13,6 @@
 #include "M_Window.h"
 #include "M_Renderer3D.h"
 #include "M_Input.h"
-#include "M_Console.h"
 
 #include "E_AppState.h"
 #include "E_Console.h"
@@ -75,7 +74,7 @@ bool M_Editor::Init()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init("#version 130");
 
-	App->console->AddLog("Log: ImGui initialized correctlly");
+	App->editor->AddLog("Log: ImGui initialized correctlly");
 
 
 	return ret;
@@ -94,12 +93,9 @@ bool M_Editor::Start()
 UPDATE_STATUS M_Editor::Update(float dt)
 {
 	// Start the Dear ImGui frame
-	
 
 	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
 		windowsVec[i]->Update();
-	
-
 	
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -140,9 +136,22 @@ void M_Editor::Draw()
 }
 
 
+void M_Editor::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+{
+	char buf[1024];
+	va_list args;
+	va_start(args, fmt);
+	vsnprintf(buf, IM_ARRAYSIZE(buf), fmt, args);
+	buf[IM_ARRAYSIZE(buf) - 1] = 0;
+	va_end(args);
+	
+	E_Console* console = (E_Console*)windowsVec[(int)E_WINDOW_TYPE::CONSOLE];
+	console->AddLog(buf);
+}
+
+
 void M_Editor::CreateDockingWindow()
 {
-
 	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 

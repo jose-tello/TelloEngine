@@ -5,16 +5,14 @@
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Camera3D.h"
-#include "M_Console.h"
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
 	window = new ModuleWindow();
 	input = new M_Input();
 	renderer3D = new ModuleRenderer3D();
-	ui = new M_Editor();
+	editor = new M_Editor();
 	camera = new ModuleCamera3D();
-	console = new M_Console();
 
 	// Main Modules
 	AddModule(window);
@@ -22,10 +20,9 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(camera);
 	
 	// Renderer last!
-	//AddModule(console);
 	
 	AddModule(renderer3D);
-	AddModule(ui);
+	AddModule(editor);
 }
 
 Application::~Application()
@@ -43,7 +40,7 @@ bool Application::Init()
 
 	App = this;
 
-	console->AddLog("Application Init --------------");
+	editor->AddLog("Application Init --------------");
 
 	// Call Init() in all modules
 	int numModules = modulesVec.size();
@@ -54,7 +51,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	console->AddLog("Application Start --------------");
+	editor->AddLog("Application Start --------------");
 
 	for (int i = 0; i < numModules && ret == true; i++)
 	{
@@ -107,7 +104,7 @@ UPDATE_STATUS Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	console->AddLog("Application clean up --------------");
+	editor->AddLog("Application clean up --------------");
 
 	for (int i = modulesVec.size() - 1; i >= 0 && ret == true; i--)
 	{

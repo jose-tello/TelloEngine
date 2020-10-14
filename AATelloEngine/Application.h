@@ -19,8 +19,7 @@ public:
 	ModuleWindow* window;
 	M_Input* input;
 	ModuleRenderer3D* renderer3D;
-	M_Editor* ui;
-	M_Console* console;
+	M_Editor* editor;
 	ModuleCamera3D* camera;
 	bool debug;
 	bool renderPrimitives;
