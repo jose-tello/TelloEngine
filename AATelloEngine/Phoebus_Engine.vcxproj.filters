@@ -96,6 +96,9 @@
     <ClInclude Include="E_AppState.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="E_DockWindow.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -162,6 +165,9 @@
       <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="E_AppState.cpp">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="E_DockWindow.cpp">
       <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>

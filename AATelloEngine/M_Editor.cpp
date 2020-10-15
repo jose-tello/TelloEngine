@@ -14,6 +14,7 @@
 #include "M_Renderer3D.h"
 #include "M_Input.h"
 
+#include "E_DockWindow.h"
 #include "E_AppState.h"
 #include "E_Console.h"
 #include "E_Scene.h"
@@ -22,6 +23,10 @@
 M_Editor::M_Editor(bool start_enabled) : Module(start_enabled)
 {
 	E_Window* win;
+
+	win = new E_DockWindow(true);
+	windowsVec.push_back(win);
+
 	win = new E_AppState(true);
 	windowsVec.push_back(win);
 
@@ -120,7 +125,12 @@ void M_Editor::Draw()
 	CreateDockingWindow();
 
 	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
+	{
+		if (windowsVec[i]->open == false)
+			continue;
+
 		windowsVec[i]->Draw();
+	}
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -150,28 +160,13 @@ void M_Editor::AddLog(const char* fmt, ...) IM_FMTARGS(2)
 }
 
 
+void M_Editor::OpenWindow(E_WINDOW_TYPE type)
+{
+	windowsVec[(int)type]->open = true;
+}
+
+
 void M_Editor::CreateDockingWindow()
 {
-	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->GetWorkPos());
-	ImGui::SetNextWindowSize(viewport->GetWorkSize());
-	ImGui::SetNextWindowViewport(viewport->ID);
-	windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("DockSpace", nullptr, windowFlags);
-	ImGui::PopStyleVar();
-
-	ImGuiIO& io = ImGui::GetIO();
-	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-	{
-		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
-	}
-
-	ImGui::End();
+	
 }

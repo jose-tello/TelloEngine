@@ -17,7 +17,7 @@ E_Console::~E_Console()
 {
 	ClearLog();
 
-	items.clear();
+	items.clear();	//TODO: Check that this bad boys are cleaning up correctlly
 	commands.clear();
 }
 

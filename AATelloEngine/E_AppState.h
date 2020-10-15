@@ -19,11 +19,14 @@ public:
 
 
 private:
-	void CreateBmHelp();
-	void CreateChApplicationState();
-	void CreateChInput();
-	void CreateChWindow();
-	void CreateChHardware();
+	void UpdateChApplicationState();
+	void UpdateChInput();
+
+	void DrawBmHelp();
+	void DrawChApplicationState();
+	void DrawChInput();
+	void DrawChWindow();
+	void DrawChHardware();
 
 private:
 

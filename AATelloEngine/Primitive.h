@@ -10,7 +10,7 @@ public:
 			  float green = 0.f, float blue = 1.f, float alpha = 1.f);
 	Primitive(vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
 
-	~Primitive();
+	virtual ~Primitive();
 
 	void SetPosition(vec3& );
 	void SetRotation(float angle, vec3& );
@@ -48,6 +48,8 @@ class Sphere : public Primitive
 {
 public:
 	Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
+	~Sphere();
+
 	void Draw() const;
 
 private:
@@ -60,6 +62,7 @@ class Plane : public Primitive
 {
 public:
 	Plane(float x, float y, float z, float d);
+	~Plane();
 	void Draw();
 
 public:

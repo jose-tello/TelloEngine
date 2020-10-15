@@ -4,6 +4,7 @@
 enum class E_WINDOW_TYPE : int
 {
 	WIN_ERROR = -1,
+	DOCKING_WINDOW,
 	APPLICATION_STATE,
 	CONSOLE,
 	SCENE,
@@ -14,7 +15,7 @@ class E_Window
 {
 public:
 	E_Window(bool open = true);
-	~E_Window();
+	virtual ~E_Window();
 
 	virtual bool Start();
 	virtual bool Update();

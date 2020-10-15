@@ -20,7 +20,16 @@
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
-ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), context()
+ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), 
+	context(),
+	
+	frameBuffer(0),
+	textureBuffer(0),
+	depthBuffer(0),
+
+	cube(nullptr),
+	piramid(nullptr),
+	sphere(nullptr)
 {
 }
 
@@ -155,6 +164,22 @@ bool ModuleRenderer3D::CleanUp()
 	App->editor->AddLog("Log: Destroying 3D Renderer");
 
 	SDL_GL_DeleteContext(context);
+
+	glDeleteFramebuffers(1, &frameBuffer);
+	frameBuffer = 0;
+	glDeleteFramebuffers(1, &textureBuffer);
+	textureBuffer = 0;
+	glDeleteFramebuffers(1, &depthBuffer);
+	depthBuffer = 0;
+
+	//TODO: Someday i will have to quit the primitives here, but now they are fine
+	delete cube;
+	delete piramid;
+	delete sphere;
+
+	cube = nullptr;
+	piramid = nullptr;
+	sphere = nullptr;
 
 	return true;
 }

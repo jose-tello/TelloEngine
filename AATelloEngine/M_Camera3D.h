@@ -25,10 +25,10 @@ private:
 
 public:
 	
-	vec3 X, Y, Z, Position, Reference;
+	vec3 X, Y, Z, position, reference;
 
 private:
-	mat4x4 ViewMatrix, ViewMatrixInverse;
+	mat4x4 viewMatrix, viewMatrixInverse;
 
 
 };

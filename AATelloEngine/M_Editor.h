@@ -11,7 +11,7 @@
 #define MAX_RESOLUTION_HEIGHT 1080
 
 class E_Window;
-
+enum class E_WINDOW_TYPE;
 class M_Editor : public Module
 {
 public:
@@ -27,6 +27,7 @@ public:
 	bool CleanUp();
 	
 	void AddLog(const char* fmt, ...) IM_FMTARGS(2);
+	void OpenWindow(E_WINDOW_TYPE type);
 
 private:
 	void CreateDockingWindow();

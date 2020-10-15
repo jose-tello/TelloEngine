@@ -35,7 +35,7 @@ bool ModuleWindow::Init()
 		int height = SCREEN_HEIGHT * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
-		//Use OpenGL 2.1
+		//Use OpenGL 3.0
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
@@ -90,20 +90,6 @@ bool ModuleWindow::CleanUp()
 	//Quit SDL subsystems
 	SDL_Quit();
 	return true;
-}
-
-int ModuleWindow::Width() const
-{
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-	return w;
-}
-
-int ModuleWindow::Height() const
-{
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-	return h;
 }
 
 

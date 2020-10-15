@@ -4,15 +4,18 @@
 #include "M_Input.h"
 
 
-ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
+ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled),
+	X(1.f, 0.f, 0.f),
+	Y(0.f, 1.f, 0.f),
+	Z(0.f, 0.f, 1.f),
+
+	reference(0.f, 0.f, 0.f),
+	position(0.f, 0.f, 0.f),
+
+	viewMatrix(),
+	viewMatrixInverse()
 {
 	CalculateViewMatrix();
-
-	X = vec3(1.0f, 0.0f, 0.0f);
-	Y = vec3(0.0f, 1.0f, 0.0f);
-	Z = vec3(0.0f, 0.0f, 1.0f);
-
-	Reference = vec3(0.0f, 0.0f, 0.0f);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -38,8 +41,8 @@ UPDATE_STATUS ModuleCamera3D::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT) newPos -= X * speed;
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT) newPos += X * speed;
 
-	Position += newPos;
-	Reference += newPos;
+	position += newPos;
+	reference += newPos;
 
 	// Mouse motion ----------------
 
@@ -48,25 +51,25 @@ UPDATE_STATUS ModuleCamera3D::Update(float dt)
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		float Sensitivity = 0.25f;
+		float sensitivity = 0.25f;
 
-		Position -= Reference;
+		position -= reference;
 
 		if (dx != 0)
 		{
-			float DeltaX = (float)dx * Sensitivity;
+			float deltaX = (float)dx * sensitivity;
 
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			X = rotate(X, deltaX, vec3(0.0f, 1.0f, 0.0f));
+			Y = rotate(Y, deltaX, vec3(0.0f, 1.0f, 0.0f));
+			Z = rotate(Z, deltaX, vec3(0.0f, 1.0f, 0.0f));
 		}
 
 		if (dy != 0)
 		{
-			float DeltaY = (float)dy * Sensitivity;
+			float deltaY = (float)dy * sensitivity;
 
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
+			Y = rotate(Y, deltaY, X);
+			Z = rotate(Z, deltaY, X);
 
 			if (Y.y < 0.0f)
 			{
@@ -75,7 +78,7 @@ UPDATE_STATUS ModuleCamera3D::Update(float dt)
 			}
 		}
 
-		Position = Reference + Z * length(Position);
+		position = reference + Z * length(position);
 	}
 
 	// Recalculate matrix -------------
@@ -85,30 +88,30 @@ UPDATE_STATUS ModuleCamera3D::Update(float dt)
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Look(const vec3& Position, const vec3& Reference, bool RotateAroundReference)
+void ModuleCamera3D::Look(const vec3& position, const vec3& reference, bool rotateAroundReference)
 {
-	this->Position = Position;
-	this->Reference = Reference;
+	this->position = position;
+	this->reference = reference;
 
-	Z = normalize(Position - Reference);
+	Z = normalize(position - reference);
 	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
 	Y = cross(Z, X);
 
-	if (!RotateAroundReference)
+	if (!rotateAroundReference)
 	{
-		this->Reference = this->Position;
-		this->Position += Z * 0.05f;
+		this->reference = this->position;
+		this->position += Z * 0.05f;
 	}
 
 	CalculateViewMatrix();
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt(const vec3& Spot)
+void ModuleCamera3D::LookAt(const vec3& spot)
 {
-	Reference = Spot;
+	reference = spot;
 
-	Z = normalize(Position - Reference);
+	Z = normalize(position - reference);
 	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
 	Y = cross(Z, X);
 
@@ -117,10 +120,10 @@ void ModuleCamera3D::LookAt(const vec3& Spot)
 
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const vec3& Movement)
+void ModuleCamera3D::Move(const vec3& movement)
 {
-	Position += Movement;
-	Reference += Movement;
+	position += movement;
+	reference += movement;
 
 	CalculateViewMatrix();
 }
@@ -128,14 +131,14 @@ void ModuleCamera3D::Move(const vec3& Movement)
 // -----------------------------------------------------------------
 float* ModuleCamera3D::GetViewMatrix()
 {
-	return &ViewMatrix;
+	return &viewMatrix;
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
-	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
-	ViewMatrixInverse = inverse(ViewMatrix);
+	viewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, position), -dot(Y, position), -dot(Z, position), 1.0f);
+	viewMatrixInverse = inverse(viewMatrix);
 }
 
 

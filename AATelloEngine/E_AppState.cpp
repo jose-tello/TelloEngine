@@ -69,6 +69,9 @@ bool E_AppState::Start()
 
 bool E_AppState::Update()
 {
+	UpdateChApplicationState();
+	UpdateChInput();
+
 	return true;
 }
 
@@ -77,11 +80,11 @@ bool E_AppState::Draw()
 {
 	ImGui::Begin("Application state", &open);
 
-	CreateBmHelp();
-	CreateChApplicationState();
-	CreateChInput();
-	CreateChWindow();
-	CreateChHardware();
+	DrawBmHelp();
+	DrawChApplicationState();
+	DrawChInput();
+	DrawChWindow();
+	DrawChHardware();
 
 	ImGui::End();
 
@@ -89,7 +92,30 @@ bool E_AppState::Draw()
 }
 
 
-void E_AppState::CreateBmHelp()
+void E_AppState::UpdateChApplicationState()
+{
+	frameRateLog.push_back(ImGui::GetIO().Framerate);
+	if (frameRateLog.size() > MAX_LOG_SIZE)
+		frameRateLog.erase(frameRateLog.begin());
+}
+
+
+void E_AppState::UpdateChInput()
+{
+	App->input->ReportKeyState(inputsLog);
+
+	if (inputsLog.size() > MAX_LOG_SIZE / 4)
+	{
+		int elementsToErase = inputsLog.size() - MAX_LOG_SIZE / 4;
+		for (int i = 0; i < elementsToErase; i++)
+		{
+			inputsLog.erase(inputsLog.begin());
+		}
+	}
+}
+
+
+void E_AppState::DrawBmHelp()
 {
 	if (ImGui::BeginMenu("Help"))
 	{
@@ -107,20 +133,16 @@ void E_AppState::CreateBmHelp()
 }
 
 
-void E_AppState::CreateChApplicationState()
+void E_AppState::DrawChApplicationState()
 {
 	if (ImGui::CollapsingHeader("Application state"))
 	{
-		frameRateLog.push_back(ImGui::GetIO().Framerate);
-		if (frameRateLog.size() > MAX_LOG_SIZE)
-			frameRateLog.erase(frameRateLog.begin());
-
 		ImGui::PlotHistogram("##framerate", &frameRateLog.front(), frameRateLog.size(), 0, "FrameRate", 0.0f, 100.0f, ImVec2(310, 100));
 	}
 }
 
 
-void E_AppState::CreateChInput()
+void E_AppState::DrawChInput()
 {
 	if (ImGui::CollapsingHeader("Input"))
 	{
@@ -133,17 +155,6 @@ void E_AppState::CreateChInput()
 		ImGui::Separator();
 		ImGui::Text("Key and mouse inputs: \n");
 		ImGui::NewLine();
-
-		App->input->ReportKeyState(inputsLog);
-
-		if (inputsLog.size() > MAX_LOG_SIZE / 4)
-		{
-			int elementsToErase = inputsLog.size() - MAX_LOG_SIZE / 4;
-			for (int i = 0; i < elementsToErase; i++)
-			{
-				inputsLog.erase(inputsLog.begin());
-			}
-		}
 
 		if (inputsLog.empty() == false)
 		{
@@ -158,7 +169,7 @@ void E_AppState::CreateChInput()
 }
 
 
-void E_AppState::CreateChWindow()
+void E_AppState::DrawChWindow()
 {
 	if (ImGui::CollapsingHeader("Window"))
 	{
@@ -196,7 +207,7 @@ void E_AppState::CreateChWindow()
 }
 
 
-void E_AppState::CreateChHardware()
+void E_AppState::DrawChHardware()
 {
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
@@ -241,5 +252,29 @@ void E_AppState::CreateChHardware()
 
 		if (hasSSE42 == true)
 			ImGui::BulletText("SSE42");
+		
+		ImGui::Spacing();
+
+		ImGui::Separator();
+		ImGui::Text("Libraries used:");
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "MathGeoLib v1.5"); //MathGeoLib has no get version
+		ImGui::Spacing();
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "ImGui");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), ImGui::GetVersion());
+		ImGui::Spacing();
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "SDL");
+		ImGui::SameLine();
+		SDL_version compiled;
+		SDL_VERSION(&compiled);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d.%d.%d", compiled.major, compiled.minor, compiled.patch); //Because returning a string was too easy huh     
+
+		ImGui::Spacing();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "OpenGL v. 3.0");
+
+		ImGui::Spacing();
 	}
 }

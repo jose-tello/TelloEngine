@@ -15,11 +15,8 @@ public:
 	// Destructor
 	virtual ~ModuleWindow();
 
-	bool Init();
-	bool CleanUp();
-
-	int Width() const;
-	int Height() const;
+	bool Init() override;
+	bool CleanUp() override;
 
 	void SetTitle(const char* title);
 	void SetWindowFullScreen(bool fullScreen);
