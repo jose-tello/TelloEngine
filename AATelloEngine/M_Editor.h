@@ -12,6 +12,7 @@
 
 class E_Window;
 enum class E_WINDOW_TYPE;
+
 class M_Editor : public Module
 {
 public:

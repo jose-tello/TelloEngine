@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "M_Input.h"
 #include "M_Window.h"
+#include "M_Renderer3D.h"
 
 #include "imgui/imgui.h"
 
@@ -18,6 +19,14 @@ E_AppState::E_AppState(bool open) :
 	brightness(100),
 	winWidth(0),
 	winHeight(0),
+
+	//Render
+	depthTestEnabled(true),
+	cullFaceEnabled(true),
+	lightingEnabled(true),
+	colorMatEnabled(true),
+	texture2DEnabled(true),
+	wireframeModeEnabled(false),
 
 	//Cpu
 	cpuCores(0),
@@ -82,8 +91,9 @@ bool E_AppState::Draw()
 
 	DrawBmHelp();
 	DrawChApplicationState();
-	DrawChInput();
 	DrawChWindow();
+	DrawChRenderOptions();
+	DrawChInput();
 	DrawChHardware();
 
 	ImGui::End();
@@ -142,33 +152,6 @@ void E_AppState::DrawChApplicationState()
 }
 
 
-void E_AppState::DrawChInput()
-{
-	if (ImGui::CollapsingHeader("Input"))
-	{
-		ImGui::Text("Mouse position: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i x,	%i y", App->input->GetMouseX(), App->input->GetMouseY());
-
-		ImGui::Text("Mouse motion: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i x,	%i y", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-
-		ImGui::Separator();
-		ImGui::Text("Key and mouse inputs: \n");
-		ImGui::NewLine();
-
-		if (inputsLog.empty() == false)
-		{
-			int logSize = inputsLog.size();
-
-			for (int i = 0; i < logSize; i++)
-			{
-				ImGui::Text(inputsLog[i].c_str());
-			}
-		}
-	}
-}
-
-
 void E_AppState::DrawChWindow()
 {
 	if (ImGui::CollapsingHeader("Window"))
@@ -203,6 +186,54 @@ void E_AppState::DrawChWindow()
 			App->window->SetWindowMeasures(winWidth, winHeight);
 		}
 
+	}
+}
+
+
+void E_AppState::DrawChRenderOptions()
+{
+	if (ImGui::CollapsingHeader("Render options"))
+	{
+		ImGui::Checkbox("Depth test", &depthTestEnabled);
+		ImGui::Checkbox("Backface cull", &cullFaceEnabled);
+		ImGui::Checkbox("Lightning", &lightingEnabled);
+		ImGui::Checkbox("Color material", &colorMatEnabled);
+		ImGui::Checkbox("Texture 2D", &texture2DEnabled);
+		ImGui::Checkbox("Wireframe mode", &wireframeModeEnabled);
+
+		App->renderer3D->SetDepthTestEnabled(depthTestEnabled);
+		App->renderer3D->SetCullFaceEnabled(cullFaceEnabled);
+		App->renderer3D->SetLightingEnabled(lightingEnabled);
+		App->renderer3D->SetColorMatEnabled(colorMatEnabled);
+		App->renderer3D->SetTexture2DEnabled(texture2DEnabled);
+
+	}
+}
+
+
+void E_AppState::DrawChInput()
+{
+	if (ImGui::CollapsingHeader("Input"))
+	{
+		ImGui::Text("Mouse position: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i x,	%i y", App->input->GetMouseX(), App->input->GetMouseY());
+
+		ImGui::Text("Mouse motion: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i x,	%i y", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+
+		ImGui::Separator();
+		ImGui::Text("Key and mouse inputs: \n");
+		ImGui::NewLine();
+
+		if (inputsLog.empty() == false)
+		{
+			int logSize = inputsLog.size();
+
+			for (int i = 0; i < logSize; i++)
+			{
+				ImGui::Text(inputsLog[i].c_str());
+			}
+		}
 	}
 }
 

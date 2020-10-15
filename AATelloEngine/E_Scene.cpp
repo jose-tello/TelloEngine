@@ -21,8 +21,6 @@ E_Scene::~E_Scene()
 
 bool E_Scene::Start() 
 {
-	App->window->GetWindowMeasures(windowWidth, windoHeight);
-
 	return true;
 }
 
@@ -34,17 +32,20 @@ bool E_Scene::Update()
 bool E_Scene::Draw()
 {
 	ImGui::Begin("Scene");
+
+	ImGui::BeginChild("Game render");
 	ImVec2 size = ImGui::GetWindowSize();
 
-/*	if (size.x != windowWidth || size.y != windoHeight)
+	if (size.x != windowWidth || size.y != windoHeight)
 	{
-		sceneWindowWidth = size.x;
-		sceneWindowHeight = size.y;
+		windowWidth = size.x;
+		windoHeight = size.y;
 
-		App->renderer3D->OnResize(sceneWindowWidth, sceneWindowHeight);
-	}*/
+		App->renderer3D->OnResize(windowWidth, windoHeight);
+	}
 
 	ImGui::Image((ImTextureID)App->renderer3D->textureBuffer, ImVec2(windowWidth, windoHeight), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::EndChild();
 	ImGui::End();
 
 	return true;

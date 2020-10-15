@@ -20,7 +20,7 @@
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
-ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), 
+M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	context(),
 	
 	frameBuffer(0),
@@ -29,17 +29,24 @@ ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled),
 
 	cube(nullptr),
 	piramid(nullptr),
-	sphere(nullptr)
+	sphere(nullptr),
+
+	depthTestEnabled(true),
+	cullFaceEnabled(true),
+	lightingEnabled(true),
+	colorMatEnabled(true),
+	texture2DEnabled(true),
+	wireframeModeEnabled(false)
 {
 }
 
 // Destructor
-ModuleRenderer3D::~ModuleRenderer3D()
+M_Renderer3D::~M_Renderer3D()
 {}
 
 
 // Called before render is available
-bool ModuleRenderer3D::Init()
+bool M_Renderer3D::Init()
 {
 	App->editor->AddLog("Log: Creating 3D Renderer context");
 	bool ret = true;
@@ -137,7 +144,7 @@ bool ModuleRenderer3D::Init()
 }
 
 // PreUpdate: clear buffer
-UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
+UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 {
 	glLoadIdentity();
 
@@ -149,7 +156,7 @@ UPDATE_STATUS ModuleRenderer3D::PreUpdate(float dt)
 }
 
 // PostUpdate present buffer to screen
-UPDATE_STATUS ModuleRenderer3D::PostUpdate(float dt)
+UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 {
 	DrawSceneTexture();
 	App->editor->Draw();
@@ -159,7 +166,7 @@ UPDATE_STATUS ModuleRenderer3D::PostUpdate(float dt)
 }
 
 // Called before quitting
-bool ModuleRenderer3D::CleanUp()
+bool M_Renderer3D::CleanUp()
 {
 	App->editor->AddLog("Log: Destroying 3D Renderer");
 
@@ -185,27 +192,114 @@ bool ModuleRenderer3D::CleanUp()
 }
 
 
-void ModuleRenderer3D::OnResize(int width, int height)
+void M_Renderer3D::OnResize(float width, float height)
 {
 	glViewport(0, 0, width, height);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
+	projectionMatrix = perspective(60.0f, width / height, 0.125f, 512.0f);
+	glLoadMatrixf(&projectionMatrix);
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	GenerateFrameBuffer();
+	GenerateFrameBuffer(width, height);
 }
 
 
-void ModuleRenderer3D::GenerateFrameBuffer()
+void M_Renderer3D::SetDepthTestEnabled(bool enable)
 {
-	int width, height;
-	App->window->GetWindowMeasures(width, height);
+	if (depthTestEnabled != enable)
+	{
+		if (enable == true)
+			glEnable(GL_DEPTH_TEST);
 
+		else
+			glDisable(GL_DEPTH_TEST);
+
+		depthTestEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::SetCullFaceEnabled(bool enable)
+{
+	if (cullFaceEnabled != enable)
+	{
+		if (enable == true)
+			glEnable(GL_CULL_FACE);
+
+		else
+			glDisable(GL_CULL_FACE);
+
+		cullFaceEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::SetLightingEnabled(bool enable)
+{
+	if (lightingEnabled != enable)
+	{
+		if (enable == true)
+			glEnable(GL_LIGHTING);
+
+		else
+			glDisable(GL_LIGHTING);
+	
+		lightingEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::SetColorMatEnabled(bool enable)
+{
+	if (colorMatEnabled != enable)
+	{
+		if (enable == true)
+			glEnable(GL_COLOR_MATERIAL);
+
+		else 
+			glDisable(GL_COLOR_MATERIAL);
+
+		colorMatEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::SetTexture2DEnabled(bool enable)
+{
+	if (texture2DEnabled != enable)
+	{
+		if (enable == true)
+			glEnable(GL_TEXTURE_2D);
+
+		else
+			glDisable(GL_TEXTURE_2D);
+
+		texture2DEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::SetWireframeMode(bool enable)
+{
+	if (wireframeModeEnabled != enable)
+	{
+		if (enable == true)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		wireframeModeEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::GenerateFrameBuffer(float width, float height)
+{
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
@@ -230,7 +324,7 @@ void ModuleRenderer3D::GenerateFrameBuffer()
 }
 
 
-void ModuleRenderer3D::DrawSceneTexture()
+void M_Renderer3D::DrawSceneTexture()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClear(GL_COLOR_BUFFER_BIT);

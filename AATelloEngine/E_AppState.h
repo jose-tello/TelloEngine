@@ -26,6 +26,7 @@ private:
 	void DrawChApplicationState();
 	void DrawChInput();
 	void DrawChWindow();
+	void DrawChRenderOptions();
 	void DrawChHardware();
 
 private:
@@ -42,6 +43,14 @@ private:
 
 	int winWidth;
 	int winHeight;
+
+	//Render
+	bool depthTestEnabled;
+	bool cullFaceEnabled;
+	bool lightingEnabled;
+	bool colorMatEnabled;
+	bool texture2DEnabled;
+	bool wireframeModeEnabled;
 
 	//Hardware
 	int cpuCores;

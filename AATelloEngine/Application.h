@@ -6,7 +6,7 @@
 
 class ModuleWindow;
 class M_Input;
-class ModuleRenderer3D;
+class M_Renderer3D;
 class M_Editor;
 class M_Console;
 class ModuleCamera3D;
@@ -18,7 +18,7 @@ class Application
 public:
 	ModuleWindow* window;
 	M_Input* input;
-	ModuleRenderer3D* renderer3D;
+	M_Renderer3D* renderer3D;
 	M_Editor* editor;
 	ModuleCamera3D* camera;
 	bool debug;
