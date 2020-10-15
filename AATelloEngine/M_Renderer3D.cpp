@@ -130,13 +130,15 @@ bool M_Renderer3D::Init()
 
 	
 	vec3 pos(-5, 3, -5);
-	vec3 pos2(0, 0, -15);
+	vec3 pos2(0, 6, -15);
 	vec3 pos3(2, 0, -5);
+	vec3 pos4(5, 2, 5);
 	vec3 rotation(1, 0, 0);
 
 	cube = new Cube(pos, 45.f, rotation, 0.f, 1.f);
-	sphere = new Sphere(1, 10, 16, pos2, 0.f, rotation);
-	piramid = new Piramid(pos3, 0, rotation);
+	sphere = new Sphere(3, 10, 16, pos2, 0.f, rotation);
+	piramid = new Piramid(pos3, 0, rotation, 1.f, 0.f, 0.f);
+	cilinder = new Cilinder(12, 4, 4, pos4, 0.f, rotation, 1.f, 0.5f, 1.f);
 
 	piramid->SetEscale(vec3(4, 4, 4));
 
@@ -183,10 +185,12 @@ bool M_Renderer3D::CleanUp()
 	delete cube;
 	delete piramid;
 	delete sphere;
+	delete cilinder;
 
 	cube = nullptr;
 	piramid = nullptr;
 	sphere = nullptr;
+	cilinder = nullptr;
 
 	return true;
 }
@@ -338,6 +342,7 @@ void M_Renderer3D::DrawSceneTexture()
 	cube->Draw();
 	sphere->Draw();
 	piramid->Draw();
+	cilinder->Draw();
 
 	Plane plane(0, 1, 0, 1);
 	plane.Draw();

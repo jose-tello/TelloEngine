@@ -238,6 +238,188 @@ void Sphere::Draw() const
 }
 
 
+Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& position, float angle, vec3& rotation,
+				   float red, float green, float blue, float alpha) :
+	Primitive(position, angle, rotation, red, green, blue, alpha),
+	normalsId(0),
+	normalsArrSize(0)
+{
+	std::vector<float> vertices;
+	std::vector<float> normals;
+	std::vector<unsigned int> indices;
+
+	std::vector<float> unitVertices;
+
+	float sectorStep = 2 * M_PI / sectorCount;
+	float sectorAngle;
+
+	for (int i = 0; i <= sectorCount; i++)
+	{
+		sectorAngle = i * sectorStep;
+		unitVertices.push_back(cos(sectorAngle));
+		unitVertices.push_back(sin(sectorAngle));
+		unitVertices.push_back(0);
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		float h = -height * .5f + i * height;
+		float t = 1 - i;
+
+		for (int j = 0, k = 0; j <= sectorCount; j++, k += 3)
+		{
+			float ux = unitVertices[k];
+			float uy = unitVertices[k + 1];
+			float uz = unitVertices[k + 2];
+
+			vertices.push_back(ux * radius);
+			vertices.push_back(uy * radius);
+			vertices.push_back(h);
+
+			normals.push_back(ux);
+			normals.push_back(uy);
+			normals.push_back(uz);
+		}
+	}
+
+	int baseCenterIndex = vertices.size() / 3;
+	int topCenterIndex = baseCenterIndex + sectorCount + 1;
+
+	for (int i = 0; i < 2; i++)
+	{
+		float h = -height * .5f + i * height;
+		float nz = -1 + i * 2;
+
+		//Center point
+		vertices.push_back(0); 
+		vertices.push_back(0); 
+		vertices.push_back(h);
+
+		normals.push_back(0);
+		normals.push_back(0);
+		normals.push_back(nz);
+
+		for (int j = 0, k = 0; j < sectorCount; j++, k += 3)
+		{
+			float ux = unitVertices[k];
+			float uy = unitVertices[k + 1];
+
+			vertices.push_back(ux * radius);
+			vertices.push_back(uy * radius);
+			vertices.push_back(h);
+
+			normals.push_back(0);
+			normals.push_back(0);
+			normals.push_back(nz);
+		}
+	}
+
+	int k1 = 0;
+	int k2 = sectorCount + 1;
+
+	for (int i = 0; i < sectorCount; ++i, ++k1, ++k2)
+	{
+		// 2 triangles per sector
+		// k1 => k1+1 => k2
+		indices.push_back(k1);
+		indices.push_back(k1 + 1);
+		indices.push_back(k2);
+
+		// k2 => k1+1 => k2+1
+		indices.push_back(k2);
+		indices.push_back(k1 + 1);
+		indices.push_back(k2 + 1);
+	}
+
+	// indices for the base surface
+	//NOTE: baseCenterIndex and topCenterIndices are pre-computed during vertex generation
+	//      please see the previous code snippet
+	for (int i = 0, k = baseCenterIndex + 1; i < sectorCount; ++i, ++k)
+	{
+		if (i < sectorCount - 1)
+		{
+			indices.push_back(baseCenterIndex);
+			indices.push_back(k + 1);
+			indices.push_back(k);
+		}
+		else // last triangle
+		{
+			indices.push_back(baseCenterIndex);
+			indices.push_back(baseCenterIndex + 1);
+			indices.push_back(k);
+		}
+	}
+
+	// indices for the top surface
+	for (int i = 0, k = topCenterIndex + 1; i < sectorCount; ++i, ++k)
+	{
+		if (i < sectorCount - 1)
+		{
+			indices.push_back(topCenterIndex);
+			indices.push_back(k);
+			indices.push_back(k + 1);
+		}
+		else // last triangle
+		{
+			indices.push_back(topCenterIndex);
+			indices.push_back(k);
+			indices.push_back(topCenterIndex + 1);
+		}
+	}
+
+	vertexArrSize = vertices.size();
+	indexArrSize = indices.size();
+	normalsArrSize = normals.size();
+
+	std::size_t vSize = vertexArrSize * sizeof(float);
+	std::size_t nSize = normalsArrSize * sizeof(float);
+	std::size_t iSize = indexArrSize * sizeof(unsigned int);
+
+	glGenBuffers(1, (GLuint*)&(vertexId));
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+	glBufferData(GL_ARRAY_BUFFER, vSize, vertices.data(), GL_STATIC_DRAW);
+
+
+	glGenBuffers(1, (GLuint*)&(normalsId));
+	glBindBuffer(GL_NORMAL_ARRAY, normalsId);
+	glBufferData(GL_NORMAL_ARRAY, nSize, normals.data(), GL_STATIC_DRAW);
+
+
+	glGenBuffers(1, (GLuint*)&(indexId));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iSize, indices.data(), GL_STATIC_DRAW);
+
+}
+
+
+Cilinder::~Cilinder()
+{
+	glDeleteFramebuffers(1, &normalsId);
+	normalsId = 0;
+}
+
+
+void Cilinder::Draw() const
+{
+	glPushMatrix();
+	glMultMatrixf(transform.M);
+	glColor3f(color.r, color.g, color.b);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glNormalPointer(GL_FLOAT, 0, NULL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+	glDrawElements(GL_TRIANGLES, indexArrSize, GL_UNSIGNED_INT, NULL);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glPopMatrix();
+}
+
+
+
 Plane::Plane(float x, float y, float z, float d) :
 	Primitive(),
 	normal(x, y, z),

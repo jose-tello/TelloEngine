@@ -7,6 +7,7 @@ class Primitive;
 class Cube;
 class Sphere;
 class Piramid;
+class Cilinder;
 
 #define MAX_LIGHTS 8
 
@@ -45,6 +46,7 @@ public:
 	Cube* cube;
 	Sphere* sphere;
 	Piramid* piramid;
+	Cilinder* cilinder;
 
 private:
 	bool depthTestEnabled;

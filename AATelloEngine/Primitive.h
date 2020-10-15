@@ -58,6 +58,20 @@ private:
 };
 
 
+class Cilinder : public Primitive
+{
+public:
+	Cilinder(unsigned int sectorCount, float height, float radius, vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
+	~Cilinder();
+
+	void Draw() const override;
+
+private:
+	unsigned int normalsId;
+	std::size_t normalsArrSize;
+};
+
+
 class Plane : public Primitive
 {
 public:
