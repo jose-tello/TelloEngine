@@ -50,7 +50,7 @@ public:
 	Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
 	~Sphere();
 
-	void Draw() const;
+	void Draw() const override;
 
 private:
 	unsigned int normalsId;

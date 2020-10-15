@@ -206,6 +206,7 @@ void E_AppState::DrawChRenderOptions()
 		App->renderer3D->SetLightingEnabled(lightingEnabled);
 		App->renderer3D->SetColorMatEnabled(colorMatEnabled);
 		App->renderer3D->SetTexture2DEnabled(texture2DEnabled);
+		App->renderer3D->SetWireframeMode(wireframeModeEnabled);
 
 	}
 }

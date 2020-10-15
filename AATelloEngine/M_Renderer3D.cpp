@@ -288,8 +288,9 @@ void M_Renderer3D::SetWireframeMode(bool enable)
 	if (wireframeModeEnabled != enable)
 	{
 		if (enable == true)
+		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		
+		}
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -329,6 +330,10 @@ void M_Renderer3D::DrawSceneTexture()
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
+
+	if (wireframeModeEnabled == true)
+		glLineWidth(3.0f);
+	
 
 	cube->Draw();
 	sphere->Draw();
