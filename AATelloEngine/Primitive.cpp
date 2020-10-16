@@ -59,8 +59,8 @@ Primitive::Primitive(vec3& position, float angle, vec3& rotation, float red, flo
 
 Primitive::~Primitive()
 {
-	glDeleteFramebuffers(1, &vertexId);
-	glDeleteFramebuffers(1, &indexId);
+	glDeleteBuffers(1, &vertexId);
+	glDeleteBuffers(1, &indexId);
 
 	vertexId = 0;
 	indexId = 0;

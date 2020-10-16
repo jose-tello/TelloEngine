@@ -337,7 +337,6 @@ void M_Renderer3D::DrawSceneTexture()
 
 	if (wireframeModeEnabled == true)
 		glLineWidth(3.0f);
-	
 
 	cube->Draw();
 	sphere->Draw();
