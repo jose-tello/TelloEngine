@@ -19,13 +19,16 @@ public:
 	virtual void Draw() const;
 
 protected:
+	void GenVertexBuffer(float*, std::size_t);
+	void GenIndexBuffer(unsigned int*);
+
+protected:
 	mat4x4 transform;
 	Color color;
 
 	unsigned int vertexId;
 	unsigned int indexId;
 
-	std::size_t vertexArrSize;
 	int indexArrSize;
 };
 
@@ -49,12 +52,6 @@ class Sphere : public Primitive
 public:
 	Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
 	~Sphere();
-
-	void Draw() const override;
-
-private:
-	unsigned int normalsId;
-	std::size_t normalsArrSize;
 };
 
 
@@ -63,12 +60,6 @@ class Cilinder : public Primitive
 public:
 	Cilinder(unsigned int sectorCount, float height, float radius, vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
 	~Cilinder();
-
-	void Draw() const override;
-
-private:
-	unsigned int normalsId;
-	std::size_t normalsArrSize;
 };
 
 
@@ -77,7 +68,7 @@ class Plane : public Primitive
 public:
 	Plane(float x, float y, float z, float d);
 	~Plane();
-	void Draw();
+	void Draw() const override;
 
 public:
 	vec3 normal;

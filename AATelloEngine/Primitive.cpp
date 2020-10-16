@@ -10,7 +10,6 @@
 Primitive::Primitive() :
 	vertexId(0),
 	indexId(0),
-	vertexArrSize(0),
 	indexArrSize(0),
 
 	transform(IdentityMatrix),
@@ -22,7 +21,6 @@ Primitive::Primitive(float* vertexArray, std::size_t vertexSize, unsigned int* i
 					 float red, float green, float blue, float alpha) :
 	vertexId(0),
 	indexId(0),
-	vertexArrSize(vertexSize),
 	indexArrSize(indexSize),
 
 	transform(IdentityMatrix),
@@ -32,21 +30,14 @@ Primitive::Primitive(float* vertexArray, std::size_t vertexSize, unsigned int* i
 	transform.translate(position.x, position.y, position.z);
 	transform.rotate(angle, rotation);
 
-	glGenBuffers(1, (GLuint*)&(vertexId));
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	glBufferData(GL_ARRAY_BUFFER, vertexArrSize, vertexArray, GL_STATIC_DRAW);
-	
-
-	glGenBuffers(1, (GLuint*)&(indexId));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexArrSize, indexArray, GL_STATIC_DRAW);
+	GenVertexBuffer(vertexArray, vertexSize);
+	GenIndexBuffer(indexArray);
 }
 
 
 Primitive::Primitive(vec3& position, float angle, vec3& rotation, float red, float green, float blue, float alpha) :
 	vertexId(0),
 	indexId(0),
-	vertexArrSize(0),
 	indexArrSize(0),
 
 	transform(IdentityMatrix),
@@ -105,6 +96,22 @@ void Primitive::Draw() const
 }
 
 
+void Primitive::GenVertexBuffer(float* vertexArray, std::size_t vertexArrSize)
+{
+	glGenBuffers(1, (GLuint*)&(vertexId));
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+	glBufferData(GL_ARRAY_BUFFER, vertexArrSize, vertexArray, GL_STATIC_DRAW);
+}
+
+
+void Primitive::GenIndexBuffer(unsigned int* indexArray)
+{
+	glGenBuffers(1, (GLuint*)&(indexId));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexArrSize, indexArray, GL_STATIC_DRAW);
+}
+
+
 Cube::Cube(vec3& position, float angle, vec3& rotation, float red, float green, float blue, float alpha) :
 	Primitive(cubeVertexArray, sizeof(cubeVertexArray), cubeIndexArray, sizeof(cubeIndexArray), position, angle, rotation, red, green, blue, alpha)
 {
@@ -122,7 +129,6 @@ Sphere::Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& pos
 {
 
 	std::vector<float> vertices;
-	std::vector<float> normals;
 	std::vector<unsigned int> indices;
 
 	float x, y, z, xy;                              // vertex position
@@ -150,15 +156,6 @@ Sphere::Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& pos
 			vertices.push_back(x);
 			vertices.push_back(y);
 			vertices.push_back(z);
-
-
-			nx = x * lengthInv;
-			ny = y * lengthInv;
-			nz = z * lengthInv;
-
-			normals.push_back(nx);
-			normals.push_back(ny);
-			normals.push_back(nz);
 		}
 	}
 
@@ -186,63 +183,24 @@ Sphere::Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& pos
 		}
 	}
 
-	vertexArrSize = vertices.size();
-	indexArrSize = indices.size();
-	normalsArrSize = normals.size();
+	 
+	std::size_t vSize = vertices.size() * sizeof(float);
+	indexArrSize = indices.size() * sizeof(unsigned int);
 
-	std::size_t vSize = vertexArrSize * sizeof(float);
-	std::size_t nSize = normalsArrSize * sizeof(float);
-	std::size_t iSize = indexArrSize * sizeof(unsigned int);
-
-	glGenBuffers(1, (GLuint*)&(vertexId));
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	glBufferData(GL_ARRAY_BUFFER, vSize, vertices.data(), GL_STATIC_DRAW);
-
-
-	glGenBuffers(1, (GLuint*)&(normalsId));
-	glBindBuffer(GL_NORMAL_ARRAY, normalsId);
-	glBufferData(GL_NORMAL_ARRAY, nSize, normals.data(), GL_STATIC_DRAW);
+	GenVertexBuffer(&vertices[0], vSize);
 	
-
-	glGenBuffers(1, (GLuint*)&(indexId));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iSize, indices.data(), GL_STATIC_DRAW);
-
+	GenIndexBuffer(&indices[0]);
 }
 
 
 Sphere::~Sphere()
 {
-	glDeleteFramebuffers(1, &normalsId);
-	normalsId = 0;
-}
-
-
-void Sphere::Draw() const
-{
-	glPushMatrix();
-	glMultMatrixf(transform.M);
-	glColor3f(color.r, color.g, color.b);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glNormalPointer(GL_FLOAT, 0, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glDrawElements(GL_TRIANGLES, indexArrSize, GL_UNSIGNED_INT, NULL);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-	glPopMatrix();
 }
 
 
 Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& position, float angle, vec3& rotation,
 				   float red, float green, float blue, float alpha) :
-	Primitive(position, angle, rotation, red, green, blue, alpha),
-	normalsId(0),
-	normalsArrSize(0)
+	Primitive(position, angle, rotation, red, green, blue, alpha)
 {
 	std::vector<float> vertices;
 	std::vector<float> normals;
@@ -275,10 +233,6 @@ Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& p
 			vertices.push_back(ux * radius);
 			vertices.push_back(uy * radius);
 			vertices.push_back(h);
-
-			normals.push_back(ux);
-			normals.push_back(uy);
-			normals.push_back(uz);
 		}
 	}
 
@@ -295,10 +249,6 @@ Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& p
 		vertices.push_back(0); 
 		vertices.push_back(h);
 
-		normals.push_back(0);
-		normals.push_back(0);
-		normals.push_back(nz);
-
 		for (int j = 0, k = 0; j < sectorCount; j++, k += 3)
 		{
 			float ux = unitVertices[k];
@@ -307,10 +257,6 @@ Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& p
 			vertices.push_back(ux * radius);
 			vertices.push_back(uy * radius);
 			vertices.push_back(h);
-
-			normals.push_back(0);
-			normals.push_back(0);
-			normals.push_back(nz);
 		}
 	}
 
@@ -367,57 +313,19 @@ Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& p
 		}
 	}
 
-	vertexArrSize = vertices.size();
-	indexArrSize = indices.size();
-	normalsArrSize = normals.size();
+	std::size_t vSize = vertices.size() * sizeof(float);
+	indexArrSize = indices.size() * sizeof(unsigned int);
 
-	std::size_t vSize = vertexArrSize * sizeof(float);
-	std::size_t nSize = normalsArrSize * sizeof(float);
-	std::size_t iSize = indexArrSize * sizeof(unsigned int);
+	GenVertexBuffer(&vertices[0], vSize);
 
-	glGenBuffers(1, (GLuint*)&(vertexId));
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	glBufferData(GL_ARRAY_BUFFER, vSize, vertices.data(), GL_STATIC_DRAW);
-
-
-	glGenBuffers(1, (GLuint*)&(normalsId));
-	glBindBuffer(GL_NORMAL_ARRAY, normalsId);
-	glBufferData(GL_NORMAL_ARRAY, nSize, normals.data(), GL_STATIC_DRAW);
-
-
-	glGenBuffers(1, (GLuint*)&(indexId));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, iSize, indices.data(), GL_STATIC_DRAW);
+	GenIndexBuffer(&indices[0]);
 
 }
 
 
 Cilinder::~Cilinder()
 {
-	glDeleteFramebuffers(1, &normalsId);
-	normalsId = 0;
 }
-
-
-void Cilinder::Draw() const
-{
-	glPushMatrix();
-	glMultMatrixf(transform.M);
-	glColor3f(color.r, color.g, color.b);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glNormalPointer(GL_FLOAT, 0, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glDrawElements(GL_TRIANGLES, indexArrSize, GL_UNSIGNED_INT, NULL);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-	glPopMatrix();
-}
-
 
 
 Plane::Plane(float x, float y, float z, float d) :
@@ -433,7 +341,7 @@ Plane::~Plane()
 }
 
 
-void Plane::Draw()
+void Plane::Draw() const
 {
 	glLineWidth(1.0f);
 	glColor3f(color.r, color.g, color.b);
