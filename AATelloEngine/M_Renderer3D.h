@@ -8,6 +8,7 @@ class Cube;
 class Sphere;
 class Piramid;
 class Cilinder;
+class Mesh;
 
 #define MAX_LIGHTS 8
 
@@ -33,7 +34,9 @@ public:
 
 private:
 	void GenerateFrameBuffer(float width, float height);
+	
 	void DrawSceneTexture();
+	void DrawAllMeshes();
 
 public:
 	SDL_GLContext context;
@@ -55,4 +58,6 @@ private:
 	bool colorMatEnabled;
 	bool texture2DEnabled;
 	bool wireframeModeEnabled;
+
+	std::vector<Mesh*> meshVector;
 };

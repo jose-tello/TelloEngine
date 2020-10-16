@@ -141,6 +141,11 @@ bool M_Renderer3D::Init()
 	piramid = new Piramid(pos3, 0, rotation, 1.f, 0.f, 0.f);
 	cilinder = new Cilinder(12, 4, 4, pos4, 0.f, rotation, 1.f, 0.5f, 1.f);
 
+	meshVector.push_back(cube->GetMesh());
+	meshVector.push_back(sphere->GetMesh());
+	meshVector.push_back(piramid->GetMesh());
+	meshVector.push_back(cilinder->GetMesh());
+
 	piramid->SetEscale(vec3(4, 4, 4));
 
 	return ret;
@@ -339,13 +344,21 @@ void M_Renderer3D::DrawSceneTexture()
 	if (wireframeModeEnabled == true)
 		glLineWidth(3.0f);
 
-	cube->GetMesh()->Draw();
-	sphere->GetMesh()->Draw();
-	piramid->GetMesh()->Draw();
-	cilinder->GetMesh()->Draw();
+	DrawAllMeshes();
 
 	Plane plane(0, 1, 0, 1);
 	plane.Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
+void M_Renderer3D::DrawAllMeshes()
+{
+	int meshCount = meshVector.size();
+	
+	for (int i = 0; i < meshCount; i++)
+	{
+		meshVector[i]->Draw();
+	}
 }
