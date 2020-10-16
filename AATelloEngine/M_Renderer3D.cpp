@@ -6,6 +6,7 @@
 #include "M_Editor.h"
 
 #include "Primitive.h"
+#include "Mesh.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -338,10 +339,10 @@ void M_Renderer3D::DrawSceneTexture()
 	if (wireframeModeEnabled == true)
 		glLineWidth(3.0f);
 
-	cube->Draw();
-	sphere->Draw();
-	piramid->Draw();
-	cilinder->Draw();
+	cube->GetMesh()->Draw();
+	sphere->GetMesh()->Draw();
+	piramid->GetMesh()->Draw();
+	cilinder->GetMesh()->Draw();
 
 	Plane plane(0, 1, 0, 1);
 	plane.Draw();

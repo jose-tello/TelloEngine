@@ -19,6 +19,9 @@
     <Filter Include="Sources\EditorWindows">
       <UniqueIdentifier>{8229c63d-da0d-4e0e-a5f4-06b0be1cd0ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Containers\Primitives">
+      <UniqueIdentifier>{961bec4c-f474-4736-8b2b-fd062504c0e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -32,9 +35,6 @@
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Sources\Tools</Filter>
@@ -75,12 +75,6 @@
     <ClInclude Include="M_Camera3D.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveVertex.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="M_Editor.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -99,6 +93,18 @@
     <ClInclude Include="E_DockWindow.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Sources\Containers\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveVertex.h">
+      <Filter>Sources\Containers\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Sources\Containers\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Sources\Containers\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -114,9 +120,6 @@
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="glmath.cpp">
-      <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="Color.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
@@ -149,9 +152,6 @@
     <ClCompile Include="M_Camera3D.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="M_Editor.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
@@ -169,6 +169,15 @@
     </ClCompile>
     <ClCompile Include="E_DockWindow.cpp">
       <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Sources\Containers\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Sources\Containers\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Sources\Containers\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

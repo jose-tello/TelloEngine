@@ -1,6 +1,8 @@
 #include "Primitive.h"
 #include "PrimitiveVertex.h"
 
+#include "Mesh.h"
+
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
@@ -8,112 +10,56 @@
 #include <gl/GLU.h>
 
 Primitive::Primitive() :
-	vertexId(0),
-	indexId(0),
-	indexArrSize(0),
-
-	transform(IdentityMatrix),
-	color(1.f, 1.f, 1.f, 1.f)
+	mesh(nullptr)
 {
 }
+
 
 Primitive::Primitive(float* vertexArray, std::size_t vertexSize, unsigned int* indexArray, std::size_t indexSize, vec3& position, float angle, vec3& rotation,
 					 float red, float green, float blue, float alpha) :
-	vertexId(0),
-	indexId(0),
-	indexArrSize(indexSize),
-
-	transform(IdentityMatrix),
-	color(red, green, blue, alpha)
-
+	mesh(nullptr)
 {
-	transform.translate(position.x, position.y, position.z);
-	transform.rotate(angle, rotation);
-
-	GenVertexBuffer(vertexArray, vertexSize);
-	GenIndexBuffer(indexArray);
-}
-
-
-Primitive::Primitive(vec3& position, float angle, vec3& rotation, float red, float green, float blue, float alpha) :
-	vertexId(0),
-	indexId(0),
-	indexArrSize(0),
-
-	transform(IdentityMatrix),
-	color(red, green, blue, alpha)
-{
-	transform.translate(position.x, position.y, position.z);
-	transform.rotate(angle, rotation);
+	mesh = new Mesh(vertexArray, vertexSize, indexArray, indexSize, position, angle, rotation, red, green, blue, alpha);
 }
 
 
 Primitive::~Primitive()
 {
-	glDeleteBuffers(1, &vertexId);
-	glDeleteBuffers(1, &indexId);
-
-	vertexId = 0;
-	indexId = 0;
+	delete mesh;
 }
 
 
 void Primitive::SetPosition(vec3& pos)
 {
-	transform.translate(pos.x, pos.y, pos.z);
+	mesh->SetPosition(pos);
 }
 
 
 void Primitive::SetRotation(float angle, vec3& rotation)
 {
-	transform.rotate(angle, rotation);
+	mesh->SetRotation(angle, rotation);
 }
 
 
 void Primitive::SetEscale(vec3& escale)
 {
-	transform.scale(escale.x, escale.y, escale.z);
+	mesh->SetEscale(escale);
 }
 
 
-void Primitive::Draw() const
+Mesh* Primitive::GetMesh() const
 {
-	glPushMatrix();
-	glMultMatrixf(transform.M);
-	glColor3f(color.r, color.g, color.b);
-
-	int idSize = indexArrSize / sizeof(unsigned int);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glDrawElements(GL_TRIANGLES, idSize, GL_UNSIGNED_INT, NULL);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-	glPopMatrix();
-}
-
-
-void Primitive::GenVertexBuffer(float* vertexArray, std::size_t vertexArrSize)
-{
-	glGenBuffers(1, (GLuint*)&(vertexId));
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	glBufferData(GL_ARRAY_BUFFER, vertexArrSize, vertexArray, GL_STATIC_DRAW);
-}
-
-
-void Primitive::GenIndexBuffer(unsigned int* indexArray)
-{
-	glGenBuffers(1, (GLuint*)&(indexId));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexArrSize, indexArray, GL_STATIC_DRAW);
+	return mesh;
 }
 
 
 Cube::Cube(vec3& position, float angle, vec3& rotation, float red, float green, float blue, float alpha) :
 	Primitive(cubeVertexArray, sizeof(cubeVertexArray), cubeIndexArray, sizeof(cubeIndexArray), position, angle, rotation, red, green, blue, alpha)
+{
+}
+
+
+Cube::~Cube()
 {
 }
 
@@ -124,8 +70,13 @@ Piramid::Piramid(vec3& position, float angle, vec3& rotation, float red, float g
 }
 
 
+Piramid::~Piramid()
+{
+}
+
+
 Sphere::Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& position, float angle, vec3& rotation, float red, float green, float blue, float alpha) :
-	Primitive(position, angle, rotation, red, green, blue, alpha)
+	Primitive()
 {
 
 	std::vector<float> vertices;
@@ -185,11 +136,9 @@ Sphere::Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& pos
 
 	 
 	std::size_t vSize = vertices.size() * sizeof(float);
-	indexArrSize = indices.size() * sizeof(unsigned int);
+	std::size_t indexArrSize = indices.size() * sizeof(unsigned int);
 
-	GenVertexBuffer(&vertices[0], vSize);
-	
-	GenIndexBuffer(&indices[0]);
+	mesh = new Mesh(&vertices[0], vSize, &indices[0], indexArrSize, position, angle, rotation, red, green, blue, alpha);
 }
 
 
@@ -200,7 +149,7 @@ Sphere::~Sphere()
 
 Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& position, float angle, vec3& rotation,
 				   float red, float green, float blue, float alpha) :
-	Primitive(position, angle, rotation, red, green, blue, alpha)
+	Primitive()
 {
 	std::vector<float> vertices;
 	std::vector<float> normals;
@@ -314,12 +263,9 @@ Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& p
 	}
 
 	std::size_t vSize = vertices.size() * sizeof(float);
-	indexArrSize = indices.size() * sizeof(unsigned int);
+	std::size_t indexArrSize = indices.size() * sizeof(unsigned int);
 
-	GenVertexBuffer(&vertices[0], vSize);
-
-	GenIndexBuffer(&indices[0]);
-
+	mesh = new Mesh(&vertices[0], vSize, &indices[0], indexArrSize, position, angle, rotation, red, green, blue, alpha);
 }
 
 
@@ -329,7 +275,6 @@ Cilinder::~Cilinder()
 
 
 Plane::Plane(float x, float y, float z, float d) :
-	Primitive(),
 	normal(x, y, z),
 	constant(d)
 {
@@ -344,7 +289,7 @@ Plane::~Plane()
 void Plane::Draw() const
 {
 	glLineWidth(1.0f);
-	glColor3f(color.r, color.g, color.b);
+	glColor3f(1, 1, 1);
 
 	glBegin(GL_LINES);
 

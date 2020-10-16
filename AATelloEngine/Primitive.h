@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "glmath.h"
-#include "Color.h"
+
+struct Mesh;
 
 class Primitive
 {
@@ -8,7 +9,6 @@ public:
 	Primitive();
 	Primitive(float*, std::size_t, unsigned int*, std::size_t, vec3& position, float angle, vec3& rotation, float red = 0.f, 
 			  float green = 0.f, float blue = 1.f, float alpha = 1.f);
-	Primitive(vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
 
 	virtual ~Primitive();
 
@@ -16,20 +16,10 @@ public:
 	void SetRotation(float angle, vec3& );
 	void SetEscale(vec3& );
 
-	virtual void Draw() const;
+	Mesh* GetMesh() const;
 
 protected:
-	void GenVertexBuffer(float*, std::size_t);
-	void GenIndexBuffer(unsigned int*);
-
-protected:
-	mat4x4 transform;
-	Color color;
-
-	unsigned int vertexId;
-	unsigned int indexId;
-
-	int indexArrSize;
+	Mesh* mesh;
 };
 
 
@@ -37,6 +27,7 @@ class Cube : public Primitive
 {
 public:
 	Cube(vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
+	~Cube();
 };
 
 
@@ -44,6 +35,7 @@ class Piramid : public Primitive
 {
 public:
 	Piramid(vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
+	~Piramid();
 };
 
 
@@ -63,12 +55,12 @@ public:
 };
 
 
-class Plane : public Primitive
+class Plane
 {
 public:
 	Plane(float x, float y, float z, float d);
 	~Plane();
-	void Draw() const override;
+	void Draw() const;
 
 public:
 	vec3 normal;
