@@ -141,10 +141,13 @@ bool M_Renderer3D::Init()
 	piramid = new Piramid(pos3, 0, rotation, 1.f, 0.f, 0.f);
 	cilinder = new Cilinder(12, 4, 4, pos4, 0.f, rotation, 1.f, 0.5f, 1.f);
 
+	Mesh* mesh = new Mesh(std::string("Assets/warrior/warrior.fbx"));
+
 	meshVector.push_back(cube->GetMesh());
 	meshVector.push_back(sphere->GetMesh());
 	meshVector.push_back(piramid->GetMesh());
 	meshVector.push_back(cilinder->GetMesh());
+	meshVector.push_back(mesh);
 
 	piramid->SetEscale(vec3(4, 4, 4));
 

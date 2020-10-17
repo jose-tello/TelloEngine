@@ -105,6 +105,9 @@
     <ClInclude Include="Mesh.h">
       <Filter>Sources\Containers\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">

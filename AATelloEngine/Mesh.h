@@ -6,17 +6,15 @@
 
 #include "Color.h"
 
-struct Mesh
+#include <string>
+
+struct MeshEntry
 {
 public:
-	Mesh(float*, std::size_t, unsigned int*, std::size_t, vec3& position, float angle, vec3& rotation, float red = 0.f,
-		float green = 0.f, float blue = 1.f, float alpha = 1.f);
-	~Mesh();
+	MeshEntry();
+	~MeshEntry();
 
-	void SetPosition(vec3&);
-	void SetRotation(float angle, vec3&);
-	void SetEscale(vec3&);
-
+	void Init(float*, std::size_t, unsigned int*, std::size_t);
 	void Draw() const;
 
 private:
@@ -24,12 +22,32 @@ private:
 	void GenIndexBuffer(unsigned int*);
 
 private:
-	mat4x4 transform;
-	Color color;
-
 	unsigned int vertexId;
 	unsigned int indexId;
 
 	int indexArrSize;
+};
+
+
+struct Mesh
+{
+public:
+	Mesh(std::string& filename);
+	//Debug for primitives
+	Mesh(float*, std::size_t, unsigned int*, std::size_t, vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
+	~Mesh();
+
+	void SetPosition(vec3&);
+	void SetRotation(float angle, vec3&);
+	void SetEscale(vec3&);
+
+	void Draw() const;	
+
+private:
+	std::vector<MeshEntry> meshEntryVector;
+
+	mat4x4 transform;
+	Color color;
+	
 };
 #endif // !__MESH_H__
