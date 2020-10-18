@@ -28,10 +28,6 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	textureBuffer(0),
 	depthBuffer(0),
 
-	cube(nullptr),
-	piramid(nullptr),
-	sphere(nullptr),
-
 	depthTestEnabled(true),
 	cullFaceEnabled(true),
 	lightingEnabled(true),
@@ -136,20 +132,23 @@ bool M_Renderer3D::Init()
 	vec3 pos4(5, 2, 5);
 	vec3 rotation(1, 0, 0);
 
-	cube = new Cube(pos, 45.f, rotation, 0.f, 1.f);
-	sphere = new Sphere(3, 10, 16, pos2, 0.f, rotation);
-	piramid = new Piramid(pos3, 0, rotation, 1.f, 0.f, 0.f);
-	cilinder = new Cilinder(12, 4, 4, pos4, 0.f, rotation, 1.f, 0.5f, 1.f);
+	Cube cube(pos, 45.f, rotation, 0.f, 1.f);
+	Sphere sphere(3, 10, 16, pos2, 0.f, rotation);
+	Piramid piramid(pos3, 0, rotation, 1.f, 0.f, 0.f);
+	Cilinder cilinder(12, 4, 4, pos4, 0.f, rotation, 1.f, 0.5f, 1.f);
 
 	Mesh* mesh = new Mesh(std::string("Assets/warrior/warrior.fbx"));
 
-	meshVector.push_back(cube->GetMesh());
-	meshVector.push_back(sphere->GetMesh());
-	meshVector.push_back(piramid->GetMesh());
-	meshVector.push_back(cilinder->GetMesh());
+	meshVector.push_back(cube.GetMesh());
+	meshVector.push_back(sphere.GetMesh());
+	meshVector.push_back(piramid.GetMesh());
+	meshVector.push_back(cilinder.GetMesh());
 	meshVector.push_back(mesh);
 
-	piramid->SetEscale(vec3(4, 4, 4));
+	mesh->SetPosition(vec3(0, 5, -60));
+	mesh->SetRotation(-90, vec3(1, 0, 0));
+	
+	piramid.SetEscale(vec3(4, 4, 4));
 
 	return ret;
 }
@@ -189,17 +188,6 @@ bool M_Renderer3D::CleanUp()
 	textureBuffer = 0;
 	glDeleteFramebuffers(1, &depthBuffer);
 	depthBuffer = 0;
-
-	//TODO: Someday i will have to quit the primitives here, but now they are fine
-	delete cube;
-	delete piramid;
-	delete sphere;
-	delete cilinder;
-
-	cube = nullptr;
-	piramid = nullptr;
-	sphere = nullptr;
-	cilinder = nullptr;
 
 	return true;
 }
@@ -362,6 +350,6 @@ void M_Renderer3D::DrawAllMeshes()
 	
 	for (int i = 0; i < meshCount; i++)
 	{
-		meshVector[i]->Draw();
+		meshVector[i]->Draw(true, true);
 	}
 }

@@ -3,6 +3,8 @@
 
 struct Mesh;
 
+//Primitives are just used to create the meshes
+//DESTROYING THE PRIMITIVE WON'T DESTROY THE MESH
 class Primitive
 {
 public:

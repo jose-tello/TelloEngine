@@ -3,11 +3,6 @@
 #include "Globals.h"
 #include "glmath.h"
 
-class Primitive;
-class Cube;
-class Sphere;
-class Piramid;
-class Cilinder;
 class Mesh;
 
 #define MAX_LIGHTS 8
@@ -30,7 +25,9 @@ public:
 	void SetLightingEnabled(bool enable);
 	void SetColorMatEnabled(bool enable);
 	void SetTexture2DEnabled(bool enable);
+	//void SetFillMode(bool enable);
 	void SetWireframeMode(bool enable);
+
 
 private:
 	void GenerateFrameBuffer(float width, float height);
@@ -45,11 +42,6 @@ public:
 	uint frameBuffer;
 	uint textureBuffer;
 	uint depthBuffer;
-
-	Cube* cube;
-	Sphere* sphere;
-	Piramid* piramid;
-	Cilinder* cilinder;
 
 private:
 	bool depthTestEnabled;

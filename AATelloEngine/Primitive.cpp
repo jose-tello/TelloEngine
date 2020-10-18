@@ -25,7 +25,7 @@ Primitive::Primitive(float* vertexArray, std::size_t vertexSize, unsigned int* i
 
 Primitive::~Primitive()
 {
-	delete mesh;
+	mesh = nullptr;
 }
 
 
@@ -61,6 +61,7 @@ Cube::Cube(vec3& position, float angle, vec3& rotation, float red, float green, 
 
 Cube::~Cube()
 {
+	mesh = nullptr;
 }
 
 
@@ -72,6 +73,7 @@ Piramid::Piramid(vec3& position, float angle, vec3& rotation, float red, float g
 
 Piramid::~Piramid()
 {
+	mesh = nullptr;
 }
 
 
@@ -144,6 +146,7 @@ Sphere::Sphere(float radius, unsigned int rings, unsigned int sectors, vec3& pos
 
 Sphere::~Sphere()
 {
+	mesh = nullptr;
 }
 
 
@@ -271,6 +274,7 @@ Cilinder::Cilinder(unsigned int sectorCount, float height, float radius, vec3& p
 
 Cilinder::~Cilinder()
 {
+	mesh = nullptr;
 }
 
 

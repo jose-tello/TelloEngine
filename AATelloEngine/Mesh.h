@@ -15,15 +15,25 @@ public:
 	~MeshEntry();
 
 	void Init(float*, std::size_t, unsigned int*, std::size_t);
-	void Draw() const;
+	void InitVertexBuffer(float*, std::size_t);
+	void InitNormalBuffer(float*, std::size_t);
+	void InitTexCoordBuffer(float*, std::size_t);
+	void InitIndexBuffer(unsigned int*, std::size_t);
 
-private:
-	void GenVertexBuffer(float*, std::size_t);
-	void GenIndexBuffer(unsigned int*);
+	void Draw() const;
+	void DrawVertexNormals() const;
+	void DrawFaceNormals() const;
 
 private:
 	unsigned int vertexId;
+	unsigned int normalsId;
+	unsigned int texCoordId;
 	unsigned int indexId;
+
+	std::vector<float> vertices;
+	std::vector<float> normals;
+	std::vector<unsigned int> indices;
+
 
 	int indexArrSize;
 };
@@ -41,7 +51,7 @@ public:
 	void SetRotation(float angle, vec3&);
 	void SetEscale(vec3&);
 
-	void Draw() const;	
+	void Draw(bool drawVertexNormals, bool drawFaceNormals) const;	
 
 private:
 	std::vector<MeshEntry> meshEntryVector;
