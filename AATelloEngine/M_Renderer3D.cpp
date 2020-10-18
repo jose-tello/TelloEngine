@@ -140,16 +140,16 @@ bool M_Renderer3D::Init()
 	Piramid piramid(pos3, 0, rotation, 1.f, 0.f, 0.f);
 	Cilinder cilinder(12, 4, 4, pos4, 0.f, rotation, 1.f, 0.5f, 1.f);
 
-	Mesh* mesh = new Mesh(std::string("Assets/warrior/warrior.fbx"));
+	//Mesh* mesh = new Mesh(std::string("Assets/warrior/warrior.fbx"));
 
 	meshVector.push_back(cube.GetMesh());
 	meshVector.push_back(sphere.GetMesh());
 	meshVector.push_back(piramid.GetMesh());
 	meshVector.push_back(cilinder.GetMesh());
-	meshVector.push_back(mesh);
+	//meshVector.push_back(mesh);
 
-	mesh->SetPosition(vec3(0, 5, -60));
-	mesh->SetRotation(-90, vec3(1, 0, 0));
+	//mesh->SetPosition(vec3(0, 5, -60));
+	//mesh->SetRotation(-90, vec3(1, 0, 0));
 	
 	piramid.SetEscale(vec3(4, 4, 4));
 
@@ -320,6 +320,14 @@ void M_Renderer3D::SetDrawFaceNormals(bool enable)
 	{
 		drawFaceNormals = enable;
 	}
+}
+
+
+void M_Renderer3D::LoadMeshFromFile(std::string fileName)
+{
+	Mesh* mesh = new Mesh(fileName);
+
+	meshVector.push_back(mesh);
 }
 
 

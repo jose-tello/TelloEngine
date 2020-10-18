@@ -5,6 +5,8 @@
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 
+#include "M_Renderer3D.h"
+
 #include "imgui/imgui_impl_sdl.h"
 
 M_Input::M_Input(bool start_enabled) : Module(start_enabled)
@@ -92,6 +94,13 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		ImGui_ImplSDL2_ProcessEvent(&e);
 		switch(e.type)
 		{
+		case (SDL_DROPFILE): { 
+			char* droppedFileDir = e.drop.file;
+			App->renderer3D->LoadMeshFromFile(droppedFileDir);
+
+			SDL_free(droppedFileDir);
+			break;
+		}
 			case SDL_MOUSEWHEEL:
 			mouse_z = e.wheel.y;
 			break;

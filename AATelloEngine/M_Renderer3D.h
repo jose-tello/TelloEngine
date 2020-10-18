@@ -3,9 +3,9 @@
 #include "Globals.h"
 #include "glmath.h"
 
-class Mesh;
+#include <string>
 
-#define MAX_LIGHTS 8
+class Mesh;
 
 class M_Renderer3D : public Module
 {
@@ -30,6 +30,7 @@ public:
 	void SetDrawVertexNormals(bool enable);
 	void SetDrawFaceNormals(bool enable);
 
+	void LoadMeshFromFile(std::string fileName);
 
 private:
 	void GenerateFrameBuffer(float width, float height);
