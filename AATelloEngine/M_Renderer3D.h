@@ -25,8 +25,10 @@ public:
 	void SetLightingEnabled(bool enable);
 	void SetColorMatEnabled(bool enable);
 	void SetTexture2DEnabled(bool enable);
-	//void SetFillMode(bool enable);
+	void SetFillMode(bool enable);
 	void SetWireframeMode(bool enable);
+	void SetDrawVertexNormals(bool enable);
+	void SetDrawFaceNormals(bool enable);
 
 
 private:
@@ -49,7 +51,9 @@ private:
 	bool lightingEnabled;
 	bool colorMatEnabled;
 	bool texture2DEnabled;
+	bool fillModeEnabled;
 	bool wireframeModeEnabled;
-
+	bool drawVertexNormals;
+	bool drawFaceNormals;
 	std::vector<Mesh*> meshVector;
 };

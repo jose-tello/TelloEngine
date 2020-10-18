@@ -51,7 +51,7 @@ public:
 	void SetRotation(float angle, vec3&);
 	void SetEscale(vec3&);
 
-	void Draw(bool drawVertexNormals, bool drawFaceNormals) const;	
+	void Draw(bool drawVertexNormals, bool drawFaceNormals, bool black = false) const;	
 
 private:
 	std::vector<MeshEntry> meshEntryVector;

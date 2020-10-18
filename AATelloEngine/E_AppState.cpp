@@ -26,7 +26,10 @@ E_AppState::E_AppState(bool open) :
 	lightingEnabled(true),
 	colorMatEnabled(true),
 	texture2DEnabled(true),
+	fillModeEnabled(true),
 	wireframeModeEnabled(false),
+	drawVertexNormals(false),
+	drawFaceNormals(false),
 
 	//Cpu
 	cpuCores(0),
@@ -199,15 +202,21 @@ void E_AppState::DrawChRenderOptions()
 		ImGui::Checkbox("Lightning", &lightingEnabled);
 		ImGui::Checkbox("Color material", &colorMatEnabled);
 		ImGui::Checkbox("Texture 2D", &texture2DEnabled);
+		ImGui::Checkbox("Fill mode", &fillModeEnabled);
 		ImGui::Checkbox("Wireframe mode", &wireframeModeEnabled);
+		ImGui::Checkbox("Vertex normals", &drawVertexNormals);
+		ImGui::Checkbox("Face normals", &drawFaceNormals);
+
 
 		App->renderer3D->SetDepthTestEnabled(depthTestEnabled);
 		App->renderer3D->SetCullFaceEnabled(cullFaceEnabled);
 		App->renderer3D->SetLightingEnabled(lightingEnabled);
 		App->renderer3D->SetColorMatEnabled(colorMatEnabled);
 		App->renderer3D->SetTexture2DEnabled(texture2DEnabled);
+		App->renderer3D->SetFillMode(fillModeEnabled);
 		App->renderer3D->SetWireframeMode(wireframeModeEnabled);
-
+		App->renderer3D->SetDrawVertexNormals(drawVertexNormals);
+		App->renderer3D->SetDrawFaceNormals(drawFaceNormals);
 	}
 }
 
@@ -245,8 +254,6 @@ void E_AppState::DrawChHardware()
 	{
 		ImGui::Text("CPU cache used: "); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i MB", SDL_GetCPUCacheLineSize());
-		//ImGui::SameLine();
-		//ImGui::TextColored(ImVec4(249, 215, 28, 1) 
 		ImGui::Text("CPU cores: "); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", cpuCores);
 
@@ -290,7 +297,7 @@ void E_AppState::DrawChHardware()
 		ImGui::Separator();
 		ImGui::Text("Libraries used:");
 
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "MathGeoLib v1.5"); //MathGeoLib has no get version
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "MathGeoLib v1.5");
 		ImGui::Spacing();
 
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "ImGui");
@@ -302,7 +309,7 @@ void E_AppState::DrawChHardware()
 		ImGui::SameLine();
 		SDL_version compiled;
 		SDL_VERSION(&compiled);
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d.%d.%d", compiled.major, compiled.minor, compiled.patch); //Because returning a string was too easy huh     
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d.%d.%d", compiled.major, compiled.minor, compiled.patch);
 
 		ImGui::Spacing();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "OpenGL v. 3.0");

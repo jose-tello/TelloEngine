@@ -33,7 +33,10 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	lightingEnabled(true),
 	colorMatEnabled(true),
 	texture2DEnabled(true),
-	wireframeModeEnabled(false)
+	fillModeEnabled(true),
+	wireframeModeEnabled(false),
+	drawVertexNormals(false),
+	drawFaceNormals(false)
 {
 }
 
@@ -284,18 +287,38 @@ void M_Renderer3D::SetTexture2DEnabled(bool enable)
 }
 
 
+void M_Renderer3D::SetFillMode(bool enable)
+{
+	if (fillModeEnabled != enable)
+	{
+		fillModeEnabled = enable;
+	}
+}
+
+
 void M_Renderer3D::SetWireframeMode(bool enable)
 {
 	if (wireframeModeEnabled != enable)
 	{
-		if (enable == true)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 		wireframeModeEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::SetDrawVertexNormals(bool enable)
+{
+	if (drawVertexNormals != enable)
+	{
+		drawVertexNormals = enable;
+	}
+}
+
+
+void M_Renderer3D::SetDrawFaceNormals(bool enable)
+{
+	if (drawFaceNormals != enable)
+	{
+		drawFaceNormals = enable;
 	}
 }
 
@@ -322,7 +345,6 @@ void M_Renderer3D::GenerateFrameBuffer(float width, float height)
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureBuffer, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
 
@@ -348,8 +370,24 @@ void M_Renderer3D::DrawAllMeshes()
 {
 	int meshCount = meshVector.size();
 	
+	if (fillModeEnabled)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	for (int i = 0; i < meshCount; i++)
 	{
-		meshVector[i]->Draw(true, true);
+		meshVector[i]->Draw(drawVertexNormals, drawFaceNormals);
+	}
+
+	if (fillModeEnabled == true && wireframeModeEnabled == true)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		for (int i = 0; i < meshCount; i++)
+		{
+			meshVector[i]->Draw(false, false, true);
+		}
 	}
 }

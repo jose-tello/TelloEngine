@@ -50,7 +50,10 @@ private:
 	bool lightingEnabled;
 	bool colorMatEnabled;
 	bool texture2DEnabled;
+	bool fillModeEnabled;
 	bool wireframeModeEnabled;
+	bool drawVertexNormals;
+	bool drawFaceNormals;
 
 	//Hardware
 	int cpuCores;

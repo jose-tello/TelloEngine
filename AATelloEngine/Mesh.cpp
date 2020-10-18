@@ -213,11 +213,16 @@ void Mesh::SetEscale(vec3& escale)
 }
 
 
-void Mesh::Draw(bool drawVertexNormals, bool drawFaceNormals) const
+void Mesh::Draw(bool drawVertexNormals, bool drawFaceNormals, bool black) const
 {
 	glPushMatrix();
 	glMultMatrixf(transform.M);
-	glColor3f(color.r, color.g, color.b);
+
+	if (black == true)
+		glColor3f(0, 0, 0);
+	
+	else
+		glColor3f(color.r, color.g, color.b);
 
 	int meshEntryCount = meshEntryVector.size();
 
