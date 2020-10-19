@@ -1,11 +1,8 @@
-#include "Globals.h"
 #include "Application.h"
 
 #include "M_Input.h"
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
-
-#include "M_Renderer3D.h"
 
 #include "imgui/imgui_impl_sdl.h"
 
@@ -61,11 +58,11 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		}
 	}
 
-	Uint32 buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
+	Uint32 buttons = SDL_GetMouseState(&mouseX, &mouseY);
 
-	mouse_x /= SCREEN_SIZE;
-	mouse_y /= SCREEN_SIZE;
-	mouse_z = 0;
+	mouseX /= SCREEN_SIZE;
+	mouseY /= SCREEN_SIZE;
+	mouseZ = 0;
 
 	for(int i = 0; i < MAX_MOUSE_BUTTONS; ++i)
 	{
@@ -85,7 +82,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		}
 	}
 
-	mouse_x_motion = mouse_y_motion = 0;
+	xMouseMotion = yMouseMotion = 0;
 
 	bool quit = false;
 	SDL_Event e;
@@ -102,15 +99,15 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			break;
 		}
 			case SDL_MOUSEWHEEL:
-			mouse_z = e.wheel.y;
+			mouseZ = e.wheel.y;
 			break;
 
 			case SDL_MOUSEMOTION:
-			mouse_x = e.motion.x / SCREEN_SIZE;
-			mouse_y = e.motion.y / SCREEN_SIZE;
+			mouseX = e.motion.x / SCREEN_SIZE;
+			mouseY = e.motion.y / SCREEN_SIZE;
 
-			mouse_x_motion = e.motion.xrel / SCREEN_SIZE;
-			mouse_y_motion = e.motion.yrel / SCREEN_SIZE;
+			xMouseMotion = e.motion.xrel / SCREEN_SIZE;
+			yMouseMotion = e.motion.yrel / SCREEN_SIZE;
 			break;
 
 			case SDL_QUIT:
@@ -198,26 +195,26 @@ void M_Input::ReportKeyState(std::vector<std::string>& inputsLog) const
 
 int M_Input::GetMouseX() const
 {
-	return mouse_x;
+	return mouseX;
 }
 
 int M_Input::GetMouseY() const
 {
-	return mouse_y;
+	return mouseY;
 }
 
 int M_Input::GetMouseZ() const
 {
-	return mouse_z;
+	return mouseZ;
 }
 
 int M_Input::GetMouseXMotion() const
 {
-	return mouse_x_motion;
+	return xMouseMotion;
 }
 
 int M_Input::GetMouseYMotion() const
 {
-	return mouse_y_motion;
+	return yMouseMotion;
 }
 

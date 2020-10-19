@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MODULE_H__
+#define __MODULE_H__
 
 class Module
 {
@@ -42,3 +43,5 @@ public:
 		return true; 
 	}
 };
+
+#endif // !__MODULE_H__

@@ -30,11 +30,6 @@ MeshEntry::MeshEntry(const MeshEntry& copy) :
 	indices(copy.indices),
 	indexArrSize(0)
 {
-	vertices = copy.vertices;
-	normals = copy.normals;
-	texCoords = copy.texCoords;
-	indices = copy.indices;
-
 	if (vertices.size() != 0)
 		InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
 	
@@ -249,9 +244,9 @@ Mesh::Mesh(std::string& filename) :
 //copy constructor
 Mesh::Mesh(const Mesh& meshCopy) :
 	color(meshCopy.color),
-	transform(meshCopy.transform)
+	transform(meshCopy.transform),
+	meshEntryVector(meshCopy.meshEntryVector)
 {
-	meshEntryVector = meshCopy.meshEntryVector;
 }
 
 

@@ -1,7 +1,7 @@
-#pragma once
+#ifndef __M_EDITOR_H__
+#define __M_EDITOR_H__
+
 #include "Module.h"
-#include "Globals.h"
-#include "glmath.h"
 
 #include "imgui/imgui.h"
 #include <vector>
@@ -36,3 +36,5 @@ private:
 private:
 	std::vector<E_Window*> windowsVec;
 }; 
+
+#endif // !__M_EDITOR_H__

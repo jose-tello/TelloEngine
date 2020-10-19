@@ -1,8 +1,10 @@
-#pragma once
+#ifndef __M_INPUT_H__
+#define __M_INPUT_H__
+
 #include "Module.h"
-#include "Globals.h"
 
 #include <string>
+
 #define MAX_KEYS 300
 #define MAX_MOUSE_BUTTONS 5
 
@@ -41,10 +43,11 @@ private:
 	KEY_STATE keyboard[MAX_KEYS];
 	KEY_STATE mouseButtons[MAX_MOUSE_BUTTONS];
 
-	int mouse_x;
-	int mouse_y;
-	int mouse_z;
-	int mouse_x_motion;
-	int mouse_y_motion;
-	//int mouse_z_motion;
+	int mouseX;
+	int mouseY;
+	int mouseZ;
+	int xMouseMotion;
+	int yMouseMotion;
 };
+
+#endif // __M_INPUT_H__

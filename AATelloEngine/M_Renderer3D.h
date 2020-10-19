@@ -1,11 +1,12 @@
-#pragma once
+#ifndef __M_RENDERER3D_H__
+#define __M_RENDERER3D_H__
+
 #include "Module.h"
-#include "Globals.h"
 #include "glmath.h"
 
 #include <string>
 
-class Mesh;
+struct Mesh;
 
 class M_Renderer3D : public Module
 {
@@ -58,3 +59,5 @@ private:
 	bool drawFaceNormals;
 	std::vector<Mesh> meshVector;
 };
+
+#endif // !__M_RENDERER3D_H__

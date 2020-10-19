@@ -2,11 +2,8 @@
 #define __PRIMITIVE_H__
 
 #include "PrimitiveVertex.h"
-#include "glmath.h"
-
 
 #include <vector>
-
 
 namespace Primitive
 {

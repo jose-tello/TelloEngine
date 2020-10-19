@@ -1,5 +1,6 @@
 #include "Application.h"
 
+#include "Module.h"
 #include "M_Window.h"
 #include "M_Input.h"
 #include "M_Renderer3D.h"
@@ -8,11 +9,11 @@
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
-	window = new ModuleWindow();
+	window = new M_Window();
 	input = new M_Input();
 	renderer3D = new M_Renderer3D();
 	editor = new M_Editor();
-	camera = new ModuleCamera3D();
+	camera = new M_Camera3D();
 
 	// Main Modules
 	AddModule(window);
@@ -58,15 +59,15 @@ bool Application::Init()
 		ret = modulesVec[i]->Start();
 	}
 
-	ms_timer.Start();
+	msTimer.Start();
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
-	ms_timer.Start();
+	dt = (float)msTimer.Read() / 1000.0f;
+	msTimer.Start();
 }
 
 // ---------------------------------------------

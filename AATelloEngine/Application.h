@@ -1,31 +1,33 @@
-#pragma once
+#ifndef __APLICATION_H__
+#define __APLICATION_H__
 
 #include "Globals.h"
 #include "Timer.h"
-#include "Module.h"
 
-class ModuleWindow;
+#include <vector>
+
+class Module;
+class M_Window;
 class M_Input;
 class M_Renderer3D;
 class M_Editor;
 class M_Console;
-class ModuleCamera3D;
-
-#include <vector>
+class M_Camera3D;
 
 class Application
 {
 public:
-	ModuleWindow* window;
+	M_Window* window;
 	M_Input* input;
 	M_Renderer3D* renderer3D;
 	M_Editor* editor;
-	ModuleCamera3D* camera;
+	M_Camera3D* camera;
 	bool debug;
 	bool renderPrimitives;
+
 private:
 
-	Timer	ms_timer;
+	Timer	msTimer;
 	float	dt;
 	std::vector<Module*> modulesVec;
 
@@ -44,3 +46,5 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 };
+
+#endif // !__APLICATION_H__

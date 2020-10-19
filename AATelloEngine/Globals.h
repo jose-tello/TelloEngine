@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __GLOBALS_H__
+#define __GLOBALS_H__
 
 // Warning disabled ---
 #pragma warning( disable : 4577 ) // Warning that exceptions are disabled
@@ -36,8 +37,10 @@ enum class UPDATE_STATUS : int
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
-#define TITLE "Phoebus Engine"
+#define TITLE "AO Tello engine"
 
 class Application;
 
 extern Application* App;
+
+#endif // !__GLOBALS_H__

@@ -1,19 +1,21 @@
-#ifndef __ModuleWindow_H__
-#define __ModuleWindow_H__
+#ifndef __M_WINDOW_H__
+#define __M_WINDOW_H__
 
 #include "Module.h"
-#include "SDL/include/SDL.h"
 
 class Application;
 
-class ModuleWindow : public Module
+struct SDL_Window;
+struct SDL_Surface;
+
+class M_Window : public Module
 {
 public:
 
-	ModuleWindow(bool start_enabled = true);
+	M_Window(bool start_enabled = true);
 
 	// Destructor
-	virtual ~ModuleWindow();
+	virtual ~M_Window();
 
 	bool Init() override;
 	bool CleanUp() override;
@@ -40,4 +42,4 @@ private:
 	bool fullScreenDesktop;
 };
 
-#endif // __ModuleWindow_H__
+#endif // __M_WINDOW_H__

@@ -3,7 +3,9 @@
 #include "M_Window.h"
 #include "M_Editor.h"
 
-ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled),
+#include "SDL/include/SDL.h"
+
+M_Window::M_Window(bool start_enabled) : Module(start_enabled),
 	window(nullptr),
 	screenSurface(nullptr),
 
@@ -13,12 +15,12 @@ ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled),
 }
 
 // Destructor
-ModuleWindow::~ModuleWindow()
+M_Window::~M_Window()
 {
 }
 
 // Called before render is available
-bool ModuleWindow::Init()
+bool M_Window::Init()
 {
 	App->editor->AddLog("Log: Init SDL window & surface");
 	bool ret = true;
@@ -77,7 +79,7 @@ bool ModuleWindow::Init()
 }
 
 // Called before quitting
-bool ModuleWindow::CleanUp()
+bool M_Window::CleanUp()
 {
 	App->editor->AddLog("Log: Destroying SDL window and quitting all SDL systems");
 
@@ -93,13 +95,13 @@ bool ModuleWindow::CleanUp()
 }
 
 
-void ModuleWindow::SetTitle(const char* title)
+void M_Window::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }
 
 
-void ModuleWindow::SetWindowFullScreen(bool fullScreen)
+void M_Window::SetWindowFullScreen(bool fullScreen)
 {
 	if (fullScreen != this->fullScreen)
 	{
@@ -120,7 +122,7 @@ void ModuleWindow::SetWindowFullScreen(bool fullScreen)
 }
 
 
-void ModuleWindow::SetWindowFullScreenDesktop(bool fullScreenDesktop)
+void M_Window::SetWindowFullScreenDesktop(bool fullScreenDesktop)
 {
 	if (fullScreenDesktop != this->fullScreenDesktop)
 	{
@@ -141,13 +143,13 @@ void ModuleWindow::SetWindowFullScreenDesktop(bool fullScreenDesktop)
 }
 
 
-void ModuleWindow::SetWindowBrightness(float brightness)
+void M_Window::SetWindowBrightness(float brightness)
 {
 	SDL_SetWindowBrightness(window, brightness);
 }
 
 
-void ModuleWindow::SetWindowResizable(bool resizable)
+void M_Window::SetWindowResizable(bool resizable)
 {
 	if (resizable == true)
 		SDL_SetWindowResizable(window, SDL_TRUE);
@@ -157,7 +159,7 @@ void ModuleWindow::SetWindowResizable(bool resizable)
 }
 
 
-void ModuleWindow::SetWindowBorderless(bool borderless)
+void M_Window::SetWindowBorderless(bool borderless)
 {
 	if (borderless == true)
 		SDL_SetWindowBordered(window, SDL_TRUE);
@@ -167,13 +169,13 @@ void ModuleWindow::SetWindowBorderless(bool borderless)
 }
 
 
-void ModuleWindow::GetWindowMeasures(int& width, int& height) const
+void M_Window::GetWindowMeasures(int& width, int& height) const
 {
 	SDL_GetWindowSize(window, &width, &height);
 }
 
 
-void ModuleWindow::SetWindowMeasures(int width, int height)
+void M_Window::SetWindowMeasures(int width, int height)
 {
 	SDL_SetWindowSize(window, width, height);
 }

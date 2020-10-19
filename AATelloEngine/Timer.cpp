@@ -6,10 +6,10 @@
 #include "Timer.h"
 
 // ---------------------------------------------
-Timer::Timer()
-	: running(false)
-	, started_at(0)
-	, stopped_at(0)
+Timer::Timer() : 
+	running(false), 
+	startedAt(0), 
+	stoppedAt(0)
 {
 	Start();
 }
@@ -18,14 +18,14 @@ Timer::Timer()
 void Timer::Start()
 {
 	running = true;
-	started_at = SDL_GetTicks();
+	startedAt = SDL_GetTicks();
 }
 
 // ---------------------------------------------
 void Timer::Stop()
 {
 	running = false;
-	stopped_at = SDL_GetTicks();
+	stoppedAt = SDL_GetTicks();
 }
 
 // ---------------------------------------------
@@ -33,12 +33,10 @@ Uint32 Timer::Read()
 {
 	if(running == true)
 	{
-		return SDL_GetTicks() - started_at;
+		return SDL_GetTicks() - startedAt;
 	}
 	else
 	{
-		return stopped_at - started_at;
+		return stoppedAt - startedAt;
 	}
 }
-
-
