@@ -46,6 +46,8 @@ void MeshEntry::InitVertexBuffer(float* vertexBuffer, std::size_t vertexArrSize)
 	glGenBuffers(1, (GLuint*)&(vertexId));
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
 	glBufferData(GL_ARRAY_BUFFER, vertexArrSize, vertexBuffer, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -57,6 +59,8 @@ void MeshEntry::InitNormalBuffer(float* normalsBuffer, std::size_t normalsArrSiz
 	glGenBuffers(1, (GLuint*)&(normalsId));
 	glBindBuffer(GL_NORMAL_ARRAY, normalsId);
 	glBufferData(GL_NORMAL_ARRAY, normalsArrSize, normalsBuffer, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_NORMAL_ARRAY, 0);
 }
 
 
@@ -65,6 +69,8 @@ void MeshEntry::InitTexCoordBuffer(float* texBuffer, std::size_t texArrSize)
 	glGenBuffers(1, (GLuint*)&(texCoordId));
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, texCoordId);
 	glBufferData(GL_TEXTURE_COORD_ARRAY, texArrSize, texBuffer, GL_TEXTURE_COORD_ARRAY);
+
+	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
 }
 
 
@@ -78,6 +84,8 @@ void MeshEntry::InitIndexBuffer(unsigned int* indexBuffer, std::size_t indexArrS
 	glGenBuffers(1, (GLuint*)&(indexId));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexArrSize, indexBuffer, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 
@@ -104,7 +112,11 @@ void MeshEntry::Draw() const
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 	glDrawElements(GL_TRIANGLES, idSize, GL_UNSIGNED_INT, NULL);
-	glDisableClientState(GL_VERTEX_ARRAY);	
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
 }
 
 
@@ -112,7 +124,7 @@ void MeshEntry::DrawVertexNormals() const
 {
 	if (normalsId != 0)
 	{
-		glLineWidth(2.0f);
+		glLineWidth(3.0f);
 		glColor3f(0, 0, 1);
 
 		glBegin(GL_LINES);
@@ -130,7 +142,7 @@ void MeshEntry::DrawVertexNormals() const
 
 void MeshEntry::DrawFaceNormals() const
 {
-	glLineWidth(2.0f);
+	glLineWidth(3.0f);
 	glColor3f(0, 1, 0);
 
 	glBegin(GL_LINES);
