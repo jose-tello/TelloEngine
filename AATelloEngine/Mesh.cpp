@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "MeshLoader.h"
+#include "Primitive.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -12,8 +13,39 @@ MeshEntry::MeshEntry() :
 	normalsId(0),
 	texCoordId(0),
 	indexId(0),
-	indexArrSize()
+	indexArrSize(0)
 {
+}
+
+
+MeshEntry::MeshEntry(const MeshEntry& copy) :
+	vertexId(0),
+	normalsId(0),
+	texCoordId(0),
+	indexId(0),
+
+	vertices(copy.vertices),
+	normals(copy.normals),
+	texCoords(copy.texCoords),
+	indices(copy.indices),
+	indexArrSize(0)
+{
+	vertices = copy.vertices;
+	normals = copy.normals;
+	texCoords = copy.texCoords;
+	indices = copy.indices;
+
+	if (vertices.size() != 0)
+		InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	
+	if (normals.size() != 0)
+		InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
+	
+	if (texCoords.size() != 0)
+		InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
+	
+	if (indices.size() != 0)
+		InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
 }
 
 
@@ -31,10 +63,43 @@ MeshEntry::~MeshEntry()
 }
 
 
-void MeshEntry::Init(float* vertexBuffer, std::size_t vertexArrSize, unsigned int* indexBuffer, std::size_t indexArrSize)
+void MeshEntry::InitAsCube()
 {
-	InitVertexBuffer(vertexBuffer, vertexArrSize);
-	InitIndexBuffer(indexBuffer, indexArrSize);
+	Primitive::CreateCube(vertices, indices);
+
+	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+}
+
+
+void MeshEntry::InitAsPiramid()
+{
+	Primitive::CreatePiramid(vertices, indices);
+
+	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+}
+
+
+void MeshEntry::InitAsSphere(float radius, unsigned int rings, unsigned int sectors)
+{
+	Primitive::CreateSphere(radius, rings, sectors, vertices, normals, texCoords, indices);
+
+	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
+	InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
+	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+}
+
+
+void MeshEntry::InitAsCilinder(float radius, unsigned int sectors, float height)
+{
+	Primitive::CreateCilinder(radius, sectors, height,vertices, normals, texCoords, indices);
+
+	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
+	InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
+	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
 }
 
 
@@ -181,24 +246,68 @@ Mesh::Mesh(std::string& filename) :
 }
 
 
-Mesh::Mesh(float* vertexBuffer, std::size_t vertexArrSize, unsigned int* indexBuffer, std::size_t indexArrSize, vec3& position, float angle, vec3& rotation, float red,
-	float green, float blue, float alpha) :
-	
-	transform(),
-	color(red, green, blue, alpha)
+//copy constructor
+Mesh::Mesh(const Mesh& meshCopy) :
+	color(meshCopy.color),
+	transform(meshCopy.transform)
+{
+	meshEntryVector = meshCopy.meshEntryVector;
+}
+
+
+//Constructor for primitives
+Mesh::Mesh(PRIMITIVE_TYPE type, Color color, float radius, unsigned int rings, unsigned int sectors, float height) :
+	color(color),
+	transform()
 {
 	meshEntryVector.push_back(MeshEntry());
-
-	int meshEntryCount = meshEntryVector.size();
-
-	for (int i = 0; i < meshEntryCount; i++)
+	
+	switch (type)
 	{
-		meshEntryVector[i].Init(vertexBuffer, vertexArrSize, indexBuffer, indexArrSize);
-	}
+	case PRIMITIVE_TYPE::NONE:
+		App->editor->AddLog("ERROR: No primitive tipe detected");
+		break;
 
-	SetPosition(position);
-	SetRotation(angle, rotation);
+	case PRIMITIVE_TYPE::CUBE:
+		meshEntryVector[0].InitAsCube();
+		if (radius != 0 || rings != 0 || sectors != 0 || height != 0)
+			App->editor->AddLog("WARNING: Using wrong variables");
+		break;
+
+	case PRIMITIVE_TYPE::PIRAMID:
+		meshEntryVector[0].InitAsPiramid();
+		if (radius != 0 || rings != 0 || sectors != 0 || height != 0)
+			App->editor->AddLog("WARNING: Using wrong variables");
+		break;
+
+	case PRIMITIVE_TYPE::SPHERE:
+		if (radius == 0 || rings == 0 || sectors == 0)
+		{
+			App->editor->AddLog("ERROR: Can not create primitive, using wrong variables");
+			return;
+		}
+
+		meshEntryVector[0].InitAsSphere(radius, rings, sectors);;
+		
+		if (height != 0)
+			App->editor->AddLog("WARNING: Using wrong variables");
+		break;
+
+	case PRIMITIVE_TYPE::CILINDER:
+		if (radius == 0 || sectors == 0 || height == 0)
+		{
+			App->editor->AddLog("ERROR: Can not create primitive, using wrong variables");
+			return;
+		}
+
+		meshEntryVector[0].InitAsCilinder(radius, sectors, height);
+		
+		if (rings != 0)
+			App->editor->AddLog("WARNING: Using wrong variables");
+		break;
+	}
 }
+
 
 
 Mesh::~Mesh()

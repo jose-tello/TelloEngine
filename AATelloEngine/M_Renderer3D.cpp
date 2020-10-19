@@ -5,8 +5,8 @@
 #include "M_Camera3D.h"
 #include "M_Editor.h"
 
-#include "Primitive.h"
 #include "Mesh.h"
+#include "Plane.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -135,23 +135,16 @@ bool M_Renderer3D::Init()
 	vec3 pos4(5, 2, 5);
 	vec3 rotation(1, 0, 0);
 
-	Cube cube(pos, 45.f, rotation, 0.f, 1.f);
-	Sphere sphere(3, 10, 16, pos2, 0.f, rotation);
-	Piramid piramid(pos3, 0, rotation, 1.f, 0.f, 0.f);
-	Cilinder cilinder(12, 4, 4, pos4, 0.f, rotation, 1.f, 0.5f, 1.f);
+	meshVector.push_back(Mesh(PRIMITIVE_TYPE::CUBE, Color(0.5, 0.5, 1)));
+	meshVector.push_back(Mesh(PRIMITIVE_TYPE::PIRAMID, Color(1, 0.5, 0)));
+	meshVector.push_back(Mesh(PRIMITIVE_TYPE::SPHERE, Color(0, 1, 0), 3, 14, 14));
+	meshVector.push_back(Mesh(PRIMITIVE_TYPE::CILINDER, Color(1, 0, 1), 2, 0, 10, 5));
 
-	//Mesh* mesh = new Mesh(std::string("Assets/warrior/warrior.fbx"));
-
-	meshVector.push_back(cube.GetMesh());
-	meshVector.push_back(sphere.GetMesh());
-	meshVector.push_back(piramid.GetMesh());
-	meshVector.push_back(cilinder.GetMesh());
-	//meshVector.push_back(mesh);
-
-	//mesh->SetPosition(vec3(0, 5, -60));
-	//mesh->SetRotation(-90, vec3(1, 0, 0));
-	
-	piramid.SetEscale(vec3(4, 4, 4));
+	meshVector[0].SetPosition(pos);
+	meshVector[1].SetPosition(pos2);
+	meshVector[1].SetEscale(vec3(3, 4, 3));
+	meshVector[2].SetPosition(pos3);
+	meshVector[3].SetPosition(pos4);
 
 	return ret;
 }
@@ -325,9 +318,7 @@ void M_Renderer3D::SetDrawFaceNormals(bool enable)
 
 void M_Renderer3D::LoadMeshFromFile(std::string fileName)
 {
-	Mesh* mesh = new Mesh(fileName);
-
-	meshVector.push_back(mesh);
+	meshVector.push_back(Mesh(fileName));
 }
 
 
@@ -367,7 +358,7 @@ void M_Renderer3D::DrawSceneTexture()
 
 	DrawAllMeshes();
 
-	Plane plane(0, 1, 0, 1);
+	Plane plane;
 	plane.Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -386,7 +377,7 @@ void M_Renderer3D::DrawAllMeshes()
 
 	for (int i = 0; i < meshCount; i++)
 	{
-		meshVector[i]->Draw(drawVertexNormals, drawFaceNormals);
+		meshVector[i].Draw(drawVertexNormals, drawFaceNormals);
 	}
 
 	if (fillModeEnabled == true && wireframeModeEnabled == true)
@@ -395,7 +386,7 @@ void M_Renderer3D::DrawAllMeshes()
 
 		for (int i = 0; i < meshCount; i++)
 		{
-			meshVector[i]->Draw(false, false, true);
+			meshVector[i].Draw(false, false, true);
 		}
 	}
 }

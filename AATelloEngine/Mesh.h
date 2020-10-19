@@ -8,13 +8,27 @@
 
 #include <string>
 
+enum class PRIMITIVE_TYPE : int
+{
+	NONE = -1,
+	CUBE,
+	PIRAMID,
+	SPHERE,
+	CILINDER
+};
+
 struct MeshEntry
 {
 public:
 	MeshEntry();
+	MeshEntry(const MeshEntry& copy);
 	~MeshEntry();
 
-	void Init(float*, std::size_t, unsigned int*, std::size_t);
+	void InitAsCube();
+	void InitAsPiramid();
+	void InitAsSphere(float radius, unsigned int rings, unsigned int sectors);
+	void InitAsCilinder(float radius, unsigned int sectors, float height);
+
 	void InitVertexBuffer(float*, std::size_t);
 	void InitNormalBuffer(float*, std::size_t);
 	void InitTexCoordBuffer(float*, std::size_t);
@@ -32,8 +46,8 @@ private:
 
 	std::vector<float> vertices;
 	std::vector<float> normals;
+	std::vector<float> texCoords;
 	std::vector<unsigned int> indices;
-
 
 	int indexArrSize;
 };
@@ -43,8 +57,10 @@ struct Mesh
 {
 public:
 	Mesh(std::string& filename);
+	Mesh(const Mesh&);	//copy constructor
+
 	//Debug for primitives
-	Mesh(float*, std::size_t, unsigned int*, std::size_t, vec3& position, float angle, vec3& rotation, float red = 0.f, float green = 0.f, float blue = 1.f, float alpha = 1.f);
+	Mesh(PRIMITIVE_TYPE, Color, float radius = 0, unsigned int rings = 0, unsigned int sectors = 0, float height = 0);
 	~Mesh();
 
 	void SetPosition(vec3&);

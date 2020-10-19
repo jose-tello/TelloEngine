@@ -38,7 +38,7 @@ unsigned int cubeIndexArray[] = {
 
 //Piramid
 
-float piramidVertex[] = {
+float piramidVertexArray[] = {
 
 	0.f, 0.f, 0.f,
 	1.f, 0.f, 0.f,
@@ -49,7 +49,7 @@ float piramidVertex[] = {
 };
 
 
-unsigned int piramidIndex[] = {
+unsigned int piramidIndexArray[] = {
 	4, 1, 0,
 	4, 2, 1,
 	4, 3, 2,

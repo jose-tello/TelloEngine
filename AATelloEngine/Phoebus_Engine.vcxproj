@@ -99,6 +99,7 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="M_Input.h" />
     <ClInclude Include="M_Window.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="PrimitiveVertex.h" />
     <ClInclude Include="Timer.h" />
@@ -126,7 +127,7 @@
     <ClCompile Include="M_Editor.cpp" />
     <ClCompile Include="M_Renderer3D.cpp" />
     <ClCompile Include="M_Window.cpp" />
-    <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

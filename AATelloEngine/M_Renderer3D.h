@@ -56,5 +56,5 @@ private:
 	bool wireframeModeEnabled;
 	bool drawVertexNormals;
 	bool drawFaceNormals;
-	std::vector<Mesh*> meshVector;
+	std::vector<Mesh> meshVector;
 };
