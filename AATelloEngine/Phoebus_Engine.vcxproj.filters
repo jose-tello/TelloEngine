@@ -111,6 +111,9 @@
     <ClInclude Include="Plane.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -183,6 +186,9 @@
       <Filter>Sources\Containers\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Plane.cpp">
+      <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
   </ItemGroup>

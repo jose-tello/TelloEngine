@@ -117,10 +117,10 @@ void MeshEntry::InitNormalBuffer(float* normalsBuffer, std::size_t normalsArrSiz
 	memcpy(&normals[0], normalsBuffer, normalsArrSize);
 
 	glGenBuffers(1, (GLuint*)&(normalsId));
-	glBindBuffer(GL_NORMAL_ARRAY, normalsId);
-	glBufferData(GL_NORMAL_ARRAY, normalsArrSize, normalsBuffer, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, normalsId);
+	glBufferData(GL_ARRAY_BUFFER, normalsArrSize, normalsBuffer, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_NORMAL_ARRAY, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -165,13 +165,24 @@ void MeshEntry::Draw() const
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	if (normalsId != 0)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, normalsId);
 		glNormalPointer(GL_FLOAT, 0, NULL);
+	}
+		
 	
 	if (texCoordId != 0)
+	{
+		glBindBuffer(GL_TEXTURE_COORD_ARRAY, texCoordId);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 	glDrawElements(GL_TRIANGLES, idSize, GL_UNSIGNED_INT, NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);

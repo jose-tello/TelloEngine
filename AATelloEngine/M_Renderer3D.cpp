@@ -112,7 +112,15 @@ bool M_Renderer3D::Init()
 			ret = false;
 		}
 		
+		GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		
+		light.ref = GL_LIGHT0;
+		light.ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
+		light.diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
+		light.Init();
+		light.Active(true);
+
 		GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
 
@@ -129,6 +137,7 @@ bool M_Renderer3D::Init()
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	
+	//putting inside primitives so it doesn't look so sad :D
 	vec3 pos(-5, 3, -5);
 	vec3 pos2(0, 6, -15);
 	vec3 pos3(2, 0, -5);
@@ -146,6 +155,8 @@ bool M_Renderer3D::Init()
 	meshVector[2].SetPosition(pos3);
 	meshVector[3].SetPosition(pos4);
 
+	
+
 	return ret;
 }
 
@@ -157,6 +168,8 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
+	light.SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
+	light.Render();
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -360,6 +373,8 @@ void M_Renderer3D::DrawSceneTexture()
 
 	Plane plane;
 	plane.Draw();
+
+	
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

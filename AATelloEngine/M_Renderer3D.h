@@ -2,6 +2,7 @@
 #define __M_RENDERER3D_H__
 
 #include "Module.h"
+#include "Light.h"
 #include "glmath.h"
 
 
@@ -61,6 +62,8 @@ private:
 	bool drawVertexNormals;
 	bool drawFaceNormals;
 	std::vector<Mesh> meshVector;
+
+	Light light;
 };
 
 #endif // !__M_RENDERER3D_H__
