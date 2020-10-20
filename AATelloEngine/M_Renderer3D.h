@@ -4,6 +4,9 @@
 #include "Module.h"
 #include "glmath.h"
 
+
+#include "SDL\include\SDL.h"
+
 #include <string>
 
 struct Mesh;

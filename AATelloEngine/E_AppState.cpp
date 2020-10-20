@@ -6,6 +6,7 @@
 #include "M_Renderer3D.h"
 
 #include "imgui/imgui.h"
+#include "SDL\include\SDL.h"
 
 E_AppState::E_AppState(bool open) :
 	E_Window(open),

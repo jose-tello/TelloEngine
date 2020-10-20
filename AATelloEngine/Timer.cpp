@@ -4,6 +4,7 @@
 // ----------------------------------------------------
 
 #include "Timer.h"
+#include "SDL\include\SDL.h"
 
 // ---------------------------------------------
 Timer::Timer() : 
@@ -29,7 +30,7 @@ void Timer::Stop()
 }
 
 // ---------------------------------------------
-Uint32 Timer::Read()
+unsigned __int32 Timer::Read()
 {
 	if(running == true)
 	{

@@ -4,6 +4,8 @@
 #include "M_Input.h"
 
 
+#include "SDL\include\SDL.h"
+
 M_Camera3D::M_Camera3D(bool start_enabled) : Module(start_enabled),
 	X(1.f, 0.f, 0.f),
 	Y(0.f, 1.f, 0.f),
