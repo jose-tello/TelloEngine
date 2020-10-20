@@ -9,6 +9,7 @@
 #include "Application.h"
 #include "Mesh.h"
 #include "M_Editor.h"
+#include "M_AssetManager.h"
 
 
 namespace MeshLoader
@@ -26,10 +27,15 @@ namespace MeshLoader
 		int numVertices = 0;
 		int numTexCoords = 0;
 		int numIndices = 0;
+
 		std::vector<float> vertices;
 		std::vector<float> normals;
 		std::vector<float> texCoords;
 		std::vector <unsigned int> indices;
+
+		/*char* buffer = nullptr;
+		unsigned int lenght = App->assetManager->Load(filename.c_str(), buffer);
+		const aiScene* scene = aiImportFileFromMemory(buffer, lenght, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);*/
 
 		const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 		if (scene != nullptr && scene->HasMeshes())

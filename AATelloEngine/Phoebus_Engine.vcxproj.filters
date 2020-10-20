@@ -114,6 +114,9 @@
     <ClInclude Include="Light.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="M_AssetManager.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -190,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="M_AssetManager.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
