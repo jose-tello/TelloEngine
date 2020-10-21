@@ -45,9 +45,9 @@ public:
 private:
 	unsigned int vertexId;
 	unsigned int normalsId;
-	unsigned int texCoordId;
 	unsigned int indexId;
 
+	unsigned int texCoordId;
 	unsigned int textureId;
 
 	std::vector<float> vertices;

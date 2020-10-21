@@ -22,6 +22,9 @@
     <Filter Include="Sources\Containers\Mesh">
       <UniqueIdentifier>{961bec4c-f474-4736-8b2b-fd062504c0e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Importers">
+      <UniqueIdentifier>{c0155f42-efcb-4c16-97b0-6b8b8fc45401}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -105,9 +108,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>Sources\Containers\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="MeshLoader.h">
-      <Filter>Sources\Containers\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
@@ -116,6 +116,12 @@
     </ClInclude>
     <ClInclude Include="M_AssetManager.h">
       <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageImporter.h">
+      <Filter>Sources\Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

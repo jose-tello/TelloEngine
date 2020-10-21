@@ -9,29 +9,29 @@
 #include <gl/GLU.h>
 
 MeshEntry::MeshEntry() :
-	vertexId(0),
-	normalsId(0),
-	texCoordId(0),
-	indexId(0),
-	textureId(0),
-	indexArrSize(0)
+	vertexId(-1),
+	normalsId(-1),
+	indexId(-1),
+	texCoordId(-1),
+	textureId(-1),
+	indexArrSize(-1)
 	
 {
 }
 
 
 MeshEntry::MeshEntry(const MeshEntry& copy) :
-	vertexId(0),
-	normalsId(0),
-	texCoordId(0),
-	indexId(0),
-	textureId(0),
+	vertexId(-1),
+	normalsId(-1),
+	indexId(-1),
+	texCoordId(-1),
+	textureId(-1),
 
 	vertices(copy.vertices),
 	normals(copy.normals),
 	texCoords(copy.texCoords),
 	indices(copy.indices),
-	indexArrSize(0)
+	indexArrSize(-1)
 {
 	if (vertices.size() != 0)
 		InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
@@ -50,14 +50,16 @@ MeshEntry::MeshEntry(const MeshEntry& copy) :
 MeshEntry::~MeshEntry()
 {
 	glDeleteBuffers(1, &vertexId);
-	glDeleteBuffers(1, &normalsId);
-	glDeleteBuffers(1, &texCoordId);
+	glDeleteBuffers(1, &normalsId);	
 	glDeleteBuffers(1, &indexId);
-
-	vertexId = 0;
-	normalsId = 0;
-	texCoordId = 0;
-	indexId = 0;
+	glDeleteBuffers(1, &texCoordId);
+	glDeleteTextures(1, &textureId);
+	
+	vertexId = -1;
+	normalsId = -1;
+	indexId = -1;
+	texCoordId = -1;
+	textureId = -1;
 }
 
 
@@ -189,29 +191,29 @@ void MeshEntry::Draw() const
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	if (normalsId != 0)
+	if (normalsId != -1)
 		glEnableClientState(GL_NORMAL_ARRAY);
 	
-	if (texCoordId != 0)
+	if (texCoordId != -1)
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	if (normalsId != 0)
+	if (normalsId != -1)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, normalsId);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 	}
 		
 	
-	if (texCoordId != 0)
+	if (texCoordId != -1)
 	{
 		glBindBuffer(GL_TEXTURE_COORD_ARRAY, texCoordId);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	}
 
-	if (textureId != 0)
+	if (textureId != -1)
 	{
 		glBindTexture(GL_TEXTURE_2D, textureId);
 	}
@@ -288,7 +290,7 @@ Mesh::Mesh(std::string& filename) :
 	color(Red),
 	transform()
 {
-	MeshLoader::Load(filename, meshEntryVector);
+	MeshImporter::Load(filename, meshEntryVector);
 }
 
 

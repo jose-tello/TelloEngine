@@ -12,7 +12,7 @@
 #include "M_AssetManager.h"
 
 
-namespace MeshLoader
+namespace MeshImporter
 {
 	void InitDebuggerOptions()
 	{
