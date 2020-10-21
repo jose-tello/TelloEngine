@@ -131,6 +131,7 @@ bool M_Renderer3D::Init()
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	// Projection matrix for
@@ -146,14 +147,14 @@ bool M_Renderer3D::Init()
 
 	meshVector.push_back(Mesh(PRIMITIVE_TYPE::CUBE, Color(0.5, 0.5, 1)));
 	meshVector.push_back(Mesh(PRIMITIVE_TYPE::PIRAMID, Color(1, 0.5, 0)));
-	meshVector.push_back(Mesh(PRIMITIVE_TYPE::SPHERE, Color(0, 1, 0), 3, 14, 14));
-	meshVector.push_back(Mesh(PRIMITIVE_TYPE::CILINDER, Color(1, 0, 1), 2, 0, 10, 5));
+	//meshVector.push_back(Mesh(PRIMITIVE_TYPE::SPHERE, Color(0, 1, 0), 3, 14, 14));
+	//meshVector.push_back(Mesh(PRIMITIVE_TYPE::CILINDER, Color(1, 0, 1), 2, 0, 10, 5));
 
 	meshVector[0].SetPosition(pos);
 	meshVector[1].SetPosition(pos2);
 	meshVector[1].SetEscale(vec3(3, 4, 3));
-	meshVector[2].SetPosition(pos3);
-	meshVector[3].SetPosition(pos4);
+	//meshVector[2].SetPosition(pos3);
+	//meshVector[3].SetPosition(pos4);
 
 	
 

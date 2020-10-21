@@ -57,11 +57,16 @@ namespace MeshLoader
 				}
 
 				//TODO make this check the 8 tex coords abaliable
-				if (scene->mMeshes[i]->HasTextureCoords(0))
+				for (int j = 0; j < 8; j++)
 				{
-					texCoords.resize(numVertices * 2);
-
-					memcpy(&texCoords[0], scene->mMeshes[i]->mTextureCoords[0], sizeof(float) * numVertices * 2);
+					if (scene->mMeshes[i]->HasTextureCoords(j))
+					{
+						for (int k = 0; k < scene->mMeshes[i]->mNumVertices; k++)
+						{
+							texCoords.push_back(scene->mMeshes[i]->mTextureCoords[j][k].x);
+							texCoords.push_back(scene->mMeshes[i]->mTextureCoords[j][k].y);
+						}
+					}
 				}
 
 				if (scene->mMeshes[i]->HasFaces())

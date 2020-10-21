@@ -53,14 +53,8 @@ unsigned int M_AssetManager::ReadBytes(const char* path, char** buffer) const
 
 	// The reading offset is set to the first byte of the file.
 	// Returns a filehandle on success that we will need for the PHYSFS_fileLength
-	std::string newPath(path);
-	for (int i = 0; i < newPath.size(); ++i)
-	{
-		if (newPath[i] == '\\')
-			newPath[i] = '/';
-	}
-	PHYSFS_getSearchPath();
-	PHYSFS_file* file = PHYSFS_openRead(newPath.c_str());
+
+	PHYSFS_file* file = PHYSFS_openRead(path);
 	// Check for end-of-file state on a PhysicsFS filehandle.
 	if (!PHYSFS_eof(file))
 	{

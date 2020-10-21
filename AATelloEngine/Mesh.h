@@ -8,6 +8,9 @@
 
 #include <string>
 
+#define CHECKERS_WIDTH 100
+#define CHECKERS_HEIGHT 100
+
 enum class PRIMITIVE_TYPE : int
 {
 	NONE = -1,
@@ -33,6 +36,7 @@ public:
 	void InitNormalBuffer(float*, std::size_t);
 	void InitTexCoordBuffer(float*, std::size_t);
 	void InitIndexBuffer(unsigned int*, std::size_t);
+	void InitTexture();
 
 	void Draw() const;
 	void DrawVertexNormals() const;
@@ -43,6 +47,8 @@ private:
 	unsigned int normalsId;
 	unsigned int texCoordId;
 	unsigned int indexId;
+
+	unsigned int textureId;
 
 	std::vector<float> vertices;
 	std::vector<float> normals;

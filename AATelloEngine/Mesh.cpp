@@ -13,7 +13,9 @@ MeshEntry::MeshEntry() :
 	normalsId(0),
 	texCoordId(0),
 	indexId(0),
+	textureId(0),
 	indexArrSize(0)
+	
 {
 }
 
@@ -23,6 +25,7 @@ MeshEntry::MeshEntry(const MeshEntry& copy) :
 	normalsId(0),
 	texCoordId(0),
 	indexId(0),
+	textureId(0),
 
 	vertices(copy.vertices),
 	normals(copy.normals),
@@ -126,11 +129,16 @@ void MeshEntry::InitNormalBuffer(float* normalsBuffer, std::size_t normalsArrSiz
 
 void MeshEntry::InitTexCoordBuffer(float* texBuffer, std::size_t texArrSize)
 {
+	texCoords.resize(texArrSize / sizeof(float));
+	memcpy(&texCoords[0], texBuffer, texArrSize);
+
 	glGenBuffers(1, (GLuint*)&(texCoordId));
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, texCoordId);
 	glBufferData(GL_TEXTURE_COORD_ARRAY, texArrSize, texBuffer, GL_TEXTURE_COORD_ARRAY);
 
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
+
+	InitTexture(); // debug shit
 }
 
 
@@ -146,6 +154,32 @@ void MeshEntry::InitIndexBuffer(unsigned int* indexBuffer, std::size_t indexArrS
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexArrSize, indexBuffer, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+
+void MeshEntry::InitTexture()
+{
+	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
+		for (int j = 0; j < CHECKERS_WIDTH; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &textureId);
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 
@@ -177,12 +211,18 @@ void MeshEntry::Draw() const
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	}
 
+	if (textureId != 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, textureId);
+	}
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 	glDrawElements(GL_TRIANGLES, idSize, GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
@@ -345,16 +385,16 @@ void Mesh::Draw(bool drawVertexNormals, bool drawFaceNormals, bool black) const
 	glPushMatrix();
 	glMultMatrixf(transform.M);
 
-	if (black == true)
-		glColor3f(0, 0, 0);
-	
-	else
-		glColor3f(color.r, color.g, color.b);
-
 	int meshEntryCount = meshEntryVector.size();
 
 	for (int i = 0; i < meshEntryCount; i++)
 	{
+		if (black == true)
+			glColor3f(0, 0, 0);
+
+		else
+			glColor3f(color.r, color.g, color.b);
+
 		meshEntryVector[i].Draw();
 
 		if (drawVertexNormals)
