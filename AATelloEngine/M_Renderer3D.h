@@ -11,6 +11,7 @@
 #include <string>
 
 struct Mesh;
+struct MeshEntry;
 
 class M_Renderer3D : public Module
 {
@@ -35,7 +36,7 @@ public:
 	void SetDrawVertexNormals(bool enable);
 	void SetDrawFaceNormals(bool enable);
 
-	void LoadMeshFromFile(std::string fileName);
+	void AddMesh(std::vector<MeshEntry>& vec);
 
 private:
 	void GenerateFrameBuffer(float width, float height);

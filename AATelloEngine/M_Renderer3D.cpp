@@ -330,9 +330,9 @@ void M_Renderer3D::SetDrawFaceNormals(bool enable)
 }
 
 
-void M_Renderer3D::LoadMeshFromFile(std::string fileName)
+void M_Renderer3D::AddMesh(std::vector<MeshEntry>& vec)
 {
-	meshVector.push_back(Mesh(fileName));
+	meshVector.push_back(Mesh(vec));
 }
 
 

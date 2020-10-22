@@ -3,6 +3,12 @@
 
 #include "M_Editor.h"
 
+#include "MeshLoader.h"
+#include "ImageImporter.h"
+
+#include <fstream>
+#include <filesystem>
+
 #include "PhysFS/include/physfs.h"
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
@@ -38,11 +44,144 @@ bool M_AssetManager::Init()
 
 bool M_AssetManager::CleanUp()
 {
-	pathVec.clear();
-	bufferVec.clear();
-	bytesVec.clear();
 
 	return false;
+}
+
+
+unsigned int M_AssetManager::LoadFromExporter(const char* path)
+{
+	unsigned int bytes = 0;
+	char* buffer = nullptr;
+
+	std::string normalizedPath = NormalizePath(path);
+	std::string finalPath;
+
+	if (DuplicateFile(normalizedPath.c_str(), "Assets", finalPath))
+	{
+		FILE_TYPE type = GetFileType(finalPath.c_str());
+		bytes = ReadBytes(finalPath.c_str(), &buffer);
+
+		switch (type)
+		{
+		case FILE_TYPE::MODEL:
+			MeshImporter::Load(buffer, bytes);
+			break;
+		case FILE_TYPE::TEXTURE:
+			break;
+		}
+	}
+
+	delete[] buffer;
+
+	return bytes;
+}
+
+
+std::string M_AssetManager::NormalizePath(const char* path)
+{
+	std::string newPath(path);
+	for (int i = 0; i < newPath.size(); ++i)
+	{
+		if (newPath[i] == '\\')
+			newPath[i] = '/';
+	}
+	return newPath;
+}
+
+
+void M_AssetManager::SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension)
+{
+	if (fullPath != nullptr)
+	{
+		std::string full(fullPath);
+		size_t posSeparator = full.find_last_of("\\/");
+		size_t posDot = full.find_last_of(".");
+
+		if (path != nullptr)
+		{
+			if (posSeparator < full.length())
+				*path = full.substr(0, posSeparator + 1);
+
+			else
+				path->clear();
+		}
+
+		if (file != nullptr)
+		{
+			if (posSeparator < full.length())
+				*file = full.substr(posSeparator + 1, posDot - posSeparator - 1);
+
+			else
+				*file = full.substr(0, posDot);
+		}
+		
+		if (extension != nullptr)
+		{
+			if (posDot < full.length())
+				*extension = full.substr(posDot + 1);
+
+			else
+				extension->clear();
+		}
+	}
+}
+
+
+bool M_AssetManager::DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath)
+{
+	std::string fileStr, extensionStr;
+	SplitPath(file, nullptr, &fileStr, &extensionStr);
+
+	relativePath = relativePath.append(dstFolder).append("/") + fileStr.append(".") + extensionStr;
+	std::string finalPath = std::string(*PHYSFS_getSearchPath()).append("/") + relativePath;
+
+	std::ifstream source;	//File that we want to copy
+	source.open(file, std::ios::binary);
+	
+	std::ofstream destiny;	//File where we will copy the file
+	destiny.open(finalPath.c_str(), std::ios::binary);
+
+	//Check everything is loaded ok
+	bool srcOpen = source.is_open();
+	bool dstOpen = destiny.is_open();
+
+	if (srcOpen == true && dstOpen == true)
+	{
+		destiny << source.rdbuf();
+
+		source.close();
+		destiny.close();
+
+		App->editor->AddLog("Log: File duplicated correctlly");
+		return true;
+	}
+
+	else
+	{
+		source.close();
+		destiny.close();
+
+		App->editor->AddLog("ERROR: Could not duplicate the file");
+		return false;
+	}
+}
+
+
+FILE_TYPE M_AssetManager::GetFileType(const char* path)
+{
+	std::string extension;
+	SplitPath(path, nullptr, nullptr, &extension);
+
+	if (extension == "FBX" || extension == "fbx")
+		return FILE_TYPE::MODEL;
+
+	else if (extension == "png" || extension == "PNG")
+		return FILE_TYPE::TEXTURE;
+
+	else
+		assert(true, "ERROR: not supported tipe of file");
+	
 }
 
 
@@ -67,66 +206,18 @@ unsigned int M_AssetManager::ReadBytes(const char* path, char** buffer) const
 
 		if (bytes != lenght)
 		{
-			LOG("%s", path, "ERROR: %s", PHYSFS_getLastError());
+			App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
 			delete[] buffer;
 		}
 		else
 			ret = bytes;
 	}
 	else
-		LOG("%s", path, "ERROR: %s", PHYSFS_getLastError());
+		App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
 
 
 	// Close a PhysicsFS firehandle
 	PHYSFS_close(file);
 
 	return ret;
-}
-
-
-unsigned int M_AssetManager::Load(const char* path, char* buffer)
-{
-	uint bytes;
-
-	 int check = CheckPath(path);
-	if (check == -1)
-	{
-		bytes = ReadBytes(path, &buffer);
-
-		bufferVec.push_back(buffer);
-		bytesVec.push_back(bytes);
-	}
-
-	else
-	{
-		buffer = bufferVec[check];
-		bytes =	bytesVec[check];
-	}
-
-	return bytes;
-}
-
-
-
-int M_AssetManager::CheckPath(const char* path)
-{
-	std::string string(path);
-
-	if (pathVec.empty() == true)
-	{
-		pathVec.push_back(string);
-		return -1;
-	}
-
-	int numBuffers = pathVec.size();
-	for (int i = 0; i < numBuffers; i++)
-	{
-		if (strcmp(pathVec[i].c_str(), path) == 0)
-		{
-			return i;
-		}
-	}
-
-	pathVec.push_back(string);
-	return -1;
 }

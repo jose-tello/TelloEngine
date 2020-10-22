@@ -9,7 +9,8 @@
 #include "Application.h"
 #include "Mesh.h"
 #include "M_Editor.h"
-#include "M_AssetManager.h"
+
+#include "M_Renderer3D.h"
 
 
 namespace MeshImporter
@@ -22,8 +23,10 @@ namespace MeshImporter
 	}
 
 
-	bool Load(std::string& filename, std::vector<MeshEntry>& meshArray)
+	bool Load(char* buffer, unsigned int bytes)
 	{
+		std::vector<MeshEntry> meshArray;
+
 		int numVertices = 0;
 		int numTexCoords = 0;
 		int numIndices = 0;
@@ -33,11 +36,9 @@ namespace MeshImporter
 		std::vector<float> texCoords;
 		std::vector <unsigned int> indices;
 
-		/*char* buffer = nullptr;
-		unsigned int lenght = App->assetManager->Load(filename.c_str(), buffer);
-		const aiScene* scene = aiImportFileFromMemory(buffer, lenght, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);*/
+		const aiScene* scene = aiImportFileFromMemory(buffer, bytes, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 
-		const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+		//const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 		if (scene != nullptr && scene->HasMeshes())
 		{
 			// Use scene->mNumMeshes to iterate on scene->mMeshes array
@@ -102,10 +103,11 @@ namespace MeshImporter
 				indices.clear();
 			}
 
+			App->renderer3D->AddMesh(meshArray);
 			aiReleaseImport(scene);
 		}
 		else
-			App->editor->AddLog("Error loading scene % s", filename);
+			App->editor->AddLog("Error loading scene");
 
 		return true;
 	}

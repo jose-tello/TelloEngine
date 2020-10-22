@@ -63,6 +63,7 @@ struct Mesh
 {
 public:
 	Mesh(std::string& filename);
+	Mesh(std::vector<MeshEntry>&);
 	Mesh(const Mesh&);	//copy constructor
 
 	//Debug for primitives

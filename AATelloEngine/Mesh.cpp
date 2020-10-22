@@ -1,6 +1,8 @@
 #include "Mesh.h"
-#include "MeshLoader.h"
 #include "Primitive.h"
+
+#include "Application.h"
+#include "M_Editor.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -286,11 +288,11 @@ void MeshEntry::DrawFaceNormals() const
 }
 
 
-Mesh::Mesh(std::string& filename) :
-	color(Red),
-	transform()
+Mesh::Mesh(std::vector<MeshEntry>& vec) :
+	meshEntryVector(vec),
+	transform(),
+	color(Red)
 {
-	MeshImporter::Load(filename, meshEntryVector);
 }
 
 
