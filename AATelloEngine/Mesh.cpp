@@ -11,29 +11,27 @@
 #include <gl/GLU.h>
 
 MeshEntry::MeshEntry() :
-	vertexId(-1),
-	normalsId(-1),
-	indexId(-1),
-	texCoordId(-1),
-	textureId(-1),
-	indexArrSize(-1)
+	vertexId(0),
+	normalsId(0),
+	indexId(0),
+	texCoordId(0),
+	indexArrSize(0)
 	
 {
 }
 
 
 MeshEntry::MeshEntry(const MeshEntry& copy) :
-	vertexId(-1),
-	normalsId(-1),
-	indexId(-1),
-	texCoordId(-1),
-	textureId(-1),
+	vertexId(0),
+	normalsId(0),
+	indexId(0),
+	texCoordId(0),
 
 	vertices(copy.vertices),
 	normals(copy.normals),
 	texCoords(copy.texCoords),
 	indices(copy.indices),
-	indexArrSize(-1)
+	indexArrSize(0)
 {
 	if (vertices.size() != 0)
 		InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
@@ -55,13 +53,11 @@ MeshEntry::~MeshEntry()
 	glDeleteBuffers(1, &normalsId);	
 	glDeleteBuffers(1, &indexId);
 	glDeleteBuffers(1, &texCoordId);
-	glDeleteTextures(1, &textureId);
 	
-	vertexId = -1;
-	normalsId = -1;
-	indexId = -1;
-	texCoordId = -1;
-	textureId = -1;
+	vertexId = 0;
+	normalsId = 0;
+	indexId = 0;
+	texCoordId = 0;
 }
 
 
@@ -141,8 +137,6 @@ void MeshEntry::InitTexCoordBuffer(float* texBuffer, std::size_t texArrSize)
 	glBufferData(GL_TEXTURE_COORD_ARRAY, texArrSize, texBuffer, GL_TEXTURE_COORD_ARRAY);
 
 	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
-
-	InitTexture(); // debug shit
 }
 
 
@@ -161,64 +155,40 @@ void MeshEntry::InitIndexBuffer(unsigned int* indexBuffer, std::size_t indexArrS
 }
 
 
-void MeshEntry::InitTexture()
-{
-	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
-	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
-		for (int j = 0; j < CHECKERS_WIDTH; j++) {
-			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-			checkerImage[i][j][0] = (GLubyte)c;
-			checkerImage[i][j][1] = (GLubyte)c;
-			checkerImage[i][j][2] = (GLubyte)c;
-			checkerImage[i][j][3] = (GLubyte)255;
-		}
-	}
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-
-void MeshEntry::Draw() const
+void MeshEntry::Draw(unsigned int textureId) const
 {
 	int idSize = indexArrSize / sizeof(unsigned int);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	if (normalsId != -1)
+	if (normalsId != 0)
 		glEnableClientState(GL_NORMAL_ARRAY);
 	
-	if (texCoordId != -1)
+	if (texCoordId != 0)
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	if (normalsId != -1)
+	if (normalsId != 0)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, normalsId);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 	}
 		
 	
-	if (texCoordId != -1)
+	if (texCoordId != 0)
 	{
 		glBindBuffer(GL_TEXTURE_COORD_ARRAY, texCoordId);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+	
+		if (textureId != 0)
+		{
+			glBindTexture(GL_TEXTURE_2D, textureId);
+		}
 	}
 
-	if (textureId != -1)
-	{
-		glBindTexture(GL_TEXTURE_2D, textureId);
-	}
+	
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 	glDrawElements(GL_TRIANGLES, idSize, GL_UNSIGNED_INT, NULL);
@@ -291,16 +261,18 @@ void MeshEntry::DrawFaceNormals() const
 Mesh::Mesh(std::vector<MeshEntry>& vec) :
 	meshEntryVector(vec),
 	transform(),
-	color(Red)
+	color(Red),
+	textureId(0)
 {
 }
 
 
 //copy constructor
 Mesh::Mesh(const Mesh& meshCopy) :
+	meshEntryVector(meshCopy.meshEntryVector),
 	color(meshCopy.color),
 	transform(meshCopy.transform),
-	meshEntryVector(meshCopy.meshEntryVector)
+	textureId(0)
 {
 }
 
@@ -362,7 +334,14 @@ Mesh::Mesh(PRIMITIVE_TYPE type, Color color, float radius, unsigned int rings, u
 
 Mesh::~Mesh()
 {
+	glDeleteTextures(1, &textureId);
 	meshEntryVector.clear();
+}
+
+
+void Mesh::InitTexture(unsigned int texId)
+{
+	textureId = texId;
 }
 
 
@@ -399,7 +378,7 @@ void Mesh::Draw(bool drawVertexNormals, bool drawFaceNormals, bool black) const
 		else
 			glColor3f(color.r, color.g, color.b);
 
-		meshEntryVector[i].Draw();
+		meshEntryVector[i].Draw(textureId);
 
 		if (drawVertexNormals)
 			meshEntryVector[i].DrawVertexNormals();

@@ -94,7 +94,7 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshLoader.h" />
+    <ClInclude Include="MeshImporter.h" />
     <ClInclude Include="M_AssetManager.h" />
     <ClInclude Include="M_Camera3D.h" />
     <ClInclude Include="M_Editor.h" />

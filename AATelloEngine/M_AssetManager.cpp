@@ -3,7 +3,7 @@
 
 #include "M_Editor.h"
 
-#include "MeshLoader.h"
+#include "MeshImporter.h"
 #include "ImageImporter.h"
 
 #include <fstream>
@@ -38,18 +38,28 @@ bool M_AssetManager::Init()
 	PHYSFS_permitSymbolicLinks(1);
 	PHYSFS_mount("Assets", nullptr, 1);
 
+	
+
+	return true;
+}
+
+bool M_AssetManager::Start()
+{
+	ImageImporter::Init();
+
 	return true;
 }
 
 
 bool M_AssetManager::CleanUp()
 {
+	ModelImporter::CleanUp();
 
 	return false;
 }
 
 
-unsigned int M_AssetManager::LoadFromExporter(const char* path)
+void M_AssetManager::LoadFromExporter(const char* path)
 {
 	unsigned int bytes = 0;
 	char* buffer = nullptr;
@@ -57,7 +67,7 @@ unsigned int M_AssetManager::LoadFromExporter(const char* path)
 	std::string normalizedPath = NormalizePath(path);
 	std::string finalPath;
 
-	if (DuplicateFile(normalizedPath.c_str(), "Assets", finalPath))
+	if (DuplicateFile(normalizedPath.c_str(), "Assets", finalPath)) //TODO: Ask why
 	{
 		FILE_TYPE type = GetFileType(finalPath.c_str());
 		bytes = ReadBytes(finalPath.c_str(), &buffer);
@@ -65,16 +75,19 @@ unsigned int M_AssetManager::LoadFromExporter(const char* path)
 		switch (type)
 		{
 		case FILE_TYPE::MODEL:
-			MeshImporter::Load(buffer, bytes);
+			ModelImporter::Load(buffer, bytes);
+			App->editor->AddLog("Log: Loaded a model");
 			break;
+
 		case FILE_TYPE::TEXTURE:
+			ImageImporter::Load(buffer, bytes);
+			App->editor->AddLog("Log: Loaded a texture");
 			break;
 		}
 	}
 
 	delete[] buffer;
-
-	return bytes;
+	buffer = nullptr;
 }
 
 
@@ -152,8 +165,6 @@ bool M_AssetManager::DuplicateFile(const char* file, const char* dstFolder, std:
 
 		source.close();
 		destiny.close();
-
-		App->editor->AddLog("Log: File duplicated correctlly");
 		return true;
 	}
 

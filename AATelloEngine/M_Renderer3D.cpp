@@ -336,6 +336,15 @@ void M_Renderer3D::AddMesh(std::vector<MeshEntry>& vec)
 }
 
 
+void M_Renderer3D::AddTextureToAllMeshes(unsigned int textureId)
+{
+	for (int i = 0; i < meshVector.size(); i++)
+	{
+		meshVector[i].InitTexture(textureId);
+	}
+}
+
+
 void M_Renderer3D::GenerateFrameBuffer(float width, float height)
 {
 	glGenFramebuffers(1, &frameBuffer);

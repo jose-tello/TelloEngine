@@ -22,12 +22,13 @@ public:
 	~M_AssetManager();
 
 	bool Init() override;
+	bool Start() override;
 
 	bool CleanUp() override;
 
 	// Return the bytes of a PhysFS filehandle
 	
-	unsigned int LoadFromExporter(const char* path);
+	void LoadFromExporter(const char* path);
 
 private:
 

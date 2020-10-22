@@ -1,5 +1,5 @@
-#ifndef __MESH_LOADER_H__
-#define __MESH_LOADER_H__
+#ifndef __MODEL_IMPORTER_H__
+#define __MODEL_IMPORTER_H__
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -12,8 +12,9 @@
 
 #include "M_Renderer3D.h"
 
+#define MAX_TEX_COORDS 8
 
-namespace MeshImporter
+namespace ModelImporter
 {
 	void InitDebuggerOptions()
 	{
@@ -58,7 +59,7 @@ namespace MeshImporter
 				}
 
 				//TODO make this check the 8 tex coords abaliable
-				for (int j = 0; j < 8; j++)
+				for (int j = 0; j < MAX_TEX_COORDS; j++)
 				{
 					if (scene->mMeshes[i]->HasTextureCoords(j))
 					{
@@ -118,5 +119,5 @@ namespace MeshImporter
 		aiDetachAllLogStreams();
 	}
 }
-#endif // !__MESH_LOADER_H__
+#endif // !__MODEL_IMPORTER_H__
 

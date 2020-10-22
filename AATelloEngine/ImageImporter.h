@@ -1,6 +1,9 @@
 #ifndef __IMAGE_IMPORTER_H__
 #define __IMAGE_IMPORTER_H__
 
+#include "Application.h"
+#include "M_Renderer3D.h"
+
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
 #include "Devil\include\ilu.h"
 #pragma comment( lib, "Devil/libx86/ILU.lib" )
@@ -18,15 +21,19 @@ namespace ImageImporter
 		ilutRenderer(ILUT_OPENGL);
 	}
 
-	unsigned int Load(std::string path)
+	void Load(char* buffer, unsigned int bytes)
 	{
-		ILuint imgName;
+		unsigned int texId;
+		ILuint imgName = 0;
 		ilGenImages(1, &imgName);
 		ilBindImage(imgName);
 
-		ilLoadImage(path.c_str());
+		ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, bytes);
 
-		return ilutGLBindTexImage();
+		texId = ilutGLBindTexImage();
+		ilDeleteImage(imgName);
+
+		App->renderer3D->AddTextureToAllMeshes(texId);
 	}
 }
 

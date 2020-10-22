@@ -37,6 +37,7 @@ public:
 	void SetDrawFaceNormals(bool enable);
 
 	void AddMesh(std::vector<MeshEntry>& vec);
+	void AddTextureToAllMeshes(unsigned int);
 
 private:
 	void GenerateFrameBuffer(float width, float height);

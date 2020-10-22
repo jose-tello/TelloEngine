@@ -117,10 +117,10 @@
     <ClInclude Include="M_AssetManager.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="MeshLoader.h">
+    <ClInclude Include="ImageImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="ImageImporter.h">
+    <ClInclude Include="MeshImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
   </ItemGroup>
