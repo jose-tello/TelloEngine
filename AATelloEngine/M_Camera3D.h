@@ -4,6 +4,10 @@
 #include "Module.h"
 #include "glmath.h"
 
+#define CAMERA_SPEED 30.f
+#define MOUSE_SENSITIVITY 0.25f
+#define MOUSE_WEEL_SPEED 250.f
+
 class M_Camera3D : public Module
 {
 public:
@@ -20,6 +24,11 @@ public:
 	
 private:
 	void CalculateViewMatrix();
+
+	void MoveCamera(float dt);
+	void ZoomCamera(int weelMotion, float dt);
+	void MoveCameraSideways(float dt);
+	void MoveCameraOrbital(float dt);
 
 public:
 	vec3 X, Y, Z, position, reference;

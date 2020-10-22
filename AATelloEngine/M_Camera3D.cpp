@@ -27,61 +27,22 @@ M_Camera3D::~M_Camera3D()
 // -----------------------------------------------------------------
 UPDATE_STATUS M_Camera3D::Update(float dt)
 {
-
-	vec3 newPos(0, 0, 0);
-	float speed = 30.0f * dt;
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
-		speed *= 2;
-
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_REPEAT) newPos.y += speed;
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_REPEAT) newPos.y -= speed;
-
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT) newPos -= Z * speed;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT) newPos += Z * speed;
-
-
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT) newPos -= X * speed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT) newPos += X * speed;
-
-	position += newPos;
-	reference += newPos;
-
-	// Mouse motion ----------------
-
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
-	{
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
+		MoveCamera(dt);
+	
 
-		float sensitivity = 0.25f;
+	else if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+		MoveCameraSideways(dt);
 
-		position -= reference;
 
-		if (dx != 0)
-		{
-			float deltaX = (float)dx * sensitivity;
+	int weelMotion = App->input->GetMouseZ();
+	if (weelMotion != 0)
+		ZoomCamera(weelMotion, dt);
 
-			X = rotate(X, deltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, deltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, deltaX, vec3(0.0f, 1.0f, 0.0f));
-		}
 
-		if (dy != 0)
-		{
-			float deltaY = (float)dy * sensitivity;
+	
+	
 
-			Y = rotate(Y, deltaY, X);
-			Z = rotate(Z, deltaY, X);
-
-			if (Y.y < 0.0f)
-			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
-		}
-
-		position = reference + Z * length(position);
-	}
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
@@ -144,4 +105,91 @@ void M_Camera3D::CalculateViewMatrix()
 }
 
 
+void M_Camera3D::MoveCamera(float dt)
+{
+	vec3 newPos(0, 0, 0);
+	float speed = CAMERA_SPEED * dt;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
+		speed *= 2;
+
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_REPEAT) newPos.y += speed;
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_REPEAT) newPos.y -= speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT) newPos -= Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT) newPos += Z * speed;
+
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT) newPos -= X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT) newPos += X * speed;
+
+	position += newPos;
+	reference += newPos;
+
+	int dx = -App->input->GetMouseXMotion();
+	int dy = -App->input->GetMouseYMotion();
+
+	position -= reference;
+
+	if (dx != 0)
+	{
+		float deltaX = (float)dx * MOUSE_SENSITIVITY;
+
+		X = rotate(X, deltaX, vec3(0.0f, 1.0f, 0.0f));
+		Y = rotate(Y, deltaX, vec3(0.0f, 1.0f, 0.0f));
+		Z = rotate(Z, deltaX, vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	if (dy != 0)
+	{
+		float deltaY = (float)dy * MOUSE_SENSITIVITY;
+
+		Y = rotate(Y, deltaY, X);
+		Z = rotate(Z, deltaY, X);
+
+		if (Y.y < 0.0f)
+		{
+			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+			Y = cross(Z, X);
+		}
+	}
+
+	position = reference + Z * length(position);
+}
+
+
+void M_Camera3D::ZoomCamera(int weelMotion, float dt)
+{
+	vec3 newPos(0, 0, 0);
+
+	if (weelMotion > 0)
+		newPos -= Z * MOUSE_WEEL_SPEED * dt;
+	
+	else
+		newPos += Z * MOUSE_WEEL_SPEED * dt;
+
+	position += newPos;
+	reference += newPos;
+}
+
+
+void M_Camera3D::MoveCameraSideways(float dt)
+{
+	vec3 newPos(0, 0, 0);
+
+	int dx = -App->input->GetMouseXMotion();
+	int dy = -App->input->GetMouseYMotion();
+
+	newPos -= dx * X * CAMERA_SPEED * 0.25f * dt;
+	newPos.y += dy * CAMERA_SPEED * 0.25f * dt;
+	
+
+	position += newPos;
+	reference += newPos;
+}
+
+
+void M_Camera3D::MoveCameraOrbital(float dt)
+{
+	
+}
 
