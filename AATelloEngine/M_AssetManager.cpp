@@ -38,14 +38,13 @@ bool M_AssetManager::Init()
 	PHYSFS_permitSymbolicLinks(1);
 	PHYSFS_mount("Assets", nullptr, 1);
 
-	
-
 	return true;
 }
 
 bool M_AssetManager::Start()
 {
 	ImageImporter::Init();
+	ModelImporter::InitDebuggerOptions();
 
 	return true;
 }
@@ -187,12 +186,14 @@ FILE_TYPE M_AssetManager::GetFileType(const char* path)
 	if (extension == "FBX" || extension == "fbx")
 		return FILE_TYPE::MODEL;
 
-	else if (extension == "png" || extension == "PNG")
+	else if (extension == "PNG" || extension == "png")
 		return FILE_TYPE::TEXTURE;
 
 	else
+	{
 		assert(true, "ERROR: not supported tipe of file");
-	
+		return FILE_TYPE::NONE;
+	}
 }
 
 

@@ -25,8 +25,6 @@ public:
 	bool Start() override;
 
 	bool CleanUp() override;
-
-	// Return the bytes of a PhysFS filehandle
 	
 	void LoadFromExporter(const char* path);
 
@@ -34,6 +32,7 @@ private:
 
 	std::string NormalizePath(const char*);
 	void SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension);
+
 	bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 	FILE_TYPE GetFileType(const char* extension);
 

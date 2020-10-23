@@ -20,6 +20,7 @@ M_Camera3D::M_Camera3D(bool start_enabled) : Module(start_enabled),
 	CalculateViewMatrix();
 }
 
+
 M_Camera3D::~M_Camera3D()
 {}
 
@@ -38,11 +39,6 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 	int weelMotion = App->input->GetMouseZ();
 	if (weelMotion != 0)
 		ZoomCamera(weelMotion, dt);
-
-
-	
-	
-
 
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
