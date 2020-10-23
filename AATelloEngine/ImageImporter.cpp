@@ -25,7 +25,6 @@ void ImageImporter::Load(char* buffer, unsigned int bytes)
 	unsigned int texId;
 	ILuint imgName = 0;
 	ilGenImages(1, &imgName);
-	//iluFlipImage();
 	ilBindImage(imgName);
 
 	ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, bytes);
