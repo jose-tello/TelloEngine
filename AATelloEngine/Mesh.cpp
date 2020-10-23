@@ -133,10 +133,10 @@ void MeshEntry::InitTexCoordBuffer(float* texBuffer, std::size_t texArrSize)
 	memcpy(&texCoords[0], texBuffer, texArrSize);
 
 	glGenBuffers(1, (GLuint*)&(texCoordId));
-	glBindBuffer(GL_TEXTURE_COORD_ARRAY, texCoordId);
-	glBufferData(GL_TEXTURE_COORD_ARRAY, texArrSize, texBuffer, GL_TEXTURE_COORD_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, texCoordId);
+	glBufferData(GL_ARRAY_BUFFER, texArrSize, texBuffer, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -179,7 +179,7 @@ void MeshEntry::Draw(unsigned int textureId) const
 	
 	if (texCoordId != 0)
 	{
-		glBindBuffer(GL_TEXTURE_COORD_ARRAY, texCoordId);
+		glBindBuffer(GL_ARRAY_BUFFER, texCoordId);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	
 		if (textureId != 0)
@@ -194,7 +194,6 @@ void MeshEntry::Draw(unsigned int textureId) const
 	glDrawElements(GL_TRIANGLES, idSize, GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 

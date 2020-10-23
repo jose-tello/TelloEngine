@@ -52,12 +52,11 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 				memcpy(&normals[0], scene->mMeshes[i]->mNormals, sizeof(float) * numVertices * 3);
 			}
 
-			//TODO make this check the 8 tex coords abaliable
 			for (int j = 0; j < MAX_TEX_COORDS; j++)
 			{
 				if (scene->mMeshes[i]->HasTextureCoords(j))
 				{
-					for (int k = 0; k < scene->mMeshes[i]->mNumVertices; k++)
+					for (int k = 0; k < scene->mMeshes[i]->mNumFaces * 3; k++)
 					{
 						texCoords.push_back(scene->mMeshes[i]->mTextureCoords[j][k].x);
 						texCoords.push_back(scene->mMeshes[i]->mTextureCoords[j][k].y);
@@ -87,7 +86,7 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 				meshArray[i].InitNormalBuffer(&normals[0], numVertices * 3 * sizeof(float));
 
 			if (texCoords.empty() == false)
-				meshArray[i].InitTexCoordBuffer(&texCoords[0], numVertices * 2 * sizeof(float));
+				meshArray[i].InitTexCoordBuffer(&texCoords[0], numIndices * 2 * sizeof(float));
 
 			if (indices.empty() == false)
 				meshArray[i].InitIndexBuffer(&indices[0], numIndices * sizeof(unsigned int));

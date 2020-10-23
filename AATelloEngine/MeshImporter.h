@@ -3,8 +3,6 @@
 
 #define MAX_TEX_COORDS 8
 
-//TODO change structure
-
 namespace ModelImporter
 {
 	void InitDebuggerOptions();
