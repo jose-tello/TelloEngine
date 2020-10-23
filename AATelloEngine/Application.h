@@ -13,7 +13,7 @@ class M_Renderer3D;
 class M_Editor;
 class M_Console;
 class M_Camera3D;
-class M_AssetManager;
+class M_FileManager;
 
 class Application
 {
@@ -23,7 +23,7 @@ public:
 	M_Renderer3D* renderer3D;
 	M_Editor* editor;
 	M_Camera3D* camera;
-	M_AssetManager* assetManager;
+	M_FileManager* assetManager;
 	bool debug;
 	bool renderPrimitives;
 

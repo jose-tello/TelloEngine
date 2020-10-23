@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "M_AssetManager.h"
+#include "M_FileManager.h"
 
 #include "M_Editor.h"
 
@@ -12,7 +12,7 @@
 #include "PhysFS/include/physfs.h"
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
-M_AssetManager::M_AssetManager(bool start_enabled) : Module(start_enabled)
+M_FileManager::M_FileManager(bool start_enabled) : Module(start_enabled)
 {
 	PHYSFS_init(nullptr);
 
@@ -22,13 +22,13 @@ M_AssetManager::M_AssetManager(bool start_enabled) : Module(start_enabled)
 }
 
 
-M_AssetManager::~M_AssetManager()
+M_FileManager::~M_FileManager()
 {
 	PHYSFS_deinit();
 }
 
 
-bool M_AssetManager::Init()
+bool M_FileManager::Init()
 {
 	if (PHYSFS_isInit())
 		App->editor->AddLog("Log: Asset Manager is succefully loaded");
@@ -41,7 +41,7 @@ bool M_AssetManager::Init()
 	return true;
 }
 
-bool M_AssetManager::Start()
+bool M_FileManager::Start()
 {
 	ImageImporter::Init();
 	ModelImporter::InitDebuggerOptions();
@@ -50,7 +50,7 @@ bool M_AssetManager::Start()
 }
 
 
-bool M_AssetManager::CleanUp()
+bool M_FileManager::CleanUp()
 {
 	ModelImporter::CleanUp();
 
@@ -58,15 +58,16 @@ bool M_AssetManager::CleanUp()
 }
 
 
-void M_AssetManager::LoadFromExporter(const char* path)
+void M_FileManager::LoadFromExporter(const char* path)
 {
 	unsigned int bytes = 0;
 	char* buffer = nullptr;
 
 	std::string normalizedPath = NormalizePath(path);
-	std::string finalPath;
+	std::string finalPath = normalizedPath;
 
-	if (DuplicateFile(normalizedPath.c_str(), "Assets", finalPath)) //TODO: Ask why
+	TransformPath(finalPath);
+	//if (DuplicateFile(normalizedPath.c_str(), "Assets", finalPath)) //TODO: Ask why
 	{
 		FILE_TYPE type = GetFileType(finalPath.c_str());
 		bytes = ReadBytes(finalPath.c_str(), &buffer);
@@ -90,7 +91,7 @@ void M_AssetManager::LoadFromExporter(const char* path)
 }
 
 
-std::string M_AssetManager::NormalizePath(const char* path)
+std::string M_FileManager::NormalizePath(const char* path)
 {
 	std::string newPath(path);
 	for (int i = 0; i < newPath.size(); ++i)
@@ -102,7 +103,15 @@ std::string M_AssetManager::NormalizePath(const char* path)
 }
 
 
-void M_AssetManager::SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension)
+//TODO: this is SOOOOOO dirty but i can't find how to do it any other way, so ill just deal with it later 
+void M_FileManager::TransformPath(std::string& path)
+{
+	int itPos = path.find("Assets");
+	path = path.substr(itPos + ASSETS_LENGHT, path.length());
+}
+
+
+void M_FileManager::SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension)
 {
 	if (fullPath != nullptr)
 	{
@@ -140,7 +149,7 @@ void M_AssetManager::SplitPath(const char* fullPath, std::string* path, std::str
 }
 
 
-bool M_AssetManager::DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath)
+/*bool M_FileManager::DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath)
 {
 	std::string fileStr, extensionStr;
 	SplitPath(file, nullptr, &fileStr, &extensionStr);
@@ -175,10 +184,10 @@ bool M_AssetManager::DuplicateFile(const char* file, const char* dstFolder, std:
 		App->editor->AddLog("ERROR: Could not duplicate the file");
 		return false;
 	}
-}
+}*/
 
 
-FILE_TYPE M_AssetManager::GetFileType(const char* path)
+FILE_TYPE M_FileManager::GetFileType(const char* path)
 {
 	std::string extension;
 	SplitPath(path, nullptr, nullptr, &extension);
@@ -198,7 +207,7 @@ FILE_TYPE M_AssetManager::GetFileType(const char* path)
 
 
 // Return the bytes of a PhysFS filehandle
-unsigned int M_AssetManager::ReadBytes(const char* path, char** buffer) const
+unsigned int M_FileManager::ReadBytes(const char* path, char** buffer) const
 {
 	uint ret = 0;
 

@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#define ASSETS_LENGHT 7
+
 enum class FILE_TYPE : int
 {
 	NONE = -1,
@@ -15,11 +17,11 @@ enum class FILE_TYPE : int
 };
 
 
-class M_AssetManager : public Module
+class M_FileManager : public Module
 {
 public:
-	M_AssetManager(bool start_enabled = true);
-	~M_AssetManager();
+	M_FileManager(bool start_enabled = true);
+	~M_FileManager();
 
 	bool Init() override;
 	bool Start() override;
@@ -31,9 +33,10 @@ public:
 private:
 
 	std::string NormalizePath(const char*);
+	void TransformPath(std::string& path);
 	void SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension);
 
-	bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
+	//bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 	FILE_TYPE GetFileType(const char* extension);
 
 	unsigned int ReadBytes(const char* path, char** buffer) const;

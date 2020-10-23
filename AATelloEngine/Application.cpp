@@ -6,7 +6,7 @@
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Camera3D.h"
-#include "M_AssetManager.h"
+#include "M_FileManager.h"
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
@@ -15,7 +15,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	renderer3D = new M_Renderer3D();
 	editor = new M_Editor();
 	camera = new M_Camera3D();
-	assetManager = new M_AssetManager();
+	assetManager = new M_FileManager();
 
 	// Main Modules
 	AddModule(window);
