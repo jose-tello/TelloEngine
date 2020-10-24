@@ -33,7 +33,10 @@ bool M_FileManager::Init()
 	if (PHYSFS_isInit())
 		App->editor->AddLog("Log: Asset Manager is succefully loaded");
 	else
+	{
 		App->editor->AddLog("ERROR: Failed loading Asset Manager");
+		return false;
+	}
 
 	PHYSFS_permitSymbolicLinks(1);
 	PHYSFS_mount("Assets", nullptr, 1);

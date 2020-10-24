@@ -76,11 +76,16 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="C_Material.h" />
+    <ClInclude Include="C_Mesh.h" />
+    <ClInclude Include="C_Transform.h" />
     <ClInclude Include="E_AppState.h" />
     <ClInclude Include="E_Console.h" />
     <ClInclude Include="E_DockWindow.h" />
     <ClInclude Include="E_Scene.h" />
     <ClInclude Include="E_Window.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImageImporter.h" />
@@ -110,11 +115,16 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="C_Material.cpp" />
+    <ClCompile Include="C_Mesh.cpp" />
+    <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="E_AppState.cpp" />
     <ClCompile Include="E_Console.cpp" />
     <ClCompile Include="E_DockWindow.cpp" />
     <ClCompile Include="E_Scene.cpp" />
     <ClCompile Include="E_Window.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="ImageImporter.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
