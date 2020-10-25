@@ -106,6 +106,7 @@
     <ClInclude Include="M_Renderer3D.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="M_Input.h" />
+    <ClInclude Include="M_Scene.h" />
     <ClInclude Include="M_Window.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Primitive.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="M_Input.cpp" />
     <ClCompile Include="M_Editor.cpp" />
     <ClCompile Include="M_Renderer3D.cpp" />
+    <ClCompile Include="M_Scene.cpp" />
     <ClCompile Include="M_Window.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Primitive.cpp" />

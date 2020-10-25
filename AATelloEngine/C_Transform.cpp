@@ -44,6 +44,14 @@ void C_Transform::SetEscale(float x, float y, float z)
 }
 
 
+const float* C_Transform::GetMatTransform() const
+{
+	mat4x4 transform = localTransform * worldTransform;
+
+	return transform.M;
+}
+
+
 void C_Transform::UpdateTransform()
 {
 	//So... here goes some mathematic code, ill ask adri later

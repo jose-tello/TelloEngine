@@ -4,6 +4,8 @@
 #include "Component.h"
 #include <vector>
 
+struct Color;
+
 class C_Mesh : public Component
 {
 public:
@@ -15,7 +17,7 @@ public:
 	void InitTexCoordBuffer(float*, size_t);
 	void InitIndexBuffer(unsigned int*, size_t);
 
-	void Draw(unsigned int textureId) const;
+	void Draw(const float* transformMatrix, unsigned int textureId, float* col) const;
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
 

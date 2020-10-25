@@ -1,5 +1,6 @@
 #include "C_Mesh.h"
 #include "GameObject.h"
+#include "Color.h"
 
 #include "Application.h"
 #include "M_Editor.h"
@@ -86,8 +87,15 @@ void C_Mesh::InitIndexBuffer(unsigned int* indexBuffer, std::size_t indexArrSize
 }
 
 
-void C_Mesh::Draw(unsigned int textureId) const
+void C_Mesh::Draw(const float* transformMatrix, unsigned int textureId, float* color) const
 {
+	glPushMatrix();
+	glMultMatrixf(transformMatrix);
+
+	if (color != nullptr)
+		glColor3f(color[0], color[1], color[2]);
+	
+
 	int idSize = indexArrSize / sizeof(unsigned int);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -129,6 +137,8 @@ void C_Mesh::Draw(unsigned int textureId) const
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glPopMatrix();
 }
 
 

@@ -15,6 +15,8 @@ public:
 	void SetPos(float x, float y, float z);
 	void SetEscale(float x, float y, float z);
 
+	const float* GetMatTransform() const;
+
 private:
 	void UpdateTransform();
 	void NotifyChildsNeedUpdate();
