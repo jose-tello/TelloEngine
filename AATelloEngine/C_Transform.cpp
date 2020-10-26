@@ -36,6 +36,12 @@ void C_Transform::SetPos(float x, float y, float z)
 }
 
 
+void C_Transform::SetRotation(float angle, float x, float y, float z)
+{
+	localTransform.rotate(angle, vec3(x, y, z));
+}
+
+
 void C_Transform::SetEscale(float x, float y, float z)
 {
 	localTransform.scale(x, y, z);

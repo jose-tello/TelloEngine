@@ -76,7 +76,9 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 				{
 					if (scene->mMeshes[mesh]->HasTextureCoords(j))
 					{
-						for (int k = 0; k < scene->mMeshes[mesh]->mNumFaces * 3; k++)
+						texCoords.reserve(numVertices * 2);
+
+						for (int k = 0; k < numVertices; k++)
 						{
 							texCoords.push_back(scene->mMeshes[mesh]->mTextureCoords[j][k].x);
 							texCoords.push_back(scene->mMeshes[mesh]->mTextureCoords[j][k].y);

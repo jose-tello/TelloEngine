@@ -13,6 +13,7 @@ public:
 	bool PostUpdate(float dt) override;
 
 	void SetPos(float x, float y, float z);
+	void SetRotation(float anfle, float x, float y, float z);
 	void SetEscale(float x, float y, float z);
 
 	mat4x4 GetMatTransform() const;
