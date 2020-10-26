@@ -7,6 +7,7 @@
 #include "M_Editor.h"
 #include "M_Camera3D.h"
 #include "M_FileManager.h"
+#include "M_Scene.h"
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
@@ -16,12 +17,15 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	editor = new M_Editor();
 	camera = new M_Camera3D();
 	assetManager = new M_FileManager();
+	scene = new M_Scene();
 
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
 	AddModule(camera);
 	AddModule(assetManager);
+
+	AddModule(scene);
 	// Renderer last!
 	
 	AddModule(renderer3D);

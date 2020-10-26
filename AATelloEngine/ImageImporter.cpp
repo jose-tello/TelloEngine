@@ -32,5 +32,6 @@ void ImageImporter::Load(char* buffer, unsigned int bytes)
 	texId = ilutGLBindTexImage();
 	ilDeleteImage(imgName);
 
-	App->renderer3D->AddTextureToAllMeshes(texId);
+	//Aply texture
+	//App->renderer3D->AddTextureToAllMeshes(texId);
 }

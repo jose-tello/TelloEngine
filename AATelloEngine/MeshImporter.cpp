@@ -1,15 +1,19 @@
 #include "MeshImporter.h"
 
 #include "Application.h"
-#include "Mesh.h"
 #include "M_Editor.h"
 
-#include "M_Renderer3D.h"
+#include "GameObject.h"
+#include "C_Mesh.h"
+
+#include "M_Scene.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+#include <stack>
 
 void ModelImporter::InitDebuggerOptions()
 {
@@ -21,7 +25,12 @@ void ModelImporter::InitDebuggerOptions()
 
 bool ModelImporter::Load(char* buffer, unsigned int bytes)
 {
-	std::vector<MeshEntry> meshArray;
+	std::stack<GameObject*> objStack;
+	GameObject* root = new GameObject(std::string("test"), nullptr);
+	GameObject* obj = nullptr;
+
+	std::stack<aiNode*> nodeStack;
+	aiNode* node = nullptr;
 
 	int numVertices = 0;
 	int numTexCoords = 0;
@@ -36,72 +45,97 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		// Use scene->mNumMeshes to iterate on scene->mMeshes array
+		nodeStack.push(scene->mRootNode);
+		objStack.push(root);
 
-		for (int i = 0; i < scene->mNumMeshes; i++)
+		while (nodeStack.empty() == false)
 		{
-			numVertices = scene->mMeshes[i]->mNumVertices;
-			vertices.resize(numVertices * 3);
+			node = nodeStack.top();
+			nodeStack.pop();
 
-			memcpy(&vertices[0], scene->mMeshes[i]->mVertices, sizeof(float) * numVertices * 3);
+			obj = objStack.top();
+			objStack.pop();
 
-			if (scene->mMeshes[i]->HasNormals())
+			for (int i = 0; i < node->mNumMeshes; i++)
 			{
-				normals.resize(numVertices * 3);
+				unsigned int mesh = node->mMeshes[i];
 
-				memcpy(&normals[0], scene->mMeshes[i]->mNormals, sizeof(float) * numVertices * 3);
-			}
+				numVertices = scene->mMeshes[mesh]->mNumVertices;
+				vertices.resize(numVertices * 3);
 
-			for (int j = 0; j < MAX_TEX_COORDS; j++)
-			{
-				if (scene->mMeshes[i]->HasTextureCoords(j))
+				memcpy(&vertices[0], scene->mMeshes[mesh]->mVertices, sizeof(float) * numVertices * 3);
+
+				if (scene->mMeshes[mesh]->HasNormals())
 				{
-					for (int k = 0; k < scene->mMeshes[i]->mNumFaces * 3; k++)
+					normals.resize(numVertices * 3);
+
+					memcpy(&normals[0], scene->mMeshes[mesh]->mNormals, sizeof(float) * numVertices * 3);
+				}
+
+				for (int j = 0; j < MAX_TEX_COORDS; j++)
+				{
+					if (scene->mMeshes[mesh]->HasTextureCoords(j))
 					{
-						texCoords.push_back(scene->mMeshes[i]->mTextureCoords[j][k].x);
-						texCoords.push_back(scene->mMeshes[i]->mTextureCoords[j][k].y);
+						for (int k = 0; k < scene->mMeshes[mesh]->mNumFaces * 3; k++)
+						{
+							texCoords.push_back(scene->mMeshes[mesh]->mTextureCoords[j][k].x);
+							texCoords.push_back(scene->mMeshes[mesh]->mTextureCoords[j][k].y);
+						}
 					}
 				}
-			}
 
-			if (scene->mMeshes[i]->HasFaces())
-			{
-				numIndices = scene->mMeshes[i]->mNumFaces * 3;
-				indices.resize(numIndices);
-
-				for (int j = 0; j < scene->mMeshes[i]->mNumFaces; j++)
+				if (scene->mMeshes[mesh]->HasFaces())
 				{
-					if (scene->mMeshes[i]->mFaces[j].mNumIndices != 3)
-						App->editor->AddLog("WARNING, geometry face with != 3 indices!");
+					numIndices = scene->mMeshes[mesh]->mNumFaces * 3;
+					indices.resize(numIndices);
 
-					else
-						memcpy(&indices[j * 3], scene->mMeshes[i]->mFaces[j].mIndices, 3 * sizeof(unsigned int));
+					for (int j = 0; j < scene->mMeshes[mesh]->mNumFaces; j++)
+					{
+						if (scene->mMeshes[mesh]->mFaces[j].mNumIndices != 3)
+							App->editor->AddLog("WARNING, geometry face with != 3 indices!");
+
+						else
+							memcpy(&indices[j * 3], scene->mMeshes[mesh]->mFaces[j].mIndices, 3 * sizeof(unsigned int));
+					}
 				}
+
+				C_Mesh* meshComponent = new C_Mesh(obj);
+				meshComponent->InitVertexBuffer(&vertices[0], numVertices * 3 * sizeof(float));
+
+				if (normals.empty() == false)
+					meshComponent->InitNormalBuffer(&normals[0], numVertices * 3 * sizeof(float));
+
+				if (texCoords.empty() == false)
+					meshComponent->InitTexCoordBuffer(&texCoords[0], numIndices * 2 * sizeof(float));
+
+				if (indices.empty() == false)
+					meshComponent->InitIndexBuffer(&indices[0], numIndices * sizeof(unsigned int));
+
+				vertices.clear();
+				normals.clear();
+				texCoords.clear();
+				indices.clear();
+
+				obj->AddComponent(meshComponent);
 			}
 
-			meshArray.push_back(MeshEntry());
-			meshArray[i].InitVertexBuffer(&vertices[0], numVertices * 3 * sizeof(float));
+			for (int i = 0; i < node->mNumChildren; i++)
+			{
+				nodeStack.push(node->mChildren[i]);
 
-			if (normals.empty() == false)
-				meshArray[i].InitNormalBuffer(&normals[0], numVertices * 3 * sizeof(float));
-
-			if (texCoords.empty() == false)
-				meshArray[i].InitTexCoordBuffer(&texCoords[0], numIndices * 2 * sizeof(float));
-
-			if (indices.empty() == false)
-				meshArray[i].InitIndexBuffer(&indices[0], numIndices * sizeof(unsigned int));
-
-			vertices.clear();
-			normals.clear();
-			texCoords.clear();
-			indices.clear();
+				obj->childs.push_back(new GameObject(obj));
+				objStack.push(obj->childs[i]);
+			}
 		}
-
-		App->renderer3D->AddMesh(meshArray);
+		App->scene->AddGameObject(root);
 		aiReleaseImport(scene);
 	}
+
 	else
+	{
 		App->editor->AddLog("Error loading scene");
+		return false;
+	}
 
 	return true;
 }

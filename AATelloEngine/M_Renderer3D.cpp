@@ -4,8 +4,8 @@
 #include "M_Window.h"
 #include "M_Camera3D.h"
 #include "M_Editor.h"
+#include "M_Scene.h"
 
-#include "Mesh.h"
 #include "Plane.h"
 
 #include "Glew/include/glew.h"
@@ -145,7 +145,7 @@ bool M_Renderer3D::Init()
 	vec3 pos4(5, 2, 5);
 	vec3 rotation(1, 0, 0);
 
-	meshVector.push_back(Mesh(PRIMITIVE_TYPE::CUBE, Color(0.5, 0.5, 1)));
+	/*meshVector.push_back(Mesh(PRIMITIVE_TYPE::CUBE, Color(0.5, 0.5, 1)));
 	meshVector.push_back(Mesh(PRIMITIVE_TYPE::PIRAMID, Color(1, 0.5, 0)));
 	meshVector.push_back(Mesh(PRIMITIVE_TYPE::SPHERE, Color(0, 1, 0), 3, 14, 14));
 	meshVector.push_back(Mesh(PRIMITIVE_TYPE::CILINDER, Color(1, 0, 1), 2, 0, 10, 5));
@@ -154,9 +154,7 @@ bool M_Renderer3D::Init()
 	meshVector[1].SetPosition(pos2);
 	meshVector[1].SetEscale(vec3(3, 4, 3));
 	meshVector[2].SetPosition(pos3);
-	meshVector[3].SetPosition(pos4);
-
-	
+	meshVector[3].SetPosition(pos4);*/
 
 	return ret;
 }
@@ -330,21 +328,6 @@ void M_Renderer3D::SetDrawFaceNormals(bool enable)
 }
 
 
-void M_Renderer3D::AddMesh(std::vector<MeshEntry>& vec)
-{
-	meshVector.push_back(Mesh(vec));
-}
-
-
-void M_Renderer3D::AddTextureToAllMeshes(unsigned int textureId)
-{
-	for (int i = 0; i < meshVector.size(); i++)
-	{
-		meshVector[i].InitTexture(textureId);
-	}
-}
-
-
 void M_Renderer3D::GenerateFrameBuffer(float width, float height)
 {
 	glGenFramebuffers(1, &frameBuffer);
@@ -379,7 +362,7 @@ void M_Renderer3D::DrawSceneTexture()
 	if (wireframeModeEnabled == true)
 		glLineWidth(3.0f);
 
-	DrawAllMeshes();
+	DrawObjects();
 
 	Plane plane;
 	plane.Draw();
@@ -390,28 +373,20 @@ void M_Renderer3D::DrawSceneTexture()
 }
 
 
-void M_Renderer3D::DrawAllMeshes()
-{
-	int meshCount = meshVector.size();
-	
+void M_Renderer3D::DrawObjects()
+{	
 	if (fillModeEnabled)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	for (int i = 0; i < meshCount; i++)
-	{
-		meshVector[i].Draw(drawVertexNormals, drawFaceNormals);
-	}
+	App->scene->DrawGameObjects(drawVertexNormals, drawFaceNormals, false);
 
 	if (fillModeEnabled == true && wireframeModeEnabled == true)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		for (int i = 0; i < meshCount; i++)
-		{
-			meshVector[i].Draw(false, false, true);
-		}
+		App->scene->DrawGameObjects(false, false, true);
 	}
 }

@@ -1,8 +1,20 @@
 #include "GameObject.h"
+#include "Component.h"
+#include "C_Mesh.h"
 
-GameObject::GameObject(std::string& name) :
+GameObject::GameObject(GameObject* parent) :
+	name(),
+	parent(parent),
+
+	transform(this)
+{
+	components.push_back(&transform);
+}
+
+
+GameObject::GameObject(std::string& name, GameObject* parent) :
 	name(name),
-	parent(nullptr),
+	parent(parent),
 
 	transform(this)
 {
@@ -16,7 +28,7 @@ GameObject::~GameObject()
 	parent = nullptr;
 
 	int count = components.size();
-	for (int i = 0; i < count; i++)
+	for (int i = 1; i < count; i++)
 	{
 		delete components[i];
 		components[i] = nullptr;
@@ -41,6 +53,8 @@ Component* GameObject::GetComponent(COMPONENT_TYPE componentType)
 		if (components[i]->GetType() == componentType)
 			return components[i];
 	}
+
+	return nullptr;
 }
 
 

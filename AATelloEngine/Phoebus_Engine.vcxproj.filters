@@ -19,9 +19,6 @@
     <Filter Include="Sources\EditorWindows">
       <UniqueIdentifier>{8229c63d-da0d-4e0e-a5f4-06b0be1cd0ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Containers\Mesh">
-      <UniqueIdentifier>{961bec4c-f474-4736-8b2b-fd062504c0e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Importers">
       <UniqueIdentifier>{c0155f42-efcb-4c16-97b0-6b8b8fc45401}</UniqueIdentifier>
     </Filter>
@@ -102,18 +99,6 @@
     <ClInclude Include="E_DockWindow.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Sources\Containers\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveVertex.h">
-      <Filter>Sources\Containers\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Sources\Containers\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Sources\Containers\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
@@ -146,6 +131,15 @@
     </ClInclude>
     <ClInclude Include="M_Scene.h">
       <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveVertex.h">
+      <Filter>Sources\Containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,20 +206,11 @@
     <ClCompile Include="E_DockWindow.cpp">
       <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Sources\Containers\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Sources\Containers\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Plane.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Containers\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="ImageImporter.cpp">
       <Filter>Sources\Importers</Filter>
@@ -253,6 +238,12 @@
     </ClCompile>
     <ClCompile Include="M_Scene.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Sources\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

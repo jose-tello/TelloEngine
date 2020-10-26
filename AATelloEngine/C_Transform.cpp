@@ -8,7 +8,6 @@ C_Transform::C_Transform(GameObject* owner) :Component(COMPONENT_TYPE::TRANSFORM
 
 	needUpdate(false)
 {
-
 }
 
 
@@ -44,11 +43,11 @@ void C_Transform::SetEscale(float x, float y, float z)
 }
 
 
-const float* C_Transform::GetMatTransform() const
+mat4x4 C_Transform::GetMatTransform() const
 {
 	mat4x4 transform = localTransform * worldTransform;
 
-	return transform.M;
+	return transform;
 }
 
 

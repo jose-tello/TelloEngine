@@ -9,7 +9,8 @@
 struct GameObject
 {
 public:
-	GameObject(std::string& name);
+	GameObject(GameObject* parent);
+	GameObject(std::string& name, GameObject* parent);
 	~GameObject();
 
 	Component* GetComponent(COMPONENT_TYPE componentType);

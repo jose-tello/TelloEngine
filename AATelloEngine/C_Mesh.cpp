@@ -5,6 +5,8 @@
 #include "Application.h"
 #include "M_Editor.h"
 
+#include "Primitive.h"
+
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
@@ -33,6 +35,15 @@ C_Mesh::~C_Mesh()
 	normalsId = 0;
 	indexId = 0;
 	texCoordId = 0;
+}
+
+
+void C_Mesh::InitAsCube()
+{
+	Primitive::CreateCube(vertices, indices);
+
+	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
 }
 
 
@@ -87,7 +98,7 @@ void C_Mesh::InitIndexBuffer(unsigned int* indexBuffer, std::size_t indexArrSize
 }
 
 
-void C_Mesh::Draw(const float* transformMatrix, unsigned int textureId, float* color) const
+void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color) const
 {
 	glPushMatrix();
 	glMultMatrixf(transformMatrix);

@@ -6,18 +6,22 @@
 
 struct Color;
 
+
 class C_Mesh : public Component
 {
 public:
 	C_Mesh(GameObject* owner);
 	~C_Mesh() override;
 
+	//Primitive things
+	void InitAsCube();
+
 	void InitVertexBuffer(float*, size_t);
 	void InitNormalBuffer(float*, size_t);
 	void InitTexCoordBuffer(float*, size_t);
 	void InitIndexBuffer(unsigned int*, size_t);
 
-	void Draw(const float* transformMatrix, unsigned int textureId, float* col) const;
+	void Draw(float* transformMatrix, unsigned int textureId, float* col) const;
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
 

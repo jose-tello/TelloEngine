@@ -5,13 +5,9 @@
 #include "Light.h"
 #include "glmath.h"
 
-
 #include "SDL\include\SDL.h"
 
 #include <string>
-
-struct Mesh;
-struct MeshEntry;
 
 class M_Renderer3D : public Module
 {
@@ -36,14 +32,11 @@ public:
 	void SetDrawVertexNormals(bool enable);
 	void SetDrawFaceNormals(bool enable);
 
-	void AddMesh(std::vector<MeshEntry>& vec);
-	void AddTextureToAllMeshes(unsigned int);
-
 private:
 	void GenerateFrameBuffer(float width, float height);
 	
 	void DrawSceneTexture();
-	void DrawAllMeshes();
+	void DrawObjects();
 
 public:
 	SDL_GLContext context;
@@ -63,7 +56,6 @@ private:
 	bool wireframeModeEnabled;
 	bool drawVertexNormals;
 	bool drawFaceNormals;
-	std::vector<Mesh> meshVector;
 
 	Light light;
 };

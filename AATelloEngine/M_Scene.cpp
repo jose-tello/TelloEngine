@@ -20,6 +20,17 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Start() //TODO: Charge house here
 {
+	//Debug purposes
+
+	/*GameObject* obj = new GameObject(nullptr);
+
+	C_Mesh* mesh = new C_Mesh(obj);
+	mesh->InitAsCube();
+
+	obj->AddComponent(mesh);
+
+	gameObjects.push_back(obj);*/
+
 	return true;
 }
 
@@ -86,7 +97,7 @@ void M_Scene::UpdateGameObjects(float dt)
 				childCount = node->childs.size();
 				for (int j = 0; j < childCount; j++)
 				{
-					stack.push(node->childs[i]);
+					stack.push(node->childs[j]);
 				}
 			}
 		}
@@ -118,7 +129,7 @@ void M_Scene::PostUpdateGameObjects(float dt)
 				childCount = node->childs.size();
 				for (int j = 0; j < childCount; j++)
 				{
-					stack.push(node->childs[i]);
+					stack.push(node->childs[j]);
 				}
 			}
 		}
@@ -152,7 +163,7 @@ void M_Scene::DrawGameObjects(bool drawVertexNormals, bool drawFaceNormals, bool
 				childCount = node->childs.size();
 				for (int j = 0; j < childCount; j++)
 				{
-					stack.push(node->childs[i]);
+					stack.push(node->childs[j]);
 				}
 			}
 		}
@@ -180,5 +191,6 @@ void M_Scene::DrawObject(GameObject* object, bool drawVertexNormals, bool drawFa
 		color = &Black;
 	}
 
-	mesh->Draw(object->transform.GetMatTransform(), texId, color);
+
+	mesh->Draw(object->transform.GetMatTransform().M, texId, color);
 }

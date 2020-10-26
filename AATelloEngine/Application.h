@@ -14,6 +14,7 @@ class M_Editor;
 class M_Console;
 class M_Camera3D;
 class M_FileManager;
+class M_Scene;
 
 class Application
 {
@@ -24,6 +25,8 @@ public:
 	M_Editor* editor;
 	M_Camera3D* camera;
 	M_FileManager* assetManager;
+	M_Scene* scene;
+
 	bool debug;
 	bool renderPrimitives;
 
