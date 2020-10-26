@@ -85,16 +85,6 @@ bool GameObject::DeleteComponent(COMPONENT_TYPE componentType)
 }
 
 
-void GameObject::PreUpdate(float dt)
-{
-	int componentsCount = components.size();
-	for (int i = 0; i < componentsCount; i++)
-	{
-		components[i]->PreUpdate(dt);
-	}
-}
-
-
 void GameObject::Update(float dt)
 {
 	int componentsCount = components.size();
@@ -134,7 +124,7 @@ bool GameObject::CheckNotRepeated(COMPONENT_TYPE componentType)
 	for (int i = 0; i < componentsCount; i++)
 	{
 		if (components[i]->GetType() == componentType)
-			return true;
+			return false;
 	}
 
 	return true;

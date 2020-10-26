@@ -4,7 +4,6 @@
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
 #include <gl/GL.h>
-#include "glmath.h"
 
 C_Material::C_Material(GameObject* owner) : Component(COMPONENT_TYPE::MATERIAL, owner),
 	textureId(0),

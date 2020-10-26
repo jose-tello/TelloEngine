@@ -19,7 +19,6 @@ public:
 	Component(COMPONENT_TYPE type, GameObject* owner);
 	virtual ~Component();
 
-	virtual bool PreUpdate(float dt);
 	virtual bool Update(float dt);
 	virtual bool PostUpdate(float dt);
 

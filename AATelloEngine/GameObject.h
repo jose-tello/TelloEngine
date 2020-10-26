@@ -17,7 +17,6 @@ public:
 	bool AddComponent(Component* component);
 	bool DeleteComponent(COMPONENT_TYPE componentType);
 
-	void PreUpdate(float dt);
 	void Update(float dt);
 	void PostUpdate(float dt);
 
@@ -28,15 +27,15 @@ private:
 	bool CheckNotRepeated(COMPONENT_TYPE componentType);
 
 public:
-	GameObject* parent;
+	GameObject* parent = nullptr;
 	std::vector<GameObject*> childs;
 
 	C_Transform transform;
 
 private:
-	std::vector<Component*> components;
-
 	std::string name;
+
+	std::vector<Component*> components;
 };
 
 #endif // __GAME_OBJECT_H__

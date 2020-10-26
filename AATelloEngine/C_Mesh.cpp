@@ -2,16 +2,13 @@
 #include "GameObject.h"
 #include "Color.h"
 
-#include "Application.h"
-#include "M_Editor.h"
-
 #include "Primitive.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
 #include <gl/GL.h>
-#include "glmath.h"
+
 
 C_Mesh::C_Mesh(GameObject* owner) : Component(COMPONENT_TYPE::MESH, owner),
 	vertexId(0),
@@ -105,7 +102,8 @@ void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color) 
 
 	if (color != nullptr)
 		glColor3f(color[0], color[1], color[2]);
-	
+	else
+		glColor3f(1.f, 1.f, 1.f);	//Reset the color
 
 	int idSize = indexArrSize / sizeof(unsigned int);
 
@@ -116,6 +114,7 @@ void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color) 
 
 	if (texCoordId != 0)
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -137,6 +136,7 @@ void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color) 
 			glBindTexture(GL_TEXTURE_2D, textureId);
 		}
 	}
+
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 	glDrawElements(GL_TRIANGLES, idSize, GL_UNSIGNED_INT, NULL);

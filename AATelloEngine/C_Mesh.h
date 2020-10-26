@@ -4,9 +4,6 @@
 #include "Component.h"
 #include <vector>
 
-struct Color;
-
-
 class C_Mesh : public Component
 {
 public:
