@@ -56,6 +56,11 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 			obj = objStack.top();
 			objStack.pop();
 
+			std::string str(node->mName.C_Str());
+			
+			str = str.substr(0, str.find_first_of("$"));
+			obj->SetName(str.c_str());
+
 			for (int i = 0; i < node->mNumMeshes; i++)
 			{
 				unsigned int mesh = node->mMeshes[i];

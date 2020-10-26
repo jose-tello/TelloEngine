@@ -8,6 +8,7 @@ enum class E_WINDOW_TYPE : int
 	APPLICATION_STATE,
 	CONSOLE,
 	SCENE,
+	GAME_OBJECTS,
 	MAX
 };
 

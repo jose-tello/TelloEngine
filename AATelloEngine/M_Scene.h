@@ -26,7 +26,12 @@ public:
 	void PostUpdateGameObjects(float dt);
 
 	void DrawGameObjects(bool drawVertexNormals, bool drawFaceNormals, bool black);
+
+	void GetGameObjectVector(std::vector<GameObject*>&);
+
+private:
 	void DrawObject(GameObject*, bool drawVertexNormals, bool drawFaceNormals, bool black);
+
 private:
 
 	std::vector<GameObject*> gameObjects; //Game objects without parent

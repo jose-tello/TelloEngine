@@ -115,6 +115,19 @@ void GameObject::PostUpdate(float dt)
 }
 
 
+const char* GameObject::GetName() const
+{
+	return name.c_str();
+}
+
+
+void GameObject::SetName(const char* n)
+{
+	name = n;
+}
+
+
+
 bool GameObject::CheckNotRepeated(COMPONENT_TYPE componentType)
 {
 	int componentsCount = components.size();

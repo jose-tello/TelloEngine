@@ -21,6 +21,9 @@ public:
 	void Update(float dt);
 	void PostUpdate(float dt);
 
+	const char* GetName() const;
+	void SetName(const char*);
+
 private:
 	bool CheckNotRepeated(COMPONENT_TYPE componentType);
 
@@ -31,10 +34,9 @@ public:
 	C_Transform transform;
 
 private:
-	std::string name;
-
 	std::vector<Component*> components;
-	
+
+	std::string name;
 };
 
 #endif // __GAME_OBJECT_H__

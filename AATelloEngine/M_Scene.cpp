@@ -171,6 +171,12 @@ void M_Scene::DrawGameObjects(bool drawVertexNormals, bool drawFaceNormals, bool
 }
 
 
+void M_Scene::GetGameObjectVector(std::vector<GameObject*>& vec)
+{
+	vec = gameObjects;
+}
+
+
 void M_Scene::DrawObject(GameObject* object, bool drawVertexNormals, bool drawFaceNormals, bool black)
 {
 	unsigned int texId = 0;

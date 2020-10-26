@@ -18,6 +18,7 @@
 #include "E_AppState.h"
 #include "E_Console.h"
 #include "E_Scene.h"
+#include "E_ObjectHierarchy.h"
 
 
 M_Editor::M_Editor(bool start_enabled) : Module(start_enabled)
@@ -34,6 +35,9 @@ M_Editor::M_Editor(bool start_enabled) : Module(start_enabled)
 	windowsVec.push_back(win);
 
 	win = new E_Scene(true);
+	windowsVec.push_back(win);
+
+	win = new E_ObjectHierarchy(true);
 	windowsVec.push_back(win);
 }
 
