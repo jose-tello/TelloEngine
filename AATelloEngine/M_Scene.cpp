@@ -193,10 +193,16 @@ void M_Scene::DrawObject(GameObject* object, bool drawVertexNormals, bool drawFa
 	}
 
 	if (black)
-	{
 		color = &Black;
-	}
-
-
+	
 	mesh->Draw(object->transform.GetMatTransform().M, texId, color);
+
+	if (black == false)
+	{
+		if (drawVertexNormals == true)
+			mesh->DrawVertexNormals();
+		
+		if (drawFaceNormals == true)
+			mesh->DrawFaceNormals();
+	}
 }
