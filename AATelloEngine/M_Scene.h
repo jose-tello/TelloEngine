@@ -20,17 +20,16 @@ public:
 	bool CleanUp() override;
 
 	void AddGameObject(GameObject*);
+	void GetGameObjectVector(std::vector<GameObject*>&);
 
 	//TODO: Considering using pointers to functions, ask Marc about it
 	void UpdateGameObjects(float dt);
 	void PostUpdateGameObjects(float dt);
 
-	void DrawGameObjects(bool drawVertexNormals, bool drawFaceNormals, bool black);
-
-	void GetGameObjectVector(std::vector<GameObject*>&);
+	void DrawGameObjects(bool black);
 
 private:
-	void DrawObject(GameObject*, bool drawVertexNormals, bool drawFaceNormals, bool black);
+	void DrawObject(GameObject*, bool black);
 
 private:
 

@@ -19,6 +19,7 @@
 #include "E_Console.h"
 #include "E_Scene.h"
 #include "E_ObjectHierarchy.h"
+#include "E_Inspector.h"
 
 
 M_Editor::M_Editor(bool start_enabled) : Module(start_enabled)
@@ -38,6 +39,9 @@ M_Editor::M_Editor(bool start_enabled) : Module(start_enabled)
 	windowsVec.push_back(win);
 
 	win = new E_ObjectHierarchy(true);
+	windowsVec.push_back(win);
+
+	win = new E_Inspector(true);
 	windowsVec.push_back(win);
 }
 
@@ -126,8 +130,6 @@ void M_Editor::Draw()
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 
-	CreateDockingWindow();
-
 	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
 	{
 		if (windowsVec[i]->open == false)
@@ -170,7 +172,7 @@ void M_Editor::OpenWindow(E_WINDOW_TYPE type)
 }
 
 
-void M_Editor::CreateDockingWindow()
+E_Window* M_Editor::GetWindow(E_WINDOW_TYPE type)
 {
-	
+	return windowsVec[(int)type];
 }

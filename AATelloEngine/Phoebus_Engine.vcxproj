@@ -83,6 +83,7 @@
     <ClInclude Include="E_AppState.h" />
     <ClInclude Include="E_Console.h" />
     <ClInclude Include="E_DockWindow.h" />
+    <ClInclude Include="E_Inspector.h" />
     <ClInclude Include="E_ObjectHierarchy.h" />
     <ClInclude Include="E_Scene.h" />
     <ClInclude Include="E_Window.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="E_AppState.cpp" />
     <ClCompile Include="E_Console.cpp" />
     <ClCompile Include="E_DockWindow.cpp" />
+    <ClCompile Include="E_Inspector.cpp" />
     <ClCompile Include="E_ObjectHierarchy.cpp" />
     <ClCompile Include="E_Scene.cpp" />
     <ClCompile Include="E_Window.cpp" />

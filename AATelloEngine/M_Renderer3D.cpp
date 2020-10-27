@@ -34,9 +34,7 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	colorMatEnabled(true),
 	texture2DEnabled(true),
 	fillModeEnabled(true),
-	wireframeModeEnabled(false),
-	drawVertexNormals(false),
-	drawFaceNormals(false)
+	wireframeModeEnabled(false)
 {
 }
 
@@ -137,29 +135,10 @@ bool M_Renderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	
-	//putting inside primitives so it doesn't look so sad :D
-	vec3 pos(-5, 3, -5);
-	vec3 pos2(0, 6, -15);
-	vec3 pos3(2, 0, -5);
-	vec3 pos4(5, 2, 5);
-	vec3 rotation(1, 0, 0);
-
-	/*meshVector.push_back(Mesh(PRIMITIVE_TYPE::CUBE, Color(0.5, 0.5, 1)));
-	meshVector.push_back(Mesh(PRIMITIVE_TYPE::PIRAMID, Color(1, 0.5, 0)));
-	meshVector.push_back(Mesh(PRIMITIVE_TYPE::SPHERE, Color(0, 1, 0), 3, 14, 14));
-	meshVector.push_back(Mesh(PRIMITIVE_TYPE::CILINDER, Color(1, 0, 1), 2, 0, 10, 5));
-
-	meshVector[0].SetPosition(pos);
-	meshVector[1].SetPosition(pos2);
-	meshVector[1].SetEscale(vec3(3, 4, 3));
-	meshVector[2].SetPosition(pos3);
-	meshVector[3].SetPosition(pos4);*/
-
 	return ret;
 }
 
-// PreUpdate: clear buffer
+
 UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 {
 	glLoadIdentity();
@@ -173,7 +152,7 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
-// PostUpdate present buffer to screen
+
 UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 {
 	DrawSceneTexture();
@@ -183,7 +162,7 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
-// Called before quitting
+
 bool M_Renderer3D::CleanUp()
 {
 	App->editor->AddLog("Log: Destroying 3D Renderer");
@@ -310,24 +289,6 @@ void M_Renderer3D::SetWireframeMode(bool enable)
 }
 
 
-void M_Renderer3D::SetDrawVertexNormals(bool enable)
-{
-	if (drawVertexNormals != enable)
-	{
-		drawVertexNormals = enable;
-	}
-}
-
-
-void M_Renderer3D::SetDrawFaceNormals(bool enable)
-{
-	if (drawFaceNormals != enable)
-	{
-		drawFaceNormals = enable;
-	}
-}
-
-
 void M_Renderer3D::GenerateFrameBuffer(float width, float height)
 {
 	glGenFramebuffers(1, &frameBuffer);
@@ -367,8 +328,6 @@ void M_Renderer3D::DrawSceneTexture()
 	Plane plane;
 	plane.Draw();
 
-	
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -381,12 +340,12 @@ void M_Renderer3D::DrawObjects()
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	App->scene->DrawGameObjects(drawVertexNormals, drawFaceNormals, false);
+	App->scene->DrawGameObjects(false);
 
 	if (fillModeEnabled == true && wireframeModeEnabled == true)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		App->scene->DrawGameObjects(false, false, true);
+		App->scene->DrawGameObjects(true);
 	}
 }

@@ -14,6 +14,7 @@ public:
 	~E_ObjectHierarchy();
 
 	bool Draw() override;
+
 	void DrawChildren(std::vector<GameObject*>&);
 };
 #endif // !__E_GAME_OBJECTS__

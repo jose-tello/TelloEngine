@@ -9,6 +9,7 @@ enum class E_WINDOW_TYPE : int
 	CONSOLE,
 	SCENE,
 	GAME_OBJECTS,
+	INSPECTOR,
 	MAX
 };
 

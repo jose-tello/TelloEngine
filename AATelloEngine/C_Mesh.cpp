@@ -8,9 +8,14 @@
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
 #include <gl/GL.h>
+#include "glmath.h"
 
 
 C_Mesh::C_Mesh(GameObject* owner) : Component(COMPONENT_TYPE::MESH, owner),
+	
+	drawVertexNormals(false),
+	drawFaceNormals(false),
+
 	vertexId(0),
 	normalsId(0),
 	texCoordId(0),
@@ -95,7 +100,7 @@ void C_Mesh::InitIndexBuffer(unsigned int* indexBuffer, std::size_t indexArrSize
 }
 
 
-void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color) const
+void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, bool wireFrameBlack) const
 {
 	glPushMatrix();
 	glMultMatrixf(transformMatrix);
@@ -148,6 +153,15 @@ void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color) 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (wireFrameBlack == false)
+	{
+		if (drawVertexNormals)
+			DrawVertexNormals();
+
+		if (drawFaceNormals == true)
+			DrawFaceNormals();
+	}
 
 	glPopMatrix();
 }

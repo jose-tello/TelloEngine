@@ -113,7 +113,7 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 					meshComponent->InitNormalBuffer(&normals[0], numVertices * 3 * sizeof(float));
 
 				if (texCoords.empty() == false)
-					meshComponent->InitTexCoordBuffer(&texCoords[0], numIndices * 2 * sizeof(float));
+					meshComponent->InitTexCoordBuffer(&texCoords[0], numVertices * 2 * sizeof(float));
 
 				if (indices.empty() == false)
 					meshComponent->InitIndexBuffer(&indices[0], numIndices * sizeof(unsigned int));
@@ -124,6 +124,15 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 				indices.clear();
 
 				obj->AddComponent(meshComponent);
+
+				/*aiVector3D position;
+				aiQuaternion rotation;
+				aiVector3D scale;
+
+				node->mTransformation.Decompose(scale, rotation, position);
+				//obj->transform.SetQuatRotation(rotation.x, rotation.y, rotation.z, rotation.w);
+				obj->transform.SetPos(position.x, position.y, position.z);*/
+				
 			}
 
 			for (int i = 0; i < node->mNumChildren; i++)

@@ -70,7 +70,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 	std::string finalPath = normalizedPath;
 
 	TransformPath(finalPath);
-	//if (DuplicateFile(normalizedPath.c_str(), "Assets", finalPath)) //TODO: Ask why
+	//if (DuplicateFile(normalizedPath.c_str(), "Assets", finalPath)) 
 	{
 		FILE_TYPE type = GetFileType(finalPath.c_str());
 		bytes = ReadBytes(finalPath.c_str(), &buffer);

@@ -29,8 +29,6 @@ public:
 	void SetTexture2DEnabled(bool enable);
 	void SetFillMode(bool enable);
 	void SetWireframeMode(bool enable);
-	void SetDrawVertexNormals(bool enable);
-	void SetDrawFaceNormals(bool enable);
 
 private:
 	void GenerateFrameBuffer(float width, float height);
@@ -54,8 +52,6 @@ private:
 	bool texture2DEnabled;
 	bool fillModeEnabled;
 	bool wireframeModeEnabled;
-	bool drawVertexNormals;
-	bool drawFaceNormals;
 
 	Light light;
 };

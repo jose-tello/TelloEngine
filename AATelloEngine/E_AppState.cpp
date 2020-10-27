@@ -29,8 +29,6 @@ E_AppState::E_AppState(bool open) :
 	texture2DEnabled(true),
 	fillModeEnabled(true),
 	wireframeModeEnabled(false),
-	drawVertexNormals(false),
-	drawFaceNormals(false),
 
 	//Cpu
 	cpuCores(0),
@@ -205,8 +203,6 @@ void E_AppState::DrawChRenderOptions()
 		ImGui::Checkbox("Texture 2D", &texture2DEnabled);
 		ImGui::Checkbox("Fill mode", &fillModeEnabled);
 		ImGui::Checkbox("Wireframe mode", &wireframeModeEnabled);
-		ImGui::Checkbox("Vertex normals", &drawVertexNormals);
-		ImGui::Checkbox("Face normals", &drawFaceNormals);
 
 
 		App->renderer3D->SetDepthTestEnabled(depthTestEnabled);
@@ -216,8 +212,6 @@ void E_AppState::DrawChRenderOptions()
 		App->renderer3D->SetTexture2DEnabled(texture2DEnabled);
 		App->renderer3D->SetFillMode(fillModeEnabled);
 		App->renderer3D->SetWireframeMode(wireframeModeEnabled);
-		App->renderer3D->SetDrawVertexNormals(drawVertexNormals);
-		App->renderer3D->SetDrawFaceNormals(drawFaceNormals);
 	}
 }
 

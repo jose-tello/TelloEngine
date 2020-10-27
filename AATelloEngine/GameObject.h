@@ -13,7 +13,9 @@ public:
 	GameObject(std::string& name, GameObject* parent);
 	~GameObject();
 
-	Component* GetComponent(COMPONENT_TYPE componentType);
+	Component* GetComponent(COMPONENT_TYPE componentType) const;
+	void GetAllComponents(std::vector<Component*>& vec) const;
+
 	bool AddComponent(Component* component);
 	bool DeleteComponent(COMPONENT_TYPE componentType);
 

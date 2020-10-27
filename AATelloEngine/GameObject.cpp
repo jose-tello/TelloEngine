@@ -45,7 +45,7 @@ GameObject::~GameObject()
 }
 
 
-Component* GameObject::GetComponent(COMPONENT_TYPE componentType)
+Component* GameObject::GetComponent(COMPONENT_TYPE componentType) const
 {
 	int componentsCount = components.size();
 	for (int i = 0; i < componentsCount; i++)
@@ -55,6 +55,12 @@ Component* GameObject::GetComponent(COMPONENT_TYPE componentType)
 	}
 
 	return nullptr;
+}
+
+
+void GameObject::GetAllComponents(std::vector<Component*>& vec) const
+{
+	vec = components;
 }
 
 

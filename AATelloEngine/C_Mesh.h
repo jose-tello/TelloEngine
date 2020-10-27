@@ -18,10 +18,13 @@ public:
 	void InitTexCoordBuffer(float*, size_t);
 	void InitIndexBuffer(unsigned int*, size_t);
 
-	void Draw(float* transformMatrix, unsigned int textureId, float* col) const;
+	void Draw(float* transformMatrix, unsigned int textureId, float* col, bool wireframeMode) const;
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
 
+public:
+	bool drawVertexNormals;
+	bool drawFaceNormals;
 
 private:
 	unsigned int vertexId;

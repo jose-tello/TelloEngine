@@ -144,6 +144,9 @@
     <ClInclude Include="E_ObjectHierarchy.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="E_Inspector.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -249,6 +252,9 @@
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="E_ObjectHierarchy.cpp">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="E_Inspector.cpp">
       <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>

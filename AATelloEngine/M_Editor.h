@@ -30,8 +30,7 @@ public:
 	void AddLog(const char* fmt, ...) IM_FMTARGS(2);
 	void OpenWindow(E_WINDOW_TYPE type);
 
-private:
-	void CreateDockingWindow();
+	E_Window* GetWindow(E_WINDOW_TYPE);
 
 private:
 	std::vector<E_Window*> windowsVec;
