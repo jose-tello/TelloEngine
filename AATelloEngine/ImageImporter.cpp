@@ -1,7 +1,11 @@
 #include "ImageImporter.h"
 
 #include "Application.h"
-#include "M_Renderer3D.h"
+#include "M_Editor.h"
+#include "E_Inspector.h"
+
+#include "GameObject.h"
+#include "C_Material.h"
 
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
 #include "Devil\include\ilu.h"
@@ -24,14 +28,26 @@ void ImageImporter::Load(char* buffer, unsigned int bytes)
 {
 	unsigned int texId;
 	ILuint imgName = 0;
-	ilGenImages(1, &imgName);
-	ilBindImage(imgName);
 
-	ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, bytes);
+	E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+	GameObject* object = inspector->GetFocusedGameObject();
+
+	if (object != nullptr)
+	{
+		ilGenImages(1, &imgName);
+		ilBindImage(imgName);
+
+		ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, bytes);
+
+		texId = ilutGLBindTexImage();
+		ilDeleteImage(imgName);
+
+		C_Material* material = new C_Material(object);
+		material->SetTexture(texId);
+
+		object->AddComponent(material);
+	}
+	else
+		App->editor->AddLog("WARNING: Dont have a game object selected");
 	
-	texId = ilutGLBindTexImage();
-	ilDeleteImage(imgName);
-
-	//Aply texture
-	//App->renderer3D->AddTextureToAllMeshes(texId);
 }

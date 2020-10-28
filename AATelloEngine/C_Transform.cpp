@@ -31,7 +31,7 @@ bool C_Transform::PostUpdate(float dt)
 
 void C_Transform::GetPos(float& x, float& y, float& z) const
 {
-	vec3 translation = worldTransform.translation();
+	vec3 translation = localTransform.translation() + worldTransform.translation();
 
 	x = translation.x;
 	y = translation.y;

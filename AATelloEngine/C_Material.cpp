@@ -7,7 +7,7 @@
 
 C_Material::C_Material(GameObject* owner) : Component(COMPONENT_TYPE::MATERIAL, owner),
 	textureId(0),
-	color(),
+	color(1.f, 1.f, 1.f),
 
 	textureEnabled(true),
 	colorEnabled(true)
@@ -80,5 +80,5 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 		col = color;
 
 	else
-		col = { 0.f, 0.f, 0.f, 0.f };
+		col = { 1.f, 1.f, 1.f, 1.f };
 }

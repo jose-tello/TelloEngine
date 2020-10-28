@@ -59,6 +59,12 @@ bool E_Inspector::Draw()
 }
 
 
+GameObject* E_Inspector::GetFocusedGameObject() const
+{
+	return focusedObject;
+}
+
+
 void E_Inspector::SetFocusedObject(GameObject* obj)
 {
 	focusedObject = obj;
@@ -93,10 +99,12 @@ void E_Inspector::DrawTransformComp(C_Transform* transform)
 		float x, y, z;
 		transform->GetPos(x, y, z);
 
+		float pos[] = { x, y, z };
 
-		ImGui::Text("Position: ");	ImGui::SameLine();
+		ImGui::Text("Position: ");
+		ImGui::InputFloat3("", pos, 10, ImGuiInputTextFlags_AutoSelectAll);
 		ImGui::Spacing();
-		ImGui::Spacing();
+		ImGui::Separator();
 
 		ImGui::Text("Rotation: ");	ImGui::SameLine();
 		ImGui::Spacing();
