@@ -1,20 +1,20 @@
-#include "Plane.h"
+#include "DrawPlane.h"
 
 #include "Glew/include/glew.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-Plane::Plane()
+DrawPlane::DrawPlane()
 {
 }
 
 
-Plane::~Plane()
+DrawPlane::~DrawPlane()
 {
 }
 
 
-void Plane::Draw() const
+void DrawPlane::Draw() const
 {
 	glLineWidth(1.0f);
 	glColor3f(1, 1, 1);

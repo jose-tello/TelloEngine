@@ -12,11 +12,17 @@ public:
 
 	bool PostUpdate(float dt) override;
 
+	void GetPos(float& x, float& y, float& z) const;
 	void SetPos(float x, float y, float z);
-	void SetRotation(float anfle, float x, float y, float z);
+
+	void GetRotation(float& angle, float& x, float& y, float& z);
+	void SetRotation(float angle, float x, float y, float z);
+
+	void GetEscale();
 	void SetEscale(float x, float y, float z);
 
 	mat4x4 GetMatTransform() const;
+	void AddTransform(mat4x4 transform);
 
 private:
 	void UpdateTransform();

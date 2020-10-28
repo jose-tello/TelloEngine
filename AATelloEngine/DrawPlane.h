@@ -1,11 +1,11 @@
 #ifndef __PLANE_H__
 #define __PLANE_H__
 
-class Plane
+class DrawPlane
 {
 public:
-	Plane();
-	~Plane();
+	DrawPlane();
+	~DrawPlane();
 
 	void Draw() const;
 };

@@ -90,6 +90,10 @@ void E_Inspector::DrawTransformComp(C_Transform* transform)
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		float x, y, z;
+		transform->GetPos(x, y, z);
+
+
 		ImGui::Text("Position: ");	ImGui::SameLine();
 		ImGui::Spacing();
 		ImGui::Spacing();

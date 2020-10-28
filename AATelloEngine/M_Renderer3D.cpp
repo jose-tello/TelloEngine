@@ -6,7 +6,7 @@
 #include "M_Editor.h"
 #include "M_Scene.h"
 
-#include "Plane.h"
+#include "DrawPlane.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -325,7 +325,7 @@ void M_Renderer3D::DrawSceneTexture()
 
 	DrawObjects();
 
-	Plane plane;
+	DrawPlane plane;
 	plane.Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

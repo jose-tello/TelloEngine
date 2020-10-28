@@ -8,6 +8,8 @@
 
 #include "M_Scene.h"
 
+#include "MathGeoLib/include/MathGeoLib.h"
+
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -60,6 +62,23 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 			
 			str = str.substr(0, str.find_first_of("$"));
 			obj->SetName(str.c_str());
+
+			aiVector3D position;
+			aiQuaternion rotation;
+			aiVector3D scale;
+			mat4x4 mat;
+
+			node->mTransformation.Decompose(scale, rotation, position);
+			Quat quat(rotation.x, rotation.y, rotation.z, rotation.w);
+
+			obj->transform.SetEscale(scale.x, scale.y, scale.z);
+			mat.rotate(quat.Angle() * RADTODEG, vec3(quat.Axis().x, quat.Axis().y, quat.Axis().z));
+			obj->transform.AddTransform(mat);
+
+			obj->transform.SetPos(position.x, position.y, position.z);
+
+			
+
 
 			for (int i = 0; i < node->mNumMeshes; i++)
 			{
@@ -125,13 +144,13 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 
 				obj->AddComponent(meshComponent);
 
-				/*aiVector3D position;
+				aiVector3D position;
 				aiQuaternion rotation;
 				aiVector3D scale;
 
 				node->mTransformation.Decompose(scale, rotation, position);
-				//obj->transform.SetQuatRotation(rotation.x, rotation.y, rotation.z, rotation.w);
-				obj->transform.SetPos(position.x, position.y, position.z);*/
+
+				obj->transform.SetPos(position.x, position.y, position.z);
 				
 			}
 
