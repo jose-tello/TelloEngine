@@ -15,10 +15,10 @@ public:
 	void GetPos(float& x, float& y, float& z) const;
 	void SetPos(float x, float y, float z);
 
-	void GetRotation(float& angle, float& x, float& y, float& z);
+	void GetRotation(float& angle, float& x, float& y, float& z) const;
 	void SetRotation(float angle, float x, float y, float z);
 
-	void GetEscale();
+	void GetEscale(float& x, float& y, float& z) const;
 	void SetEscale(float x, float y, float z);
 
 	mat4x4 GetMatTransform() const;

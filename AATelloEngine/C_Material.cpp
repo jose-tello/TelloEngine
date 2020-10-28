@@ -53,10 +53,22 @@ void C_Material::DeleteColor()
 }
 
 
+bool C_Material::GetTextureEnabled() const
+{
+	return textureEnabled;
+}
+
+
 void C_Material::SetTextureEnable(bool enable)
 {
 	if (textureEnabled != enable)
 		textureEnabled = enable;
+}
+
+
+bool C_Material::GetColorEnabled() const
+{
+	return colorEnabled;
 }
 
 

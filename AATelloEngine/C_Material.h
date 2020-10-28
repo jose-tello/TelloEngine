@@ -15,7 +15,10 @@ public:
 	void DeleteTexture();
 	void DeleteColor();
 
+	bool GetTextureEnabled() const;
 	void SetTextureEnable(bool enable);
+	
+	bool GetColorEnabled() const;
 	void SetColorEnable(bool enable);
 
 	void GetDrawVariables(unsigned int& texId, Color& col) const;

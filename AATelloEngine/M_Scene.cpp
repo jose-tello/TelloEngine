@@ -137,7 +137,7 @@ void M_Scene::PostUpdateGameObjects(float dt)
 }
 
 
-void M_Scene::DrawGameObjects(bool drawVertexNormals, bool drawFaceNormals, bool black)
+void M_Scene::DrawGameObjects(bool black)
 {
 	std::stack<GameObject*> stack;
 	GameObject* node;
@@ -155,7 +155,7 @@ void M_Scene::DrawGameObjects(bool drawVertexNormals, bool drawFaceNormals, bool
 			stack.pop();
 
 			if (node->GetComponent(COMPONENT_TYPE::MESH) != nullptr)
-				DrawObject(node, drawVertexNormals, drawFaceNormals, black);
+				DrawObject(node, black);
 			
 
 			if (node->childs.empty() == false)
@@ -177,7 +177,7 @@ void M_Scene::GetGameObjectVector(std::vector<GameObject*>& vec)
 }
 
 
-void M_Scene::DrawObject(GameObject* object, bool drawVertexNormals, bool drawFaceNormals, bool black)
+void M_Scene::DrawObject(GameObject* object, bool blackWireframe)
 {
 	unsigned int texId = 0;
 	float* color = nullptr;
@@ -192,17 +192,8 @@ void M_Scene::DrawObject(GameObject* object, bool drawVertexNormals, bool drawFa
 		color = &col;
 	}
 
-	if (black)
+	if (blackWireframe)
 		color = &Black;
 	
-	mesh->Draw(object->transform.GetMatTransform().M, texId, color);
-
-	if (black == false)
-	{
-		if (drawVertexNormals == true)
-			mesh->DrawVertexNormals();
-		
-		if (drawFaceNormals == true)
-			mesh->DrawFaceNormals();
-	}
+	mesh->Draw(object->transform.GetMatTransform().M, texId, color, blackWireframe);
 }

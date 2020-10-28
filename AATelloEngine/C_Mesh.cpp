@@ -218,3 +218,11 @@ void C_Mesh::DrawFaceNormals() const
 
 	glEnd();
 }
+
+
+void C_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const
+{
+	vert = vertices.size();
+	norm = normals.size();
+	ind = indices.size();
+}

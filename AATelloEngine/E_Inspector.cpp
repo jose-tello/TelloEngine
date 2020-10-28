@@ -47,7 +47,7 @@ bool E_Inspector::Draw()
 				break;
 
 			default:
-
+				
 				break;
 			}
 		}
@@ -89,6 +89,8 @@ void E_Inspector::DrawGameObject(GameObject* obj)
 	{
 		ImGui::Text("Name: ");	ImGui::SameLine(); ImGui::Text(obj->GetName());
 	}
+
+	ImGui::NewLine();
 }
 
 
@@ -96,24 +98,34 @@ void E_Inspector::DrawTransformComp(C_Transform* transform)
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		float x, y, z;
-		transform->GetPos(x, y, z);
+		float x, y, z, angle;
 
+		transform->GetPos(x, y, z);
 		float pos[] = { x, y, z };
 
 		ImGui::Text("Position: ");
-		ImGui::InputFloat3("", pos, 10, ImGuiInputTextFlags_AutoSelectAll);
-		ImGui::Spacing();
+		ImGui::InputFloat3("", pos, 2, ImGuiInputTextFlags_AutoSelectAll);
+		ImGui::NewLine();
 		ImGui::Separator();
 
-		ImGui::Text("Rotation: ");	ImGui::SameLine();
-		ImGui::Spacing();
-		ImGui::Spacing();
+		transform->GetRotation(angle, x, y, z);
+		float rotation[] = { x, y, z };
+
+		ImGui::Text("Rotation: ");
+		ImGui::InputFloat3("", rotation, 2, ImGuiInputTextFlags_AutoSelectAll);
+		ImGui::InputFloat("Angle rotation:", &angle);
+		ImGui::NewLine();
+		ImGui::Separator();
+
+		transform->GetEscale(x, y, z);
+		float escale[] = { x, y, z };
+
 		ImGui::Text("Scale: ");
-		ImGui::Spacing();
-		ImGui::Spacing();
+		ImGui::InputFloat3("", escale, 2, ImGuiInputTextFlags_AutoSelectAll);
+		ImGui::NewLine();
 	}
 
+	ImGui::NewLine();
 }
 
 
@@ -121,13 +133,36 @@ void E_Inspector::DrawMeshComp(C_Mesh* mesh)
 {
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		unsigned int verSize, normSize, indSize;
+		mesh->GetAllVectorsSize(verSize, normSize, indSize);
+
+		ImGui::Text("Vertices: %i", verSize);
+		ImGui::Text("Normals: %i", normSize);
+		ImGui::Text("Indices: %i", indSize);
+
+		ImGui::NewLine();
+		ImGui::Separator();
+
 		ImGui::Checkbox("Draw vertex normals", &mesh->drawVertexNormals);
 		ImGui::Checkbox("Draw face normals", &mesh->drawFaceNormals);
 	}
+	ImGui::NewLine();
 }
 
 
 void E_Inspector::DrawMaterialComp(C_Material* material)
 {
+	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool texEnabled = material->GetTextureEnabled();
+		bool colEnabled = material->GetColorEnabled();
 
+		ImGui::Checkbox("Texture", &texEnabled);
+		ImGui::Checkbox("Color", &colEnabled);
+
+		material->SetTextureEnable(texEnabled);
+		material->SetColorEnable(colEnabled);
+	}
+
+	ImGui::NewLine();
 }

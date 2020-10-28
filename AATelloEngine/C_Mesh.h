@@ -22,6 +22,8 @@ public:
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
 
+	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
+
 public:
 	bool drawVertexNormals;
 	bool drawFaceNormals;
@@ -32,7 +34,6 @@ private:
 	unsigned int texCoordId;
 	unsigned int indexId;
 
-	//Used to draw vertex and face normals, mayby i should get rid of them
 	std::vector<float> vertices;
 	std::vector<float> normals;
 	std::vector<unsigned int> indices;

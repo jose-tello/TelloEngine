@@ -30,21 +30,24 @@ bool E_ObjectHierarchy::Draw()
 	std::vector<GameObject*> gameObjects;
 	App->scene->GetGameObjectVector(gameObjects);
 
+	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+
 	int gameObjCount = gameObjects.size();
 	for (int i = 0; i < gameObjCount; i++)
 	{
-		if (ImGui::TreeNodeEx(gameObjects[i]->GetName()))
+		bool open = ImGui::TreeNodeEx(gameObjects[i]->GetName(), flags);
+		
+		if (ImGui::IsItemClicked())
 		{
-			if (ImGui::IsItemClicked())
-			{
-				E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
-				inspector->SetFocusedObject(gameObjects[i]);
-			}
-			
-			DrawChildren(gameObjects[i]->childs);
-
-			ImGui::TreePop();
+			E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+			inspector->SetFocusedObject(gameObjects[i]);
 		}
+		
+		if (open == true)
+		{
+			DrawChildren(gameObjects[i]->childs);
+			ImGui::TreePop();
+		}		
 	}
 
 	ImGui::End();
@@ -55,19 +58,22 @@ bool E_ObjectHierarchy::Draw()
 
 void E_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 {
+	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+
 	int gameObjCount = vec.size();
 	for (int i = 0; i < gameObjCount; i++)
 	{
-		if (ImGui::TreeNodeEx(vec[i]->GetName()))
+		bool open = ImGui::TreeNodeEx(vec[i]->GetName(), flags);
+		
+		if (ImGui::IsItemClicked())
 		{
-			if (ImGui::IsItemClicked())
-			{
-				E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
-				inspector->SetFocusedObject(vec[i]);
-			}
+			E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+			inspector->SetFocusedObject(vec[i]);
+		}
 
+		if (open == true)
+		{
 			DrawChildren(vec[i]->childs);
-
 			ImGui::TreePop();
 		}
 	}
