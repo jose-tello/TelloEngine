@@ -141,35 +141,40 @@ void M_Scene::PostUpdateGameObjects(float dt)
 void M_Scene::CheckObjectsToDelete()
 {
 	std::stack<GameObject*> stack;
-	GameObject* node;
+	GameObject* node = nullptr;
 
-	int childCount;
-
-	int gameObjCount = gameObjects.size();
-	for (int i = 0; i < gameObjCount; i++)
+	for (int i = 0; i < gameObjects.size(); i++)
 	{
-		stack.push(gameObjects[i]);
-
-		while (stack.empty() == false)
+		if (gameObjects[i]->toDelete == true)
 		{
-			node = stack.top();
-			stack.pop();
+			delete gameObjects[i];
+			gameObjects.erase(gameObjects.begin() + i);
+			i--;
+		}
 
-			if (node->toDelete == true)
-			{
-				if (node->parent != nullptr)
-					node->parent->SearchDeletedChilds();
-				
-				delete node;
-				node = nullptr;
-			}
+		else
+		{
+			stack.push(gameObjects[i]);
 
-			if (node != nullptr && node->childs.empty() == false)
+			while (stack.empty() == false)
 			{
-				childCount = node->childs.size();
-				for (int j = 0; j < childCount; j++)
+				node = stack.top();
+				stack.pop();
+
+				if (node->childs.empty() == false)
 				{
-					stack.push(node->childs[j]);
+					for (int j = 0; j < node->childs.size(); j++)
+					{
+						if (node->childs[j]->toDelete == true)
+						{
+							delete node->childs[j];
+							node->childs.erase(node->childs.begin() + j);
+							j--;
+						}
+
+						else
+							stack.push(node->childs[j]);
+					}
 				}
 			}
 		}

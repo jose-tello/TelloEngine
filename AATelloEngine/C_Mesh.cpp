@@ -37,6 +37,10 @@ C_Mesh::~C_Mesh()
 	normalsId = 0;
 	indexId = 0;
 	texCoordId = 0;
+
+	vertices.clear();
+	normals.clear();
+	indices.clear();
 }
 
 

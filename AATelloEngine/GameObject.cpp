@@ -42,6 +42,8 @@ GameObject::~GameObject()
 		childs[i] = nullptr;
 	}
 	childs.clear();
+
+	name.clear();
 }
 
 
@@ -131,8 +133,7 @@ void GameObject::SearchDeletedChilds()
 		if (childs[i]->toDelete == true)
 		{
 			childs.erase(childs.begin() + i);
-			childsCount--;
-			i--;
+			return;								//If multiple childs are deleted simultaneously, this ensures all will be deleted properly
 		}
 	}
 }

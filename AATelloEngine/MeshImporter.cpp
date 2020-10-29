@@ -30,7 +30,7 @@ void ModelImporter::InitDebuggerOptions()
 bool ModelImporter::Load(char* buffer, unsigned int bytes)
 {
 	std::stack<GameObject*> objStack;
-	GameObject* root = new GameObject(std::string("test"), nullptr);
+	GameObject* root = new GameObject(nullptr);
 	GameObject* obj = nullptr;
 
 	std::stack<aiNode*> nodeStack;
@@ -60,30 +60,20 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 			obj = objStack.top();
 			objStack.pop();
 
-			std::string str(node->mName.C_Str());
-			
-			str = str.substr(0, str.find_first_of("$"));
-			obj->SetName(str.c_str());
-
-			aiVector3D position;
-			aiQuaternion rotation;
-			aiVector3D scale;
-			mat4x4 mat;
-
-			node->mTransformation.Decompose(scale, rotation, position);
-			Quat quat(rotation.x, rotation.y, rotation.z, rotation.w);
-
-			obj->transform.SetEscale(scale.x, scale.y, scale.z);
-			mat.rotate(quat.Angle() * RADTODEG, vec3(quat.Axis().x, quat.Axis().y, quat.Axis().z));
-			obj->transform.AddTransform(mat);
-
-			obj->transform.SetPos(position.x, position.y, position.z);
-
-			
-
+			SetObjName(obj, node);
+			InitTransformComponent(obj, node);
 
 			for (int i = 0; i < node->mNumMeshes; i++)
 			{
+				//TODO: i hate this if
+				if (i > 0)
+				{
+					GameObject* it = new GameObject(obj->parent);
+					obj->parent->childs.push_back(it);
+					obj = it;
+					SetObjName(obj, node);
+					InitTransformComponent(obj, node);
+				}
 				unsigned int mesh = node->mMeshes[i];
 
 				numVertices = scene->mMeshes[mesh]->mNumVertices;
@@ -127,48 +117,12 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 					}
 				}
 
-				C_Mesh* meshComponent = new C_Mesh(obj);
-				meshComponent->InitVertexBuffer(&vertices[0], numVertices * 3 * sizeof(float));
-
-				if (normals.empty() == false)
-					meshComponent->InitNormalBuffer(&normals[0], numVertices * 3 * sizeof(float));
-
-				if (texCoords.empty() == false)
-					meshComponent->InitTexCoordBuffer(&texCoords[0], numVertices * 2 * sizeof(float));
-
-				if (indices.empty() == false)
-					meshComponent->InitIndexBuffer(&indices[0], numIndices * sizeof(unsigned int));
-
-				vertices.clear();
-				normals.clear();
-				texCoords.clear();
-				indices.clear();
-
-				obj->AddComponent(meshComponent);
-
+				InitMeshComponent(obj, vertices, normals, texCoords, indices);
 				
 				aiMaterial* material = scene->mMaterials[scene->mMeshes[mesh]->mMaterialIndex];
-				aiString texPath;
 
 				if (material->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE) > 0)
-				{
-					C_Material* cMat = new C_Material(obj);
-
-					material->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
-
-					cMat->SetTexture(ImageImporter::Load(texPath.C_Str(), false));
-
-					obj->AddComponent(cMat);
-				}
-
-				aiVector3D position;
-				aiQuaternion rotation;
-				aiVector3D scale;
-
-				node->mTransformation.Decompose(scale, rotation, position);
-
-				obj->transform.SetPos(position.x, position.y, position.z);
-				
+					InitMaterialComponent(obj, material);			
 			}
 
 			for (int i = 0; i < node->mNumChildren; i++)
@@ -190,6 +144,69 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 	}
 
 	return true;
+}
+
+
+void ModelImporter::SetObjName(GameObject* object, aiNode* node)
+{
+	std::string str(node->mName.C_Str());
+
+	str = str.substr(0, str.find_first_of("$"));
+	object->SetName(str.c_str());
+}
+
+
+void ModelImporter::InitTransformComponent(GameObject* object, aiNode* node)
+{
+	aiVector3D position;
+	aiQuaternion rotation;
+	aiVector3D scale;
+	mat4x4 mat;
+
+	node->mTransformation.Decompose(scale, rotation, position);
+	Quat quat(rotation.x, rotation.y, rotation.z, rotation.w);
+
+	object->transform.SetEscale(scale.x, scale.y, scale.z);
+	mat.rotate(quat.Angle() * RADTODEG, vec3(quat.Axis().x, quat.Axis().y, quat.Axis().z));
+	object->transform.AddTransform(mat);
+
+	object->transform.SetPos(position.x, position.y, position.z);
+}
+
+
+void ModelImporter::InitMeshComponent(GameObject* object, std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords, std::vector<unsigned int>& indices)
+{
+	C_Mesh* meshComponent = new C_Mesh(object);
+	meshComponent->InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+
+	if (normals.empty() == false)
+		meshComponent->InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
+
+	if (texCoords.empty() == false)
+		meshComponent->InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
+
+	if (indices.empty() == false)
+		meshComponent->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+
+	vertices.clear();
+	normals.clear();
+	texCoords.clear();
+	indices.clear();
+
+	object->AddComponent(meshComponent);
+}
+
+
+void ModelImporter::InitMaterialComponent(GameObject* object, aiMaterial* mat)
+{
+	C_Material* material = new C_Material(object);
+
+	aiString texPath;
+	mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
+
+	material->SetTexture(ImageImporter::Load(texPath.C_Str(), false));
+
+	object->AddComponent(material);
 }
 
 
