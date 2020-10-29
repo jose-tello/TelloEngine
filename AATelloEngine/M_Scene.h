@@ -26,6 +26,8 @@ public:
 	void UpdateGameObjects(float dt);
 	void PostUpdateGameObjects(float dt);
 
+	void CheckObjectsToDelete();
+
 	void DrawGameObjects(bool black);
 
 private:

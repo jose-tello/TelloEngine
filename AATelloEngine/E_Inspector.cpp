@@ -4,6 +4,9 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 
+#include "Application.h"
+#include "M_Input.h"
+
 #include "imgui/imgui.h"
 
 E_Inspector::E_Inspector(bool open) : E_Window(open),
@@ -21,6 +24,11 @@ E_Inspector::~E_Inspector()
 
 bool E_Inspector::Draw()
 {
+	if (App->input->GetKey(42) == KEY_STATE::KEY_DOWN)
+		DeleteFocusedObject();
+
+	
+
 	ImGui::Begin("Inspector", &open);
 	if (focusedObject != nullptr)
 	{
@@ -79,6 +87,11 @@ void E_Inspector::QuitFocusedObject()
 
 bool E_Inspector::DeleteFocusedObject()
 {
+	if (focusedObject != nullptr)
+		focusedObject->toDelete = true;
+
+	QuitFocusedObject();
+
 	return true;
 }
 

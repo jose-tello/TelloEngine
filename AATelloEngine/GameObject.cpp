@@ -3,20 +3,20 @@
 #include "C_Mesh.h"
 
 GameObject::GameObject(GameObject* parent) :
-	name(),
 	parent(parent),
-
-	transform(this)
+	toDelete(false),
+	transform(this),
+	name()
 {
 	components.push_back(&transform);
 }
 
 
 GameObject::GameObject(std::string& name, GameObject* parent) :
-	name(name),
 	parent(parent),
-
-	transform(this)
+	toDelete(false),
+	transform(this),
+	name(name)
 {
 	components.push_back(&transform);
 }
@@ -122,6 +122,20 @@ void GameObject::SetName(const char* n)
 	name = n;
 }
 
+
+void GameObject::SearchDeletedChilds()
+{
+	int childsCount = childs.size();
+	for (int i = 0; i < childsCount; i++)
+	{
+		if (childs[i]->toDelete == true)
+		{
+			childs.erase(childs.begin() + i);
+			childsCount--;
+			i--;
+		}
+	}
+}
 
 
 bool GameObject::CheckNotRepeated(COMPONENT_TYPE componentType)
