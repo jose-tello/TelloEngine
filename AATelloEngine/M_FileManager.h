@@ -30,16 +30,20 @@ public:
 	
 	void LoadFromExporter(const char* path);
 
+	void AdaptPath(std::string& path);
+	unsigned int ReadBytes(const char* path, char** buffer) const;
+
+	void SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension);
+
 private:
 
 	std::string NormalizePath(const char*);
 	void TransformPath(std::string& path);
-	void SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension);
 
 	//bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 	FILE_TYPE GetFileType(const char* extension);
 
-	unsigned int ReadBytes(const char* path, char** buffer) const;
+	
 
 };
 

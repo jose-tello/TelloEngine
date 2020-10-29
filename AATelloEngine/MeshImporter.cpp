@@ -1,10 +1,12 @@
 #include "MeshImporter.h"
+#include "ImageImporter.h"
 
 #include "Application.h"
 #include "M_Editor.h"
 
 #include "GameObject.h"
 #include "C_Mesh.h"
+#include "C_Material.h"
 
 #include "M_Scene.h"
 
@@ -143,6 +145,21 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 				indices.clear();
 
 				obj->AddComponent(meshComponent);
+
+				
+				aiMaterial* material = scene->mMaterials[scene->mMeshes[mesh]->mMaterialIndex];
+				aiString texPath;
+
+				if (material->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE) > 0)
+				{
+					C_Material* cMat = new C_Material(obj);
+
+					material->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
+
+					cMat->SetTexture(ImageImporter::Load(texPath.C_Str(), false));
+
+					obj->AddComponent(cMat);
+				}
 
 				aiVector3D position;
 				aiQuaternion rotation;

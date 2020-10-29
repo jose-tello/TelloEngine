@@ -5,7 +5,7 @@ namespace ImageImporter
 {
 	void Init();
 
-	void Load(char* buffer, unsigned int bytes);
+	unsigned int Load(const char* path, bool pathFromFileManager = true);
 }
 
 #endif // !__IMAGE_IMPORTER_H__

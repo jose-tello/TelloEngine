@@ -2,6 +2,10 @@
 #include "M_FileManager.h"
 
 #include "M_Editor.h"
+#include "E_Inspector.h"
+
+#include "GameObject.h"
+#include "C_Material.h"
 
 #include "MeshImporter.h"
 #include "ImageImporter.h"
@@ -32,6 +36,7 @@ bool M_FileManager::Init()
 {
 	if (PHYSFS_isInit())
 		App->editor->AddLog("Log: Asset Manager is succefully loaded");
+
 	else
 	{
 		App->editor->AddLog("ERROR: Failed loading Asset Manager");
@@ -63,34 +68,48 @@ bool M_FileManager::CleanUp()
 
 void M_FileManager::LoadFromExporter(const char* path)
 {
-	unsigned int bytes = 0;
-	char* buffer = nullptr;
 
-	std::string normalizedPath = NormalizePath(path);
-	std::string finalPath = normalizedPath;
+	FILE_TYPE type = GetFileType(path);
 
-	TransformPath(finalPath);
-	//if (DuplicateFile(normalizedPath.c_str(), "Assets", finalPath)) 
+	switch (type)
 	{
-		FILE_TYPE type = GetFileType(finalPath.c_str());
-		bytes = ReadBytes(finalPath.c_str(), &buffer);
+	case FILE_TYPE::MODEL:
+	{
+		std::string filePath(path);
+		AdaptPath(filePath);
 
-		switch (type)
-		{
-		case FILE_TYPE::MODEL:
-			ModelImporter::Load(buffer, bytes);
-			App->editor->AddLog("Log: Loaded a model");
-			break;
+		char* buffer = nullptr;
+		unsigned int bytes = ReadBytes(filePath.c_str(), &buffer);
 
-		case FILE_TYPE::TEXTURE:
-			ImageImporter::Load(buffer, bytes);
-			App->editor->AddLog("Log: Loaded a texture");
-			break;
-		}
+		ModelImporter::Load(buffer, bytes);
+		App->editor->AddLog("Log: Loaded a model");
+
+		delete[] buffer;
+		buffer = nullptr;
+	}
+	break;
+
+	case FILE_TYPE::TEXTURE:
+		unsigned int texId = ImageImporter::Load(path);
+		App->editor->AddLog("Log: Loaded a texture");
+
+		E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+		GameObject* object = inspector->GetFocusedGameObject();
+		C_Material* material = new C_Material(object);
+
+		material->SetTexture(texId);
+
+		object->AddComponent(material);
+		break;
 	}
 
-	delete[] buffer;
-	buffer = nullptr;
+}
+
+
+void M_FileManager::AdaptPath(std::string& path)
+{
+	path = NormalizePath(path.c_str());
+	TransformPath(path);
 }
 
 
@@ -139,7 +158,7 @@ void M_FileManager::SplitPath(const char* fullPath, std::string* path, std::stri
 			else
 				*file = full.substr(0, posDot);
 		}
-		
+
 		if (extension != nullptr)
 		{
 			if (posDot < full.length())
@@ -162,7 +181,7 @@ void M_FileManager::SplitPath(const char* fullPath, std::string* path, std::stri
 
 	std::ifstream source;	//File that we want to copy
 	source.open(file, std::ios::binary);
-	
+
 	std::ofstream destiny;	//File where we will copy the file
 	destiny.open(finalPath.c_str(), std::ios::binary);
 

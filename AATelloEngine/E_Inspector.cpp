@@ -12,21 +12,19 @@
 E_Inspector::E_Inspector(bool open) : E_Window(open),
 	focusedObject(nullptr)
 {
-
 }
 
 
 E_Inspector::~E_Inspector()
 {
-
+	focusedObject = nullptr;
 }
 
 
 bool E_Inspector::Draw()
 {
-	if (App->input->GetKey(42) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
 		DeleteFocusedObject();
-
 	
 
 	ImGui::Begin("Inspector", &open);
@@ -90,7 +88,7 @@ bool E_Inspector::DeleteFocusedObject()
 	if (focusedObject != nullptr)
 		focusedObject->toDelete = true;
 
-	QuitFocusedObject();
+	focusedObject = nullptr;
 
 	return true;
 }

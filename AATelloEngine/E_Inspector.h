@@ -8,6 +8,8 @@ class C_Transform;
 class C_Mesh;
 class C_Material;
 
+#define BACKSPACE 42
+
 class E_Inspector : public E_Window
 {
 public:
