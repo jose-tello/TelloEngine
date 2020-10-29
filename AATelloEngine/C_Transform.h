@@ -7,8 +7,8 @@
 class C_Transform : public Component
 {
 public:
-	C_Transform(GameObject* owner);
-	~C_Transform();
+	C_Transform();
+	~C_Transform() override;
 
 	bool PostUpdate(float dt) override;
 

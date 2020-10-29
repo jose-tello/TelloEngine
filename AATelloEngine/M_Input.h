@@ -20,12 +20,11 @@ class M_Input : public Module
 {
 public:
 	
-	M_Input(bool start_enabled = true);
+	M_Input(bool startEnabled = true);
 	~M_Input();
 
 	bool Init() override;
 	UPDATE_STATUS PreUpdate(float dt) override;
-	UPDATE_STATUS Update(float dt) override;
 	bool CleanUp() override;
 
 	KEY_STATE GetKey(int id) const;

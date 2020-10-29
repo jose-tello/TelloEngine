@@ -5,7 +5,7 @@
 
 #include <gl/GL.h>
 
-C_Material::C_Material(GameObject* owner) : Component(COMPONENT_TYPE::MATERIAL, owner),
+C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 	textureId(0),
 	color(1.f, 1.f, 1.f),
 
@@ -37,19 +37,6 @@ void C_Material::SetTexture(unsigned int newTex)
 void C_Material::SetColor(Color& col)
 {
 	color = col;
-}
-
-
-void C_Material::DeleteTexture()
-{
-	glDeleteTextures(1, &textureId);
-	textureId = 0;
-}
-
-
-void C_Material::DeleteColor()
-{
-	color = { 0.f, 0.f, 0.f, 0.f };
 }
 
 

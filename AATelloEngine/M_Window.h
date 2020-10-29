@@ -31,11 +31,8 @@ public:
 	void SetWindowMeasures(int width, int height);
 
 public:
-	//The window we'll be rendering to
-	SDL_Window* window;
-
-	//The surface contained by the window
-	SDL_Surface* screenSurface;
+	SDL_Window* window = nullptr;
+	SDL_Surface* screenSurface = nullptr;
 
 private:
 	bool fullScreen;

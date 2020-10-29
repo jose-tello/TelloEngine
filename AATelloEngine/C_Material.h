@@ -7,13 +7,11 @@
 class C_Material : public Component
 {
 public:
-	C_Material(GameObject* owner);
+	C_Material();
 	~C_Material();
 
 	void SetTexture(unsigned int newTex);
 	void SetColor(Color& col);
-	void DeleteTexture();
-	void DeleteColor();
 
 	bool GetTextureEnabled() const;
 	void SetTextureEnable(bool enable);

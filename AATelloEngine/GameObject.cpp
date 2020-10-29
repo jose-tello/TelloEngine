@@ -5,9 +5,10 @@
 GameObject::GameObject(GameObject* parent) :
 	parent(parent),
 	toDelete(false),
-	transform(this),
+	transform(),
 	name()
 {
+	transform.SetOwner(this);
 	components.push_back(&transform);
 }
 
@@ -15,7 +16,7 @@ GameObject::GameObject(GameObject* parent) :
 GameObject::GameObject(std::string& name, GameObject* parent) :
 	parent(parent),
 	toDelete(false),
-	transform(this),
+	transform(),
 	name(name)
 {
 	components.push_back(&transform);
@@ -68,7 +69,7 @@ void GameObject::GetAllComponents(std::vector<Component*>& vec) const
 
 bool GameObject::AddComponent(Component* component)
 {
-	if (CheckNotRepeated(component->GetType()) == false)
+	if (CheckNotRepeated(component->GetType()) == false && component->SetOwner(this) == true)
 		return false;
 	
 	components.push_back(component);
@@ -122,20 +123,6 @@ const char* GameObject::GetName() const
 void GameObject::SetName(const char* n)
 {
 	name = n;
-}
-
-
-void GameObject::SearchDeletedChilds()
-{
-	int childsCount = childs.size();
-	for (int i = 0; i < childsCount; i++)
-	{
-		if (childs[i]->toDelete == true)
-		{
-			childs.erase(childs.begin() + i);
-			return;								//If multiple childs are deleted simultaneously, this ensures all will be deleted properly
-		}
-	}
 }
 
 

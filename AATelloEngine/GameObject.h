@@ -25,8 +25,6 @@ public:
 	const char* GetName() const;
 	void SetName(const char*);
 
-	void SearchDeletedChilds();
-
 private:
 	bool CheckNotRepeated(COMPONENT_TYPE componentType);
 

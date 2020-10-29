@@ -8,7 +8,7 @@
 
 #include "imgui/imgui_impl_sdl.h"
 
-M_Input::M_Input(bool start_enabled) : Module(start_enabled)
+M_Input::M_Input(bool startEnabled) : Module(startEnabled)
 {
 	memset(keyboard, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
 	memset(mouseButtons, (int)KEY_STATE::KEY_IDLE, sizeof(KEY_STATE) * MAX_MOUSE_BUTTONS);
@@ -95,7 +95,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		{
 		case (SDL_DROPFILE): { 
 			char* droppedFileDir = e.drop.file;
-			App->assetManager->LoadFromExporter(droppedFileDir);
+			App->fileManager->LoadFromExporter(droppedFileDir);
 
 			SDL_free(droppedFileDir);
 			break;
@@ -119,7 +119,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			case SDL_WINDOWEVENT:
 			{
 				if (e.window.event == SDL_WINDOWEVENT_RESIZED);
-					//App->renderer3D->OnResize(e.window.data1, e.window.data2);
+					
 			}
 		}
 	}
@@ -130,16 +130,6 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
-UPDATE_STATUS M_Input::Update(float dt)
-{
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
-		App->debug = !App->debug;
-
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_STATE::KEY_DOWN)
-		App->renderPrimitives = !App->renderPrimitives;
-
-	return UPDATE_STATUS::UPDATE_CONTINUE;
-}
 
 // Called before quitting
 bool M_Input::CleanUp()

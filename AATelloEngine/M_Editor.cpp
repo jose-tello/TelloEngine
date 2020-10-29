@@ -1,11 +1,9 @@
-
-//The order is relevant from here...
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "SDL/include/SDL.h"
 #include "Glew/include/glew.h"
-//...to here
+
 #include "Globals.h"
 #include "Application.h"
 #include "M_Editor.h"
@@ -22,7 +20,7 @@
 #include "E_Inspector.h"
 
 
-M_Editor::M_Editor(bool start_enabled) : Module(start_enabled)
+M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 {
 	E_Window* win;
 
@@ -105,8 +103,6 @@ bool M_Editor::Start()
 
 UPDATE_STATUS M_Editor::Update(float dt)
 {
-	// Start the Dear ImGui frame
-
 	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
 		windowsVec[i]->Update();
 	
@@ -132,10 +128,8 @@ void M_Editor::Draw()
 
 	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
 	{
-		if (windowsVec[i]->open == false)
-			continue;
-
-		windowsVec[i]->Draw();
+		if (windowsVec[i]->open == true)
+			windowsVec[i]->Draw();
 	}
 
 	ImGui::Render();
@@ -152,7 +146,7 @@ void M_Editor::Draw()
 }
 
 
-void M_Editor::AddLog(const char* fmt, ...) IM_FMTARGS(2)
+void M_Editor::AddLog(const char* fmt, ...)
 {
 	char buf[1024];
 	va_list args;

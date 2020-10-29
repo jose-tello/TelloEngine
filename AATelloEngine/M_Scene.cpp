@@ -74,6 +74,46 @@ void M_Scene::AddGameObject(GameObject* object)
 }
 
 
+void M_Scene::GetGameObjectVector(std::vector<GameObject*>& vec)
+{
+	vec = gameObjects;
+}
+
+
+void M_Scene::DrawGameObjects(bool black)
+{
+	std::stack<GameObject*> stack;
+	GameObject* node;
+
+	int childCount;
+
+	int gameObjCount = gameObjects.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		stack.push(gameObjects[i]);
+
+		while (stack.empty() == false)
+		{
+			node = stack.top();
+			stack.pop();
+
+			if (node->GetComponent(COMPONENT_TYPE::MESH) != nullptr)
+				DrawObject(node, black);
+			
+
+			if (node->childs.empty() == false)
+			{
+				childCount = node->childs.size();
+				for (int j = 0; j < childCount; j++)
+				{
+					stack.push(node->childs[j]);
+				}
+			}
+		}
+	}
+}
+
+
 void M_Scene::UpdateGameObjects(float dt)
 {
 	std::stack<GameObject*> stack;
@@ -179,46 +219,6 @@ void M_Scene::CheckObjectsToDelete()
 			}
 		}
 	}
-}
-
-
-void M_Scene::DrawGameObjects(bool black)
-{
-	std::stack<GameObject*> stack;
-	GameObject* node;
-
-	int childCount;
-
-	int gameObjCount = gameObjects.size();
-	for (int i = 0; i < gameObjCount; i++)
-	{
-		stack.push(gameObjects[i]);
-
-		while (stack.empty() == false)
-		{
-			node = stack.top();
-			stack.pop();
-
-			if (node->GetComponent(COMPONENT_TYPE::MESH) != nullptr)
-				DrawObject(node, black);
-			
-
-			if (node->childs.empty() == false)
-			{
-				childCount = node->childs.size();
-				for (int j = 0; j < childCount; j++)
-				{
-					stack.push(node->childs[j]);
-				}
-			}
-		}
-	}
-}
-
-
-void M_Scene::GetGameObjectVector(std::vector<GameObject*>& vec)
-{
-	vec = gameObjects;
 }
 
 

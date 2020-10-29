@@ -24,22 +24,23 @@ unsigned int ImageImporter::Load(const char* path, bool pathFromFileManager)
 {
 	char* buffer = nullptr;
 	unsigned int bytes = 0;
-	unsigned int texId;
+	unsigned int texId = 0;
 	ILuint imgName = 0;
 	std::string finalPath(path);
 
 	if (pathFromFileManager == true)
-		App->assetManager->AdaptPath(finalPath);
+		App->fileManager->AdaptPath(finalPath);
 	
+	//TODO: this is here untill i implement the resource manager
 	else
 	{
 		std::string fileName;
 		std::string fileExtension;
-		App->assetManager->SplitPath(path, nullptr, &fileName, &fileExtension);
+		App->fileManager->SplitPath(path, nullptr, &fileName, &fileExtension);
 		finalPath = fileName + "." + fileExtension;
 	}
 	
-	bytes = App->assetManager->ReadBytes(finalPath.c_str(), &buffer);
+	bytes = App->fileManager->ReadBytes(finalPath.c_str(), &buffer);
 
 	ilGenImages(1, &imgName);
 	ilBindImage(imgName);

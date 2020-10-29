@@ -19,25 +19,20 @@ class M_Scene;
 class Application
 {
 public:
-	M_Window* window;
-	M_Input* input;
-	M_Renderer3D* renderer3D;
-	M_Editor* editor;
-	M_Camera3D* camera;
-	M_FileManager* assetManager;
-	M_Scene* scene;
-
-	bool debug;
-	bool renderPrimitives;
+	M_Window* window = nullptr;
+	M_Input* input = nullptr;
+	M_Renderer3D* renderer3D = nullptr;
+	M_Editor* editor = nullptr;
+	M_Camera3D* camera = nullptr;
+	M_FileManager* fileManager = nullptr;
+	M_Scene* scene = nullptr;
 
 private:
-
 	Timer	msTimer;
 	float	dt;
 	std::vector<Module*> modulesVec;
 
 public:
-
 	Application();
 	~Application();
 
@@ -46,7 +41,6 @@ public:
 	bool CleanUp();
 
 private:
-
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();

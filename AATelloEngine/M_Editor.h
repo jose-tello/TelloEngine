@@ -3,7 +3,6 @@
 
 #include "Module.h"
 
-#include "imgui/imgui.h"
 #include <vector>
 
 #define MAX_LOG_SIZE 80
@@ -16,18 +15,18 @@ enum class E_WINDOW_TYPE;
 class M_Editor : public Module
 {
 public:
-	M_Editor(bool start_enabled = true);
+	M_Editor(bool startEnabled = true);
 	~M_Editor();
 
-	bool Init();
-	bool Start();
+	bool Init() override;
+	bool Start() override;
 	
-	UPDATE_STATUS Update(float dt);
+	UPDATE_STATUS Update(float dt) override;
 	void Draw();
 
-	bool CleanUp();
+	bool CleanUp() override;
 	
-	void AddLog(const char* fmt, ...) IM_FMTARGS(2);
+	void AddLog(const char* fmt, ...);
 	void OpenWindow(E_WINDOW_TYPE type);
 
 	E_Window* GetWindow(E_WINDOW_TYPE);

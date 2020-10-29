@@ -1,5 +1,4 @@
 #include "C_Mesh.h"
-#include "GameObject.h"
 #include "Color.h"
 
 #include "Primitive.h"
@@ -11,7 +10,7 @@
 #include "glmath.h"
 
 
-C_Mesh::C_Mesh(GameObject* owner) : Component(COMPONENT_TYPE::MESH, owner),
+C_Mesh::C_Mesh() : Component(COMPONENT_TYPE::MESH),
 	
 	drawVertexNormals(false),
 	drawFaceNormals(false),

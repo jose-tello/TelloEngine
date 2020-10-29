@@ -147,9 +147,6 @@
     <ClInclude Include="E_Inspector.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
-    <ClInclude Include="DrawPlane.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="MathGeoLib\include\MathBuildConfig.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
@@ -330,6 +327,9 @@
     <ClInclude Include="MathGeoLib\include\Algorithm\Random\LCG.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -437,9 +437,6 @@
     <ClCompile Include="E_Inspector.cpp">
       <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
-    <ClCompile Include="DrawPlane.cpp">
-      <Filter>Sources\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
@@ -535,6 +532,9 @@
     </ClCompile>
     <ClCompile Include="MathGeoLib\include\Algorithm\Random\LCG.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Sources\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

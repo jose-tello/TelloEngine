@@ -7,7 +7,7 @@
 class C_Mesh : public Component
 {
 public:
-	C_Mesh(GameObject* owner);
+	C_Mesh();
 	~C_Mesh() override;
 
 	//Primitive things

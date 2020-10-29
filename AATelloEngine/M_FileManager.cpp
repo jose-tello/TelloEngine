@@ -95,7 +95,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 
 		E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
 		GameObject* object = inspector->GetFocusedGameObject();
-		C_Material* material = new C_Material(object);
+		C_Material* material = new C_Material();
 
 		material->SetTexture(texId);
 
@@ -222,7 +222,7 @@ FILE_TYPE M_FileManager::GetFileType(const char* path)
 
 	else
 	{
-		assert(true, "ERROR: not supported tipe of file");
+		//assert(true, "ERROR: not supported tipe of file");
 		return FILE_TYPE::NONE;
 	}
 }

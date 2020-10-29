@@ -5,7 +5,7 @@
 
 #include "Globals.h"
 
-C_Transform::C_Transform(GameObject* owner) :Component(COMPONENT_TYPE::TRANSFORM, owner),
+C_Transform::C_Transform() : Component(COMPONENT_TYPE::TRANSFORM),
 	localTransform(),
 	worldTransform(),
 

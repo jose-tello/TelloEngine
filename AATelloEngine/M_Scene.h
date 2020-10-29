@@ -22,19 +22,18 @@ public:
 	void AddGameObject(GameObject*);
 	void GetGameObjectVector(std::vector<GameObject*>&);
 
+	void DrawGameObjects(bool blackWireframe);
+
+private:
 	//TODO: Considering using pointers to functions, ask Marc about it
 	void UpdateGameObjects(float dt);
 	void PostUpdateGameObjects(float dt);
 
 	void CheckObjectsToDelete();
 
-	void DrawGameObjects(bool black);
+	void DrawObject(GameObject*, bool blackWireframe);
 
 private:
-	void DrawObject(GameObject*, bool black);
-
-private:
-
 	std::vector<GameObject*> gameObjects; //Game objects without parent
 };
 

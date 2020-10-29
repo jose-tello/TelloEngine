@@ -1,8 +1,8 @@
 #include "Component.h"
 
-Component::Component(COMPONENT_TYPE type, GameObject* owner) : 
+Component::Component(COMPONENT_TYPE type) : 
 	type(type),
-	owner(owner)
+	owner(nullptr)
 {
 }
 
@@ -23,6 +23,18 @@ bool Component::Update(float dt)
 bool Component::PostUpdate(float dt)
 {
 	return true;
+}
+
+
+bool Component::SetOwner(GameObject* gameObject)
+{
+	if (owner == nullptr)
+	{
+		owner = gameObject;
+		return true;
+	}
+	else
+		return false;
 }
 
 

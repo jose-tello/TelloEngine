@@ -15,10 +15,10 @@ namespace ModelImporter
 
 	bool Load(char* buffer, unsigned int bytes);
 
-	void SetObjName(GameObject*, aiNode*);
-	void InitTransformComponent(GameObject*, aiNode*);
-	void InitMeshComponent(GameObject*, std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords, std::vector<unsigned int>& indices);
-	void InitMaterialComponent(GameObject*, aiMaterial* mat);
+	void SetObjName(GameObject* gameObject, aiNode* node);
+	void InitTransformComponent(GameObject* gameObject, aiNode* node);
+	void InitMeshComponent(GameObject* gameObject, std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords, std::vector<unsigned int>& indices);
+	void InitMaterialComponent(GameObject* gameObject, aiMaterial* material);
 
 	void CleanUp();
 }

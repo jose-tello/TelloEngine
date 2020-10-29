@@ -9,28 +9,34 @@
 #include "M_FileManager.h"
 #include "M_Scene.h"
 
-Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
+
+Application* App = nullptr; //TODO: Dont know how and why this works, ask marc, should use an extern?
+
+
+Application::Application() : 
+	dt(0.16f)
 {
 	window = new M_Window();
 	input = new M_Input();
 	renderer3D = new M_Renderer3D();
 	editor = new M_Editor();
 	camera = new M_Camera3D();
-	assetManager = new M_FileManager();
+	fileManager = new M_FileManager();
 	scene = new M_Scene();
 
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
 	AddModule(camera);
-	AddModule(assetManager);
+	AddModule(fileManager);
 
 	AddModule(scene);
-	// Renderer last!
-	
+
+	// Renderer
 	AddModule(renderer3D);
 	AddModule(editor);
 }
+
 
 Application::~Application()
 {
@@ -40,6 +46,7 @@ Application::~Application()
 		modulesVec[i] = nullptr;
 	}
 }
+
 
 bool Application::Init()
 {
@@ -69,6 +76,7 @@ bool Application::Init()
 	return ret;
 }
 
+
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
@@ -76,10 +84,12 @@ void Application::PrepareUpdate()
 	msTimer.Start();
 }
 
+
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
 }
+
 
 // Call PreUpdate, Update and PostUpdate on all modules
 UPDATE_STATUS Application::Update()
@@ -108,6 +118,7 @@ UPDATE_STATUS Application::Update()
 	return ret;
 }
 
+
 bool Application::CleanUp()
 {
 	bool ret = true;
@@ -120,9 +131,11 @@ bool Application::CleanUp()
 	return ret;
 }
 
+
 void Application::AddModule(Module* mod)
 {
 	modulesVec.push_back(mod);
 }
 
-Application* App = nullptr;
+
+

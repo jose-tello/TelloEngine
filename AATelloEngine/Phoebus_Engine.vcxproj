@@ -80,7 +80,7 @@
     <ClInclude Include="C_Material.h" />
     <ClInclude Include="C_Mesh.h" />
     <ClInclude Include="C_Transform.h" />
-    <ClInclude Include="DrawPlane.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="E_AppState.h" />
     <ClInclude Include="E_Console.h" />
     <ClInclude Include="E_DockWindow.h" />
@@ -181,7 +181,7 @@
     <ClCompile Include="C_Material.cpp" />
     <ClCompile Include="C_Mesh.cpp" />
     <ClCompile Include="C_Transform.cpp" />
-    <ClCompile Include="DrawPlane.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="E_AppState.cpp" />
     <ClCompile Include="E_Console.cpp" />
     <ClCompile Include="E_DockWindow.cpp" />

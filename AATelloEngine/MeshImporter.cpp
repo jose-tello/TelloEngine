@@ -161,22 +161,20 @@ void ModelImporter::InitTransformComponent(GameObject* object, aiNode* node)
 	aiVector3D position;
 	aiQuaternion rotation;
 	aiVector3D scale;
-	mat4x4 mat;
 
 	node->mTransformation.Decompose(scale, rotation, position);
 	Quat quat(rotation.x, rotation.y, rotation.z, rotation.w);
+	float3 rotAxis = quat.Axis();
 
 	object->transform.SetEscale(scale.x, scale.y, scale.z);
-	mat.rotate(quat.Angle() * RADTODEG, vec3(quat.Axis().x, quat.Axis().y, quat.Axis().z));
-	object->transform.AddTransform(mat);
-
+	object->transform.SetRotation(quat.Angle() * RADTODEG, rotAxis.x, rotAxis.y, rotAxis.z);
 	object->transform.SetPos(position.x, position.y, position.z);
 }
 
 
 void ModelImporter::InitMeshComponent(GameObject* object, std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords, std::vector<unsigned int>& indices)
 {
-	C_Mesh* meshComponent = new C_Mesh(object);
+	C_Mesh* meshComponent = new C_Mesh();
 	meshComponent->InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
 
 	if (normals.empty() == false)
@@ -199,7 +197,7 @@ void ModelImporter::InitMeshComponent(GameObject* object, std::vector<float>& ve
 
 void ModelImporter::InitMaterialComponent(GameObject* object, aiMaterial* mat)
 {
-	C_Material* material = new C_Material(object);
+	C_Material* material = new C_Material();
 
 	aiString texPath;
 	mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);

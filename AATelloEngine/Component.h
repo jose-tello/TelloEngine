@@ -16,16 +16,17 @@ struct GameObject;
 class Component
 {
 public:
-	Component(COMPONENT_TYPE type, GameObject* owner);
+	Component(COMPONENT_TYPE type);
 	virtual ~Component();
 
 	virtual bool Update(float dt);
 	virtual bool PostUpdate(float dt);
 
+	bool SetOwner(GameObject*);
 	COMPONENT_TYPE GetType();
 
 protected:
-	GameObject* owner;
+	GameObject* owner = nullptr;
 
 private:
 	COMPONENT_TYPE type;
