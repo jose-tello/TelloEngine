@@ -115,8 +115,12 @@ void ModelImporter::InitTransformComponent(GameObject* object, aiNode* node)
 	Quat quat(rotation.x, rotation.y, rotation.z, rotation.w);
 	float3 rotAxis = quat.Axis();
 
+	mat4x4 rot;
+	rot.rotate(quat.Angle() * RADTODEG, vec3(rotAxis.x, rotAxis.y, rotAxis.z));
+
 	object->transform.SetEscale(scale.x, scale.y, scale.z);
-	object->transform.SetRotation(quat.Angle() * RADTODEG, rotAxis.x, rotAxis.y, rotAxis.z);
+	//object->transform.SetRotation(quat.Angle() * RADTODEG, rotAxis.x, rotAxis.y, rotAxis.z);
+	object->transform.AddTransform(rot);
 	object->transform.SetPos(position.x, position.y, position.z);
 }
 
