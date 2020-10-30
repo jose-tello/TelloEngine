@@ -1,12 +1,12 @@
-#include "Application.h"
-#include "E_Scene.h"
+#include "W_Scene.h"
 
+#include "Application.h"
 #include "M_Renderer3D.h"
 #include "M_Window.h"
 
 #include "imgui/imgui.h"
 
-E_Scene::E_Scene(bool active) :
+W_Scene::W_Scene(bool active) :
 	E_Window(active),
 	windowWidth(0),
 	windoHeight(0)
@@ -14,22 +14,12 @@ E_Scene::E_Scene(bool active) :
 }
 
 
-E_Scene::~E_Scene()
+W_Scene::~W_Scene()
 {
-
 }
 
-bool E_Scene::Start() 
-{
-	return true;
-}
 
-bool E_Scene::Update()
-{
-	return true;
-}
-
-bool E_Scene::Draw()
+bool W_Scene::Draw()
 {
 	ImGui::Begin("Scene");
 

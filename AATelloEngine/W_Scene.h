@@ -3,14 +3,12 @@
 
 #include "E_Window.h"
 
-class E_Scene : public E_Window
+class W_Scene : public E_Window
 {
 public:
-	E_Scene(bool active);
-	~E_Scene();
+	W_Scene(bool active);
+	~W_Scene() override;
 
-	bool Start() override;
-	bool Update() override;
 	bool Draw() override;
 
 private:

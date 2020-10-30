@@ -1,4 +1,4 @@
-#include "E_AppState.h"
+#include "W_AppState.h"
 
 #include "Application.h"
 #include "M_Input.h"
@@ -8,7 +8,7 @@
 #include "imgui/imgui.h"
 #include "SDL\include\SDL.h"
 
-E_AppState::E_AppState(bool open) :
+W_AppState::W_AppState(bool open) :
 	E_Window(open),
 
 	//Window
@@ -50,13 +50,13 @@ E_AppState::E_AppState(bool open) :
 }
 
 
-E_AppState::~E_AppState()
+W_AppState::~W_AppState()
 {
 	frameRateLog.clear();
 	inputsLog.clear();
 }
 
-bool E_AppState::Start()
+bool W_AppState::Start()
 {
 	App->window->GetWindowMeasures(winWidth, winHeight);
 
@@ -78,7 +78,8 @@ bool E_AppState::Start()
 	return true;
 }
 
-bool E_AppState::Update()
+
+bool W_AppState::Update()
 {
 	UpdateChApplicationState();
 	UpdateChInput();
@@ -87,7 +88,7 @@ bool E_AppState::Update()
 }
 
 
-bool E_AppState::Draw()
+bool W_AppState::Draw()
 {
 	ImGui::Begin("Application state", &open);
 
@@ -104,15 +105,16 @@ bool E_AppState::Draw()
 }
 
 
-void E_AppState::UpdateChApplicationState()
+void W_AppState::UpdateChApplicationState()
 {
 	frameRateLog.push_back(ImGui::GetIO().Framerate);
+
 	if (frameRateLog.size() > MAX_LOG_SIZE)
 		frameRateLog.erase(frameRateLog.begin());
 }
 
 
-void E_AppState::UpdateChInput()
+void W_AppState::UpdateChInput()
 {
 	App->input->ReportKeyState(inputsLog);
 
@@ -127,7 +129,7 @@ void E_AppState::UpdateChInput()
 }
 
 
-void E_AppState::DrawBmHelp()
+void W_AppState::DrawBmHelp()
 {
 	if (ImGui::BeginMenu("Help"))
 	{
@@ -145,7 +147,7 @@ void E_AppState::DrawBmHelp()
 }
 
 
-void E_AppState::DrawChApplicationState()
+void W_AppState::DrawChApplicationState()
 {
 	if (ImGui::CollapsingHeader("Application state"))
 	{
@@ -154,7 +156,7 @@ void E_AppState::DrawChApplicationState()
 }
 
 
-void E_AppState::DrawChWindow()
+void W_AppState::DrawChWindow()
 {
 	if (ImGui::CollapsingHeader("Window"))
 	{
@@ -192,7 +194,7 @@ void E_AppState::DrawChWindow()
 }
 
 
-void E_AppState::DrawChRenderOptions()
+void W_AppState::DrawChRenderOptions()
 {
 	if (ImGui::CollapsingHeader("Render options"))
 	{
@@ -216,7 +218,7 @@ void E_AppState::DrawChRenderOptions()
 }
 
 
-void E_AppState::DrawChInput()
+void W_AppState::DrawChInput()
 {
 	if (ImGui::CollapsingHeader("Input"))
 	{
@@ -243,7 +245,7 @@ void E_AppState::DrawChInput()
 }
 
 
-void E_AppState::DrawChHardware()
+void W_AppState::DrawChHardware()
 {
 	if (ImGui::CollapsingHeader("Hardware"))
 	{

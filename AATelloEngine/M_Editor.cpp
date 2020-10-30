@@ -10,36 +10,35 @@
 
 #include "M_Window.h"
 #include "M_Renderer3D.h"
-#include "M_Input.h"
 
-#include "E_DockWindow.h"
-#include "E_AppState.h"
-#include "E_Console.h"
-#include "E_Scene.h"
-#include "E_ObjectHierarchy.h"
-#include "E_Inspector.h"
+#include "W_DockWindow.h"
+#include "W_AppState.h"
+#include "W_Console.h"
+#include "W_Scene.h"
+#include "W_ObjectHierarchy.h"
+#include "W_Inspector.h"
 
 
 M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 {
 	E_Window* win;
 
-	win = new E_DockWindow(true);
+	win = new W_DockWindow(true);
 	windowsVec.push_back(win);
 
-	win = new E_AppState(true);
+	win = new W_AppState(true);
 	windowsVec.push_back(win);
 
-	win = new E_Console(true);
+	win = new W_Console(true);
 	windowsVec.push_back(win);
 
-	win = new E_Scene(true);
+	win = new W_Scene(true);
 	windowsVec.push_back(win);
 
-	win = new E_ObjectHierarchy(true);
+	win = new W_ObjectHierarchy(true);
 	windowsVec.push_back(win);
 
-	win = new E_Inspector(true);
+	win = new W_Inspector(true);
 	windowsVec.push_back(win);
 }
 
@@ -155,7 +154,7 @@ void M_Editor::AddLog(const char* fmt, ...)
 	buf[IM_ARRAYSIZE(buf) - 1] = 0;
 	va_end(args);
 	
-	E_Console* console = (E_Console*)windowsVec[(int)E_WINDOW_TYPE::CONSOLE];
+	W_Console* console = (W_Console*)windowsVec[(int)E_WINDOW_TYPE::CONSOLE];
 	console->AddLog(buf);
 }
 

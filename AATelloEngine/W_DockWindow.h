@@ -3,11 +3,11 @@
 
 #include "E_Window.h"
 
-class E_DockWindow : public E_Window
+class W_DockWindow : public E_Window
 {
 public:
-	E_DockWindow(bool open = true);
-	~E_DockWindow();
+	W_DockWindow(bool open = true);
+	~W_DockWindow() override;
 
 	bool Draw() override;
 private:

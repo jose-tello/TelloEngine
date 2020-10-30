@@ -10,11 +10,11 @@
 #define INPUT_BUFFER_SIZE 256
 
 
-class E_Console : public E_Window
+class W_Console : public E_Window
 {
 public:
-	E_Console(bool open = true);
-	~E_Console();
+	W_Console(bool open = true);
+	~W_Console();
 
 	bool Draw() override;
 

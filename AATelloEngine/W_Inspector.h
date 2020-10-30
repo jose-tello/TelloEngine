@@ -10,18 +10,18 @@ class C_Material;
 
 #define BACKSPACE 42
 
-class E_Inspector : public E_Window
+class W_Inspector : public E_Window
 {
 public:
-	E_Inspector(bool open = true);
-	~E_Inspector();
+	W_Inspector(bool open = true);
+	~W_Inspector() override;
 
 	bool Draw() override;
 
 	GameObject* GetFocusedGameObject() const;
 	void SetFocusedObject(GameObject* obj);
 	void QuitFocusedObject();
-	bool DeleteFocusedObject(); //TODO: Implement this (not necessary for now)
+	bool DeleteFocusedObject();
 
 private:
 	void DrawGameObject(GameObject* obj);

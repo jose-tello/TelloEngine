@@ -7,11 +7,11 @@
 
 struct GameObject;
 
-class E_ObjectHierarchy : public E_Window
+class W_ObjectHierarchy : public E_Window
 {
 public:
-	E_ObjectHierarchy(bool open = true);
-	~E_ObjectHierarchy();
+	W_ObjectHierarchy(bool open = true);
+	~W_ObjectHierarchy();
 
 	bool Draw() override;
 

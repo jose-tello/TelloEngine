@@ -1,26 +1,25 @@
-#include "E_DockWindow.h"
+#include "W_DockWindow.h"
 
 #include "imgui/imgui.h"
 
-E_DockWindow::E_DockWindow(bool open) :
-	E_Window(open)
+W_DockWindow::W_DockWindow(bool open) : E_Window(open)
 {
 }
 
 
-E_DockWindow::~E_DockWindow()
+W_DockWindow::~W_DockWindow()
 {
 }
 
 
-bool E_DockWindow::Draw()
+bool W_DockWindow::Draw()
 {
 	CreateDockWindow();
 	return true;
 }
 
 
-void E_DockWindow::CreateDockWindow()
+void W_DockWindow::CreateDockWindow()
 {
 	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;

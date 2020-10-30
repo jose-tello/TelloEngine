@@ -87,21 +87,6 @@
     <ClInclude Include="M_Editor.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="E_Window.h">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="E_Console.h">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="E_Scene.h">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="E_AppState.h">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="E_DockWindow.h">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
@@ -140,12 +125,6 @@
     </ClInclude>
     <ClInclude Include="PrimitiveVertex.h">
       <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="E_ObjectHierarchy.h">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="E_Inspector.h">
-      <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="MathGeoLib\include\MathBuildConfig.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
@@ -330,6 +309,27 @@
     <ClInclude Include="Grid.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="W_DockWindow.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="W_AppState.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="W_Console.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="W_Inspector.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="W_ObjectHierarchy.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="W_Scene.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="E_Window.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -380,21 +380,6 @@
     <ClCompile Include="M_Editor.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="E_Window.cpp">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="E_Console.cpp">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="E_Scene.cpp">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="E_AppState.cpp">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="E_DockWindow.cpp">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
@@ -430,12 +415,6 @@
     </ClCompile>
     <ClCompile Include="Primitive.cpp">
       <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="E_ObjectHierarchy.cpp">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="E_Inspector.cpp">
-      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\include\Time\Clock.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
@@ -535,6 +514,27 @@
     </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="W_DockWindow.cpp">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="W_AppState.cpp">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="W_Console.cpp">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="W_Inspector.cpp">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="W_ObjectHierarchy.cpp">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="W_Scene.cpp">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="E_Window.cpp">
+      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#include "E_Inspector.h"
+#include "W_Inspector.h"
 
 #include "GameObject.h"
 #include "C_Mesh.h"
@@ -9,19 +9,19 @@
 
 #include "imgui/imgui.h"
 
-E_Inspector::E_Inspector(bool open) : E_Window(open),
+W_Inspector::W_Inspector(bool open) : E_Window(open),
 	focusedObject(nullptr)
 {
 }
 
 
-E_Inspector::~E_Inspector()
+W_Inspector::~W_Inspector()
 {
 	focusedObject = nullptr;
 }
 
 
-bool E_Inspector::Draw()
+bool W_Inspector::Draw()
 {
 	if (App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
 		DeleteFocusedObject();
@@ -65,25 +65,25 @@ bool E_Inspector::Draw()
 }
 
 
-GameObject* E_Inspector::GetFocusedGameObject() const
+GameObject* W_Inspector::GetFocusedGameObject() const
 {
 	return focusedObject;
 }
 
 
-void E_Inspector::SetFocusedObject(GameObject* obj)
+void W_Inspector::SetFocusedObject(GameObject* obj)
 {
 	focusedObject = obj;
 }
 
 
-void E_Inspector::QuitFocusedObject()
+void W_Inspector::QuitFocusedObject()
 {
 	focusedObject = nullptr;
 }
 
 
-bool E_Inspector::DeleteFocusedObject()
+bool W_Inspector::DeleteFocusedObject()
 {
 	if (focusedObject != nullptr)
 		focusedObject->toDelete = true;
@@ -94,7 +94,7 @@ bool E_Inspector::DeleteFocusedObject()
 }
 
 
-void E_Inspector::DrawGameObject(GameObject* obj)
+void W_Inspector::DrawGameObject(GameObject* obj)
 {
 	if (ImGui::CollapsingHeader("GameObject"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
@@ -105,7 +105,7 @@ void E_Inspector::DrawGameObject(GameObject* obj)
 }
 
 
-void E_Inspector::DrawTransformComp(C_Transform* transform)
+void W_Inspector::DrawTransformComp(C_Transform* transform)
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -140,7 +140,7 @@ void E_Inspector::DrawTransformComp(C_Transform* transform)
 }
 
 
-void E_Inspector::DrawMeshComp(C_Mesh* mesh)
+void W_Inspector::DrawMeshComp(C_Mesh* mesh)
 {
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -161,7 +161,7 @@ void E_Inspector::DrawMeshComp(C_Mesh* mesh)
 }
 
 
-void E_Inspector::DrawMaterialComp(C_Material* material)
+void W_Inspector::DrawMaterialComp(C_Material* material)
 {
 	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{

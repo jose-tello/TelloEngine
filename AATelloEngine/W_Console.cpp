@@ -1,7 +1,9 @@
-#include "E_Console.h"
+#include "W_Console.h"
 #include "Application.h"
 
-E_Console::E_Console(bool open) :
+#include "imgui/imgui.h"
+
+W_Console::W_Console(bool open) :
 	E_Window(open),
 	autoScroll(true),
 	scrollToBottom(false)
@@ -13,16 +15,24 @@ E_Console::E_Console(bool open) :
 	commands.push_back("classify");
 }
 
-E_Console::~E_Console()
+
+W_Console::~W_Console()
 {
 	ClearLog();
 
-	items.clear();	//TODO: Check that this bad boys are cleaning up correctlly
+	int count = items.Size;
+	for (int i = 0; i < count; i++)
+	{
+		delete[] items[i];
+		items[i] = nullptr;
+	}
+
+	items.clear();
 	commands.clear();
-}
+} 
 
 
-bool E_Console::Draw()
+bool W_Console::Draw()
 {
 	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
 	ImGui::Begin("console", &open);
@@ -113,21 +123,13 @@ bool E_Console::Draw()
 }
 
 
-void E_Console::AddLog(char* log)
+void W_Console::AddLog(char* log)
 {
 	items.push_back(strdup(log));
 }
 
 
-void E_Console::ClearLog()
-{
-	for (int i = 0; i < items.size(); i++)
-		free(items[i]);
-	items.clear();
-}
-
-
-void E_Console::AddCommandLog(const char* fmt, ...) IM_FMTARGS(2)
+void W_Console::AddCommandLog(const char* fmt, ...) IM_FMTARGS(2)
 {
 	char buf[1024];
 	va_list args;
@@ -140,7 +142,15 @@ void E_Console::AddCommandLog(const char* fmt, ...) IM_FMTARGS(2)
 }
 
 
-void E_Console::ExecuteCommand(const char* command)
+void W_Console::ClearLog()
+{
+	for (int i = 0; i < items.size(); i++)
+		free(items[i]);
+	items.clear();
+}
+
+
+void W_Console::ExecuteCommand(const char* command)
 {
 	AddCommandLog("# %s\n", command);
 
@@ -164,21 +174,21 @@ void E_Console::ExecuteCommand(const char* command)
 }
 
 
-int E_Console::TextEditCallbackStub(ImGuiInputTextCallbackData* data)
+int W_Console::TextEditCallbackStub(ImGuiInputTextCallbackData* data)
 {
-	E_Console* console = (E_Console*)data->UserData;
+	W_Console* console = (W_Console*)data->UserData;
 	return console->TextEditCallback(data);
 }
 
 
-void E_Console::Strtrim(char* s) 
+void W_Console::Strtrim(char* s)
 { 
 	char* str_end = s + strlen(s); 
 	while (str_end > s && str_end[-1] == ' ') str_end--; *str_end = 0; 
 }
 
 
-int E_Console::TextEditCallback(ImGuiInputTextCallbackData* data)
+int W_Console::TextEditCallback(ImGuiInputTextCallbackData* data)
 {
 	switch (data->EventFlag)
 	{

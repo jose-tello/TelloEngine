@@ -1,6 +1,6 @@
-#include "E_ObjectHierarchy.h"
+#include "W_ObjectHierarchy.h"
 
-#include "E_Inspector.h"
+#include "W_Inspector.h"
 
 #include "Application.h"
 #include "M_Scene.h"
@@ -13,17 +13,17 @@
 #include <vector>
 
 
-E_ObjectHierarchy::E_ObjectHierarchy(bool open) : E_Window(open)
+W_ObjectHierarchy::W_ObjectHierarchy(bool open) : E_Window(open)
 {
 }
 
 
-E_ObjectHierarchy::~E_ObjectHierarchy()
+W_ObjectHierarchy::~W_ObjectHierarchy()
 {
 }
 
 
-bool E_ObjectHierarchy::Draw()
+bool W_ObjectHierarchy::Draw()
 {
 	ImGui::Begin("Hierarchy", &open);
 
@@ -39,7 +39,7 @@ bool E_ObjectHierarchy::Draw()
 		
 		if (ImGui::IsItemClicked())
 		{
-			E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
 			inspector->SetFocusedObject(gameObjects[i]);
 		}
 		
@@ -56,7 +56,7 @@ bool E_ObjectHierarchy::Draw()
 }
 
 
-void E_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
+void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 {
 	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
 
@@ -67,7 +67,7 @@ void E_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 		
 		if (ImGui::IsItemClicked())
 		{
-			E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
 			inspector->SetFocusedObject(vec[i]);
 		}
 

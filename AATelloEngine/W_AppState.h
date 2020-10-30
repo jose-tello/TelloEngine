@@ -7,11 +7,11 @@
 #define MAX_RESOLUTION_WIDTH 1920
 #define MAX_RESOLUTION_HEIGHT 1080
 
-class E_AppState : public E_Window
+class W_AppState : public E_Window
 {
 public:
-	E_AppState(bool open = true);
-	~E_AppState();
+	W_AppState(bool open = true);
+	~W_AppState() override;
 
 	bool Start() override;
 	bool Update() override; 
@@ -24,9 +24,9 @@ private:
 
 	void DrawBmHelp();
 	void DrawChApplicationState();
-	void DrawChInput();
 	void DrawChWindow();
 	void DrawChRenderOptions();
+	void DrawChInput();
 	void DrawChHardware();
 
 private:
@@ -39,8 +39,8 @@ private:
 	bool winFullScreenDesktop;
 	bool winResizable;
 	bool winBorderless;
-	int  brightness;
 
+	int  brightness;
 	int winWidth;
 	int winHeight;
 
@@ -55,8 +55,8 @@ private:
 
 	//Hardware
 	int cpuCores;
-
 	int maxRamMemory;
+
 	bool has3DNow;
 	bool hasAVX;
 	bool hasAVX2;

@@ -2,7 +2,7 @@
 #include "M_FileManager.h"
 
 #include "M_Editor.h"
-#include "E_Inspector.h"
+#include "W_Inspector.h"
 
 #include "GameObject.h"
 #include "C_Material.h"
@@ -10,8 +10,8 @@
 #include "MeshImporter.h"
 #include "ImageImporter.h"
 
-#include <fstream>
-#include <filesystem>
+//#include <fstream>
+//#include <filesystem>
 
 #include "PhysFS/include/physfs.h"
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
@@ -93,7 +93,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 		unsigned int texId = ImageImporter::Load(path);
 		App->editor->AddLog("Log: Loaded a texture");
 
-		E_Inspector* inspector = (E_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+		W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
 		GameObject* object = inspector->GetFocusedGameObject();
 		C_Material* material = new C_Material();
 
