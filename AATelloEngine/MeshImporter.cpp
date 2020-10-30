@@ -36,15 +36,6 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 	std::stack<aiNode*> nodeStack;
 	aiNode* node = nullptr;
 
-	int numVertices = 0;
-	int numTexCoords = 0;
-	int numIndices = 0;
-
-	std::vector<float> vertices;
-	std::vector<float> normals;
-	std::vector<float> texCoords;
-	std::vector <unsigned int> indices;
-
 	const aiScene* scene = aiImportFileFromMemory(buffer, bytes, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 
 	if (scene != nullptr && scene->HasMeshes())
@@ -65,55 +56,15 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 
 			for (int i = 0; i < node->mNumMeshes; i++)
 			{
-				unsigned int mesh = node->mMeshes[i];
+				unsigned int meshIterator = node->mMeshes[i];
 
-				numVertices = scene->mMeshes[mesh]->mNumVertices;
-				vertices.resize(numVertices * 3);
-
-				memcpy(&vertices[0], scene->mMeshes[mesh]->mVertices, sizeof(float) * numVertices * 3);
-
-				if (scene->mMeshes[mesh]->HasNormals())
-				{
-					normals.resize(numVertices * 3);
-
-					memcpy(&normals[0], scene->mMeshes[mesh]->mNormals, sizeof(float) * numVertices * 3);
-				}
-
-				for (int j = 0; j < MAX_TEX_COORDS; j++)
-				{
-					if (scene->mMeshes[mesh]->HasTextureCoords(j))
-					{
-						texCoords.reserve(numVertices * 2);
-
-						for (int k = 0; k < numVertices; k++)
-						{
-							texCoords.push_back(scene->mMeshes[mesh]->mTextureCoords[j][k].x);
-							texCoords.push_back(scene->mMeshes[mesh]->mTextureCoords[j][k].y);
-						}
-					}
-				}
-
-				if (scene->mMeshes[mesh]->HasFaces())
-				{
-					numIndices = scene->mMeshes[mesh]->mNumFaces * 3;
-					indices.resize(numIndices);
-
-					for (int j = 0; j < scene->mMeshes[mesh]->mNumFaces; j++)
-					{
-						if (scene->mMeshes[mesh]->mFaces[j].mNumIndices != 3)
-							App->editor->AddLog("WARNING, geometry face with != 3 indices!");
-
-						else
-							memcpy(&indices[j * 3], scene->mMeshes[mesh]->mFaces[j].mIndices, 3 * sizeof(unsigned int));
-					}
-				}
-
-				InitMeshComponent(obj, vertices, normals, texCoords, indices);
+				aiMesh* mesh = scene->mMeshes[meshIterator];
+				InitMeshComponent(obj, mesh);
 				
-				aiMaterial* material = scene->mMaterials[scene->mMeshes[mesh]->mMaterialIndex];				
+				aiMaterial* material = scene->mMaterials[scene->mMeshes[meshIterator]->mMaterialIndex];
 				InitMaterialComponent(obj, material);
 
-				if (node->mNumMeshes > 1)
+				if (node->mNumMeshes > 1) // if there is more than one mesh, create a sibiling
 				{
 					GameObject* it = new GameObject(obj->parent);
 					obj->parent->childs.push_back(it);
@@ -170,8 +121,58 @@ void ModelImporter::InitTransformComponent(GameObject* object, aiNode* node)
 }
 
 
-void ModelImporter::InitMeshComponent(GameObject* object, std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords, std::vector<unsigned int>& indices)
+void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 {
+	int numVertices = 0;
+	int numTexCoords = 0;
+	int numIndices = 0;
+
+	std::vector<float> vertices;
+	std::vector<float> normals;
+	std::vector<float> texCoords;
+	std::vector <unsigned int> indices;
+
+	numVertices = mesh->mNumVertices;
+	vertices.resize(numVertices * 3);
+
+	memcpy(&vertices[0], mesh->mVertices, sizeof(float) * numVertices * 3);
+
+	if (mesh->HasNormals())
+	{
+		normals.resize(numVertices * 3);
+
+		memcpy(&normals[0], mesh->mNormals, sizeof(float) * numVertices * 3);
+	}
+
+	for (int j = 0; j < MAX_TEX_COORDS; j++)
+	{
+		if (mesh->HasTextureCoords(j))
+		{
+			texCoords.reserve(numVertices * 2);
+
+			for (int k = 0; k < numVertices; k++)
+			{
+				texCoords.push_back(mesh->mTextureCoords[j][k].x);
+				texCoords.push_back(mesh->mTextureCoords[j][k].y);
+			}
+		}
+	}
+
+	if (mesh->HasFaces())
+	{
+		numIndices = mesh->mNumFaces * 3;
+		indices.resize(numIndices);
+
+		for (int j = 0; j < mesh->mNumFaces; j++)
+		{
+			if (mesh->mFaces[j].mNumIndices != 3)
+				App->editor->AddLog("WARNING, geometry face with != 3 indices!");
+
+			else
+				memcpy(&indices[j * 3], mesh->mFaces[j].mIndices, 3 * sizeof(unsigned int));
+		}
+	}
+
 	C_Mesh* meshComponent = new C_Mesh();
 	meshComponent->InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
 

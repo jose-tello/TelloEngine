@@ -7,6 +7,7 @@
 
 struct GameObject;
 struct aiMaterial;
+struct aiMesh;
 struct aiNode; 
 
 namespace ModelImporter
@@ -17,7 +18,7 @@ namespace ModelImporter
 
 	void SetObjName(GameObject* gameObject, aiNode* node);
 	void InitTransformComponent(GameObject* gameObject, aiNode* node);
-	void InitMeshComponent(GameObject* gameObject, std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords, std::vector<unsigned int>& indices);
+	void InitMeshComponent(GameObject* gameObject, aiMesh* mesh);
 	void InitMaterialComponent(GameObject* gameObject, aiMaterial* material);
 
 	void CleanUp();
