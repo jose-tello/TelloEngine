@@ -20,7 +20,7 @@ enum class FILE_TYPE : int
 class M_FileManager : public Module
 {
 public:
-	M_FileManager(bool start_enabled = true);
+	M_FileManager(bool startEnabled = true);
 	~M_FileManager();
 
 	bool Init() override;

@@ -65,15 +65,6 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 
 			for (int i = 0; i < node->mNumMeshes; i++)
 			{
-				//TODO: i hate this if
-				if (i > 0)
-				{
-					GameObject* it = new GameObject(obj->parent);
-					obj->parent->childs.push_back(it);
-					obj = it;
-					SetObjName(obj, node);
-					InitTransformComponent(obj, node);
-				}
 				unsigned int mesh = node->mMeshes[i];
 
 				numVertices = scene->mMeshes[mesh]->mNumVertices;
@@ -119,10 +110,17 @@ bool ModelImporter::Load(char* buffer, unsigned int bytes)
 
 				InitMeshComponent(obj, vertices, normals, texCoords, indices);
 				
-				aiMaterial* material = scene->mMaterials[scene->mMeshes[mesh]->mMaterialIndex];
+				aiMaterial* material = scene->mMaterials[scene->mMeshes[mesh]->mMaterialIndex];				
+				InitMaterialComponent(obj, material);
 
-				if (material->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE) > 0)
-					InitMaterialComponent(obj, material);			
+				if (node->mNumMeshes > 1)
+				{
+					GameObject* it = new GameObject(obj->parent);
+					obj->parent->childs.push_back(it);
+					obj = it;
+					SetObjName(obj, node);
+					InitTransformComponent(obj, node);
+				}
 			}
 
 			for (int i = 0; i < node->mNumChildren; i++)
@@ -195,16 +193,30 @@ void ModelImporter::InitMeshComponent(GameObject* object, std::vector<float>& ve
 }
 
 
-void ModelImporter::InitMaterialComponent(GameObject* object, aiMaterial* mat)
+void ModelImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* mat)
 {
-	C_Material* material = new C_Material();
+	aiColor4D color;
 
-	aiString texPath;
-	mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
+	bool hasTextures = mat->GetTextureCount(aiTextureType::aiTextureType_DIFFUSE) > 0;
+	bool hasColor = aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &color) == aiReturn_SUCCESS;
 
-	material->SetTexture(ImageImporter::Load(texPath.C_Str(), false));
+	if (hasTextures || hasColor)
+	{
+		C_Material* material = new C_Material();
 
-	object->AddComponent(material);
+		if (hasTextures)
+		{
+			aiString texPath;
+			mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
+
+			material->SetTexture(ImageImporter::Load(texPath.C_Str(), false));
+		}
+
+		if (hasColor)
+			material->SetColor(Color(color.r, color.g, color.b));
+
+		gameObject->AddComponent(material);
+	}	
 }
 
 

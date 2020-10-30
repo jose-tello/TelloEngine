@@ -1,6 +1,6 @@
-#include "Application.h"
 #include "M_FileManager.h"
 
+#include "Application.h"
 #include "M_Editor.h"
 #include "W_Inspector.h"
 
@@ -12,11 +12,12 @@
 
 //#include <fstream>
 //#include <filesystem>
+#include <assert.h>
 
 #include "PhysFS/include/physfs.h"
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
-M_FileManager::M_FileManager(bool start_enabled) : Module(start_enabled)
+M_FileManager::M_FileManager(bool startEnabled) : Module(startEnabled)
 {
 	PHYSFS_init(nullptr);
 
@@ -113,23 +114,41 @@ void M_FileManager::AdaptPath(std::string& path)
 }
 
 
-std::string M_FileManager::NormalizePath(const char* path)
+// Return the bytes of a PhysFS filehandle
+unsigned int M_FileManager::ReadBytes(const char* path, char** buffer) const
 {
-	std::string newPath(path);
-	for (int i = 0; i < newPath.size(); ++i)
+	uint ret = 0;
+
+	// The reading offset is set to the first byte of the file.
+	// Returns a filehandle on success that we will need for the PHYSFS_fileLength
+
+	PHYSFS_file* file = PHYSFS_openRead(path);
+	// Check for end-of-file state on a PhysicsFS filehandle.
+	if (!PHYSFS_eof(file))
 	{
-		if (newPath[i] == '\\')
-			newPath[i] = '/';
+		// Get total length of a file in bytes
+		uint lenght = PHYSFS_fileLength(file);
+		*buffer = new char[lenght];
+
+		// Read data from a PhysicsFS firehandle. Returns a number of bytes read.
+		uint bytes = PHYSFS_readBytes(file, *buffer, lenght);
+
+		if (bytes != lenght)
+		{
+			App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
+			delete[] buffer;
+		}
+		else
+			ret = bytes;
 	}
-	return newPath;
-}
+	else
+		App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
 
 
-//TODO: this is SOOOOOO dirty but i can't find how to do it any other way, so ill just deal with it later 
-void M_FileManager::TransformPath(std::string& path)
-{
-	int itPos = path.find("Assets");
-	path = path.substr(itPos + ASSETS_LENGHT, path.length());
+	// Close a PhysicsFS firehandle
+	PHYSFS_close(file);
+
+	return ret;
 }
 
 
@@ -168,6 +187,26 @@ void M_FileManager::SplitPath(const char* fullPath, std::string* path, std::stri
 				extension->clear();
 		}
 	}
+}
+
+
+std::string M_FileManager::NormalizePath(const char* path)
+{
+	std::string newPath(path);
+	for (int i = 0; i < newPath.size(); ++i)
+	{
+		if (newPath[i] == '\\')
+			newPath[i] = '/';
+	}
+	return newPath;
+}
+
+
+//TODO: this is SOOOOOO dirty but i can't find how to do it any other way, so ill just deal with it later 
+void M_FileManager::TransformPath(std::string& path)
+{
+	int itPos = path.find("Assets");
+	path = path.substr(itPos + ASSETS_LENGHT, path.length());
 }
 
 
@@ -222,45 +261,9 @@ FILE_TYPE M_FileManager::GetFileType(const char* path)
 
 	else
 	{
-		//assert(true, "ERROR: not supported tipe of file");
+		assert(true, "ERROR: not supported tipe of file");
 		return FILE_TYPE::NONE;
 	}
 }
 
 
-// Return the bytes of a PhysFS filehandle
-unsigned int M_FileManager::ReadBytes(const char* path, char** buffer) const
-{
-	uint ret = 0;
-
-	// The reading offset is set to the first byte of the file.
-	// Returns a filehandle on success that we will need for the PHYSFS_fileLength
-
-	PHYSFS_file* file = PHYSFS_openRead(path);
-	// Check for end-of-file state on a PhysicsFS filehandle.
-	if (!PHYSFS_eof(file))
-	{
-		// Get total length of a file in bytes
-		uint lenght = PHYSFS_fileLength(file);
-		*buffer = new char[lenght];
-
-		// Read data from a PhysicsFS firehandle. Returns a number of bytes read.
-		uint bytes = PHYSFS_readBytes(file, *buffer, lenght);
-
-		if (bytes != lenght)
-		{
-			App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
-			delete[] buffer;
-		}
-		else
-			ret = bytes;
-	}
-	else
-		App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
-
-
-	// Close a PhysicsFS firehandle
-	PHYSFS_close(file);
-
-	return ret;
-}
