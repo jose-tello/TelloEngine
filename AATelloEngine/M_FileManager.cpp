@@ -91,16 +91,23 @@ void M_FileManager::LoadFromExporter(const char* path)
 	break;
 
 	case FILE_TYPE::TEXTURE:
-		unsigned int texId = ImageImporter::Load(path);
-		App->editor->AddLog("Log: Loaded a texture");
 
-		W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
-		GameObject* object = inspector->GetFocusedGameObject();
-		C_Material* material = new C_Material();
+		GameObject* object = App->editor->GetFocusedGameObject();
+		if (object != nullptr)
+		{
+			unsigned int texId = ImageImporter::Load(path);
+			App->editor->AddLog("Log: Loaded a texture");
 
-		material->SetTexture(texId);
+			C_Material* material = new C_Material();
 
-		object->AddComponent(material);
+			material->SetTexture(texId);
+
+			object->AddComponent(material);
+		}
+
+		else
+			App->editor->AddLog("WARNING: Dont have any game object selected");
+		
 		break;
 	}
 
@@ -256,7 +263,7 @@ FILE_TYPE M_FileManager::GetFileType(const char* path)
 	if (extension == "FBX" || extension == "fbx")
 		return FILE_TYPE::MODEL;
 
-	else if (extension == "PNG" || extension == "png")
+	else if (extension == "PNG" || extension == "png" || extension == "DDS" ||extension == "dds")
 		return FILE_TYPE::TEXTURE;
 
 	else
