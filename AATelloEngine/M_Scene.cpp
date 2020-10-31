@@ -1,5 +1,7 @@
 #include "M_Scene.h"
+
 #include "Application.h"
+#include "M_FileManager.h"
 
 #include "GameObject.h"
 #include "C_Mesh.h"
@@ -21,15 +23,11 @@ M_Scene::~M_Scene()
 bool M_Scene::Start() //TODO: Charge house here
 {
 	//Debug purposes
-
-	/*GameObject* obj = new GameObject(nullptr);
-
-	C_Mesh* mesh = new C_Mesh(obj);
-	mesh->InitAsCube();
-
-	obj->AddComponent(mesh);
-
-	gameObjects.push_back(obj);*/
+	App->fileManager->LoadFromExporter("Assets/house/BakerHouse.fbx");
+	gameObjects[0]->transform.SetEscale(0.01, 0.01, 0.01);
+	mat4x4 rot;
+	rot.rotate(90, vec3(1, 0, 0));
+	gameObjects[0]->transform.AddTransform(rot);
 
 	return true;
 }
