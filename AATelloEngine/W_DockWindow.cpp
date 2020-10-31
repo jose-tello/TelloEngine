@@ -48,42 +48,75 @@ void W_DockWindow::CreateDockWindow()
 
 	if (ImGui::BeginMenuBar())
 	{
-		if (ImGui::BeginMenu("About"))
+		if (ImGui::BeginMenu("Menu"))
 		{
-			//TODO: put some cool text here
+			DrawAboutMenu();
+
+			DrawWindowsMenu();
+
+			if (ImGui::MenuItem("Exit"))
+				App->CloseApplication();
 
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Load shapes"))
-		{
-			if (ImGui::Button("Cube"))
-				App->scene->AddPrimitive(PRIMITIVE_TYPE::CUBE);
-
-			if (ImGui::Button("Piramid"))
-				App->scene->AddPrimitive(PRIMITIVE_TYPE::PIRAMID);
-
-			if (ImGui::Button("Sphere"))
-				App->scene->AddPrimitive(PRIMITIVE_TYPE::SPHERE);
-
-			if (ImGui::Button("Cilinder"))
-				App->scene->AddPrimitive(PRIMITIVE_TYPE::CILINDER);
-			
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Windows"))
-		{
-			ImGui::Checkbox("App state", &App->editor->GetWindow(E_WINDOW_TYPE::APPLICATION_STATE)->open);
-			ImGui::Checkbox("Console", &App->editor->GetWindow(E_WINDOW_TYPE::CONSOLE)->open);
-			ImGui::Checkbox("Inspector", &App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR)->open);
-			ImGui::Checkbox("Object hierarchy", &App->editor->GetWindow(E_WINDOW_TYPE::GAME_OBJECTS)->open);
-			ImGui::Checkbox("Scene", &App->editor->GetWindow(E_WINDOW_TYPE::SCENE)->open);
-
-			ImGui::EndMenu();
-		}
+		DrawShapesMenu();		
 
 		ImGui::EndMenuBar();
 	}
 	ImGui::End();
+}
+
+
+void W_DockWindow::DrawAboutMenu()
+{
+	if (ImGui::BeginMenu("About"))
+	{
+		if (ImGui::MenuItem("Documentation"))
+			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/wiki", NULL, NULL, SW_SHOWNORMAL);
+
+		if (ImGui::MenuItem("Download latest version"))
+			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/releases", NULL, NULL, SW_SHOWNORMAL);
+
+		if (ImGui::MenuItem("Report a bug"))
+			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/issues", NULL, NULL, SW_SHOWNORMAL);
+
+		ImGui::EndMenu();
+	}
+}
+
+
+void W_DockWindow::DrawWindowsMenu()
+{
+	if (ImGui::BeginMenu("Windows"))
+	{
+		ImGui::Checkbox("App state", &App->editor->GetWindow(E_WINDOW_TYPE::APPLICATION_STATE)->open);
+		ImGui::Checkbox("Console", &App->editor->GetWindow(E_WINDOW_TYPE::CONSOLE)->open);
+		ImGui::Checkbox("Inspector", &App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR)->open);
+		ImGui::Checkbox("Object hierarchy", &App->editor->GetWindow(E_WINDOW_TYPE::GAME_OBJECTS)->open);
+		ImGui::Checkbox("Scene", &App->editor->GetWindow(E_WINDOW_TYPE::SCENE)->open);
+
+		ImGui::EndMenu();
+	}
+}
+
+
+void W_DockWindow::DrawShapesMenu()
+{
+	if (ImGui::BeginMenu("Load shapes"))
+	{
+		if (ImGui::Button("Cube"))
+			App->scene->AddPrimitive(PRIMITIVE_TYPE::CUBE);
+
+		if (ImGui::Button("Piramid"))
+			App->scene->AddPrimitive(PRIMITIVE_TYPE::PIRAMID);
+
+		if (ImGui::Button("Sphere"))
+			App->scene->AddPrimitive(PRIMITIVE_TYPE::SPHERE);
+
+		if (ImGui::Button("Cilinder"))
+			App->scene->AddPrimitive(PRIMITIVE_TYPE::CILINDER);
+
+		ImGui::EndMenu();
+	}
 }

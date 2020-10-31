@@ -10,8 +10,13 @@ public:
 	~W_DockWindow() override;
 
 	bool Draw() override;
+
 private:
+
 	void CreateDockWindow();
+	void DrawAboutMenu();
+	void DrawWindowsMenu();
+	void DrawShapesMenu();
 };
 
 

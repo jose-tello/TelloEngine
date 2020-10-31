@@ -32,6 +32,8 @@ private:
 	float	dt;
 	std::vector<Module*> modulesVec;
 
+	bool closeApplication;
+
 public:
 	Application();
 	~Application();
@@ -40,10 +42,10 @@ public:
 	UPDATE_STATUS Update();
 	bool CleanUp();
 
+	void CloseApplication();
+
 private:
 	void AddModule(Module* mod);
-	void PrepareUpdate();
-	void FinishUpdate();
-};
+	void PrepareUpdate();};
 
 #endif // !__APLICATION_H__

@@ -14,6 +14,7 @@ Application* App = nullptr; //TODO: Dont know how and why this works, ask marc, 
 
 
 Application::Application() : 
+	closeApplication(false),
 	dt(0.16f)
 {
 	window = new M_Window();
@@ -85,16 +86,14 @@ void Application::PrepareUpdate()
 }
 
 
-// ---------------------------------------------
-void Application::FinishUpdate()
-{
-}
-
-
 // Call PreUpdate, Update and PostUpdate on all modules
 UPDATE_STATUS Application::Update()
 {
 	UPDATE_STATUS ret = UPDATE_STATUS::UPDATE_CONTINUE;
+
+	if (closeApplication == true)
+		return UPDATE_STATUS::UPDATE_STOP;
+
 	PrepareUpdate();
 
 	int numModules = modulesVec.size();
@@ -114,7 +113,6 @@ UPDATE_STATUS Application::Update()
 		ret = modulesVec[i]->PostUpdate(dt);
 	}
 
-	FinishUpdate();
 	return ret;
 }
 
@@ -129,6 +127,13 @@ bool Application::CleanUp()
 		ret = modulesVec[i]->CleanUp();
 	}
 	return ret;
+}
+
+
+void Application::CloseApplication()
+{
+	editor->AddLog("Closing Application --------------");
+	closeApplication = true;
 }
 
 

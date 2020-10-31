@@ -92,7 +92,6 @@ bool W_AppState::Draw()
 {
 	ImGui::Begin("Application state", &open);
 
-	DrawBmHelp();
 	DrawChApplicationState();
 	DrawChWindow();
 	DrawChRenderOptions();
@@ -125,24 +124,6 @@ void W_AppState::UpdateChInput()
 		{
 			inputsLog.erase(inputsLog.begin());
 		}
-	}
-}
-
-
-void W_AppState::DrawBmHelp()
-{
-	if (ImGui::BeginMenu("Help"))
-	{
-		if (ImGui::MenuItem("Documentation"))
-			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/wiki", NULL, NULL, SW_SHOWNORMAL);
-
-		if (ImGui::MenuItem("Download latest version"))
-			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/releases", NULL, NULL, SW_SHOWNORMAL);
-
-		if (ImGui::MenuItem("Report a bug"))
-			ShellExecuteA(NULL, "open", "https://github.com/jose-tello/TelloEngine/issues", NULL, NULL, SW_SHOWNORMAL);
-
-		ImGui::End();
 	}
 }
 

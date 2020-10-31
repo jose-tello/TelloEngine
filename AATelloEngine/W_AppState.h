@@ -22,7 +22,6 @@ private:
 	void UpdateChApplicationState();
 	void UpdateChInput();
 
-	void DrawBmHelp();
 	void DrawChApplicationState();
 	void DrawChWindow();
 	void DrawChRenderOptions();
