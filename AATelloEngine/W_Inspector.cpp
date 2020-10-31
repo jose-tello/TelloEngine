@@ -113,26 +113,34 @@ void W_Inspector::DrawTransformComp(C_Transform* transform)
 
 		transform->GetPos(x, y, z);
 		float pos[] = { x, y, z };
+		float auxPos[] = { x, y, z };
 
-		ImGui::Text("Position: ");
-		ImGui::InputFloat3("", pos, 2, ImGuiInputTextFlags_AutoSelectAll);
+		if (ImGui::InputFloat3("Position", pos, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			x = pos[0] - auxPos[0];
+			y = pos[1] - auxPos[1];
+			z = pos[2] - auxPos[2];
+			transform->SetPos(x, y, z);
+		}
 		ImGui::NewLine();
 		ImGui::Separator();
+
 
 		transform->GetRotation(angle, x, y, z);
 		float rotation[] = { x, y, z };
 
-		ImGui::Text("Rotation: ");
-		ImGui::InputFloat3("", rotation, 2, ImGuiInputTextFlags_AutoSelectAll);
-		ImGui::InputFloat("Angle rotation:", &angle);
+		if (ImGui::InputFloat3("Rotation", rotation, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
+		ImGui::Text("Angle rotation :");
+		ImGui::InputFloat("", &angle);
 		ImGui::NewLine();
 		ImGui::Separator();
 
+
 		transform->GetEscale(x, y, z);
 		float escale[] = { x, y, z };
-
+		
 		ImGui::Text("Scale: ");
-		ImGui::InputFloat3("", escale, 2, ImGuiInputTextFlags_AutoSelectAll);
+		if (ImGui::InputFloat3("Scale", escale, 6, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
 		ImGui::NewLine();
 	}
 
