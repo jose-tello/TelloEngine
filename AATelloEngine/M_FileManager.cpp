@@ -101,6 +101,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 			C_Material* material = new C_Material();
 
 			material->SetTexture(texId);
+			material->texturePath = path;
 
 			object->AddComponent(material);
 		}

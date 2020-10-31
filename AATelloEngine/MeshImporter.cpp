@@ -215,6 +215,7 @@ void ModelImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* ma
 			mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
 
 			material->SetTexture(ImageImporter::Load(texPath.C_Str(), false));
+			material->texturePath = texPath.C_Str();
 		}
 
 		if (hasColor)

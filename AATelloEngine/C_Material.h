@@ -4,6 +4,11 @@
 #include "Component.h"
 #include "Color.h"
 
+#include <string>
+
+#define CHECKERS_WIDTH 80
+#define CHECKERS_HEIGHT 80
+
 class C_Material : public Component
 {
 public:
@@ -19,7 +24,21 @@ public:
 	bool GetColorEnabled() const;
 	void SetColorEnable(bool enable);
 
+	bool GetCheckerTextureEnabled() const;
+	void SetCheckerTextureEnable(bool enable);
+
 	void GetDrawVariables(unsigned int& texId, Color& col) const;
+
+private:
+	void InitTextureSize();
+	void InitCheckerTex();
+
+public:
+	//TODO: this information will be held by the material/texture resource, but for now it will stay here
+	std::string texturePath;
+	int textureWidth;
+	int textureHeight;
+	
 
 private:
 	unsigned int textureId;
@@ -27,6 +46,10 @@ private:
 
 	bool textureEnabled;
 	bool colorEnabled;
+
+	//This will be a material on its own, but for now this is "accetable"
+	unsigned int checkerTexId;
+	bool useCheckerTex;
 };
 
 #endif // !__C_MATERIAL_H__

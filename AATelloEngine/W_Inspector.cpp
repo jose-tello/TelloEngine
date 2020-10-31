@@ -165,14 +165,24 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 {
 	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Text("Texture Path: %s", material->texturePath.c_str());
+		ImGui::Text("Tex width: %i", material->textureWidth);
+		ImGui::Text("Tex height: %i", material->textureHeight);
+
+		ImGui::Spacing();
+		ImGui::Separator();
+
 		bool texEnabled = material->GetTextureEnabled();
 		bool colEnabled = material->GetColorEnabled();
+		bool checkEnabled = material->GetCheckerTextureEnabled();
 
 		ImGui::Checkbox("Texture", &texEnabled);
 		ImGui::Checkbox("Color", &colEnabled);
+		ImGui::Checkbox("Checker tex", &checkEnabled);
 
 		material->SetTextureEnable(texEnabled);
 		material->SetColorEnable(colEnabled);
+		material->SetCheckerTextureEnable(checkEnabled);
 	}
 
 	ImGui::NewLine();

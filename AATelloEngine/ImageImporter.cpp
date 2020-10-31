@@ -38,6 +38,8 @@ unsigned int ImageImporter::Load(const char* path, bool pathFromFileManager)
 		std::string fileExtension;
 		App->fileManager->SplitPath(path, nullptr, &fileName, &fileExtension);
 		finalPath = fileName + "." + fileExtension;
+
+		path = finalPath.c_str();
 	}
 	
 	bytes = App->fileManager->ReadBytes(finalPath.c_str(), &buffer);
