@@ -5,6 +5,8 @@
 
 #include <vector>
 
+struct GameObject;
+
 #define MAX_LOG_SIZE 80
 #define MAX_RESOLUTION_WIDTH 1920
 #define MAX_RESOLUTION_HEIGHT 1080
@@ -30,6 +32,7 @@ public:
 	void OpenWindow(E_WINDOW_TYPE type);
 
 	E_Window* GetWindow(E_WINDOW_TYPE);
+	GameObject* GetFocusedGameObject() const;
 
 private:
 	std::vector<E_Window*> windowsVec;

@@ -169,3 +169,10 @@ E_Window* M_Editor::GetWindow(E_WINDOW_TYPE type)
 {
 	return windowsVec[(int)type];
 }
+
+
+GameObject* M_Editor::GetFocusedGameObject() const
+{
+	W_Inspector* inspector = (W_Inspector *)windowsVec[(int)E_WINDOW_TYPE::INSPECTOR];
+	return inspector->GetFocusedGameObject();
+}

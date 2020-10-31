@@ -2,7 +2,10 @@
 #include "Application.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
+#include "M_Editor.h"
 
+#include "GameObject.h"
+#include "C_Transform.h"
 
 #include "SDL\include\SDL.h"
 
@@ -28,12 +31,38 @@ M_Camera3D::~M_Camera3D()
 // -----------------------------------------------------------------
 UPDATE_STATUS M_Camera3D::Update(float dt)
 {
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
+	{
+		vec3 pos;
+		GameObject* obj = App->editor->GetFocusedGameObject();
+		if (obj != nullptr)
+		{
+			obj->transform.GetPos(pos.x, pos.y, pos.z);
+			LookAt(pos);
+		}
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_UP)
+		reference = position;
+
+	else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
 		MoveCamera(dt);
-	
 
 	else if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
 		MoveCameraSideways(dt);
+
+	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
+	{
+		vec3 pos;
+		GameObject* obj = App->editor->GetFocusedGameObject();
+		if (obj != nullptr)
+		{
+			obj->transform.GetPos(pos.x, pos.y, pos.z);
+			Look(pos, true);
+		}
+
+		MoveCamera(dt);
+	}
+	
 
 
 	int weelMotion = App->input->GetMouseZ();
@@ -47,10 +76,9 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 }
 
 // -----------------------------------------------------------------
-void M_Camera3D::Look(const vec3& position, const vec3& reference, bool rotateAroundReference)
+void M_Camera3D::Look(const vec3& spot, bool rotateAroundReference)
 {
-	this->position = position;
-	this->reference = reference;
+	reference = spot;
 
 	Z = normalize(position - reference);
 	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
@@ -58,8 +86,8 @@ void M_Camera3D::Look(const vec3& position, const vec3& reference, bool rotateAr
 
 	if (!rotateAroundReference)
 	{
-		this->reference = this->position;
-		this->position += Z * 0.05f;
+		reference = this->position;
+		position += Z * 0.05f;
 	}
 
 	CalculateViewMatrix();
@@ -107,9 +135,6 @@ void M_Camera3D::MoveCamera(float dt)
 	float speed = CAMERA_SPEED * dt;
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
 		speed *= 2;
-
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_REPEAT) newPos.y += speed;
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_REPEAT) newPos.y -= speed;
 
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT) newPos -= Z * speed;
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT) newPos += Z * speed;

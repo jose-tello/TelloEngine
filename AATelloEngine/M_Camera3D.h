@@ -16,9 +16,9 @@ public:
 
 	UPDATE_STATUS Update(float dt);
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
+	void Look(const vec3 &spot, bool RotateAroundReference = false);
+	void LookAt(const vec3 &spot);
+	void Move(const vec3 &movement);
 
 	float* GetViewMatrix();
 	
