@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "M_Scene.h"
+#include "M_Editor.h"
 
 #include "imgui/imgui.h"
 
@@ -68,6 +69,17 @@ void W_DockWindow::CreateDockWindow()
 			if (ImGui::Button("Cilinder"))
 				App->scene->AddPrimitive(PRIMITIVE_TYPE::CILINDER);
 			
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Windows"))
+		{
+			ImGui::Checkbox("App state", &App->editor->GetWindow(E_WINDOW_TYPE::APPLICATION_STATE)->open);
+			ImGui::Checkbox("Console", &App->editor->GetWindow(E_WINDOW_TYPE::CONSOLE)->open);
+			ImGui::Checkbox("Inspector", &App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR)->open);
+			ImGui::Checkbox("Object hierarchy", &App->editor->GetWindow(E_WINDOW_TYPE::GAME_OBJECTS)->open);
+			ImGui::Checkbox("Scene", &App->editor->GetWindow(E_WINDOW_TYPE::SCENE)->open);
+
 			ImGui::EndMenu();
 		}
 
