@@ -291,6 +291,9 @@ void W_AppState::DrawChHardware()
 
 		ImGui::Spacing();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "OpenGL v. 3.0");
+		ImGui::Spacing();
+
+		ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "DevIl v1.7.8");
 
 		ImGui::Spacing();
 	}
