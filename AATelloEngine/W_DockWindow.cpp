@@ -1,5 +1,8 @@
 #include "W_DockWindow.h"
 
+#include "Application.h"
+#include "M_Scene.h"
+
 #include "imgui/imgui.h"
 
 W_DockWindow::W_DockWindow(bool open) : E_Window(open)
@@ -42,5 +45,33 @@ void W_DockWindow::CreateDockWindow()
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
 	}
 
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("About"))
+		{
+			//TODO: put some cool text here
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Load shapes"))
+		{
+			if (ImGui::Button("Cube"))
+				App->scene->AddPrimitive(PRIMITIVE_TYPE::CUBE);
+
+			if (ImGui::Button("Piramid"))
+				App->scene->AddPrimitive(PRIMITIVE_TYPE::PIRAMID);
+
+			if (ImGui::Button("Sphere"))
+				App->scene->AddPrimitive(PRIMITIVE_TYPE::SPHERE);
+
+			if (ImGui::Button("Cilinder"))
+				App->scene->AddPrimitive(PRIMITIVE_TYPE::CILINDER);
+			
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMenuBar();
+	}
 	ImGui::End();
 }

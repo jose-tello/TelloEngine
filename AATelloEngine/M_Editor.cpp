@@ -142,6 +142,8 @@ void M_Editor::Draw()
 		ImGui::RenderPlatformWindowsDefault();
 		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 	}
+
+	
 }
 
 

@@ -12,6 +12,9 @@ public:
 
 	//Primitive things
 	void InitAsCube();
+	void InitAsPiramid();
+	void InitAsSphere();
+	void InitAsCilinder();
 
 	void InitVertexBuffer(float*, size_t);
 	void InitNormalBuffer(float*, size_t);

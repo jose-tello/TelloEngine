@@ -72,6 +72,40 @@ void M_Scene::AddGameObject(GameObject* object)
 }
 
 
+void M_Scene::AddPrimitive(PRIMITIVE_TYPE type)
+{
+	GameObject* object = new GameObject(nullptr);
+	C_Mesh* mesh = new C_Mesh();
+
+	switch (type)
+	{
+	case PRIMITIVE_TYPE::CUBE:
+		object->SetName("Cube");
+		mesh->InitAsCube();
+		break;
+
+	case PRIMITIVE_TYPE::PIRAMID:
+		object->SetName("Piramid");
+		mesh->InitAsPiramid();
+		break;
+
+	case PRIMITIVE_TYPE::SPHERE:
+		object->SetName("Sphere");
+		mesh->InitAsSphere();
+		break;
+
+	case PRIMITIVE_TYPE::CILINDER:
+		object->SetName("Cilinder");
+		mesh->InitAsCilinder();
+		break;
+	}
+
+	object->AddComponent(mesh);
+	gameObjects.push_back(object);
+	object->transform.SetEscale(10.f, 10.f, 10.f);
+}
+
+
 void M_Scene::GetGameObjectVector(std::vector<GameObject*>& vec)
 {
 	vec = gameObjects;

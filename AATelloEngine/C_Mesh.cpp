@@ -52,6 +52,39 @@ void C_Mesh::InitAsCube()
 }
 
 
+void C_Mesh::InitAsPiramid()
+{
+	Primitive::CreatePiramid(vertices, indices);
+
+	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+}
+
+
+void C_Mesh::InitAsSphere()
+{
+	std::vector<float> texCoords;
+	Primitive::CreateSphere(2.f, 20, 20, vertices, normals, texCoords, indices);
+
+	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
+	InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
+	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+}
+
+
+void C_Mesh::InitAsCilinder()
+{
+	std::vector<float> texCoords;
+	Primitive::CreateCilinder(2.f, 20, 3, vertices, normals, texCoords, indices);
+
+	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+	InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
+	InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
+	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+}
+
+
 void C_Mesh::InitVertexBuffer(float* vertexBuffer, std::size_t vertexArrSize)
 {
 	vertices.resize(vertexArrSize / sizeof(float));
