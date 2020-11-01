@@ -87,7 +87,7 @@ void C_Transform::GetEscale(float& x, float& y, float& z) const
 
 void C_Transform::SetEscale(float x, float y, float z)
 {
-	localTransform.ScaleAlongAxis(float3(x, y, z), 1);
+	localTransform = localTransform.ScaleAlongAxis(float3(x, y, z), 1);
 	needUpdate = true;
 }
 

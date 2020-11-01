@@ -140,7 +140,7 @@ void W_Inspector::DrawTransformComp(C_Transform* transform)
 		float escale[] = { x, y, z };
 		
 		ImGui::Text("Scale: ");
-		if (ImGui::InputFloat3("Scale", escale, 6, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
+		if (ImGui::InputFloat3("Scale", escale, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
 		ImGui::NewLine();
 	}
 
