@@ -69,7 +69,6 @@ bool M_FileManager::CleanUp()
 
 void M_FileManager::LoadFromExporter(const char* path)
 {
-
 	FILE_TYPE type = GetFileType(path);
 
 	switch (type)

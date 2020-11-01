@@ -40,8 +40,6 @@ private:
 	bool winBorderless;
 
 	int  brightness;
-	int winWidth;
-	int winHeight;
 
 	//Render
 	bool depthTestEnabled;

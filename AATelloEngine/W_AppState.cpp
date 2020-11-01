@@ -18,8 +18,6 @@ W_AppState::W_AppState(bool open) :
 	winBorderless(true),
 
 	brightness(100),
-	winWidth(0),
-	winHeight(0),
 
 	//Render
 	depthTestEnabled(true),
@@ -58,8 +56,6 @@ W_AppState::~W_AppState()
 
 bool W_AppState::Start()
 {
-	App->window->GetWindowMeasures(winWidth, winHeight);
-
 	cpuCores = SDL_GetCPUCount();
 	maxRamMemory = SDL_GetSystemRAM();
 
@@ -141,9 +137,6 @@ void W_AppState::DrawChWindow()
 {
 	if (ImGui::CollapsingHeader("Window"))
 	{
-		int width = winWidth;
-		int height = winHeight;
-
 		ImGui::Checkbox("Full screen", &winFullScreen);
 		ImGui::SameLine();
 		ImGui::Checkbox("Full screen desktop", &winFullScreenDesktop);
@@ -153,8 +146,6 @@ void W_AppState::DrawChWindow()
 
 
 		ImGui::SliderInt("Brightness", &brightness, 1, 100);
-		ImGui::SliderInt("Width", &width, 100, MAX_RESOLUTION_WIDTH);
-		ImGui::SliderInt("Height", &height, 100, MAX_RESOLUTION_HEIGHT);
 
 		App->window->SetWindowFullScreen(winFullScreen);
 		App->window->SetWindowFullScreenDesktop(winFullScreenDesktop);
@@ -163,14 +154,6 @@ void W_AppState::DrawChWindow()
 
 		float bright = brightness * 0.01;
 		App->window->SetWindowBrightness(bright);
-
-		if (winWidth != width || winHeight != height)
-		{
-			winWidth = width;
-			winHeight = height;
-			App->window->SetWindowMeasures(winWidth, winHeight);
-		}
-
 	}
 }
 
@@ -294,7 +277,9 @@ void W_AppState::DrawChHardware()
 		ImGui::Spacing();
 
 		ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "DevIl v1.7.8");
+		ImGui::Spacing();
 
+		ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "Assimp");
 		ImGui::Spacing();
 	}
 }

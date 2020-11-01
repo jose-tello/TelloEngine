@@ -25,7 +25,7 @@ M_Scene::~M_Scene()
 bool M_Scene::Start() //TODO: Charge house here
 {
 	//Debug purposes
-	App->fileManager->LoadFromExporter("Assets/house/BakerHouse.fbx");
+	App->fileManager->LoadFromExporter("/Assets/house/BakerHouse.fbx");
 	gameObjects[0]->transform.SetEscale(0.05, 0.05, 0.05);
 	float4x4 rot = rot.identity;
 	gameObjects[0]->transform.AddTransform(rot.RotateAxisAngle(float3(1, 0, 0), 90 * DEGTORAD));
