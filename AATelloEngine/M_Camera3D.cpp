@@ -62,7 +62,8 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 
 		MoveCamera(dt);
 	}
-	
+	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_UP || App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_UP)
+		reference = position;
 
 	int weelMotion = App->input->GetMouseZ();
 	if (weelMotion != 0)
@@ -165,12 +166,6 @@ void M_Camera3D::MoveCamera(float dt)
 
 		Y = rotate(Y, deltaY, X);
 		Z = rotate(Z, deltaY, X);
-
-		if (Y.y < 0.0f)
-		{
-			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-			Y = cross(Z, X);
-		}
 	}
 
 	position = reference + Z * length(position);

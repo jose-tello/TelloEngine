@@ -24,6 +24,7 @@ public:
 	
 private:
 	void CalculateViewMatrix();
+	void CheckGimballLock();
 
 	void MoveCamera(float dt);
 	void ZoomCamera(int weelMotion, float dt);
