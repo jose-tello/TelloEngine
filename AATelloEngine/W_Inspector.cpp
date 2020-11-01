@@ -130,7 +130,7 @@ void W_Inspector::DrawTransformComp(C_Transform* transform)
 		float rotation[] = { x, y, z };
 
 		if (ImGui::InputFloat3("Rotation", rotation, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
-		ImGui::Text("Angle rotation :");
+		ImGui::Text("Angle rotation : ");
 		ImGui::InputFloat("", &angle);
 		ImGui::NewLine();
 		ImGui::Separator();

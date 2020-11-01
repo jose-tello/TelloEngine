@@ -64,7 +64,6 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 	}
 	
 
-
 	int weelMotion = App->input->GetMouseZ();
 	if (weelMotion != 0)
 		ZoomCamera(weelMotion, dt);

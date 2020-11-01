@@ -2,7 +2,7 @@
 #define __C_TRANSFORM_H__
 
 #include "Component.h"
-#include "glmath.h"
+#include "MathGeoLib/include/MathGeoLib.h"
 
 class C_Transform : public Component
 {
@@ -21,16 +21,16 @@ public:
 	void GetEscale(float& x, float& y, float& z) const;
 	void SetEscale(float x, float y, float z);
 
-	mat4x4 GetMatTransform() const;
-	void AddTransform(mat4x4 transform);
+	float4x4 GetMatTransform() const;
+	void AddTransform(float4x4 transform);
 
 private:
 	void UpdateTransform();
 	void NotifyChildsNeedUpdate();
 
 private:
-	mat4x4 localTransform;
-	mat4x4 worldTransform;
+	float4x4 localTransform;
+	float4x4 worldTransform;
 
 	bool needUpdate;
 

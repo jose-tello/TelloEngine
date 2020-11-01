@@ -7,6 +7,8 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 
+#include "Globals.h"
+
 #include <stack>
 
 M_Scene::M_Scene(bool start_enabled) : Module(start_enabled)
@@ -25,9 +27,8 @@ bool M_Scene::Start() //TODO: Charge house here
 	//Debug purposes
 	App->fileManager->LoadFromExporter("Assets/house/BakerHouse.fbx");
 	gameObjects[0]->transform.SetEscale(0.05, 0.05, 0.05);
-	mat4x4 rot;
-	rot.rotate(90, vec3(1, 0, 0));
-	gameObjects[0]->transform.AddTransform(rot);
+	float4x4 rot = rot.identity;
+	gameObjects[0]->transform.AddTransform(rot.RotateAxisAngle(float3(1, 0, 0), 90 * DEGTORAD));
 
 	return true;
 }
@@ -272,5 +273,5 @@ void M_Scene::DrawObject(GameObject* object, bool blackWireframe)
 	if (blackWireframe)
 		color = &Black;
 	
-	mesh->Draw(object->transform.GetMatTransform().M, texId, color, blackWireframe);
+	mesh->Draw(object->transform.GetMatTransform().ptr(), texId, color, blackWireframe);
 }

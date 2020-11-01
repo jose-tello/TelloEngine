@@ -1,13 +1,12 @@
 #include "C_Transform.h"
 
 #include "GameObject.h"
-#include "MathGeoLib/include/MathGeoLib.h"
 
 #include "Globals.h"
 
 C_Transform::C_Transform() : Component(COMPONENT_TYPE::TRANSFORM),
-	localTransform(),
-	worldTransform(),
+	localTransform(localTransform.identity),
+	worldTransform(worldTransform.identity),
 
 	needUpdate(false)
 {
@@ -34,7 +33,7 @@ bool C_Transform::PostUpdate(float dt)
 
 void C_Transform::GetPos(float& x, float& y, float& z) const
 {
-	vec3 translation = localTransform.translation() + worldTransform.translation();
+	float3 translation = localTransform.TranslatePart() + worldTransform.TranslatePart();
 
 	x = translation.x;
 	y = translation.y;
@@ -44,19 +43,14 @@ void C_Transform::GetPos(float& x, float& y, float& z) const
 
 void C_Transform::SetPos(float x, float y, float z)
 {
-	localTransform.translate(x, y, z);
+	localTransform.SetTranslatePart(float3(x, y, z));
 	needUpdate = true;
 }
 
 
 void C_Transform::GetRotation(float& angle, float& x, float& y, float& z) const
 {
-	mat4x4 mat = localTransform * worldTransform;
-
-	float4x4 matrix(mat[0],	 mat[1],  mat[2],  mat[3],
-					mat[4],  mat[5],  mat[6],  mat[7],
-					mat[8],  mat[9],  mat[10], mat[11],
-					mat[12], mat[13], mat[14], mat[15]);
+	float4x4 matrix = localTransform * worldTransform;
 
 	Quat rotation;
 	float3 pos;
@@ -74,19 +68,14 @@ void C_Transform::GetRotation(float& angle, float& x, float& y, float& z) const
 
 void C_Transform::SetRotation(float angle, float x, float y, float z)
 {
-	localTransform.rotate(angle, vec3(x, y, z));
+	localTransform.RotateAxisAngle(float3(x, y, z), angle);
 	needUpdate = true;
 }
 
 
 void C_Transform::GetEscale(float& x, float& y, float& z) const
 {
-	mat4x4 mat = localTransform * worldTransform;
-
-	float4x4 matrix(mat[0],  mat[1],  mat[2],  mat[3],
-					mat[4],  mat[5],  mat[6],  mat[7],
-					mat[8],  mat[9],  mat[10], mat[11],
-					mat[12], mat[13], mat[14], mat[15]);
+	float4x4 matrix = localTransform * worldTransform;
 
 	float3 scale = matrix.GetScale();
 
@@ -98,18 +87,20 @@ void C_Transform::GetEscale(float& x, float& y, float& z) const
 
 void C_Transform::SetEscale(float x, float y, float z)
 {
-	localTransform.scale(x, y, z);
+	localTransform.ScaleAlongAxis(float3(x, y, z), 1);
 	needUpdate = true;
 }
 
 
-mat4x4 C_Transform::GetMatTransform() const
+float4x4 C_Transform::GetMatTransform() const
 {
-	return worldTransform * localTransform;
+	float4x4 mat = worldTransform * localTransform;
+	mat.Transpose();
+	return mat;
 }
 
 
-void C_Transform::AddTransform(mat4x4 transform)
+void C_Transform::AddTransform(float4x4 transform)
 {
 	localTransform = transform * localTransform;
 	needUpdate = true;

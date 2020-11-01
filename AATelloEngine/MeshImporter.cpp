@@ -10,6 +10,7 @@
 
 #include "M_Scene.h"
 
+#include "glmath.h"
 #include "MathGeoLib/include/MathGeoLib.h"
 
 #include "Assimp/include/cimport.h"
@@ -115,12 +116,10 @@ void ModelImporter::InitTransformComponent(GameObject* object, aiNode* node)
 	Quat quat(rotation.x, rotation.y, rotation.z, rotation.w);
 	float3 rotAxis = quat.Axis();
 
-	mat4x4 rot;
-	rot.rotate(quat.Angle() * RADTODEG, vec3(rotAxis.x, rotAxis.y, rotAxis.z));
+	float4x4 rot = rot.identity;
 
 	object->transform.SetEscale(scale.x, scale.y, scale.z);
-	//object->transform.SetRotation(quat.Angle() * RADTODEG, rotAxis.x, rotAxis.y, rotAxis.z);
-	object->transform.AddTransform(rot);
+	object->transform.AddTransform(rot.RotateAxisAngle(float3(rotAxis.x, rotAxis.y, rotAxis.z), quat.Angle()));
 	object->transform.SetPos(position.x, position.y, position.z);
 }
 
