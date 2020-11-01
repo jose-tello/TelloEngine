@@ -98,12 +98,16 @@ void M_FileManager::LoadFromExporter(const char* path)
 			unsigned int texId = ImageImporter::Load(path);
 			App->editor->AddLog("Log: Loaded a texture");
 
-			C_Material* material = new C_Material();
+			C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
+			if (material == nullptr)
+			{
+				material = new C_Material();
+				object->AddComponent(material);
+			}
+			 
 
 			material->SetTexture(texId);
 			material->texturePath = path;
-
-			object->AddComponent(material);
 		}
 
 		else
@@ -132,26 +136,30 @@ unsigned int M_FileManager::ReadBytes(const char* path, char** buffer) const
 
 	PHYSFS_file* file = PHYSFS_openRead(path);
 	// Check for end-of-file state on a PhysicsFS filehandle.
-	if (!PHYSFS_eof(file))
+	if (file != NULL)
 	{
-		// Get total length of a file in bytes
-		uint lenght = PHYSFS_fileLength(file);
-		*buffer = new char[lenght];
-
-		// Read data from a PhysicsFS firehandle. Returns a number of bytes read.
-		uint bytes = PHYSFS_readBytes(file, *buffer, lenght);
-
-		if (bytes != lenght)
+		if (!PHYSFS_eof(file))
 		{
-			App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
-			delete[] buffer;
+			// Get total length of a file in bytes
+			uint lenght = PHYSFS_fileLength(file);
+			*buffer = new char[lenght];
+
+			// Read data from a PhysicsFS firehandle. Returns a number of bytes read.
+			uint bytes = PHYSFS_readBytes(file, *buffer, lenght);
+
+			if (bytes != lenght)
+			{
+				App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
+				delete[] buffer;
+			}
+			else
+				ret = bytes;
 		}
 		else
-			ret = bytes;
+			App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
 	}
 	else
 		App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
-
 
 	// Close a PhysicsFS firehandle
 	PHYSFS_close(file);
