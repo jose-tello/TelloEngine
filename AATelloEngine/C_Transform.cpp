@@ -8,7 +8,7 @@ C_Transform::C_Transform() : Component(COMPONENT_TYPE::TRANSFORM),
 	localTransform(localTransform.identity),
 	worldTransform(worldTransform.identity),
 
-	needUpdate(false)
+	needUpdate(true)
 {
 }
 
@@ -94,7 +94,7 @@ void C_Transform::SetEscale(float x, float y, float z)
 
 float4x4 C_Transform::GetMatTransform() const
 {
-	float4x4 mat = worldTransform * localTransform;
+	float4x4 mat = worldTransform;
 	mat.Transpose();
 	return mat;
 }
@@ -110,7 +110,10 @@ void C_Transform::AddTransform(float4x4 transform)
 void C_Transform::UpdateTransform()
 {
 	if (owner->parent != nullptr)
-		worldTransform = owner->parent->transform.localTransform * owner->parent->transform.worldTransform;
+		worldTransform = owner->parent->transform.worldTransform * localTransform;
+
+	else
+		worldTransform = localTransform;
 
 	needUpdate = false;
 }
