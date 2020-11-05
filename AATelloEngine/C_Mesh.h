@@ -4,27 +4,19 @@
 #include "Component.h"
 #include <vector>
 
+struct Mesh;
+
 class C_Mesh : public Component
 {
 public:
 	C_Mesh();
+	C_Mesh(std::vector<float>& vertexBuff, std::vector<float>& normals, std::vector<float> texCoords, std::vector<unsigned int> indices);
 	~C_Mesh() override;
 
-	//Primitive things
-	void InitAsCube();
-	void InitAsPiramid();
-	void InitAsSphere();
-	void InitAsCilinder();
-
-	void InitVertexBuffer(float*, size_t);
-	void InitNormalBuffer(float*, size_t);
-	void InitTexCoordBuffer(float*, size_t);
-	void InitIndexBuffer(unsigned int*, size_t);
-
 	void Draw(float* transformMatrix, unsigned int textureId, float* col, bool wireframeMode) const;
-	void DrawVertexNormals() const;
-	void DrawFaceNormals() const;
 
+	void SetMesh(Mesh*);
+	Mesh* GetMesh() const;
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
 
 public:
@@ -32,16 +24,7 @@ public:
 	bool drawFaceNormals;
 
 private:
-	unsigned int vertexId;
-	unsigned int normalsId;
-	unsigned int texCoordId;
-	unsigned int indexId;
-
-	std::vector<float> vertices;
-	std::vector<float> normals;
-	std::vector<unsigned int> indices;
-
-	int indexArrSize;
+	Mesh* mesh = nullptr;
 	
 };
 

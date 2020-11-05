@@ -20,7 +20,7 @@ void ImageImporter::Init()
 }
 
 
-unsigned int ImageImporter::Load(const char* path, bool pathFromFileManager)
+unsigned int ImageImporter::Import(const char* path, bool pathFromFileManager)
 {
 	char* buffer = nullptr;
 	unsigned int bytes = 0;

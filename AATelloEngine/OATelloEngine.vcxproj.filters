@@ -330,6 +330,9 @@
     <ClInclude Include="E_Window.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -535,6 +538,9 @@
     </ClCompile>
     <ClCompile Include="E_Window.cpp">
       <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Sources\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@
 
 #include "GameObject.h"
 #include "C_Mesh.h"
+#include "Mesh.h"
 #include "C_Material.h"
 
 #include "Globals.h"
@@ -75,7 +76,8 @@ void M_Scene::AddGameObject(GameObject* object)
 void M_Scene::AddPrimitive(PRIMITIVE_TYPE type)
 {
 	GameObject* object = new GameObject(nullptr);
-	C_Mesh* mesh = new C_Mesh();
+	C_Mesh* meshComponent = new C_Mesh();
+	Mesh* mesh = new Mesh();
 
 	switch (type)
 	{
@@ -100,7 +102,8 @@ void M_Scene::AddPrimitive(PRIMITIVE_TYPE type)
 		break;
 	}
 
-	object->AddComponent(mesh);
+	meshComponent->SetMesh(mesh);
+	object->AddComponent(meshComponent);
 	gameObjects.push_back(object);
 	object->transform.SetEscale(10.f, 10.f, 10.f);
 }

@@ -28,7 +28,7 @@ void ModelImporter::InitDebuggerOptions()
 }
 
 
-bool ModelImporter::Load(char* buffer, unsigned int bytes)
+bool ModelImporter::Import(char* buffer, unsigned int bytes)
 {
 	std::stack<GameObject*> objStack;
 	GameObject* root = new GameObject(nullptr);
@@ -176,17 +176,7 @@ void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 		}
 	}
 
-	C_Mesh* meshComponent = new C_Mesh();
-	meshComponent->InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
-
-	if (normals.empty() == false)
-		meshComponent->InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
-
-	if (texCoords.empty() == false)
-		meshComponent->InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
-
-	if (indices.empty() == false)
-		meshComponent->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+	C_Mesh* meshComponent = new C_Mesh(vertices, normals, texCoords, indices);
 
 	vertices.clear();
 	normals.clear();
@@ -213,7 +203,7 @@ void ModelImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* ma
 			aiString texPath;
 			mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
 
-			material->SetTexture(ImageImporter::Load(texPath.C_Str(), false));
+			material->SetTexture(ImageImporter::Import(texPath.C_Str(), false));
 			material->texturePath = texPath.C_Str();
 		}
 

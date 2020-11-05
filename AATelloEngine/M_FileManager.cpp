@@ -81,7 +81,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 		char* buffer = nullptr;
 		unsigned int bytes = ReadBytes(filePath.c_str(), &buffer);
 
-		ModelImporter::Load(buffer, bytes);
+		ModelImporter::Import(buffer, bytes);
 		App->editor->AddLog("Log: Loaded a model");
 
 		delete[] buffer;
@@ -94,7 +94,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 		GameObject* object = App->editor->GetFocusedGameObject();
 		if (object != nullptr)
 		{
-			unsigned int texId = ImageImporter::Load(path);
+			unsigned int texId = ImageImporter::Import(path);
 			App->editor->AddLog("Log: Loaded a texture");
 
 			C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
