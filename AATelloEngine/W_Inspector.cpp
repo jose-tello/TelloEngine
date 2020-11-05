@@ -117,10 +117,7 @@ void W_Inspector::DrawTransformComp(C_Transform* transform)
 
 		if (ImGui::InputFloat3("Position", pos, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			x = pos[0] - auxPos[0];
-			y = pos[1] - auxPos[1];
-			z = pos[2] - auxPos[2];
-			transform->SetPos(x, y, z);
+			transform->SetPos(pos[0], pos[1], pos[2]);
 		}
 		ImGui::NewLine();
 		ImGui::Separator();

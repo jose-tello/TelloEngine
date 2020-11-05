@@ -25,12 +25,18 @@ public:
 	void AddTransform(float4x4 transform);
 
 private:
-	void UpdateTransform();
+	void UpdateLocalTransform();
+	void UpdateTRS();
+	void UpdateWorldTransform();
 	void NotifyChildsNeedUpdate();
 
 private:
 	float4x4 localTransform;
 	float4x4 worldTransform;
+
+	float3 position;
+	Quat rotation;
+	float3 scale;
 
 	bool needUpdate;
 

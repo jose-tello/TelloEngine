@@ -113,14 +113,14 @@ void ModelImporter::InitTransformComponent(GameObject* object, aiNode* node)
 	aiVector3D scale;
 
 	node->mTransformation.Decompose(scale, rotation, position);
+
 	Quat quat(rotation.x, rotation.y, rotation.z, rotation.w);
-	float3 rotAxis = quat.Axis();
+	float3 pos = {position.x, position.y, position.z};
+	float3 scl = { scale.x, scale.y, scale.z };
 
-	float4x4 rot = rot.identity;
+	float4x4 rot = float4x4::FromTRS(pos, quat, scl);
 
-	object->transform.SetEscale(scale.x, scale.y, scale.z);
-	object->transform.AddTransform(rot.RotateAxisAngle(float3(rotAxis.x, rotAxis.y, rotAxis.z), quat.Angle()));
-	object->transform.SetPos(position.x, position.y, position.z);
+	object->transform.AddTransform(rot);
 }
 
 

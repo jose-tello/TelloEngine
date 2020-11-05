@@ -8,6 +8,10 @@ C_Transform::C_Transform() : Component(COMPONENT_TYPE::TRANSFORM),
 	localTransform(localTransform.identity),
 	worldTransform(worldTransform.identity),
 
+	position(float3::zero),
+	rotation(Quat::identity),
+	scale(float3::one),
+
 	needUpdate(true)
 {
 }
@@ -22,7 +26,7 @@ bool C_Transform::PostUpdate(float dt)
 {
 	if (needUpdate == true)
 	{
-		UpdateTransform();
+		UpdateWorldTransform();
 		
 		NotifyChildsNeedUpdate();
 	}
@@ -33,30 +37,26 @@ bool C_Transform::PostUpdate(float dt)
 
 void C_Transform::GetPos(float& x, float& y, float& z) const
 {
-	float3 translation = localTransform.TranslatePart() + worldTransform.TranslatePart();
-
-	x = translation.x;
-	y = translation.y;
-	z = translation.z;
+	x = position.x;
+	y = position.y;
+	z = position.z;
 }
 
 
 void C_Transform::SetPos(float x, float y, float z)
 {
-	localTransform.SetTranslatePart(float3(x, y, z));
-	needUpdate = true;
+	position = { x, y, z };
+	UpdateLocalTransform();
 }
 
 
 void C_Transform::GetRotation(float& angle, float& x, float& y, float& z) const
 {
-	float4x4 matrix = localTransform * worldTransform;
-
 	Quat rotation;
 	float3 pos;
 	float3 scl;
 
-	matrix.Decompose(scl, rotation, pos);
+	worldTransform.Decompose(scl, rotation, pos);
 	float3 rotationAxis = rotation.Axis();
 
 	x = rotationAxis.x;
@@ -68,16 +68,14 @@ void C_Transform::GetRotation(float& angle, float& x, float& y, float& z) const
 
 void C_Transform::SetRotation(float angle, float x, float y, float z)
 {
-	localTransform.RotateAxisAngle(float3(x, y, z), angle);
-	needUpdate = true;
+	rotation = { x, y, z, angle };
+	UpdateLocalTransform();
 }
 
 
 void C_Transform::GetEscale(float& x, float& y, float& z) const
 {
-	float4x4 matrix = localTransform * worldTransform;
-
-	float3 scale = matrix.GetScale();
+	float3 scale = worldTransform.GetScale();
 
 	x = scale.x;
 	y = scale.y;
@@ -87,33 +85,46 @@ void C_Transform::GetEscale(float& x, float& y, float& z) const
 
 void C_Transform::SetEscale(float x, float y, float z)
 {
-	localTransform = localTransform.ScaleAlongAxis(float3(x, y, z), 1);
-	needUpdate = true;
+	scale = { x, y, z };
+	UpdateLocalTransform();
 }
 
 
 float4x4 C_Transform::GetMatTransform() const
 {
-	float4x4 mat = worldTransform;
-	mat.Transpose();
-	return mat;
+	return worldTransform.Transposed();
 }
 
 
 void C_Transform::AddTransform(float4x4 transform)
 {
 	localTransform = transform * localTransform;
+	UpdateTRS();
+
 	needUpdate = true;
 }
 
 
-void C_Transform::UpdateTransform()
+void C_Transform::UpdateLocalTransform()
+{
+	localTransform = float4x4::FromTRS(position, rotation, scale);
+	needUpdate = true;
+}
+
+
+void C_Transform::UpdateTRS()
+{
+	localTransform.Decompose(position, rotation, scale);
+}
+
+
+void C_Transform::UpdateWorldTransform()
 {
 	if (owner->parent != nullptr)
 		worldTransform = owner->parent->transform.worldTransform * localTransform;
 
 	else
-		worldTransform = localTransform;
+		worldTransform = float4x4::identity * localTransform;
 
 	needUpdate = false;
 }

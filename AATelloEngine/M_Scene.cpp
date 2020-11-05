@@ -22,9 +22,8 @@ M_Scene::~M_Scene()
 }
 
 
-bool M_Scene::Start() //TODO: Charge house here
+bool M_Scene::Start()
 {
-	//Debug purposes
 	App->fileManager->LoadFromExporter("/Assets/house/BakerHouse.fbx");
 	gameObjects[0]->transform.SetEscale(0.05, 0.05, 0.05);
 	float4x4 rot = rot.identity;
