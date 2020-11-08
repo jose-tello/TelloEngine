@@ -23,7 +23,7 @@ namespace ModelImporter
 	void InitMaterialComponent(GameObject* gameObject, aiMaterial* material);
 
 	void Load(Mesh* mesh, char* buffer);
-	void Save(Mesh* mesh);
+	void Save(Mesh* mesh, const char* fileName);
 
 	void CleanUp();
 }

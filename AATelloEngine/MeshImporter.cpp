@@ -10,6 +10,7 @@
 #include "C_Material.h"
 
 #include "M_Scene.h"
+#include "M_FileManager.h"
 
 #include "glmath.h"
 #include "MathGeoLib/include/MathGeoLib.h"
@@ -178,6 +179,8 @@ void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 	}
 
 	C_Mesh* meshComponent = new C_Mesh(vertices, normals, texCoords, indices);
+	Save(meshComponent->GetMesh(), object->GetName());
+	//Load(meshComponent->GetMesh(), );
 
 	vertices.clear();
 	normals.clear();
@@ -268,8 +271,12 @@ void ModelImporter::Load(Mesh* mesh, char* buffer)
 }
 
 
-void ModelImporter::Save(Mesh* mesh)
+void ModelImporter::Save(Mesh* mesh, const char* fileName)
 {
+	std::string filePath(MESH_LIBRARY);
+	filePath.append( "/");
+	filePath.append(fileName);
+
 	std::vector<float> vertices, normals, texCoords;
 	std::vector<unsigned int> indices;
 
@@ -302,6 +309,8 @@ void ModelImporter::Save(Mesh* mesh)
 	bytes = sizeof(unsigned int) * indices.size();
 	memcpy(pointer, &indices[0], bytes);
 	pointer += bytes;
+
+	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
 }
 
 
