@@ -23,6 +23,7 @@ public:
 
 	float4x4 GetMatTransform() const;
 	void AddTransform(float4x4 transform);
+	void SetGlobalTransform(float4x4 transform);
 
 private:
 	void UpdateLocalTransform();
@@ -34,9 +35,9 @@ private:
 	float4x4 localTransform;
 	float4x4 worldTransform;
 
-	float3 position;
-	Quat rotation;
-	float3 scale;
+	float3 localPosition;
+	Quat localRotation;
+	float3 localScale;
 
 	bool needUpdate;
 

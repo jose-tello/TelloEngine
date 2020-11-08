@@ -30,6 +30,8 @@ public:
 	
 	void LoadFromExporter(const char* path);
 
+	void Save(const char* fileName, const void* buffer, unsigned int size) const;
+
 	void AdaptPath(std::string& path);
 	unsigned int ReadBytes(const char* path, char** buffer) const;
 
@@ -42,9 +44,6 @@ private:
 
 	//bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 	FILE_TYPE GetFileType(const char* extension);
-
-	
-
 };
 
 #endif // __M_ASSET_MANAGER_H__

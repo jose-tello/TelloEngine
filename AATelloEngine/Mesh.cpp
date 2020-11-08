@@ -230,6 +230,15 @@ void Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, bo
 }
 
 
+void Mesh::GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const
+{
+	vertexArray = vertices;
+	normalsArray = normals;
+	texCoordArray = texCoords;
+	indicesArray = indices;
+}
+
+
 void Mesh::DrawVertexNormals() const
 {
 	if (normalsId != 0)

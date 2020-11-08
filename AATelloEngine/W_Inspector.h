@@ -26,6 +26,11 @@ public:
 private:
 	void DrawGameObject(GameObject* obj);
 	void DrawTransformComp(C_Transform*);
+
+	void DrawTransformPos(C_Transform* transform);
+	void DrawTransformRot(C_Transform* transform);
+	void DrawTransformScale(C_Transform* transform);
+
 	void DrawMeshComp(C_Mesh*);
 	void DrawMaterialComp(C_Material*);
 

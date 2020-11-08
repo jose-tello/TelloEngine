@@ -6,9 +6,10 @@
 #include <vector>
 
 struct GameObject;
+struct Mesh;
 struct aiMaterial;
 struct aiMesh;
-struct aiNode; 
+struct aiNode;
 
 namespace ModelImporter
 {
@@ -20,6 +21,9 @@ namespace ModelImporter
 	void InitTransformComponent(GameObject* gameObject, aiNode* node);
 	void InitMeshComponent(GameObject* gameObject, aiMesh* mesh);
 	void InitMaterialComponent(GameObject* gameObject, aiMaterial* material);
+
+	void Load(Mesh* mesh, char* buffer);
+	void Save(Mesh* mesh);
 
 	void CleanUp();
 }

@@ -25,6 +25,8 @@ public:
 
 	void Draw(float* transformMatrix, unsigned int textureId, float* color, bool wireFrameBlack, bool drawVertexNormals, bool drawFaceNormals) const;
 
+	void GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const;
+
 private:
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;

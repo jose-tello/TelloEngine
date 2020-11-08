@@ -8,9 +8,9 @@ C_Transform::C_Transform() : Component(COMPONENT_TYPE::TRANSFORM),
 	localTransform(localTransform.identity),
 	worldTransform(worldTransform.identity),
 
-	position(float3::zero),
-	rotation(Quat::identity),
-	scale(float3::one),
+	localPosition(float3::zero),
+	localRotation(Quat::identity),
+	localScale(float3::one),
 
 	needUpdate(true)
 {
@@ -37,15 +37,20 @@ bool C_Transform::PostUpdate(float dt)
 
 void C_Transform::GetPos(float& x, float& y, float& z) const
 {
-	x = position.x;
-	y = position.y;
-	z = position.z;
+	/*float3 pos = worldTransform.TranslatePart();
+	x = pos.x;
+	y = pos.y;
+	z = pos.z;*/
+
+	x = localPosition.x;
+	y = localPosition.y;
+	z = localPosition.z;
 }
 
 
 void C_Transform::SetPos(float x, float y, float z)
 {
-	position = { x, y, z };
+	localPosition = { x, y, z };
 	UpdateLocalTransform();
 }
 
@@ -68,7 +73,7 @@ void C_Transform::GetRotation(float& angle, float& x, float& y, float& z) const
 
 void C_Transform::SetRotation(float angle, float x, float y, float z)
 {
-	rotation = { x, y, z, angle };
+	localRotation = { x, y, z, angle };
 	UpdateLocalTransform();
 }
 
@@ -85,7 +90,7 @@ void C_Transform::GetEscale(float& x, float& y, float& z) const
 
 void C_Transform::SetEscale(float x, float y, float z)
 {
-	scale = { x, y, z };
+	localScale = { x, y, z };
 	UpdateLocalTransform();
 }
 
@@ -98,23 +103,31 @@ float4x4 C_Transform::GetMatTransform() const
 
 void C_Transform::AddTransform(float4x4 transform)
 {
-	localTransform = transform * localTransform;
+	localTransform = transform;
 	UpdateTRS();
 
 	needUpdate = true;
 }
 
 
+void C_Transform::SetGlobalTransform(float4x4 transform)
+{
+	worldTransform = transform;
+	needUpdate = true;
+}
+
+
 void C_Transform::UpdateLocalTransform()
 {
-	localTransform = float4x4::FromTRS(position, rotation, scale);
+	localRotation.Normalize();
+	localTransform = float4x4::FromTRS(localPosition, localRotation, localScale);
 	needUpdate = true;
 }
 
 
 void C_Transform::UpdateTRS()
 {
-	localTransform.Decompose(position, rotation, scale);
+	localTransform.Decompose(localPosition, localRotation, localScale);
 }
 
 
@@ -124,7 +137,7 @@ void C_Transform::UpdateWorldTransform()
 		worldTransform = owner->parent->transform.worldTransform * localTransform;
 
 	else
-		worldTransform = float4x4::identity * localTransform;
+		worldTransform = localTransform;
 
 	needUpdate = false;
 }

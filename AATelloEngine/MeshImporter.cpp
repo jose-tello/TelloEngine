@@ -6,6 +6,7 @@
 
 #include "GameObject.h"
 #include "C_Mesh.h"
+#include "Mesh.h"
 #include "C_Material.h"
 
 #include "M_Scene.h"
@@ -212,6 +213,95 @@ void ModelImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* ma
 
 		gameObject->AddComponent(material);
 	}	
+}
+
+
+//TODO: Use only two vectors
+void ModelImporter::Load(Mesh* mesh, char* buffer)
+{
+	std::vector<float> vertices, normals, texCoords;
+	std::vector<unsigned int> indices;
+	char* pointer = buffer;
+
+	//Ranges
+	unsigned int ranges[4];
+	unsigned int bytes = sizeof(ranges);
+	memcpy(ranges, pointer, bytes);
+
+	pointer += bytes;
+
+	//Vertices
+	bytes = sizeof(float) * ranges[0];
+	vertices.resize(ranges[0]);
+	memcpy(&vertices[0], pointer, bytes);
+
+	pointer += bytes;
+
+	//Normals
+	bytes = sizeof(float) * ranges[1];
+	normals.resize(ranges[1]);
+	memcpy(&normals[0], pointer, bytes);
+
+	pointer += bytes;
+
+	//Texture coords
+	bytes = sizeof(float) * ranges[2];
+	texCoords.resize(ranges[2]);
+	memcpy(&texCoords[0], pointer, bytes);
+
+	pointer += bytes;
+
+	//Indices
+	bytes = sizeof(unsigned int) * ranges[3];
+	indices.resize(ranges[3]);
+	memcpy(&indices[0], pointer, bytes);
+
+	mesh->InitVertexBuffer(&vertices[0], vertices.size());
+	
+	if (normals.empty() == false)
+		mesh->InitNormalBuffer(&normals[0], normals.size());
+
+	if (texCoords.empty() == false)
+		mesh->InitTexCoordBuffer(&texCoords[0], texCoords.size());
+
+	mesh->InitIndexBuffer(&indices[0], indices.size());
+}
+
+
+void ModelImporter::Save(Mesh* mesh)
+{
+	std::vector<float> vertices, normals, texCoords;
+	std::vector<unsigned int> indices;
+
+	mesh->GetAllVertexData(vertices, normals, texCoords, indices);
+
+	unsigned int ranges[4] = { vertices.size(), normals.size(), texCoords.size(), indices.size() };
+	
+	unsigned int size = sizeof(ranges) + sizeof(float) * vertices.size() + sizeof(float) * normals.size() + 
+						sizeof(float) * texCoords.size() + sizeof(unsigned int) * indices.size();
+
+	char* fileBuffer = new char[size];
+	char* pointer = fileBuffer;
+
+	//Store ranges
+	unsigned int bytes = sizeof(ranges);
+	memcpy(pointer, ranges, bytes);
+	pointer += bytes;
+
+	//Store vertices
+	bytes = sizeof(float) * vertices.size();
+	memcpy(pointer, &vertices[0], bytes);
+	pointer += bytes;
+
+	//Store normals
+	bytes = sizeof(float) * normals.size();
+	memcpy(pointer, &normals[0], bytes);
+	pointer += bytes;
+
+	//Store indices
+	bytes = sizeof(unsigned int) * indices.size();
+	memcpy(pointer, &indices[0], bytes);
+	pointer += bytes;
 }
 
 

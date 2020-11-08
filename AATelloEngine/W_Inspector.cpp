@@ -111,36 +111,60 @@ void W_Inspector::DrawTransformComp(C_Transform* transform)
 	{
 		float x, y, z, angle;
 
-		transform->GetPos(x, y, z);
-		float pos[] = { x, y, z };
-		float auxPos[] = { x, y, z };
+		DrawTransformPos(transform);
 
-		if (ImGui::InputFloat3("Position", pos, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
-		{
-			transform->SetPos(pos[0], pos[1], pos[2]);
-		}
-		ImGui::NewLine();
-		ImGui::Separator();
+		DrawTransformRot(transform);
 
-
-		transform->GetRotation(angle, x, y, z);
-		float rotation[] = { x, y, z };
-
-		if (ImGui::InputFloat3("Rotation", rotation, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
-		ImGui::Text("Angle rotation : ");
-		ImGui::InputFloat("", &angle);
-		ImGui::NewLine();
-		ImGui::Separator();
-
-
-		transform->GetEscale(x, y, z);
-		float escale[] = { x, y, z };
-		
-		ImGui::Text("Scale: ");
-		if (ImGui::InputFloat3("Scale", escale, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
-		ImGui::NewLine();
+		DrawTransformScale(transform);
 	}
 
+	ImGui::NewLine();
+}
+
+
+void W_Inspector::DrawTransformPos(C_Transform* transform)
+{
+	float x, y, z;
+	transform->GetPos(x, y, z);
+
+	float pos[] = { x, y, z };
+
+	if (ImGui::InputFloat3("Position", pos, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		transform->SetPos(pos[0], pos[1], pos[2]);
+	}
+	ImGui::NewLine();
+	ImGui::Separator();
+}
+
+
+void W_Inspector::DrawTransformRot(C_Transform* transform)
+{
+	float angle, x, y, z;
+
+	transform->GetRotation(angle, x, y, z);
+	float rotation[] = { x, y, z };
+
+	if (ImGui::InputFloat3("Rotation", rotation, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+	}
+
+	ImGui::Text("Angle rotation : ");
+	ImGui::InputFloat("", &angle);
+	ImGui::NewLine();
+	ImGui::Separator();
+}
+
+
+void W_Inspector::DrawTransformScale(C_Transform* transform)
+{
+	float x, y, z;
+
+	transform->GetEscale(x, y, z);
+	float escale[] = { x, y, z };
+
+	ImGui::Text("Scale: ");
+	if (ImGui::InputFloat3("Scale", escale, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
 	ImGui::NewLine();
 }
 

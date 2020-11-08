@@ -118,6 +118,24 @@ void M_FileManager::LoadFromExporter(const char* path)
 }
 
 
+void M_FileManager::Save(const char* fileName, const void* buffer, unsigned int size) const
+{
+	PHYSFS_File* file = PHYSFS_openWrite(fileName);
+
+	if (file != nullptr)
+	{
+		unsigned int writtedBytes = PHYSFS_write(file, buffer, 1, size);
+
+		if (writtedBytes != size)
+			App->editor->AddLog("ERROR: Error while writting file %s: %s", fileName, PHYSFS_getLastError());
+		
+		if (PHYSFS_close(file) == 0)
+			App->editor->AddLog("ERROR: Error while closing file %s: %s", fileName, PHYSFS_getLastError());
+	}
+
+}
+
+
 void M_FileManager::AdaptPath(std::string& path)
 {
 	path = NormalizePath(path.c_str());
