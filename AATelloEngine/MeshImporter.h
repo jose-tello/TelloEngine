@@ -23,7 +23,8 @@ namespace ModelImporter
 	void InitMeshComponent(GameObject* gameObject, aiMesh* mesh);
 	void InitMaterialComponent(GameObject* gameObject, aiMaterial* material);
 
-	void Load(Mesh* mesh, const char* buffer);
+	void Load(Mesh* mesh, const char* path);
+	//The string returned is the path to the mesh
 	std::string Save(Mesh* mesh, const char* fileName);
 
 	void CleanUp();

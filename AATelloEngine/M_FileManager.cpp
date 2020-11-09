@@ -8,7 +8,7 @@
 #include "C_Material.h"
 
 #include "MeshImporter.h"
-#include "ImageImporter.h"
+#include "MaterialImporter.h"
 
 //#include <fstream>
 //#include <filesystem>
@@ -54,7 +54,7 @@ bool M_FileManager::Init()
 
 bool M_FileManager::Start()
 {
-	ImageImporter::Init();
+	MaterialImporter::Init();
 	ModelImporter::InitDebuggerOptions();
 
 	return true;
@@ -96,7 +96,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 		GameObject* object = App->editor->GetFocusedGameObject();
 		if (object != nullptr)
 		{
-			unsigned int texId = ImageImporter::Import(path);
+			unsigned int texId = MaterialImporter::ImportTexture(path);
 			App->editor->AddLog("Log: Loaded a texture");
 
 			C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
@@ -150,14 +150,14 @@ unsigned int M_FileManager::Load(const char* fileName, char** buffer) const
 
 		if (size != 0)
 		{
-			*buffer = new char[size];
+			*buffer = new char[size + 1];
 
 			PHYSFS_readBytes(file, *buffer, size);
 
 			if (PHYSFS_close(file) == 0)
 				App->editor->AddLog("ERROR: Error while closing file %s: %s", fileName, PHYSFS_getLastError());
 
-			//(*buffer)[size] = '\0'; //End of file signal
+			(*buffer)[size] = '\0'; //End of file signal
 			return size;
 		}
 	}

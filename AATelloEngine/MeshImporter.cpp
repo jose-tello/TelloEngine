@@ -1,5 +1,5 @@
 #include "MeshImporter.h"
-#include "ImageImporter.h"
+#include "MaterialImporter.h"
 
 #include "Application.h"
 #include "M_Editor.h"
@@ -178,6 +178,7 @@ void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 		}
 	}
 
+	//TODO this is here until resource manager is implemented
 	C_Mesh* meshComponent = new C_Mesh();
 	Mesh* objectMesh = new Mesh(vertices, normals, texCoords, indices);
 	Mesh* testMesh = new Mesh();
@@ -208,18 +209,7 @@ void ModelImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* ma
 	if (hasTextures || hasColor)
 	{
 		C_Material* material = new C_Material();
-
-		if (hasTextures)
-		{
-			aiString texPath;
-			mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
-
-			material->SetTexture(ImageImporter::Import(texPath.C_Str(), false));
-			material->texturePath = texPath.C_Str();
-		}
-
-		if (hasColor)
-			material->SetColor(Color(color.r, color.g, color.b));
+		MaterialImporter::Import(mat, material, Color(color.r, color.g, color.b, color.a), hasTextures, hasColor);
 
 		gameObject->AddComponent(material);
 	}	
@@ -231,10 +221,11 @@ void ModelImporter::Load(Mesh* mesh, const char* path)
 {
 	std::vector<float> vertices, normals, texCoords;
 	std::vector<unsigned int> indices;
-	char* pointer = nullptr;
+	char* buffer = nullptr;
 
-	App->fileManager->Load(path, &pointer);
+	unsigned int size = App->fileManager->Load(path, &buffer);
 
+	char* pointer = buffer;
 	if (pointer != nullptr)
 	{
 		//Ranges
@@ -270,7 +261,6 @@ void ModelImporter::Load(Mesh* mesh, const char* path)
 
 			pointer += bytes;
 		}
-		
 
 		//Indices
 		bytes = sizeof(unsigned int) * ranges[3];
@@ -286,8 +276,12 @@ void ModelImporter::Load(Mesh* mesh, const char* path)
 			mesh->InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
 
 		mesh->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
-
-	}
+	
+		delete[] buffer;
+		buffer = nullptr;
+	}	
+	else
+		App->editor->AddLog("WARNING, geometry face with != 3 indices!");
 }
 
 
