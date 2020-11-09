@@ -178,9 +178,16 @@ void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 		}
 	}
 
-	C_Mesh* meshComponent = new C_Mesh(vertices, normals, texCoords, indices);
-	Save(meshComponent->GetMesh(), object->GetName());
-	//Load(meshComponent->GetMesh(), );
+	C_Mesh* meshComponent = new C_Mesh();
+	Mesh* objectMesh = new Mesh(vertices, normals, texCoords, indices);
+	Mesh* testMesh = new Mesh();
+
+	std::string path = Save(objectMesh, object->GetName());
+
+	delete objectMesh;
+
+	Load(testMesh, path.c_str());
+	meshComponent->SetMesh(testMesh);
 
 	vertices.clear();
 	normals.clear();
@@ -220,58 +227,71 @@ void ModelImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* ma
 
 
 //TODO: Use only two vectors
-void ModelImporter::Load(Mesh* mesh, char* buffer)
+void ModelImporter::Load(Mesh* mesh, const char* path)
 {
 	std::vector<float> vertices, normals, texCoords;
 	std::vector<unsigned int> indices;
-	char* pointer = buffer;
+	char* pointer = nullptr;
 
-	//Ranges
-	unsigned int ranges[4];
-	unsigned int bytes = sizeof(ranges);
-	memcpy(ranges, pointer, bytes);
+	App->fileManager->Load(path, &pointer);
 
-	pointer += bytes;
+	if (pointer != nullptr)
+	{
+		//Ranges
+		unsigned int ranges[4];
+		unsigned int bytes = sizeof(ranges);
+		memcpy(ranges, pointer, bytes);
 
-	//Vertices
-	bytes = sizeof(float) * ranges[0];
-	vertices.resize(ranges[0]);
-	memcpy(&vertices[0], pointer, bytes);
+		pointer += bytes;
 
-	pointer += bytes;
+		//Vertices
+		bytes = sizeof(float) * ranges[0];
+		vertices.resize(ranges[0]);
+		memcpy(&vertices[0], pointer, bytes);
 
-	//Normals
-	bytes = sizeof(float) * ranges[1];
-	normals.resize(ranges[1]);
-	memcpy(&normals[0], pointer, bytes);
+		pointer += bytes;
 
-	pointer += bytes;
+		//Normals
+		if (ranges[1] != 0)
+		{
+			bytes = sizeof(float) * ranges[1];
+			normals.resize(ranges[1]);
+			memcpy(&normals[0], pointer, bytes);
 
-	//Texture coords
-	bytes = sizeof(float) * ranges[2];
-	texCoords.resize(ranges[2]);
-	memcpy(&texCoords[0], pointer, bytes);
+			pointer += bytes;
+		}
 
-	pointer += bytes;
+		//Texture coords
+		if (ranges[2] != 0)
+		{
+			bytes = sizeof(float) * ranges[2];
+			texCoords.resize(ranges[2]);
+			memcpy(&texCoords[0], pointer, bytes);
 
-	//Indices
-	bytes = sizeof(unsigned int) * ranges[3];
-	indices.resize(ranges[3]);
-	memcpy(&indices[0], pointer, bytes);
+			pointer += bytes;
+		}
+		
 
-	mesh->InitVertexBuffer(&vertices[0], vertices.size());
-	
-	if (normals.empty() == false)
-		mesh->InitNormalBuffer(&normals[0], normals.size());
+		//Indices
+		bytes = sizeof(unsigned int) * ranges[3];
+		indices.resize(ranges[3]);
+		memcpy(&indices[0], pointer, bytes);
 
-	if (texCoords.empty() == false)
-		mesh->InitTexCoordBuffer(&texCoords[0], texCoords.size());
+		mesh->InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
 
-	mesh->InitIndexBuffer(&indices[0], indices.size());
+		if (normals.empty() == false)
+			mesh->InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
+
+		if (texCoords.empty() == false)
+			mesh->InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
+
+		mesh->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+
+	}
 }
 
 
-void ModelImporter::Save(Mesh* mesh, const char* fileName)
+std::string ModelImporter::Save(Mesh* mesh, const char* fileName)
 {
 	std::string filePath(MESH_LIBRARY);
 	filePath.append( "/");
@@ -301,16 +321,30 @@ void ModelImporter::Save(Mesh* mesh, const char* fileName)
 	pointer += bytes;
 
 	//Store normals
-	bytes = sizeof(float) * normals.size();
-	memcpy(pointer, &normals[0], bytes);
-	pointer += bytes;
+	if (normals.empty() == false)
+	{
+		bytes = sizeof(float) * normals.size();
+		memcpy(pointer, &normals[0], bytes);
+		pointer += bytes;
+	}
+	
+
+	//Store tex coords
+	if (texCoords.empty() == false)
+	{
+		bytes = sizeof(float) * texCoords.size();
+		memcpy(pointer, &texCoords[0], bytes);
+		pointer += bytes;
+	}
+	
 
 	//Store indices
 	bytes = sizeof(unsigned int) * indices.size();
 	memcpy(pointer, &indices[0], bytes);
-	pointer += bytes;
 
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
+
+	return filePath;
 }
 
 

@@ -33,7 +33,7 @@ public:
 	void LoadFromExporter(const char* path);
 
 	void Save(const char* fileName, const void* buffer, unsigned int size) const;
-	unsigned int Load(const char* fileName, char* buffer) const;
+	unsigned int Load(const char* fileName, char** buffer) const;
 
 	void AdaptPath(std::string& path);
 	unsigned int ReadBytes(const char* path, char** buffer) const;

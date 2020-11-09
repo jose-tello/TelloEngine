@@ -23,8 +23,8 @@ M_FileManager::M_FileManager(bool startEnabled) : Module(startEnabled)
 
 	PHYSFS_setWriteDir(".");
 	// We only need this when compiling in debug. In Release we don't need it.
-	//PHYSFS_mount(".", nullptr, 1);
-	//PHYSFS_mount("Assets.zip", nullptr, 1);
+	PHYSFS_mount(".", nullptr, 1);
+	PHYSFS_mount("Assets.zip", nullptr, 1);
 }
 
 
@@ -140,7 +140,7 @@ void M_FileManager::Save(const char* fileName, const void* buffer, unsigned int 
 }
 
 
-unsigned int M_FileManager::Load(const char* fileName, char* buffer) const
+unsigned int M_FileManager::Load(const char* fileName, char** buffer) const
 {
 	PHYSFS_File* file = PHYSFS_openRead(fileName);
 
@@ -150,14 +150,14 @@ unsigned int M_FileManager::Load(const char* fileName, char* buffer) const
 
 		if (size != 0)
 		{
-			buffer = new char[size + 1];
+			*buffer = new char[size];
 
-			PHYSFS_readBytes(file, buffer, size);
+			PHYSFS_readBytes(file, *buffer, size);
 
 			if (PHYSFS_close(file) == 0)
 				App->editor->AddLog("ERROR: Error while closing file %s: %s", fileName, PHYSFS_getLastError());
 
-			buffer[size] = '\0'; //End of file signal
+			//(*buffer)[size] = '\0'; //End of file signal
 			return size;
 		}
 	}

@@ -130,7 +130,7 @@ void Mesh::InitNormalBuffer(float* normalsBuffer, size_t normalsArrSize)
 void Mesh::InitTexCoordBuffer(float* texBuffer, size_t texArrSize)
 {
 	texCoords.resize(texArrSize / sizeof(float));
-	memcpy(&normals[0], texBuffer, texArrSize);
+	memcpy(&texCoords[0], texBuffer, texArrSize);
 
 	glGenBuffers(1, (GLuint*)&(texCoordId));
 	glBindBuffer(GL_ARRAY_BUFFER, texCoordId);

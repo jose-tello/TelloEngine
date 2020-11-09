@@ -4,6 +4,7 @@
 #define MAX_TEX_COORDS 8
 
 #include <vector>
+#include <string>
 
 struct GameObject;
 struct Mesh;
@@ -22,8 +23,8 @@ namespace ModelImporter
 	void InitMeshComponent(GameObject* gameObject, aiMesh* mesh);
 	void InitMaterialComponent(GameObject* gameObject, aiMaterial* material);
 
-	void Load(Mesh* mesh, char* buffer);
-	void Save(Mesh* mesh, const char* fileName);
+	void Load(Mesh* mesh, const char* buffer);
+	std::string Save(Mesh* mesh, const char* fileName);
 
 	void CleanUp();
 }
