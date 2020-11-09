@@ -91,7 +91,7 @@ bool ModelImporter::Import(char* buffer, unsigned int bytes)
 
 	else
 	{
-		App->editor->AddLog("Error loading scene");
+		App->editor->AddLog("[ERROR] loading scene");
 		return false;
 	}
 
@@ -171,7 +171,7 @@ void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 		for (int j = 0; j < mesh->mNumFaces; j++)
 		{
 			if (mesh->mFaces[j].mNumIndices != 3)
-				App->editor->AddLog("WARNING, geometry face with != 3 indices!");
+				App->editor->AddLog("[WARNING], geometry face with != 3 indices!");
 
 			else
 				memcpy(&indices[j * 3], mesh->mFaces[j].mIndices, 3 * sizeof(unsigned int));
@@ -281,7 +281,7 @@ void ModelImporter::Load(Mesh* mesh, const char* path)
 		buffer = nullptr;
 	}	
 	else
-		App->editor->AddLog("WARNING, geometry face with != 3 indices!");
+		App->editor->AddLog("[WARNING], geometry face with != 3 indices!");
 }
 
 

@@ -28,7 +28,7 @@ bool M_Input::Init()
 
 	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
-		App->editor->AddLog("ERROR: SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
+		App->editor->AddLog("[ERROR]: SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 

@@ -27,7 +27,7 @@ bool M_Window::Init()
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		App->editor->AddLog("ERROR: SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		App->editor->AddLog("[ERROR]: SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	else
@@ -65,7 +65,7 @@ bool M_Window::Init()
 
 		if (window == NULL)
 		{
-			App->editor->AddLog("ERROR: Window could not be created! SDL_Error: %s\n", SDL_GetError());
+			App->editor->AddLog("[ERROR]: Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
 		}
 		else

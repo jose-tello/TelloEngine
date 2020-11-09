@@ -50,7 +50,7 @@ bool M_Renderer3D::Init()
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
 	{
-		App->editor->AddLog("ERROR: OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
+		App->editor->AddLog("[ERROR]: OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	else
@@ -59,7 +59,7 @@ bool M_Renderer3D::Init()
 		
 		if (glewError != GLEW_OK)
 		{
-			App->editor->AddLog("ERROR: Error initializing GLEW! %s\n", glewGetErrorString(glewError));
+			App->editor->AddLog("[ERROR]: Error initializing GLEW! %s\n", glewGetErrorString(glewError));
 		}
 	}
 
@@ -67,7 +67,7 @@ bool M_Renderer3D::Init()
 	{
 		//Use Vsync
 		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
-			App->editor->AddLog("ERROR: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+			App->editor->AddLog("[ERROR]: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
@@ -77,7 +77,7 @@ bool M_Renderer3D::Init()
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			App->editor->AddLog("ERROR: Error initializing OpenGL! %s\n", gluErrorString(error));
+			App->editor->AddLog("[ERROR]: Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 
@@ -89,7 +89,7 @@ bool M_Renderer3D::Init()
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			App->editor->AddLog("ERROR: Error initializing OpenGL! %s\n", gluErrorString(error));
+			App->editor->AddLog("[ERROR]: Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 		
@@ -103,7 +103,7 @@ bool M_Renderer3D::Init()
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			App->editor->AddLog("ERROR: Error initializing OpenGL! %s\n", gluErrorString(error));
+			App->editor->AddLog("[ERROR]: Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 		

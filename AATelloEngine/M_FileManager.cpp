@@ -41,7 +41,7 @@ bool M_FileManager::Init()
 
 	else
 	{
-		App->editor->AddLog("ERROR: Failed loading Asset Manager");
+		App->editor->AddLog("[ERROR]: Failed loading Asset Manager");
 		return false;
 	}
 
@@ -112,7 +112,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 		}
 
 		else
-			App->editor->AddLog("WARNING: Dont have any game object selected");
+			App->editor->AddLog("[WARNING]: Dont have any game object selected");
 		
 		break;
 	}
@@ -129,14 +129,14 @@ void M_FileManager::Save(const char* fileName, const void* buffer, unsigned int 
 		unsigned int writtedBytes = PHYSFS_write(file, buffer, 1, size);
 
 		if (writtedBytes != size)
-			App->editor->AddLog("ERROR: Error while writting file %s: %s", fileName, PHYSFS_getLastError());
+			App->editor->AddLog("[ERROR]: Error while writting file %s: %s", fileName, PHYSFS_getLastError());
 		
 		if (PHYSFS_close(file) == 0)
-			App->editor->AddLog("ERROR: Error while closing file %s: %s", fileName, PHYSFS_getLastError());
+			App->editor->AddLog("[ERROR]: Error while closing file %s: %s", fileName, PHYSFS_getLastError());
 	}
 
 	else
-		App->editor->AddLog("ERROR: Error while opening file %s: %s", fileName, PHYSFS_getLastError());
+		App->editor->AddLog("[ERROR]: Error while opening file %s: %s", fileName, PHYSFS_getLastError());
 }
 
 
@@ -155,7 +155,7 @@ unsigned int M_FileManager::Load(const char* fileName, char** buffer) const
 			PHYSFS_readBytes(file, *buffer, size);
 
 			if (PHYSFS_close(file) == 0)
-				App->editor->AddLog("ERROR: Error while closing file %s: %s", fileName, PHYSFS_getLastError());
+				App->editor->AddLog("[ERROR]: Error while closing file %s: %s", fileName, PHYSFS_getLastError());
 
 			(*buffer)[size] = '\0'; //End of file signal
 			return size;
@@ -163,7 +163,7 @@ unsigned int M_FileManager::Load(const char* fileName, char** buffer) const
 	}
 
 	else
-		App->editor->AddLog("ERROR: Error while opening file %s: %s", fileName, PHYSFS_getLastError());
+		App->editor->AddLog("[ERROR]: Error while opening file %s: %s", fileName, PHYSFS_getLastError());
 
 	return 0;
 }
@@ -199,17 +199,17 @@ unsigned int M_FileManager::ReadBytes(const char* path, char** buffer) const
 
 			if (bytes != lenght)
 			{
-				App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
+				App->editor->AddLog("%s", path, "[ERROR]: %s", PHYSFS_getLastError());
 				delete[] buffer;
 			}
 			else
 				ret = bytes;
 		}
 		else
-			App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
+			App->editor->AddLog("%s", path, "[ERROR]: %s", PHYSFS_getLastError());
 	}
 	else
-		App->editor->AddLog("%s", path, "ERROR: %s", PHYSFS_getLastError());
+		App->editor->AddLog("%s", path, "[ERROR]: %s", PHYSFS_getLastError());
 
 	// Close a PhysicsFS firehandle
 	PHYSFS_close(file);
