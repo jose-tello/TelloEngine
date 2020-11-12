@@ -9,6 +9,7 @@
 
 #include "MeshImporter.h"
 #include "MaterialImporter.h"
+#include "TextureImporter.h"
 
 //#include <fstream>
 //#include <filesystem>
@@ -54,7 +55,7 @@ bool M_FileManager::Init()
 
 bool M_FileManager::Start()
 {
-	MaterialImporter::Init();
+	TextureImporter::Init();
 	ModelImporter::InitDebuggerOptions();
 
 	return true;
@@ -77,17 +78,8 @@ void M_FileManager::LoadFromExporter(const char* path)
 	{
 	case FILE_TYPE::MODEL:
 	{
-		std::string filePath(path);
-		AdaptPath(filePath);
-
-		char* buffer = nullptr;
-		unsigned int bytes = ReadBytes(filePath.c_str(), &buffer);
-
-		ModelImporter::Import(buffer, bytes);
+		ModelImporter::Import(path);
 		App->editor->AddLog("Log: Loaded a model");
-
-		delete[] buffer;
-		buffer = nullptr;
 	}
 	break;
 
@@ -96,7 +88,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 		GameObject* object = App->editor->GetFocusedGameObject();
 		if (object != nullptr)
 		{
-			unsigned int texId = MaterialImporter::ImportTexture(path);
+			unsigned int texId = TextureImporter::Import(path);
 
 			C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
 			if (material == nullptr)

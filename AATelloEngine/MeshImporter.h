@@ -16,7 +16,7 @@ namespace ModelImporter
 {
 	void InitDebuggerOptions();
 
-	bool Import(char* buffer, unsigned int bytes);
+	void Import(const char* path);
 
 	void SetObjName(GameObject* gameObject, aiNode* node);
 	void InitTransformComponent(GameObject* gameObject, aiNode* node);

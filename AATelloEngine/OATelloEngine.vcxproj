@@ -82,6 +82,7 @@
     <ClInclude Include="C_Transform.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="W_AppState.h" />
     <ClInclude Include="W_Console.h" />
     <ClInclude Include="W_DockWindow.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="W_AppState.cpp" />
     <ClCompile Include="W_Console.cpp" />
     <ClCompile Include="W_DockWindow.cpp" />

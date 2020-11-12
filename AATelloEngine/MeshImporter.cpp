@@ -30,8 +30,14 @@ void ModelImporter::InitDebuggerOptions()
 }
 
 
-bool ModelImporter::Import(char* buffer, unsigned int bytes)
+void ModelImporter::Import(const char* path)
 {
+	std::string filePath(path);
+	App->fileManager->AdaptPath(filePath);
+
+	char* buffer = nullptr;
+	unsigned int bytes = App->fileManager->ReadBytes(filePath.c_str(), &buffer);
+
 	std::stack<GameObject*> objStack;
 	GameObject* root = new GameObject(nullptr);
 	GameObject* obj = nullptr;
@@ -90,12 +96,11 @@ bool ModelImporter::Import(char* buffer, unsigned int bytes)
 	}
 
 	else
-	{
 		App->editor->AddLog("[ERROR] loading scene");
-		return false;
-	}
+	
 
-	return true;
+	delete[] buffer;
+	buffer = nullptr;
 }
 
 
@@ -181,14 +186,11 @@ void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 	//TODO this is here until resource manager is implemented
 	C_Mesh* meshComponent = new C_Mesh();
 	Mesh* objectMesh = new Mesh(vertices, normals, texCoords, indices);
-	Mesh* testMesh = new Mesh();
 
 	std::string path = Save(objectMesh, object->GetName());
 
-	delete objectMesh;
-
-	Load(testMesh, path.c_str());
-	meshComponent->SetMesh(testMesh);
+	Load(objectMesh, path.c_str());
+	meshComponent->SetMesh(objectMesh);
 
 	vertices.clear();
 	normals.clear();
@@ -288,7 +290,6 @@ void ModelImporter::Load(Mesh* mesh, const char* path)
 std::string ModelImporter::Save(Mesh* mesh, const char* fileName)
 {
 	std::string filePath(MESH_LIBRARY);
-	filePath.append( "/");
 	filePath.append(fileName);
 
 	std::vector<float> vertices, normals, texCoords;

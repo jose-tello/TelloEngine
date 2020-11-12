@@ -333,6 +333,9 @@
     <ClInclude Include="MaterialImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="TextureImporter.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -540,6 +543,9 @@
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="MaterialImporter.cpp">
+      <Filter>Sources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureImporter.cpp">
       <Filter>Sources\Importers</Filter>
     </ClCompile>
   </ItemGroup>

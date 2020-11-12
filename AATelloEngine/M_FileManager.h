@@ -7,9 +7,9 @@
 #include <string>
 
 #define ASSETS_LENGHT 7
-#define MESH_LIBRARY "/Library/Mesh"
-#define MATERIAL_LIBRARY "/Library/Material"
-#define TEXTURE_LIBRARY "/Library/Textures"
+#define MESH_LIBRARY "/Library/Mesh/"
+#define MATERIAL_LIBRARY "/Library/Material/"
+#define TEXTURE_LIBRARY "/Library/Textures/"
 
 enum class FILE_TYPE : int
 {
