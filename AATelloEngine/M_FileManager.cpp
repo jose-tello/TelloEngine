@@ -97,7 +97,6 @@ void M_FileManager::LoadFromExporter(const char* path)
 		if (object != nullptr)
 		{
 			unsigned int texId = MaterialImporter::ImportTexture(path);
-			App->editor->AddLog("Log: Loaded a texture");
 
 			C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
 			if (material == nullptr)
@@ -105,9 +104,12 @@ void M_FileManager::LoadFromExporter(const char* path)
 				material = new C_Material();
 				object->AddComponent(material);
 			}
-			 
+			
+			std::string fileName;
+			SplitPath(path, nullptr, &fileName, nullptr);
 
 			material->SetTexture(texId);
+			material->textureName = fileName;
 			material->texturePath = path;
 		}
 

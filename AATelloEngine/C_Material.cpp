@@ -10,6 +10,7 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 	color(1.f, 1.f, 1.f),
 
 	texturePath(),
+	textureName(),
 	textureWidth(0),
 	textureHeight(0),
 
@@ -41,6 +42,15 @@ void C_Material::SetTexture(unsigned int newTex)
 	textureId = newTex;
 
 	InitTextureSize();
+}
+
+
+void C_Material::GetColor(float& r, float& g, float& b, float& a) const
+{
+	r = color.r;
+	g = color.g;
+	b = color.b;
+	a = color.a;
 }
 
 

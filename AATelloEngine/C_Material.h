@@ -16,6 +16,7 @@ public:
 	~C_Material();
 
 	void SetTexture(unsigned int newTex);
+	void GetColor(float& r, float& g, float& b, float& a) const;
 	void SetColor(Color& col);
 
 	bool GetTextureEnabled() const;
@@ -36,6 +37,7 @@ private:
 public:
 	//TODO: this information will be held by the material/texture resource, but for now it will stay here
 	std::string texturePath;
+	std::string textureName;
 	int textureWidth;
 	int textureHeight;
 	

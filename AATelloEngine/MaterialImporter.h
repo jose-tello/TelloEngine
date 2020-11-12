@@ -14,9 +14,11 @@ namespace MaterialImporter
 	void Import(aiMaterial* material, C_Material* materialComponent, Color& col, bool hasTexture, bool hasColor);
 	unsigned int ImportTexture(const char* path, bool pathFromFileManager = true);
 
-	void Load(const char* path);
+	void Load(C_Material*, const char* path);
+	unsigned int LoadTexture(const char* path);
 	//The string returned is the path to the mesh
-	std::string Save(const char* fileName);
+	std::string Save(C_Material* materialComponent, const char* fileName);
+	void SaveTexture(const char* );
 }
 
 #endif // !__IMAGE_IMPORTER_H__
