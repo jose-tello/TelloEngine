@@ -149,6 +149,12 @@ void M_Scene::DrawGameObjects(bool black)
 }
 
 
+void M_Scene::SaveScene()
+{
+
+}
+
+
 void M_Scene::UpdateGameObjects(float dt)
 {
 	std::stack<GameObject*> stack;

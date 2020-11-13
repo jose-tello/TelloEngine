@@ -16,6 +16,7 @@ enum class PRIMITIVE_TYPE : int
 	CILINDER
 };
 
+
 class M_Scene : public Module
 {
 public:
@@ -34,6 +35,8 @@ public:
 	void GetGameObjectVector(std::vector<GameObject*>&);
 
 	void DrawGameObjects(bool blackWireframe);
+
+	void SaveScene();
 
 private:
 	//TODO: Considering using pointers to functions, ask Marc about it

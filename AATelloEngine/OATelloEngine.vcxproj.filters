@@ -31,6 +31,9 @@
     <Filter Include="Sources\Tools\MathGeoLib">
       <UniqueIdentifier>{80bc6f71-4656-4c7c-917c-4efa9f6f9fc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Json">
+      <UniqueIdentifier>{d7d39ac9-5164-47b7-abec-462ef2b829af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -336,6 +339,12 @@
     <ClInclude Include="TextureImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="parson\parson.h">
+      <Filter>Sources\Tools\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -547,6 +556,12 @@
     </ClCompile>
     <ClCompile Include="TextureImporter.cpp">
       <Filter>Sources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="parson\parson.c">
+      <Filter>Sources\Tools\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>Sources\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

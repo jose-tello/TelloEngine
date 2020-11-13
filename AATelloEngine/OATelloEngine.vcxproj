@@ -77,11 +77,13 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="C_Material.h" />
     <ClInclude Include="C_Mesh.h" />
     <ClInclude Include="C_Transform.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="parson\parson.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="W_AppState.h" />
     <ClInclude Include="W_Console.h" />
@@ -180,11 +182,13 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="C_Material.cpp" />
     <ClCompile Include="C_Mesh.cpp" />
     <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="parson\parson.c" />
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="W_AppState.cpp" />
     <ClCompile Include="W_Console.cpp" />
