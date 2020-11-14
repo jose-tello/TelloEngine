@@ -10,6 +10,7 @@
 #define MESH_LIBRARY "/Library/Mesh/"
 #define MATERIAL_LIBRARY "/Library/Material/"
 #define TEXTURE_LIBRARY "/Library/Textures/"
+#define SCENE_LIBRARY "/Library/Scenes/"
 
 enum class FILE_TYPE : int
 {

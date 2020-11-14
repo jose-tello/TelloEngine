@@ -57,6 +57,8 @@ public:
 	const char* GetString(unsigned int index) const;
 	Config		GetNode(unsigned int index) const;
 
+	unsigned int GetSize();
+
 private:
 	json_array_t* arr = nullptr;
 	unsigned int size;

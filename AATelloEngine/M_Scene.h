@@ -36,6 +36,7 @@ public:
 
 	void DrawGameObjects(bool blackWireframe);
 
+	void LoadScene();
 	void SaveScene();
 
 private:

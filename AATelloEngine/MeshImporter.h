@@ -12,7 +12,7 @@ struct aiMaterial;
 struct aiMesh;
 struct aiNode;
 
-namespace ModelImporter
+namespace MeshImporter
 {
 	void InitDebuggerOptions();
 

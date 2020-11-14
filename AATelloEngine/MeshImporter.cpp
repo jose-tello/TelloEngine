@@ -22,7 +22,7 @@
 
 #include <stack>
 
-void ModelImporter::InitDebuggerOptions()
+void MeshImporter::InitDebuggerOptions()
 {
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
@@ -30,7 +30,7 @@ void ModelImporter::InitDebuggerOptions()
 }
 
 
-void ModelImporter::Import(const char* path)
+void MeshImporter::Import(const char* path)
 {
 	std::string filePath(path);
 	App->fileManager->AdaptPath(filePath);
@@ -104,7 +104,7 @@ void ModelImporter::Import(const char* path)
 }
 
 
-void ModelImporter::SetObjName(GameObject* object, aiNode* node)
+void MeshImporter::SetObjName(GameObject* object, aiNode* node)
 {
 	std::string str(node->mName.C_Str());
 
@@ -113,7 +113,7 @@ void ModelImporter::SetObjName(GameObject* object, aiNode* node)
 }
 
 
-void ModelImporter::InitTransformComponent(GameObject* object, aiNode* node)
+void MeshImporter::InitTransformComponent(GameObject* object, aiNode* node)
 {
 	aiVector3D position;
 	aiQuaternion rotation;
@@ -131,7 +131,7 @@ void ModelImporter::InitTransformComponent(GameObject* object, aiNode* node)
 }
 
 
-void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
+void MeshImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 {
 	int numVertices = 0;
 	int numTexCoords = 0;
@@ -202,7 +202,7 @@ void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 }
 
 
-void ModelImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* mat)
+void MeshImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* mat)
 {
 	aiColor4D color;
 
@@ -220,7 +220,7 @@ void ModelImporter::InitMaterialComponent(GameObject* gameObject, aiMaterial* ma
 
 
 //TODO: Use only two vectors
-void ModelImporter::Load(Mesh* mesh, const char* path)
+void MeshImporter::Load(Mesh* mesh, const char* path)
 {
 	std::vector<float> vertices, normals, texCoords;
 	std::vector<unsigned int> indices;
@@ -288,7 +288,7 @@ void ModelImporter::Load(Mesh* mesh, const char* path)
 }
 
 
-std::string ModelImporter::Save(Mesh* mesh, const char* fileName)
+std::string MeshImporter::Save(Mesh* mesh, const char* fileName)
 {
 	std::string filePath(MESH_LIBRARY);
 	filePath.append(fileName);
@@ -344,7 +344,7 @@ std::string ModelImporter::Save(Mesh* mesh, const char* fileName)
 }
 
 
-void ModelImporter::CleanUp()
+void MeshImporter::CleanUp()
 {
 	aiDetachAllLogStreams();
 }

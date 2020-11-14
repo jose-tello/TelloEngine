@@ -56,7 +56,7 @@ bool M_FileManager::Init()
 bool M_FileManager::Start()
 {
 	TextureImporter::Init();
-	ModelImporter::InitDebuggerOptions();
+	MeshImporter::InitDebuggerOptions();
 
 	return true;
 }
@@ -64,7 +64,7 @@ bool M_FileManager::Start()
 
 bool M_FileManager::CleanUp()
 {
-	ModelImporter::CleanUp();
+	MeshImporter::CleanUp();
 
 	return false;
 }
@@ -78,7 +78,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 	{
 	case FILE_TYPE::MODEL:
 	{
-		ModelImporter::Import(path);
+		MeshImporter::Import(path);
 		App->editor->AddLog("Log: Loaded a model");
 	}
 	break;
@@ -316,7 +316,7 @@ FILE_TYPE M_FileManager::GetFileType(const char* path)
 	if (extension == "FBX" || extension == "fbx")
 		return FILE_TYPE::MODEL;
 
-	else if (extension == "PNG" || extension == "png" || extension == "DDS" ||extension == "dds")
+	else if (extension == "PNG" || extension == "png" || extension == "DDS" ||extension == "dds" || extension == "jpg")
 		return FILE_TYPE::TEXTURE;
 
 	else

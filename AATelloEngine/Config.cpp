@@ -217,3 +217,9 @@ Config ConfigArray::GetNode(unsigned int index) const
 
 	return json_array_get_object(arr, index);
 }
+
+
+unsigned int ConfigArray::GetSize()
+{
+	return size;
+}

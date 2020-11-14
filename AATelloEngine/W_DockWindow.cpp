@@ -58,7 +58,7 @@ void W_DockWindow::CreateDockWindow()
 				App->scene->SaveScene();
 
 			if (ImGui::MenuItem("Load"))
-				App->scene->SaveScene();
+				App->scene->LoadScene();
 			
 
 			if (ImGui::MenuItem("Exit"))

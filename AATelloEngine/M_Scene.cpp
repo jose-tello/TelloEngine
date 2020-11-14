@@ -159,6 +159,14 @@ void M_Scene::SaveScene()
 }
 
 
+void M_Scene::LoadScene()
+{
+	gameObjects.clear(); //TODO delete this properlly
+
+	SceneImporter::Load("test", gameObjects);
+}
+
+
 void M_Scene::UpdateGameObjects(float dt)
 {
 	std::stack<GameObject*> stack;

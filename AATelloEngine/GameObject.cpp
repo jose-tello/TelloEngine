@@ -17,7 +17,7 @@ GameObject::GameObject(GameObject* parent, int uuid) :
 	if (uuid == 0)
 	{
 		LCG randomNumber;
-		uuid = randomNumber.IntFast();
+		this->uuid = randomNumber.IntFast();
 	}
 }
 
@@ -29,12 +29,13 @@ GameObject::GameObject(std::string& name, GameObject* parent, int uuid) :
 	name(name),
 	uuid(uuid)
 {
+	transform.SetOwner(this);
 	components.push_back(&transform);
 
 	if (uuid == 0)
 	{
 		LCG randomNumber;
-		uuid = randomNumber.IntFast();
+		this->uuid = randomNumber.IntFast();
 	}
 }
 
