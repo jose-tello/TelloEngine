@@ -54,6 +54,13 @@ void W_DockWindow::CreateDockWindow()
 
 			DrawWindowsMenu();
 
+			if (ImGui::MenuItem("Save"))
+				App->scene->SaveScene();
+
+			if (ImGui::MenuItem("Load"))
+				App->scene->SaveScene();
+			
+
 			if (ImGui::MenuItem("Exit"))
 				App->CloseApplication();
 

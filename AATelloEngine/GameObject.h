@@ -9,8 +9,8 @@
 struct GameObject
 {
 public:
-	GameObject(GameObject* parent);
-	GameObject(std::string& name, GameObject* parent);
+	GameObject(GameObject* parent, int uuid = 0);
+	GameObject(std::string& name, GameObject* parent, int uuid = 0);
 	~GameObject();
 
 	Component* GetComponent(COMPONENT_TYPE componentType) const;
@@ -25,6 +25,8 @@ public:
 	const char* GetName() const;
 	void SetName(const char*);
 
+	int GetUuid() const;
+
 private:
 	bool CheckNotRepeated(COMPONENT_TYPE componentType);
 
@@ -38,6 +40,7 @@ public:
 
 private:
 	std::string name;
+	int uuid;
 
 	std::vector<Component*> components;
 };

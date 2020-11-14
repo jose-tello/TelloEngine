@@ -186,6 +186,7 @@ void ModelImporter::InitMeshComponent(GameObject* object, aiMesh* mesh)
 	//TODO this is here until resource manager is implemented
 	C_Mesh* meshComponent = new C_Mesh();
 	Mesh* objectMesh = new Mesh(vertices, normals, texCoords, indices);
+	objectMesh->meshPath = object->GetName();
 
 	std::string path = Save(objectMesh, object->GetName());
 

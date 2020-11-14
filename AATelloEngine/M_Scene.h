@@ -47,6 +47,8 @@ private:
 
 	void DrawObject(GameObject*, bool blackWireframe);
 
+	void GetAllGameObjects(std::vector<GameObject*>& vector);
+
 private:
 	std::vector<GameObject*> gameObjects; //Game objects without parent
 };

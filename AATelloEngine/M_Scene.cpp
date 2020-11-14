@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "M_FileManager.h"
+#include "SceneImporter.h"
 
 #include "GameObject.h"
 #include "C_Mesh.h"
@@ -151,7 +152,10 @@ void M_Scene::DrawGameObjects(bool black)
 
 void M_Scene::SaveScene()
 {
+	std::vector<GameObject*> vec;
+	GetAllGameObjects(vec);
 
+	SceneImporter::Save("test", vec);
 }
 
 
@@ -282,4 +286,36 @@ void M_Scene::DrawObject(GameObject* object, bool blackWireframe)
 		color = &Black;
 	
 	mesh->Draw(object->transform.GetMatTransform().ptr(), texId, color, blackWireframe);
+}
+
+
+void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector)
+{
+	std::stack<GameObject*> stack;
+	GameObject* node;
+
+	int childCount;
+
+	int gameObjCount = gameObjects.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		stack.push(gameObjects[i]);
+
+		while (stack.empty() == false)
+		{
+			node = stack.top();
+			stack.pop();
+
+			vector.push_back(node);
+
+			if (node->childs.empty() == false)
+			{
+				childCount = node->childs.size();
+				for (int j = 0; j < childCount; j++)
+				{
+					stack.push(node->childs[j]);
+				}
+			}
+		}
+	}
 }

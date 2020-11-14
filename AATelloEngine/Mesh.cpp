@@ -10,6 +10,7 @@
 #include "glmath.h"
 
 Mesh::Mesh() :
+	meshPath(),
 	vertexId(0),
 	normalsId(0),
 	texCoordId(0),
@@ -21,6 +22,7 @@ Mesh::Mesh() :
 
 
 Mesh::Mesh(std::vector<float>& vertexBuff, std::vector<float>& normals, std::vector<float> texCoords, std::vector<unsigned int> indices) :
+	meshPath(),
 	vertexId(0),
 	normalsId(0),
 	texCoordId(0),

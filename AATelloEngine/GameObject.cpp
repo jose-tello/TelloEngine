@@ -2,24 +2,40 @@
 #include "Component.h"
 #include "C_Mesh.h"
 
-GameObject::GameObject(GameObject* parent) :
+#include "MathGeoLib/include/Algorithm/Random/LCG.h"
+
+GameObject::GameObject(GameObject* parent, int uuid) :
 	parent(parent),
 	toDelete(false),
 	transform(),
-	name()
+	name(),
+	uuid(uuid)
 {
 	transform.SetOwner(this);
 	components.push_back(&transform);
+
+	if (uuid == 0)
+	{
+		LCG randomNumber;
+		uuid = randomNumber.IntFast();
+	}
 }
 
 
-GameObject::GameObject(std::string& name, GameObject* parent) :
+GameObject::GameObject(std::string& name, GameObject* parent, int uuid) :
 	parent(parent),
 	toDelete(false),
 	transform(),
-	name(name)
+	name(name),
+	uuid(uuid)
 {
 	components.push_back(&transform);
+
+	if (uuid == 0)
+	{
+		LCG randomNumber;
+		uuid = randomNumber.IntFast();
+	}
 }
 
 
@@ -45,6 +61,8 @@ GameObject::~GameObject()
 	childs.clear();
 
 	name.clear();
+
+	uuid = 0;
 }
 
 
@@ -123,6 +141,12 @@ const char* GameObject::GetName() const
 void GameObject::SetName(const char* n)
 {
 	name = n;
+}
+
+
+int GameObject::GetUuid() const
+{
+	return uuid;
 }
 
 

@@ -2,6 +2,7 @@
 #define __MESH_H__
 
 #include <vector>
+#include <string> //TODO: remove
 
 struct Mesh
 {
@@ -30,6 +31,9 @@ public:
 private:
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
+
+public:
+	std::string meshPath;	//TODO: Remove when resource manager is implemented
 
 private:
 	unsigned int vertexId;

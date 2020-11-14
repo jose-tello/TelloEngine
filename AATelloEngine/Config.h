@@ -33,7 +33,7 @@ public:
 	Config		GetNode(const char* name) const;
 	ConfigArray GetArray(const char* name) const;
 
-	void Serialize(char** buffer) const;
+	unsigned int Serialize(char** buffer) const;
 
 private:
 	json_value_t* rootValue = nullptr;

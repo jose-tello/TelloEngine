@@ -2,7 +2,6 @@
 #include "parson/parson.h"
 
 #include "Application.h"
-#include "M_FileManager.h"
 #include "M_Editor.h"
 
 #include <assert.h>
@@ -115,9 +114,13 @@ ConfigArray Config::GetArray(const char* name) const
 
 
 //Fills a buffer
-void Config::Serialize(char** buffer) const
+unsigned int Config::Serialize(char** buffer) const
 {
 	unsigned int size = json_serialization_size_pretty(rootValue);
+
+	*buffer = new char[size];
+	json_serialize_to_buffer_pretty(rootValue, *buffer, size);
+	return size;
 }
 
 

@@ -57,20 +57,14 @@ void C_Transform::SetPos(float x, float y, float z)
 
 void C_Transform::GetRotation(float& angle, float& x, float& y, float& z) const
 {
-	Quat rotation;
-	float3 pos;
-	float3 scl;
-
-	worldTransform.Decompose(scl, rotation, pos);
-	float3 rotationAxis = rotation.Axis();
-
-	x = rotationAxis.x;
-	y = rotationAxis.y;
-	z = rotationAxis.z;
-	angle = rotation.Angle() * RADTODEG;
+	x = localRotation.x;
+	y = localRotation.y;
+	z = localRotation.z;
+	angle = localRotation.Angle() * RADTODEG;
 }
 
 
+//TODO: Cange order
 void C_Transform::SetRotation(float angle, float x, float y, float z)
 {
 	localRotation = { x, y, z, angle };
@@ -80,11 +74,9 @@ void C_Transform::SetRotation(float angle, float x, float y, float z)
 
 void C_Transform::GetEscale(float& x, float& y, float& z) const
 {
-	float3 scale = worldTransform.GetScale();
-
-	x = scale.x;
-	y = scale.y;
-	z = scale.z;
+	x = localScale.x;
+	y = localScale.y;
+	z = localScale.z;
 }
 
 

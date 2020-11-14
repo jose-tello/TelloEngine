@@ -345,6 +345,9 @@
     <ClInclude Include="Config.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="SceneImporter.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -562,6 +565,9 @@
     </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneImporter.cpp">
+      <Filter>Sources\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
