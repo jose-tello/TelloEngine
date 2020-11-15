@@ -42,6 +42,8 @@ public:
 
 	void SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension);
 
+	void ExploreDirectory(const char* directory, std::vector<std::string>& filesVec, std::vector<std::string>& dirVec) const;
+
 private:
 
 	std::string NormalizePath(const char*);

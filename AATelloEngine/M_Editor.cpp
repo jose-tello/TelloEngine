@@ -17,6 +17,7 @@
 #include "W_Scene.h"
 #include "W_ObjectHierarchy.h"
 #include "W_Inspector.h"
+#include "W_LoadFile.h"
 
 
 M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
@@ -39,6 +40,9 @@ M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 	windowsVec.push_back(win);
 
 	win = new W_Inspector(true);
+	windowsVec.push_back(win);
+
+	win = new W_LoadFile(false);
 	windowsVec.push_back(win);
 }
 

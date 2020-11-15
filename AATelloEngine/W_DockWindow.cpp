@@ -111,7 +111,11 @@ void W_DockWindow::DrawFileMenu()
 			App->scene->SaveScene();
 
 		if (ImGui::MenuItem("Load"))
+			App->editor->OpenWindow(E_WINDOW_TYPE::LOAD_FILE);
+
+		if (ImGui::MenuItem("Load Scene"))
 			App->scene->LoadScene();
+			
 
 			ImGui::EndMenu();
 	}

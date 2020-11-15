@@ -10,6 +10,7 @@ enum class E_WINDOW_TYPE : int
 	SCENE,
 	GAME_OBJECTS,
 	INSPECTOR,
+	LOAD_FILE,
 	MAX
 };
 

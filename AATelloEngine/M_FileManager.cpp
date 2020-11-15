@@ -250,6 +250,26 @@ void M_FileManager::SplitPath(const char* fullPath, std::string* path, std::stri
 }
 
 
+void M_FileManager::ExploreDirectory(const char* directory, std::vector<std::string>& filesVec, std::vector<std::string>& dirVec) const
+{
+	char** files = PHYSFS_enumerateFiles(directory);
+	char** iterator;
+
+	std::string dir(directory);
+
+	for (iterator = files; *iterator != nullptr; iterator++)
+	{
+		if (PHYSFS_isDirectory((dir + *iterator).c_str()))
+			dirVec.push_back(*iterator);
+
+		else
+			filesVec.push_back(*iterator);
+	}
+
+	PHYSFS_freeList(files);
+}
+
+
 std::string M_FileManager::NormalizePath(const char* path)
 {
 	std::string newPath(path);
