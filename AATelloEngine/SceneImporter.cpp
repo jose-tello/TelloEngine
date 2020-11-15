@@ -9,7 +9,6 @@
 #include "MeshImporter.h"
 #include "MaterialImporter.h"
 
-
 #include "Component.h"
 #include "C_Transform.h"
 #include "C_Mesh.h"
@@ -82,6 +81,7 @@ void SceneImporter::LoadGameObject(Config& node, std::vector<GameObject*>& objVe
 			break;
 
 		default:
+			assert("Invalid component type");
 			break;
 		}
 	}

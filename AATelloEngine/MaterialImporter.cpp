@@ -56,6 +56,7 @@ void MaterialImporter::Load(C_Material* material, const char* path)
 			std::string filePath(TEXTURE_LIBRARY);
 			filePath.append(pointer);	//Name of the file
 			material->SetTexture(TextureImporter::Load(filePath.c_str()));
+			material->textureName = pointer;
 		}
 	}
 

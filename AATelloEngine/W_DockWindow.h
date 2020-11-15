@@ -16,6 +16,7 @@ private:
 	void CreateDockWindow();
 	void DrawAboutMenu();
 	void DrawWindowsMenu();
+	void DrawFileMenu();
 	void DrawShapesMenu();
 };
 

@@ -54,14 +54,7 @@ UPDATE_STATUS M_Scene::PostUpdate(float dt)
 
 bool M_Scene::CleanUp()
 {
-	int gameObjCount = gameObjects.size();
-	for (int i = 0; i < gameObjCount; i++)
-	{
-		delete gameObjects[i];
-		gameObjects[i] = nullptr;
-	}
-
-	gameObjects.clear();
+	DeleteAllGameObjects();
 
 	return true;
 }
@@ -161,7 +154,7 @@ void M_Scene::SaveScene()
 
 void M_Scene::LoadScene()
 {
-	gameObjects.clear(); //TODO delete this properlly
+	DeleteAllGameObjects();
 
 	SceneImporter::Load("test", gameObjects);
 }
@@ -297,7 +290,7 @@ void M_Scene::DrawObject(GameObject* object, bool blackWireframe)
 }
 
 
-void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector)
+void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector) const
 {
 	std::stack<GameObject*> stack;
 	GameObject* node;
@@ -326,4 +319,17 @@ void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector)
 			}
 		}
 	}
+}
+
+
+void M_Scene::DeleteAllGameObjects()
+{
+	int gameObjCount = gameObjects.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		delete gameObjects[i];
+		gameObjects[i] = nullptr;
+	}
+
+	gameObjects.clear();
 }

@@ -1,5 +1,5 @@
-#ifndef __MODEL_IMPORTER_H__
-#define __MODEL_IMPORTER_H__
+#ifndef __MESH_IMPORTER_H__
+#define __MESH_IMPORTER_H__
 
 #define MAX_TEX_COORDS 8
 
@@ -29,5 +29,5 @@ namespace MeshImporter
 
 	void CleanUp();
 }
-#endif // !__MODEL_IMPORTER_H__
+#endif // !__MESH_IMPORTER_H__
 

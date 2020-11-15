@@ -53,12 +53,6 @@ void W_DockWindow::CreateDockWindow()
 			DrawAboutMenu();
 
 			DrawWindowsMenu();
-
-			if (ImGui::MenuItem("Save"))
-				App->scene->SaveScene();
-
-			if (ImGui::MenuItem("Load"))
-				App->scene->LoadScene();
 			
 
 			if (ImGui::MenuItem("Exit"))
@@ -67,6 +61,7 @@ void W_DockWindow::CreateDockWindow()
 			ImGui::EndMenu();
 		}
 
+		DrawFileMenu();
 		DrawShapesMenu();		
 
 		ImGui::EndMenuBar();
@@ -104,6 +99,21 @@ void W_DockWindow::DrawWindowsMenu()
 		ImGui::Checkbox("Scene", &App->editor->GetWindow(E_WINDOW_TYPE::SCENE)->open);
 
 		ImGui::EndMenu();
+	}
+}
+
+
+void W_DockWindow::DrawFileMenu()
+{
+	if (ImGui::BeginMenu("File"))
+	{
+		if (ImGui::MenuItem("Save"))
+			App->scene->SaveScene();
+
+		if (ImGui::MenuItem("Load"))
+			App->scene->LoadScene();
+
+			ImGui::EndMenu();
 	}
 }
 
