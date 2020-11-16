@@ -109,6 +109,12 @@ void C_Transform::SetGlobalTransform(float4x4 transform)
 }
 
 
+void C_Transform::NotifyNeedUpdate()
+{
+	needUpdate = true;
+}
+
+
 void C_Transform::UpdateLocalTransform()
 {
 	localRotation.Normalize();

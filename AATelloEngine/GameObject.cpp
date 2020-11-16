@@ -151,6 +151,20 @@ int GameObject::GetUuid() const
 }
 
 
+//Does not delete the child
+void GameObject::RemoveChild(int uid)
+{
+	for (int i = 0; i < childs.size(); i++)
+	{
+		if (childs[i]->GetUuid() == uid)
+		{
+			childs.erase(childs.begin() + i);
+			return;
+		}
+	}
+}
+
+
 bool GameObject::CheckNotRepeated(COMPONENT_TYPE componentType)
 {
 	int componentsCount = components.size();

@@ -27,6 +27,8 @@ public:
 
 	int GetUuid() const;
 
+	void RemoveChild(int uid);
+
 private:
 	bool CheckNotRepeated(COMPONENT_TYPE componentType);
 

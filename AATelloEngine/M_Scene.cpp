@@ -103,6 +103,42 @@ void M_Scene::AddPrimitive(PRIMITIVE_TYPE type)
 }
 
 
+GameObject* M_Scene::GetGameObject(int uid)
+{
+	std::stack<GameObject*> stack;
+	GameObject* node;
+
+	int childCount;
+
+	int gameObjCount = gameObjects.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		stack.push(gameObjects[i]);
+
+		while (stack.empty() == false)
+		{
+			node = stack.top();
+			stack.pop();
+
+			if (node->GetUuid() == uid)
+				return node;
+
+
+			if (node->childs.empty() == false)
+			{
+				childCount = node->childs.size();
+				for (int j = 0; j < childCount; j++)
+				{
+					stack.push(node->childs[j]);
+				}
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+
 void M_Scene::GetGameObjectVector(std::vector<GameObject*>& vec)
 {
 	vec = gameObjects;

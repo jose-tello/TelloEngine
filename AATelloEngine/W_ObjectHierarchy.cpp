@@ -42,6 +42,8 @@ bool W_ObjectHierarchy::Draw()
 			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
 			inspector->SetFocusedObject(gameObjects[i]);
 		}
+
+
 		
 		if (open == true)
 		{
@@ -60,8 +62,7 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 {
 	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
 
-	int gameObjCount = vec.size();
-	for (int i = 0; i < gameObjCount; i++)
+	for (int i = 0; i < vec.size(); i++)
 	{
 		bool open = ImGui::TreeNodeEx(vec[i]->GetName(), flags);
 		
@@ -71,10 +72,62 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 			inspector->SetFocusedObject(vec[i]);
 		}
 
+		HandleDragAndDrop(vec[i]);
+
 		if (open == true)
 		{
 			DrawChildren(vec[i]->childs);
 			ImGui::TreePop();
 		}
 	}
+}
+
+
+void W_ObjectHierarchy::HandleDragAndDrop(GameObject* currGameObject)
+{
+	//Drop
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+		{
+			GameObject* targetGo = (GameObject*)(payload->Data);
+
+			if (targetGo != nullptr)
+			{
+				ReparentGameObjects(currGameObject, targetGo);
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	//Drag
+	else if (App->editor->GetFocusedGameObject()->parent != nullptr)
+	{
+		if (ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("GameObject", currGameObject, sizeof(GameObject));
+			ImGui::EndDragDropSource();
+		}
+	}
+}
+
+
+void W_ObjectHierarchy::ReparentGameObjects(GameObject* parent, GameObject* child)
+{
+	GameObject* sceneChild = App->scene->GetGameObject(child->GetUuid());
+	if (sceneChild->parent == parent || sceneChild == nullptr)
+		return;
+	
+
+	sceneChild->parent->RemoveChild(child->GetUuid());
+	sceneChild->parent = parent;
+
+	if (parent == nullptr)
+		App->scene->AddGameObject(sceneChild);
+	
+	else
+		parent->childs.push_back(sceneChild);
+
+	//TODO: make it maintain the transform
+	//sceneChild->transform.NotifyNeedUpdate();
 }

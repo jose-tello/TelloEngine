@@ -26,7 +26,6 @@ bool W_LoadFile::Draw()
 	DrawLoadWindow();
 	ImGui::End();
 	
-
 	return true;
 }
 

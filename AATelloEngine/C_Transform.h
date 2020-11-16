@@ -25,6 +25,8 @@ public:
 	void AddTransform(float4x4 transform);
 	void SetGlobalTransform(float4x4 transform);
 
+	void NotifyNeedUpdate();
+
 private:
 	void UpdateLocalTransform();
 	void UpdateTRS();

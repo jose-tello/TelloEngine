@@ -15,7 +15,11 @@ public:
 
 	bool Draw() override;
 
+private:
 	void DrawChildren(std::vector<GameObject*>&);
+	void HandleDragAndDrop(GameObject* currGameObject);
+	void ReparentGameObjects(GameObject* father, GameObject* child);
+
 };
 #endif // !__E_GAME_OBJECTS__
 

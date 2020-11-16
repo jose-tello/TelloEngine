@@ -32,6 +32,7 @@ public:
 	void AddGameObject(GameObject*);
 	void AddPrimitive(PRIMITIVE_TYPE);
 
+	GameObject* GetGameObject(int uid);
 	void GetGameObjectVector(std::vector<GameObject*>&);
 
 	void DrawGameObjects(bool blackWireframe);
