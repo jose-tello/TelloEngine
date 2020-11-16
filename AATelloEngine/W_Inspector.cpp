@@ -140,17 +140,16 @@ void W_Inspector::DrawTransformPos(C_Transform* transform)
 
 void W_Inspector::DrawTransformRot(C_Transform* transform)
 {
-	float angle, x, y, z;
+	float x, y, z;
 
-	transform->GetRotation(angle, x, y, z);
+	transform->GetEulerAngles(x, y, z);
 	float rotation[] = { x, y, z };
 
 	if (ImGui::InputFloat3("Rotation", rotation, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 	{
+		transform->SetEulerAngles(rotation[0], rotation[1], rotation[2]);
 	}
 
-	ImGui::Text("Angle rotation : ");
-	ImGui::InputFloat("", &angle);
 	ImGui::NewLine();
 	ImGui::Separator();
 }
@@ -163,8 +162,10 @@ void W_Inspector::DrawTransformScale(C_Transform* transform)
 	transform->GetEscale(x, y, z);
 	float escale[] = { x, y, z };
 
-	ImGui::Text("Scale: ");
-	if (ImGui::InputFloat3("Scale", escale, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue));
+	if (ImGui::InputFloat3("Scale", escale, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		transform->SetEscale(escale[0], escale[1], escale[2]);
+	}
 	ImGui::NewLine();
 }
 

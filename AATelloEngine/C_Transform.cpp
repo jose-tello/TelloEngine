@@ -72,6 +72,23 @@ void C_Transform::SetRotation(float angle, float x, float y, float z)
 }
 
 
+void C_Transform::GetEulerAngles(float& x, float& y, float& z) const
+{
+	float3 rot = localRotation.ToEulerXYZ();
+
+	x = rot.x * RADTODEG;
+	y = rot.y * RADTODEG;
+	z = rot.z * RADTODEG;
+}
+
+
+void C_Transform::SetEulerAngles(float x, float y, float z)
+{
+	localRotation = Quat::FromEulerXYZ(x * DEGTORAD, y * DEGTORAD, z * DEGTORAD);
+	UpdateLocalTransform();
+}
+
+
 void C_Transform::GetEscale(float& x, float& y, float& z) const
 {
 	x = localScale.x;

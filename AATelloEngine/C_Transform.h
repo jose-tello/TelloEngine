@@ -18,6 +18,9 @@ public:
 	void GetRotation(float& angle, float& x, float& y, float& z) const;
 	void SetRotation(float angle, float x, float y, float z);
 
+	void GetEulerAngles(float& x, float& y, float& z) const;
+	void SetEulerAngles(float x, float y, float z);
+
 	void GetEscale(float& x, float& y, float& z) const;
 	void SetEscale(float x, float y, float z);
 

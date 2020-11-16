@@ -27,9 +27,11 @@ M_Scene::~M_Scene()
 bool M_Scene::Start()
 {
 	App->fileManager->LoadFromExporter("/Assets/house/BakerHouse.fbx");
-	gameObjects[0]->transform.SetEscale(0.05, 0.05, 0.05);
-	float4x4 rot = rot.identity;
-	gameObjects[0]->transform.AddTransform(rot.RotateAxisAngle(float3(1, 0, 0), 90 * DEGTORAD));
+
+	float4x4 transform = float4x4::FromTRS(float3(0, 0, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0),
+										   float3(0.05f, 0.05f, 0.05f));
+
+	gameObjects[0]->transform.AddTransform(transform);
 
 	return true;
 }

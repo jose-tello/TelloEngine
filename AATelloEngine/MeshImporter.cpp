@@ -125,9 +125,9 @@ void MeshImporter::InitTransformComponent(GameObject* object, aiNode* node)
 	float3 pos = {position.x, position.y, position.z};
 	float3 scl = { scale.x, scale.y, scale.z };
 
-	float4x4 rot = float4x4::FromTRS(pos, quat, scl);
+	float4x4 transform = float4x4::FromTRS(pos, quat, scl);
 
-	object->transform.AddTransform(rot);
+	object->transform.AddTransform(transform);
 }
 
 
