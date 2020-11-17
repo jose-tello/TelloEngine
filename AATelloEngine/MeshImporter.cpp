@@ -201,5 +201,8 @@ std::string MeshImporter::Save(Mesh* mesh, const char* path)
 
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
 
+	delete[] fileBuffer;
+	fileBuffer = nullptr;
+
 	return filePath;
 }

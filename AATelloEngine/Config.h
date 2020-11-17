@@ -47,6 +47,8 @@ public:
 	ConfigArray();
 	ConfigArray(json_array_t*);
 
+	~ConfigArray();
+
 	void	AppendNum(double data);
 	void	AppendBool(bool data);
 	void	AppendString(const char* data);

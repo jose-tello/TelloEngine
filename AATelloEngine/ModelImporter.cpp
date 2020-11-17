@@ -169,19 +169,19 @@ void ModelImporter::Load(GameObject* root, const char* path)
 	char* fileBuffer;
 	App->fileManager->Load(filePath.c_str(), &fileBuffer);
 
-	Config node(fileBuffer);
-	ConfigArray gameObjects = node.GetArray("game objects");
+	Config rootNode(fileBuffer);
+	ConfigArray gameObjects = rootNode.GetArray("game objects");
 	int objCount = gameObjects.GetSize();
 
-	int uuid = node.GetNum("uuid");
-	std::string name = node.GetString("name");
+	int uuid = rootNode.GetNum("uuid");
+	std::string name = rootNode.GetString("name");
 
 	GameObject* object = new GameObject(name, nullptr, uuid); //Root
 	App->scene->AddGameObject(object);
 
 	for (int i = 1; i < objCount; i++)
 	{
-		node = gameObjects.GetNode(i);
+		Config node = gameObjects.GetNode(i);
 		
 		int uuid = node.GetNum("uuid");
 		int parentId = node.GetNum("parent");
@@ -192,6 +192,9 @@ void ModelImporter::Load(GameObject* root, const char* path)
 		object = new GameObject(name, parent, uuid);
 		parent->childs.push_back(object);
 	}
+
+	delete[] fileBuffer;
+	fileBuffer = nullptr;
 }
 
 
@@ -202,7 +205,7 @@ std::string ModelImporter::Save(std::vector<GameObject*>& allGo, const char* fil
 	filePath.append(fileName);
 
 	Config sceneRoot;
-	Config node;
+	
 	sceneRoot.AppendString("Model name", fileName);
 
 	ConfigArray gameObjects = sceneRoot.AppendArray("game objects");
@@ -210,13 +213,16 @@ std::string ModelImporter::Save(std::vector<GameObject*>& allGo, const char* fil
 	int objCount = allGo.size();
 	for (int i = 0; i < objCount; i++)
 	{
-		node = gameObjects.AppendNode();
+		Config node = gameObjects.AppendNode();
 		allGo[i]->Save(node);
 	}
 
 	char* fileBuffer;
 	unsigned int size = sceneRoot.Serialize(&fileBuffer);
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
+
+	delete[] fileBuffer;
+	fileBuffer = nullptr;
 
 	return filePath;
 }

@@ -35,8 +35,11 @@ Config::Config(json_object_t* obj) :
 
 Config::~Config()
 {
+	if (node != nullptr)
+		json_object_clear(node);
+
 	if (rootValue != nullptr)
-		json_value_free(rootValue);
+		json_value_free(rootValue);	
 }
 
 
@@ -138,6 +141,11 @@ ConfigArray::ConfigArray(json_array_t* arr) :
 	size(0)
 {
 	size = json_array_get_count(arr);
+}
+
+
+ConfigArray::~ConfigArray()
+{
 }
 
 

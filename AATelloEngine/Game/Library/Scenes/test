@@ -2,7 +2,7 @@
     "Scene name": "test",
     "game objects": [
         {
-            "uuid": -1999900164,
+            "uuid": -760037815,
             "parent": 0,
             "name": "RootNode",
             "components": [
@@ -28,8 +28,8 @@
             ]
         },
         {
-            "uuid": -2032142104,
-            "parent": -1999900164,
+            "uuid": -2076556527,
+            "parent": -760037815,
             "name": "Spot001.Target_",
             "components": [
                 {
@@ -54,8 +54,8 @@
             ]
         },
         {
-            "uuid": -1976723788,
-            "parent": -2032142104,
+            "uuid": -2052955008,
+            "parent": -2076556527,
             "name": "Spot001.Target_",
             "components": [
                 {
@@ -80,8 +80,8 @@
             ]
         },
         {
-            "uuid": -1955210899,
-            "parent": -1976723788,
+            "uuid": -2029353489,
+            "parent": -2052955008,
             "name": "Spot001.Target_",
             "components": [
                 {
@@ -106,8 +106,8 @@
             ]
         },
         {
-            "uuid": -1930913170,
-            "parent": -1955210899,
+            "uuid": -1966624968,
+            "parent": -2029353489,
             "name": "Spot001.Target",
             "components": [
                 {
@@ -132,8 +132,8 @@
             ]
         },
         {
-            "uuid": -2042446012,
-            "parent": -1999900164,
+            "uuid": -2083518627,
+            "parent": -760037815,
             "name": "Spot001_",
             "components": [
                 {
@@ -158,8 +158,8 @@
             ]
         },
         {
-            "uuid": -1899931825,
-            "parent": -2042446012,
+            "uuid": -1928820765,
+            "parent": -2083518627,
             "name": "Spot001_",
             "components": [
                 {
@@ -184,8 +184,8 @@
             ]
         },
         {
-            "uuid": -1880925292,
-            "parent": -1899931825,
+            "uuid": -1891573530,
+            "parent": -1928820765,
             "name": "Spot001_",
             "components": [
                 {
@@ -210,8 +210,8 @@
             ]
         },
         {
-            "uuid": -1863380800,
-            "parent": -1880925292,
+            "uuid": -1872984723,
+            "parent": -1891573530,
             "name": "Spot001_",
             "components": [
                 {
@@ -236,8 +236,8 @@
             ]
         },
         {
-            "uuid": -1834139980,
-            "parent": -1863380800,
+            "uuid": -1855161747,
+            "parent": -1872984723,
             "name": "Spot001",
             "components": [
                 {
@@ -262,8 +262,8 @@
             ]
         },
         {
-            "uuid": -2049060007,
-            "parent": -1999900164,
+            "uuid": -2090411106,
+            "parent": -760037815,
             "name": "Camera001.Target_",
             "components": [
                 {
@@ -288,8 +288,8 @@
             ]
         },
         {
-            "uuid": -1803089014,
-            "parent": -2049060007,
+            "uuid": -1819446174,
+            "parent": -2090411106,
             "name": "Camera001.Target_",
             "components": [
                 {
@@ -314,8 +314,8 @@
             ]
         },
         {
-            "uuid": -1783873618,
-            "parent": -1803089014,
+            "uuid": -1800509262,
+            "parent": -1819446174,
             "name": "Camera001.Target_",
             "components": [
                 {
@@ -340,8 +340,8 @@
             ]
         },
         {
-            "uuid": -1764867085,
-            "parent": -1783873618,
+            "uuid": -1776838122,
+            "parent": -1800509262,
             "name": "Camera001.Target",
             "components": [
                 {
@@ -366,8 +366,8 @@
             ]
         },
         {
-            "uuid": -2065420942,
-            "parent": -1999900164,
+            "uuid": -2096816238,
+            "parent": -760037815,
             "name": "Camera001_",
             "components": [
                 {
@@ -392,8 +392,8 @@
             ]
         },
         {
-            "uuid": -1733468014,
-            "parent": -2065420942,
+            "uuid": -1744812462,
+            "parent": -2096816238,
             "name": "Camera001_",
             "components": [
                 {
@@ -418,8 +418,8 @@
             ]
         },
         {
-            "uuid": -1716341248,
-            "parent": -1733468014,
+            "uuid": -1727407212,
+            "parent": -1744812462,
             "name": "Camera001_",
             "components": [
                 {
@@ -444,8 +444,8 @@
             ]
         },
         {
-            "uuid": -1698657514,
-            "parent": -1716341248,
+            "uuid": -1709862720,
+            "parent": -1727407212,
             "name": "Camera001",
             "components": [
                 {
@@ -470,8 +470,8 @@
             ]
         },
         {
-            "uuid": -2072104558,
-            "parent": -1999900164,
+            "uuid": -2103499854,
+            "parent": -760037815,
             "name": "Dummy001_",
             "components": [
                 {
@@ -496,8 +496,8 @@
             ]
         },
         {
-            "uuid": -1670600251,
-            "parent": -2072104558,
+            "uuid": -1681875078,
+            "parent": -2103499854,
             "name": "Dummy001_",
             "components": [
                 {
@@ -522,8 +522,8 @@
             ]
         },
         {
-            "uuid": -1651941823,
-            "parent": -1670600251,
+            "uuid": -1663425513,
+            "parent": -1681875078,
             "name": "Dummy001",
             "components": [
                 {
@@ -548,8 +548,8 @@
             ]
         },
         {
-            "uuid": 829584914,
-            "parent": -1651941823,
+            "uuid": -1048859189,
+            "parent": -1663425513,
             "name": "City_building_010",
             "components": [
                 {
@@ -574,8 +574,8 @@
             ]
         },
         {
-            "uuid": 1397872341,
-            "parent": -1651941823,
+            "uuid": -1820141071,
+            "parent": -1663425513,
             "name": "City_building_010",
             "components": [
                 {
@@ -608,8 +608,8 @@
             ]
         },
         {
-            "uuid": 840999890,
-            "parent": -1651941823,
+            "uuid": 538234027,
+            "parent": -1663425513,
             "name": "City_building_016",
             "components": [
                 {
@@ -634,8 +634,8 @@
             ]
         },
         {
-            "uuid": 1640224350,
-            "parent": -1651941823,
+            "uuid": 1681924622,
+            "parent": -1663425513,
             "name": "City_building_016",
             "components": [
                 {
@@ -668,8 +668,8 @@
             ]
         },
         {
-            "uuid": 1342896245,
-            "parent": -1651941823,
+            "uuid": -502789339,
+            "parent": -1663425513,
             "name": "City_building_017",
             "components": [
                 {
@@ -694,8 +694,8 @@
             ]
         },
         {
-            "uuid": 141300424,
-            "parent": -1651941823,
+            "uuid": 1516726018,
+            "parent": -1663425513,
             "name": "City_building_017",
             "components": [
                 {
@@ -728,8 +728,8 @@
             ]
         },
         {
-            "uuid": -1474129789,
-            "parent": -1651941823,
+            "uuid": -1477467822,
+            "parent": -1663425513,
             "name": "City_building_041",
             "components": [
                 {
@@ -762,8 +762,8 @@
             ]
         },
         {
-            "uuid": -1480047574,
-            "parent": -1651941823,
+            "uuid": -1482689397,
+            "parent": -1663425513,
             "name": "City_building_040",
             "components": [
                 {
@@ -796,8 +796,8 @@
             ]
         },
         {
-            "uuid": -1487148916,
-            "parent": -1651941823,
+            "uuid": -1489303392,
+            "parent": -1663425513,
             "name": "City_building_039",
             "components": [
                 {
@@ -830,8 +830,8 @@
             ]
         },
         {
-            "uuid": -1493971774,
-            "parent": -1651941823,
+            "uuid": -1500581994,
+            "parent": -1663425513,
             "name": "City_building_038",
             "components": [
                 {
@@ -864,8 +864,8 @@
             ]
         },
         {
-            "uuid": -1498079413,
-            "parent": -1651941823,
+            "uuid": -1514575815,
+            "parent": -1663425513,
             "name": "City_building_037",
             "components": [
                 {
@@ -898,8 +898,8 @@
             ]
         },
         {
-            "uuid": -1503092125,
-            "parent": -1651941823,
+            "uuid": -1518474591,
+            "parent": -1663425513,
             "name": "City_building_036",
             "components": [
                 {
@@ -932,8 +932,8 @@
             ]
         },
         {
-            "uuid": -1507269385,
-            "parent": -1651941823,
+            "uuid": -1522721472,
+            "parent": -1663425513,
             "name": "City_building_035",
             "components": [
                 {
@@ -966,8 +966,8 @@
             ]
         },
         {
-            "uuid": -1511516266,
-            "parent": -1651941823,
+            "uuid": -1526968353,
+            "parent": -1663425513,
             "name": "City_building_034",
             "components": [
                 {
@@ -1000,8 +1000,8 @@
             ]
         },
         {
-            "uuid": -1515345421,
-            "parent": -1651941823,
+            "uuid": -1530797508,
+            "parent": -1663425513,
             "name": "City_building_033",
             "components": [
                 {
@@ -1034,8 +1034,8 @@
             ]
         },
         {
-            "uuid": -1519174576,
-            "parent": -1651941823,
+            "uuid": -1534696284,
+            "parent": -1663425513,
             "name": "City_building_032",
             "components": [
                 {
@@ -1068,8 +1068,8 @@
             ]
         },
         {
-            "uuid": -1529200000,
-            "parent": -1651941823,
+            "uuid": -1540126722,
+            "parent": -1663425513,
             "name": "City_building_031",
             "components": [
                 {
@@ -1102,8 +1102,8 @@
             ]
         },
         {
-            "uuid": -1533377260,
-            "parent": -1651941823,
+            "uuid": -1544303982,
+            "parent": -1663425513,
             "name": "City_building_030",
             "components": [
                 {
@@ -1136,8 +1136,8 @@
             ]
         },
         {
-            "uuid": -1537206415,
-            "parent": -1651941823,
+            "uuid": -1548202758,
+            "parent": -1663425513,
             "name": "Object010",
             "components": [
                 {
@@ -1170,8 +1170,8 @@
             ]
         },
         {
-            "uuid": -1541035570,
-            "parent": -1651941823,
+            "uuid": -1552031913,
+            "parent": -1663425513,
             "name": "City_building_028",
             "components": [
                 {
@@ -1204,8 +1204,8 @@
             ]
         },
         {
-            "uuid": -1545282451,
-            "parent": -1651941823,
+            "uuid": -1556278794,
+            "parent": -1663425513,
             "name": "City_building_026",
             "components": [
                 {
@@ -1238,8 +1238,8 @@
             ]
         },
         {
-            "uuid": -1560111724,
-            "parent": -1651941823,
+            "uuid": -1560525675,
+            "parent": -1663425513,
             "name": "City_building_024",
             "components": [
                 {
@@ -1272,8 +1272,8 @@
             ]
         },
         {
-            "uuid": -1565333299,
-            "parent": -1651941823,
+            "uuid": -1565538387,
+            "parent": -1663425513,
             "name": "City_building_023",
             "components": [
                 {
@@ -1306,8 +1306,8 @@
             ]
         },
         {
-            "uuid": -1569232075,
-            "parent": -1651941823,
+            "uuid": -1569437163,
+            "parent": -1663425513,
             "name": "City_building_022",
             "components": [
                 {
@@ -1340,8 +1340,8 @@
             ]
         },
         {
-            "uuid": -1573548577,
-            "parent": -1651941823,
+            "uuid": -1583987952,
+            "parent": -1663425513,
             "name": "City_building_017",
             "components": [
                 {
@@ -1374,8 +1374,8 @@
             ]
         },
         {
-            "uuid": -1577725837,
-            "parent": -1651941823,
+            "uuid": -1588374075,
+            "parent": -1663425513,
             "name": "City_building_016",
             "components": [
                 {
@@ -1408,8 +1408,8 @@
             ]
         },
         {
-            "uuid": -1582877791,
-            "parent": -1651941823,
+            "uuid": -1593526029,
+            "parent": -1663425513,
             "name": "City_building_014",
             "components": [
                 {
@@ -1442,8 +1442,8 @@
             ]
         },
         {
-            "uuid": -1586915809,
-            "parent": -1651941823,
+            "uuid": -1597633668,
+            "parent": -1663425513,
             "name": "City_building_013",
             "components": [
                 {
@@ -1476,8 +1476,8 @@
             ]
         },
         {
-            "uuid": -1591162690,
-            "parent": -1651941823,
+            "uuid": -1601950170,
+            "parent": -1663425513,
             "name": "City_building_011",
             "components": [
                 {
@@ -1510,8 +1510,8 @@
             ]
         },
         {
-            "uuid": -1596453886,
-            "parent": -1651941823,
+            "uuid": -1607310987,
+            "parent": -1663425513,
             "name": "City_building_010",
             "components": [
                 {
@@ -1544,8 +1544,8 @@
             ]
         },
         {
-            "uuid": -1600422283,
-            "parent": -1651941823,
+            "uuid": -1611279384,
+            "parent": -1663425513,
             "name": "Plane001",
             "components": [
                 {
@@ -1578,8 +1578,8 @@
             ]
         },
         {
-            "uuid": -1605922342,
-            "parent": -1651941823,
+            "uuid": -1616292096,
+            "parent": -1663425513,
             "name": "Line002",
             "components": [
                 {
@@ -1612,8 +1612,8 @@
             ]
         },
         {
-            "uuid": -1621308583,
-            "parent": -1651941823,
+            "uuid": -1621583292,
+            "parent": -1663425513,
             "name": "City_building_008",
             "components": [
                 {
@@ -1646,8 +1646,8 @@
             ]
         },
         {
-            "uuid": -1626251674,
-            "parent": -1651941823,
+            "uuid": -1626596004,
+            "parent": -1663425513,
             "name": "City_building_007",
             "components": [
                 {
@@ -1680,8 +1680,8 @@
             ]
         },
         {
-            "uuid": -1631125144,
-            "parent": -1651941823,
+            "uuid": -1631608716,
+            "parent": -1663425513,
             "name": "City_building_001",
             "components": [
                 {
@@ -1714,8 +1714,8 @@
             ]
         },
         {
-            "uuid": -1635928993,
-            "parent": -1651941823,
+            "uuid": -1636621428,
+            "parent": -1663425513,
             "name": "City_building_004",
             "components": [
                 {
@@ -1748,8 +1748,8 @@
             ]
         },
         {
-            "uuid": -2094870625,
-            "parent": -1999900164,
+            "uuid": -2110322712,
+            "parent": -760037815,
             "name": "Sky001_",
             "components": [
                 {
@@ -1774,8 +1774,8 @@
             ]
         },
         {
-            "uuid": -1481867065,
-            "parent": -2094870625,
+            "uuid": -162922178,
+            "parent": -2110322712,
             "name": "Sky001_",
             "components": [
                 {
@@ -1800,8 +1800,8 @@
             ]
         },
         {
-            "uuid": -1463139016,
-            "parent": -1481867065,
+            "uuid": -142662467,
+            "parent": -162922178,
             "name": "Sky001_",
             "components": [
                 {
@@ -1826,8 +1826,8 @@
             ]
         },
         {
-            "uuid": -1440860296,
-            "parent": -1463139016,
+            "uuid": -122750861,
+            "parent": -142662467,
             "name": "Sky001",
             "components": [
                 {

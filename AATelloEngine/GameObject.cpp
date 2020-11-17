@@ -221,12 +221,11 @@ void GameObject::Save(Config& node) const
 	node.AppendString("name", name.c_str());
 
 	ConfigArray componentsArray = node.AppendArray("components");
-	Config componentNode;
 
 	int componentsCount = components.size();
 	for (int i = 0; i < componentsCount; i++)
 	{
-		componentNode = componentsArray.AppendNode();
+		Config componentNode = componentsArray.AppendNode();
 		components[i]->Save(componentNode);
 	}
 }

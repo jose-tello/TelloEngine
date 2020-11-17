@@ -44,7 +44,6 @@ public:
 	std::string materialPath;
 	int textureWidth;
 	int textureHeight;
-	
 
 private:
 	unsigned int textureId;

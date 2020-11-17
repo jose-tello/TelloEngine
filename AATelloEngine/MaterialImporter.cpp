@@ -30,7 +30,6 @@ void MaterialImporter::Import(aiMaterial* material, C_Material* materialComponen
 	}
 
 
-
 	if (hasColor)
 		materialComponent->SetColor(color);
 
@@ -57,15 +56,11 @@ void MaterialImporter::Load(C_Material* material, const char* path)
 		material->SetColor(Color(color[0], color[1], color[2], color[3]));
 
 		if (bytes < size)
-		{
-			if (pointer != "")
-			{
-				std::string filePath(TEXTURE_LIBRARY);
-				filePath.append(pointer);	//Name of the file
-				material->SetTexture(TextureImporter::Load(filePath.c_str()));
-				material->textureName = pointer;
-			}
-			
+		{		
+			std::string filePath(TEXTURE_LIBRARY);
+			filePath.append(pointer);	//Name of the file
+			material->SetTexture(TextureImporter::Load(filePath.c_str()));
+			material->textureName = pointer;	
 		}
 	}
 
