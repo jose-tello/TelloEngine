@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+struct Config;
+
 struct GameObject
 {
 public:
@@ -28,6 +30,9 @@ public:
 	int GetUuid() const;
 
 	void RemoveChild(int uid);
+
+	void Load(Config&);
+	void Save(Config&) const;
 
 private:
 	bool CheckNotRepeated(COMPONENT_TYPE componentType);

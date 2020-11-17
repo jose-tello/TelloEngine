@@ -1,6 +1,8 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
+struct Config;
+
 enum class COMPONENT_TYPE : int
 {
 	NONE = -1,
@@ -24,6 +26,9 @@ public:
 
 	bool SetOwner(GameObject*);
 	COMPONENT_TYPE GetType();
+
+	virtual void Load(Config&);
+	virtual void Save(Config&) const;
 
 protected:
 	GameObject* owner = nullptr;

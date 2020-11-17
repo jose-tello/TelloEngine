@@ -1,5 +1,9 @@
 #include "C_Material.h"
 
+#include "Config.h"
+#include "M_FileManager.h"
+#include "MaterialImporter.h"
+
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
@@ -11,6 +15,7 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 
 	texturePath(),
 	textureName(),
+	materialPath(),
 	textureWidth(0),
 	textureHeight(0),
 
@@ -118,6 +123,24 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 
 	else
 		col = { 1.f, 1.f, 1.f, 1.f };
+}
+
+
+void C_Material::Load(Config& node)
+{
+	const char* materialName = node.GetString("material");
+	std::string materialPath(MATERIAL_LIBRARY);
+	materialPath.append(materialName);
+
+	MaterialImporter::Load(this, materialPath.c_str());
+}
+
+
+void C_Material::Save(Config& node) const
+{
+	node.AppendNum("type", (int)COMPONENT_TYPE::MATERIAL);
+
+	node.AppendString("material", materialPath.c_str());
 }
 
 

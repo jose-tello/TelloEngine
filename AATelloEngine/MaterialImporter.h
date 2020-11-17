@@ -9,7 +9,7 @@ class C_Material;
 
 namespace MaterialImporter
 {
-	void Import(aiMaterial* material, C_Material* materialComponent, Color& col, bool hasTexture, bool hasColor);
+	void Import(aiMaterial* material, C_Material* materialComponent, Color& col, bool hasTexture, bool hasColor, const char* nodeName);
 	
 	void Load(C_Material*, const char* path);
 	

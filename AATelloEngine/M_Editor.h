@@ -18,9 +18,9 @@ class M_Editor : public Module
 {
 public:
 	M_Editor(bool startEnabled = true);
-	~M_Editor();
+	~M_Editor() override;
 
-	bool Init() override;
+ 	bool Init() override;
 	bool Start() override;
 	
 	UPDATE_STATUS Update(float dt) override;

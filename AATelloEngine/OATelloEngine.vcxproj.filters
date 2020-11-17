@@ -93,9 +93,6 @@
     <ClInclude Include="Light.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="MeshImporter.h">
-      <Filter>Sources\Importers</Filter>
-    </ClInclude>
     <ClInclude Include="M_FileManager.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -351,6 +348,12 @@
     <ClInclude Include="W_LoadFile.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="ModelImporter.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshImporter.h">
+      <Filter>Sources\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -403,9 +406,6 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshImporter.cpp">
-      <Filter>Sources\Importers</Filter>
     </ClCompile>
     <ClCompile Include="M_FileManager.cpp">
       <Filter>Sources\Modules</Filter>
@@ -574,6 +574,12 @@
     </ClCompile>
     <ClCompile Include="W_LoadFile.cpp">
       <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelImporter.cpp">
+      <Filter>Sources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshImporter.cpp">
+      <Filter>Sources\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

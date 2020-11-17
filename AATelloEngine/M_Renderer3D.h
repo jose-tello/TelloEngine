@@ -13,12 +13,12 @@ class M_Renderer3D : public Module
 {
 public:
 	M_Renderer3D(bool start_enabled = true);
-	~M_Renderer3D();
+	~M_Renderer3D() override;
 
-	bool Init();
+	bool Init() override;
 	UPDATE_STATUS PreUpdate(float dt) override;
 	UPDATE_STATUS PostUpdate(float dt) override;
-	bool CleanUp();
+	bool CleanUp() override;
 
 	void OnResize(float width, float height);
 

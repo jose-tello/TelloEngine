@@ -10,9 +10,10 @@
 #include "Assimp/include/material.h"
 
 
-void MaterialImporter::Import(aiMaterial* material, C_Material* materialComponent, Color& color, bool hasTexture, bool hasColor)
+void MaterialImporter::Import(aiMaterial* material, C_Material* materialComponent, Color& color, bool hasTexture, 
+							  bool hasColor, const char* nodeName)
 {
-	std::string materialName("noName");
+	std::string materialName(nodeName);
 	if (hasTexture)
 	{
 		aiString texPath;
@@ -28,8 +29,12 @@ void MaterialImporter::Import(aiMaterial* material, C_Material* materialComponen
 		materialComponent->textureName = materialName;
 	}
 
+
+
 	if (hasColor)
 		materialComponent->SetColor(color);
+
+	materialComponent->materialPath = materialName;
 
 	std::string materialPath = Save(materialComponent, materialName.c_str());
 	Load(materialComponent, materialPath.c_str());
@@ -53,10 +58,14 @@ void MaterialImporter::Load(C_Material* material, const char* path)
 
 		if (bytes < size)
 		{
-			std::string filePath(TEXTURE_LIBRARY);
-			filePath.append(pointer);	//Name of the file
-			material->SetTexture(TextureImporter::Load(filePath.c_str()));
-			material->textureName = pointer;
+			if (pointer != "")
+			{
+				std::string filePath(TEXTURE_LIBRARY);
+				filePath.append(pointer);	//Name of the file
+				material->SetTexture(TextureImporter::Load(filePath.c_str()));
+				material->textureName = pointer;
+			}
+			
 		}
 	}
 

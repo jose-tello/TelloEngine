@@ -1,6 +1,9 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "C_Mesh.h"
+#include "C_Material.h"
+
+#include "Config.h"
 
 #include "MathGeoLib/include/Algorithm/Random/LCG.h"
 
@@ -161,6 +164,70 @@ void GameObject::RemoveChild(int uid)
 			childs.erase(childs.begin() + i);
 			return;
 		}
+	}
+}
+
+
+void GameObject::Load(Config& node)
+{
+	ConfigArray componentsArray = node.GetArray("components");
+	int componentsCount = componentsArray.GetSize();
+
+	for (int i = 0; i < componentsCount; i++)
+	{
+		Config componentNode = componentsArray.GetNode(i);
+		int type = componentNode.GetNum("type");
+
+		switch (COMPONENT_TYPE(type))
+		{
+		case COMPONENT_TYPE::TRANSFORM:
+			transform.Load(componentNode);
+			break;
+
+		case COMPONENT_TYPE::MESH:
+		{
+			C_Mesh* mesh = new C_Mesh();
+			mesh->Load(componentNode);
+			AddComponent(mesh);
+		}
+			break;
+
+		case COMPONENT_TYPE::MATERIAL:
+		{
+			C_Material* material = new C_Material();
+			material->Load(componentNode);
+			AddComponent(material);
+		}
+			break;
+
+		default:
+			assert("Invalid component type");
+			break;
+		}
+	}
+}
+
+
+void GameObject::Save(Config& node) const
+{
+	node.AppendNum("uuid", uuid);
+
+	if (parent != nullptr)
+		node.AppendNum("parent", parent->GetUuid());
+
+	else
+		node.AppendNum("parent", 0);
+
+	node.AppendString("name", name.c_str());
+
+	ConfigArray componentsArray = node.AppendArray("components");
+	Config componentNode;
+
+	int componentsCount = components.size();
+	for (int i = 0; i < componentsCount; i++)
+	{
+		componentNode = componentsArray.AppendNode();
+		components[i]->Save(componentNode);
 	}
 }
 

@@ -15,7 +15,7 @@ public:
 	M_Window(bool start_enabled = true);
 
 	// Destructor
-	virtual ~M_Window();
+	virtual ~M_Window() override;
 
 	bool Init() override;
 	bool CleanUp() override;

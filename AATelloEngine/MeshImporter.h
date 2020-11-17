@@ -3,31 +3,18 @@
 
 #define MAX_TEX_COORDS 8
 
-#include <vector>
-#include <string>
-
 struct GameObject;
-struct Mesh;
-struct aiMaterial;
 struct aiMesh;
-struct aiNode;
+struct Mesh;
+
+#include <string>
 
 namespace MeshImporter
 {
-	void InitDebuggerOptions();
+	void Import(GameObject* gameObject, aiMesh* mesh);
 
-	void Import(const char* path);
-
-	void SetObjName(GameObject* gameObject, aiNode* node);
-	void InitTransformComponent(GameObject* gameObject, aiNode* node);
-	void InitMeshComponent(GameObject* gameObject, aiMesh* mesh);
-	void InitMaterialComponent(GameObject* gameObject, aiMaterial* material);
-
-	void Load(Mesh* mesh, const char* path);
-	//The string returned is the path to the mesh
-	std::string Save(Mesh* mesh, const char* fileName);
-
-	void CleanUp();
+	void Load(Mesh*, const char* path);
+	std::string Save(Mesh*, const char* path);
 }
-#endif // !__MESH_IMPORTER_H__
 
+#endif // !__MESH_IMPORTER_H__

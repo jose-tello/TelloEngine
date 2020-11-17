@@ -30,6 +30,9 @@ public:
 
 	void GetDrawVariables(unsigned int& texId, Color& col) const;
 
+	void Load(Config&) override;
+	void Save(Config&) const override;
+
 private:
 	void InitTextureSize();
 	void InitCheckerTex();
@@ -38,6 +41,7 @@ public:
 	//TODO: this information will be held by the material/texture resource, but for now it will stay here
 	std::string texturePath;
 	std::string textureName;
+	std::string materialPath;
 	int textureWidth;
 	int textureHeight;
 	

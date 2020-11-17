@@ -21,7 +21,7 @@ class M_Input : public Module
 public:
 	
 	M_Input(bool startEnabled = true);
-	~M_Input();
+	~M_Input() override;
 
 	bool Init() override;
 	UPDATE_STATUS PreUpdate(float dt) override;

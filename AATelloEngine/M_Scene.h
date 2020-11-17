@@ -21,7 +21,7 @@ class M_Scene : public Module
 {
 public:
 	M_Scene(bool start_enabled = true);
-	~M_Scene();
+	~M_Scene() override;
 
 	bool Start() override;
 	UPDATE_STATUS Update(float dt) override;

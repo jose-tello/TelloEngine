@@ -30,6 +30,9 @@ public:
 
 	void NotifyNeedUpdate();
 
+	void Load(Config&) override;
+	void Save(Config&) const override;
+
 private:
 	void UpdateLocalTransform();
 	void UpdateTRS();

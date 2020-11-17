@@ -11,6 +11,7 @@
 #define MATERIAL_LIBRARY "/Library/Material/"
 #define TEXTURE_LIBRARY "/Library/Textures/"
 #define SCENE_LIBRARY "/Library/Scenes/"
+#define MODEL_LIBRARY "/Library/Model/"
 
 enum class FILE_TYPE : int
 {
@@ -25,7 +26,7 @@ class M_FileManager : public Module
 {
 public:
 	M_FileManager(bool startEnabled = true);
-	~M_FileManager();
+	~M_FileManager() override;
 
 	bool Init() override;
 	bool Start() override;

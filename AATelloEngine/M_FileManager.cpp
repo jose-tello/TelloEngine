@@ -7,7 +7,7 @@
 #include "GameObject.h"
 #include "C_Material.h"
 
-#include "MeshImporter.h"
+#include "ModelImporter.h"
 #include "MaterialImporter.h"
 #include "TextureImporter.h"
 
@@ -56,7 +56,7 @@ bool M_FileManager::Init()
 bool M_FileManager::Start()
 {
 	TextureImporter::Init();
-	MeshImporter::InitDebuggerOptions();
+	ModelImporter::InitDebuggerOptions();
 
 	return true;
 }
@@ -64,7 +64,7 @@ bool M_FileManager::Start()
 
 bool M_FileManager::CleanUp()
 {
-	MeshImporter::CleanUp();
+	ModelImporter::CleanUp();
 
 	return false;
 }
@@ -78,7 +78,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 	{
 	case FILE_TYPE::MODEL:
 	{
-		MeshImporter::Import(path);
+		ModelImporter::Import(path);
 		App->editor->AddLog("Log: Loaded a model");
 	}
 	break;

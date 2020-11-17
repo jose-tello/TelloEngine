@@ -1,6 +1,7 @@
 #include "C_Transform.h"
 
 #include "GameObject.h"
+#include "Config.h"
 
 #include "Globals.h"
 
@@ -129,6 +130,55 @@ void C_Transform::SetGlobalTransform(float4x4 transform)
 void C_Transform::NotifyNeedUpdate()
 {
 	needUpdate = true;
+}
+
+
+void C_Transform::Load(Config& node)
+{
+	float x, y, z, w;
+	ConfigArray arr = node.GetArray("position");
+	x = arr.GetNum(0);
+	y = arr.GetNum(1);
+	z = arr.GetNum(2);
+
+	SetPos(x, y, z);
+
+	arr = node.GetArray("rotation");
+	x = arr.GetNum(0);
+	y = arr.GetNum(1);
+	z = arr.GetNum(2);
+	w = arr.GetNum(3);
+
+	localRotation = Quat(x, y, z, w);
+
+	arr = node.GetArray("scale");
+	x = arr.GetNum(0);
+	y = arr.GetNum(1);
+	z = arr.GetNum(2);
+
+	SetEscale(x, y, z);
+}
+
+
+void C_Transform::Save(Config& node) const
+{
+	node.AppendNum("type", (int)COMPONENT_TYPE::TRANSFORM);
+
+	ConfigArray arr = node.AppendArray("position");
+	arr.AppendNum(localPosition.x);
+	arr.AppendNum(localPosition.y);
+	arr.AppendNum(localPosition.z);
+
+	arr = node.AppendArray("rotation");
+	arr.AppendNum(localRotation.x);
+	arr.AppendNum(localRotation.y);
+	arr.AppendNum(localRotation.z);
+	arr.AppendNum(localRotation.w);
+
+	arr = node.AppendArray("scale");
+	arr.AppendNum(localScale.x);
+	arr.AppendNum(localScale.y);
+	arr.AppendNum(localScale.z);
 }
 
 

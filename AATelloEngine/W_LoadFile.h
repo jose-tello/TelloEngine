@@ -7,9 +7,9 @@ class W_LoadFile : public E_Window
 {
 public:
 	W_LoadFile(bool open = true);
-	~W_LoadFile();
+	~W_LoadFile() override;
 
-	bool Draw();
+	bool Draw() override;
 
 private:
 	void DrawLoadWindow();

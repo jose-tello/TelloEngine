@@ -42,3 +42,12 @@ COMPONENT_TYPE Component::GetType()
 {
 	return type;
 }
+
+
+void Component::Load(Config& node)
+{
+}
+
+void Component::Save(Config& node) const
+{
+}
