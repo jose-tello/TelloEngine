@@ -14,6 +14,7 @@ void MaterialImporter::Import(aiMaterial* material, C_Material* materialComponen
 							  bool hasColor, const char* nodeName)
 {
 	std::string materialName(nodeName);
+
 	if (hasTexture)
 	{
 		aiString texPath;

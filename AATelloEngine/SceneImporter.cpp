@@ -6,15 +6,6 @@
 
 #include "Application.h"
 #include "M_FileManager.h"
-#include "ModelImporter.h"
-#include "MaterialImporter.h"
-
-#include "Component.h"
-#include "C_Transform.h"
-#include "C_Mesh.h"
-#include "C_Material.h"
-
-#include "Mesh.h"
 
 void SceneImporter::Load(const char* path, std::vector<GameObject*>& objVector)
 {
@@ -31,7 +22,7 @@ void SceneImporter::Load(const char* path, std::vector<GameObject*>& objVector)
 	for (int i = 0; i < objCount; i++)
 	{
 		Config node = gameObjects.GetNode(i);
-		LoadGameObject(node, objVector);
+		Private::LoadGameObject(node, objVector);
 	}
 
 	delete[] fileBuffer;
@@ -39,7 +30,7 @@ void SceneImporter::Load(const char* path, std::vector<GameObject*>& objVector)
 }
 
 
-void SceneImporter::LoadGameObject(Config& node, std::vector<GameObject*>& objVector)
+void SceneImporter::Private::LoadGameObject(Config& node, std::vector<GameObject*>& objVector)
 {
 	int uuid = node.GetNum("uuid");
 	int parentId = node.GetNum("parent");
@@ -49,6 +40,7 @@ void SceneImporter::LoadGameObject(Config& node, std::vector<GameObject*>& objVe
 
 	if (parentId != 0)
 	{
+		//TODO: function to get parent, start searching from the back (maiby?)
 		GameObject* parent = App->scene->GetGameObject(parentId);
 
 		object = new GameObject(name, parent, uuid);

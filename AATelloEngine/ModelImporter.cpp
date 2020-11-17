@@ -6,14 +6,11 @@
 
 #include "Application.h"
 #include "M_Editor.h"
-
-#include "GameObject.h"
-#include "C_Mesh.h"
-#include "Mesh.h"
-#include "C_Material.h"
-
 #include "M_Scene.h"
 #include "M_FileManager.h"
+
+#include "GameObject.h"
+#include "C_Material.h"
 
 #include "MathGeoLib/include/MathGeoLib.h"
 

@@ -6,7 +6,6 @@
 
 struct GameObject;
 struct aiMaterial;
-struct aiMesh;
 struct aiNode;
 
 namespace ModelImporter
