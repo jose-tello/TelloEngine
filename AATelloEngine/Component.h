@@ -9,6 +9,7 @@ enum class COMPONENT_TYPE : int
 	TRANSFORM,
 	MESH,
 	MATERIAL,
+	CAMERA,
 	MAX
 
 };

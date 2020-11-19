@@ -12,7 +12,7 @@
 #include "GameObject.h"
 #include "C_Material.h"
 
-#include "MathGeoLib/include/MathGeoLib.h"
+#include "MathGeoLib/src/MathGeoLib.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"

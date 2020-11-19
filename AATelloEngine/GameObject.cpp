@@ -5,7 +5,7 @@
 
 #include "Config.h"
 
-#include "MathGeoLib/include/Algorithm/Random/LCG.h"
+#include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
 GameObject::GameObject(GameObject* parent, int uuid) :
 	parent(parent),
