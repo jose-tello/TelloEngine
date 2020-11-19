@@ -22,7 +22,6 @@ public:
 	bool DeleteComponent(COMPONENT_TYPE componentType);
 
 	void Update(float dt);
-	void PostUpdate(float dt);
 
 	const char* GetName() const;
 	void SetName(const char*);

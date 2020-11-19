@@ -41,9 +41,7 @@ public:
 	void SaveScene();
 
 private:
-	//TODO: Considering using pointers to functions, ask Marc about it
 	void UpdateGameObjects(float dt);
-	void PostUpdateGameObjects(float dt);
 
 	void CheckObjectsToDelete();
 

@@ -10,7 +10,7 @@ public:
 	C_Transform();
 	~C_Transform() override;
 
-	bool PostUpdate(float dt) override;
+	bool Update(float dt) override;
 
 	void GetPos(float& x, float& y, float& z) const;
 	void SetPos(float x, float y, float z);

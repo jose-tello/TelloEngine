@@ -126,16 +126,6 @@ void GameObject::Update(float dt)
 }
 
 
-void GameObject::PostUpdate(float dt)
-{
-	int componentsCount = components.size();
-	for (int i = 0; i < componentsCount; i++)
-	{
-		components[i]->PostUpdate(dt);
-	}
-}
-
-
 const char* GameObject::GetName() const
 {
 	return name.c_str();

@@ -101,7 +101,7 @@ void W_ObjectHierarchy::HandleDragAndDrop(GameObject* currGameObject)
 	}
 
 	//Drag
-	else if (App->editor->GetFocusedGameObject()->parent != nullptr)
+	else if (currGameObject != nullptr)
 	{
 		if (ImGui::BeginDragDropSource())
 		{

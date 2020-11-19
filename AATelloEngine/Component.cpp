@@ -20,12 +20,6 @@ bool Component::Update(float dt)
 }
 
 
-bool Component::PostUpdate(float dt)
-{
-	return true;
-}
-
-
 bool Component::SetOwner(GameObject* gameObject)
 {
 	if (owner == nullptr)

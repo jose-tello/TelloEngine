@@ -47,7 +47,6 @@ UPDATE_STATUS M_Scene::Update(float dt)
 
 UPDATE_STATUS M_Scene::PostUpdate(float dt)
 {
-	PostUpdateGameObjects(dt);
 	CheckObjectsToDelete();
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
@@ -216,38 +215,6 @@ void M_Scene::UpdateGameObjects(float dt)
 			stack.pop();
 
 			node->Update(dt);
-
-			if (node->childs.empty() == false)
-			{
-				childCount = node->childs.size();
-				for (int j = 0; j < childCount; j++)
-				{
-					stack.push(node->childs[j]);
-				}
-			}
-		}
-	}
-}
-
-
-void M_Scene::PostUpdateGameObjects(float dt)
-{
-	std::stack<GameObject*> stack;
-	GameObject* node;
-
-	int childCount;
-
-	int gameObjCount = gameObjects.size();
-	for (int i = 0; i < gameObjCount; i++)
-	{
-		stack.push(gameObjects[i]);
-
-		while (stack.empty() == false)
-		{
-			node = stack.top();
-			stack.pop();
-
-			node->PostUpdate(dt);
 
 			if (node->childs.empty() == false)
 			{

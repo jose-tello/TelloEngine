@@ -23,7 +23,7 @@ C_Transform::~C_Transform()
 }
 
 
-bool C_Transform::PostUpdate(float dt)
+bool C_Transform::Update(float dt)
 {
 	if (needUpdate == true)
 	{

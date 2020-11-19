@@ -23,7 +23,6 @@ public:
 	virtual ~Component();
 
 	virtual bool Update(float dt);
-	virtual bool PostUpdate(float dt);
 
 	bool SetOwner(GameObject*);
 	COMPONENT_TYPE GetType();
