@@ -25,8 +25,8 @@ public:
 	void SetEscale(float x, float y, float z);
 
 	float4x4 GetMatTransform() const;
-	void AddTransform(float4x4 transform);
-	void SetGlobalTransform(float4x4 transform);
+	void AddTransform(float4x4& transform);
+	void SetGlobalTransform(float4x4& transform);
 
 	void NotifyNeedUpdate();
 

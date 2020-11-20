@@ -30,6 +30,8 @@ bool C_Transform::Update(float dt)
 		UpdateWorldTransform();
 		
 		NotifyChildsNeedUpdate();
+
+		owner->OnUpdateTransform(worldTransform);
 	}
 
 	return true;
@@ -61,7 +63,7 @@ void C_Transform::GetRotation(float& angle, float& x, float& y, float& z) const
 	x = localRotation.x;
 	y = localRotation.y;
 	z = localRotation.z;
-	angle = localRotation.Angle() * RADTODEG;
+	angle = localRotation.w;
 }
 
 
@@ -111,7 +113,7 @@ float4x4 C_Transform::GetMatTransform() const
 }
 
 
-void C_Transform::AddTransform(float4x4 transform)
+void C_Transform::AddTransform(float4x4& transform)
 {
 	localTransform = transform;
 	UpdateTRS();
@@ -120,9 +122,11 @@ void C_Transform::AddTransform(float4x4 transform)
 }
 
 
-void C_Transform::SetGlobalTransform(float4x4 transform)
+void C_Transform::SetGlobalTransform(float4x4& transform)
 {
-	worldTransform = transform;
+	localTransform = owner->transform.GetMatTransform().Inverted() * transform;
+
+	UpdateTRS();
 	needUpdate = true;
 }
 

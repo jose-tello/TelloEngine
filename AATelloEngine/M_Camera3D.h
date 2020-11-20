@@ -2,11 +2,13 @@
 #define __M_CAMERA3D_H__
 
 #include "Module.h"
-#include "glmath.h"
+#include "MathGeoLib/src/MathGeoLibFwd.h"
 
 #define CAMERA_SPEED 30.f
 #define MOUSE_SENSITIVITY 0.25f
 #define MOUSE_WEEL_SPEED 250.f
+
+class C_Camera;
 
 class M_Camera3D : public Module
 {
@@ -16,25 +18,20 @@ public:
 
 	UPDATE_STATUS Update(float dt);
 
-	void Look(const vec3 &spot, bool RotateAroundReference = false);
-	void LookAt(const vec3 &spot);
-	void Move(const vec3 &movement);
-
 	float* GetViewMatrix();
+	float* GetProjectionMatrix();
+	float3 GetPosition();
+
+	void Resize(float width, float height);
 	
 private:
-	void CalculateViewMatrix();
 
 	void MoveCamera(float dt);
 	void ZoomCamera(int weelMotion, float dt);
 	void MoveCameraSideways(float dt);
-	void MoveCameraOrbital(float dt);
-
-public:
-	vec3 X, Y, Z, position, reference;
 
 private:
-	mat4x4 viewMatrix, viewMatrixInverse;
+	C_Camera* camera = nullptr;
 };
 
 #endif // !__M_CAMERA3D_H__

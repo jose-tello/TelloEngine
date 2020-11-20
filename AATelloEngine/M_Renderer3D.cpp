@@ -6,7 +6,7 @@
 #include "M_Scene.h"
 
 #include "Grid.h"
-#include "glmath.h"
+#include "MathGeoLib/src/MathGeoLib.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -143,7 +143,8 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
-	light.SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
+	float3 pos = App->camera->GetPosition();
+	light.SetPos(pos.x, pos.y, pos.z);
 	light.Render();
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
@@ -183,8 +184,8 @@ void M_Renderer3D::OnResize(float width, float height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	projectionMatrix = perspective(60.0f, width / height, 0.125f, 512.0f);
-	glLoadMatrixf(&projectionMatrix);
+	App->camera->Resize(width, height);
+	glLoadMatrixf(App->camera->GetProjectionMatrix());
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

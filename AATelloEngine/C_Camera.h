@@ -10,6 +10,8 @@ public:
 	C_Camera();
 	~C_Camera() override;
 
+	void OnUpdateTransform(float4x4& transform) override;
+
 	float* GetViewMat() const;
 	float* GetProjectionMat() const;
 	
@@ -24,9 +26,8 @@ public:
 	void SetProjectionMat(float fov, float aspect);
 
 	void LookAt(float3& pos);
-	void UpdateTransform();
-
-private:
+	
+public:
 	Frustum frustum;
 };
 

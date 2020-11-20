@@ -20,6 +20,11 @@ bool Component::Update(float dt)
 }
 
 
+void Component::OnUpdateTransform(float4x4 &)
+{
+}
+
+
 bool Component::SetOwner(GameObject* gameObject)
 {
 	if (owner == nullptr)

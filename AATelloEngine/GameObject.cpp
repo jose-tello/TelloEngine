@@ -126,6 +126,17 @@ void GameObject::Update(float dt)
 }
 
 
+//TODO: this should be called by the event system
+void GameObject::OnUpdateTransform(float4x4& globalTransform)
+{
+	int componentsCount = components.size();
+	for (int i = 0; i < componentsCount; i++)
+	{
+		components[i]->OnUpdateTransform(globalTransform);
+	}
+}
+
+
 const char* GameObject::GetName() const
 {
 	return name.c_str();

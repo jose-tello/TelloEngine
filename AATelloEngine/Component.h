@@ -2,6 +2,9 @@
 #define __COMPONENT_H__
 
 struct Config;
+struct GameObject;
+
+#include "MathGeoLib/src/MathGeoLibFwd.h"
 
 enum class COMPONENT_TYPE : int
 {
@@ -14,7 +17,6 @@ enum class COMPONENT_TYPE : int
 
 };
 
-struct GameObject;
 
 class Component
 {
@@ -23,6 +25,7 @@ public:
 	virtual ~Component();
 
 	virtual bool Update(float dt);
+	virtual void OnUpdateTransform(float4x4 &);
 
 	bool SetOwner(GameObject*);
 	COMPONENT_TYPE GetType();

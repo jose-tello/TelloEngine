@@ -20,15 +20,25 @@ C_Camera::~C_Camera()
 }
 
 
+void C_Camera::OnUpdateTransform(float4x4& transform)
+{
+	frustum.SetUp(transform.WorldY());
+	frustum.SetFront(transform.WorldZ());
+
+	frustum.SetPos(transform.TranslatePart());
+}
+
+
 float* C_Camera::GetViewMat() const
 {
-	return frustum.ViewMatrix().ptr();
+	float4x4 mat = frustum.ViewMatrix();
+	return mat.Transposed().ptr();
 }
 
 
 float* C_Camera::GetProjectionMat() const
 {
-	return frustum.ProjectionMatrix().ptr();
+	return frustum.ProjectionMatrix().Transposed().ptr();
 }
 
 
@@ -76,18 +86,9 @@ void C_Camera::SetProjectionMat(float fov, float aspect)
 
 void C_Camera::LookAt(float3& pos)
 {
-	float3x3 look = float3x3::LookAt(frustum.Front(), pos, frustum.Up(), float3::unitY);
+	float3 vector = pos - frustum.Pos();
+	float3x3 look = float3x3::LookAt(frustum.Front(), vector.Normalized(), frustum.Up(), float3::unitY);
 
 	frustum.SetFront(look.MulDir(frustum.Front().Normalized()));
 	frustum.SetUp(look.MulDir(frustum.Up().Normalized()));
-}
-
-
-void C_Camera::UpdateTransform()
-{
-	float4x4 global = owner->transform.GetMatTransform();
-	frustum.SetUp(global.WorldZ());
-	frustum.SetFront(global.WorldY());
-
-	frustum.SetPos(global.TranslatePart());
 }
