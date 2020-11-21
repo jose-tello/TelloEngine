@@ -53,7 +53,6 @@ void W_DockWindow::CreateDockWindow()
 			DrawAboutMenu();
 
 			DrawWindowsMenu();
-			
 
 			if (ImGui::MenuItem("Exit"))
 				App->CloseApplication();
@@ -92,11 +91,22 @@ void W_DockWindow::DrawWindowsMenu()
 {
 	if (ImGui::BeginMenu("Windows"))
 	{
-		ImGui::Checkbox("App state", &App->editor->GetWindow(E_WINDOW_TYPE::APPLICATION_STATE)->open);
-		ImGui::Checkbox("Console", &App->editor->GetWindow(E_WINDOW_TYPE::CONSOLE)->open);
-		ImGui::Checkbox("Inspector", &App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR)->open);
-		ImGui::Checkbox("Object hierarchy", &App->editor->GetWindow(E_WINDOW_TYPE::GAME_OBJECTS)->open);
-		ImGui::Checkbox("Scene", &App->editor->GetWindow(E_WINDOW_TYPE::SCENE)->open);
+		ImGui::Checkbox("App state", &App->editor->GetWindow((int)E_WINDOW_TYPE::APPLICATION_STATE)->open);
+		ImGui::Checkbox("Console", &App->editor->GetWindow((int)E_WINDOW_TYPE::CONSOLE)->open);
+		ImGui::Checkbox("Inspector", &App->editor->GetWindow((int)E_WINDOW_TYPE::INSPECTOR)->open);
+		ImGui::Checkbox("Object hierarchy", &App->editor->GetWindow((int)E_WINDOW_TYPE::GAME_OBJECTS)->open);
+		ImGui::Checkbox("Scene", &App->editor->GetWindow((int)E_WINDOW_TYPE::SCENE)->open);
+		
+
+		std::vector<E_Window*> windows = App->editor->GetWindowsVector();
+
+		int windowsCount = windows.size();
+		for (int i = (int)E_WINDOW_TYPE::SCENE + 1; i < windowsCount; i++)
+		{
+			ImGui::PushID(i);
+			ImGui::Checkbox("Camera", &App->editor->GetWindow(i)->open);
+			ImGui::PopID();
+		}
 
 		ImGui::EndMenu();
 	}

@@ -39,7 +39,7 @@ bool W_ObjectHierarchy::Draw()
 		
 		if (ImGui::IsItemClicked())
 		{
-			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow((int)E_WINDOW_TYPE::INSPECTOR);
 			inspector->SetFocusedObject(gameObjects[i]);
 		}
 
@@ -68,7 +68,7 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 		
 		if (ImGui::IsItemClicked())
 		{
-			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow(E_WINDOW_TYPE::INSPECTOR);
+			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow((int)E_WINDOW_TYPE::INSPECTOR);
 			inspector->SetFocusedObject(vec[i]);
 		}
 

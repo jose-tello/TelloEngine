@@ -44,7 +44,7 @@ bool W_Scene::Draw()
 	else
 		name = "Scene";
 
-	ImGui::Begin(name.c_str());
+	ImGui::Begin(name.c_str(), &open);
 
 	ImGui::BeginChild("Game render");
 	ImVec2 size = ImGui::GetWindowSize();

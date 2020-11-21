@@ -195,9 +195,15 @@ E_Window* M_Editor::AddSceneWindow(C_Camera* camera)
 }
 
 
-E_Window* M_Editor::GetWindow(E_WINDOW_TYPE type)
+std::vector<E_Window*> M_Editor::GetWindowsVector()
 {
-	return windowsVec[(int)type];
+	return windowsVec;
+}
+
+
+E_Window* M_Editor::GetWindow(int win)
+{
+	return windowsVec[win];
 }
 
 
