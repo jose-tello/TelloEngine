@@ -8,6 +8,7 @@
 #include "C_Mesh.h"
 #include "Mesh.h"
 #include "C_Material.h"
+#include "C_Camera.h"
 
 #include "Globals.h"
 
@@ -101,6 +102,25 @@ void M_Scene::AddPrimitive(PRIMITIVE_TYPE type)
 	object->AddComponent(meshComponent);
 	gameObjects.push_back(object);
 	object->transform.SetEscale(10.f, 10.f, 10.f);
+}
+
+
+void M_Scene::AddEmpty()
+{
+	GameObject* object = new GameObject(nullptr);
+	object->SetName("Empty");
+
+	gameObjects.push_back(object);
+}
+
+
+void M_Scene::AddCamera()
+{
+	GameObject* object = new GameObject(nullptr);
+	object->AddComponent(new C_Camera());
+	object->SetName("Camera");
+
+	gameObjects.push_back(object);
 }
 
 

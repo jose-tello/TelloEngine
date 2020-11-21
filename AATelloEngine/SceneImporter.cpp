@@ -68,6 +68,7 @@ void SceneImporter::Save(const char* sceneName, std::vector<GameObject*> objVect
 	ConfigArray gameObjects = sceneRoot.AppendArray("game objects");
 
 	int objCount = objVector.size();
+
 	for (int i = 0; i < objCount; i++)
 	{
 		Config node = gameObjects.AppendNode();

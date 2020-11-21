@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
+#include "C_Camera.h"
 
 #include "Application.h"
 #include "M_Input.h"
@@ -52,8 +53,12 @@ bool W_Inspector::Draw()
 				DrawMaterialComp((C_Material*)componentsVec[i]);
 				break;
 
+			case COMPONENT_TYPE::CAMERA:
+				DrawCameraComp((C_Camera*)componentsVec[i]);
+				break;
+
 			default:
-				
+				assert("Forgot to add component");
 				break;
 			}
 		}
@@ -213,6 +218,32 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 		material->SetTextureEnable(texEnabled);
 		material->SetColorEnable(colEnabled);
 		material->SetCheckerTextureEnable(checkEnabled);
+	}
+
+	ImGui::NewLine();
+}
+
+
+void W_Inspector::DrawCameraComp(C_Camera* camera)
+{
+	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		float aspectRatio = camera->GetAspectRatio();
+		float verticalFov = camera->GetVerticalFov();
+		float farDst = camera->GetFarPlaneDst();
+		float nearDst = camera->GetNearPlaneDst();
+
+		if (ImGui::InputFloat("Aspect ratio", &aspectRatio, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			camera->SetAspectRatio(aspectRatio);
+
+		if (ImGui::InputFloat("Vertical fov", &verticalFov, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			camera->SetVerticalFov(verticalFov);
+
+		if (ImGui::InputFloat("Far plane distance", &farDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			camera->SetFarPlaneDst(farDst);
+
+		if (ImGui::InputFloat("Aspect ratio", &nearDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			camera->SetNearPlaneDst(nearDst);
 	}
 
 	ImGui::NewLine();

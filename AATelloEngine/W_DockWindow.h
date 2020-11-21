@@ -17,6 +17,8 @@ private:
 	void DrawAboutMenu();
 	void DrawWindowsMenu();
 	void DrawFileMenu();
+
+	void DrawAddMenu();
 	void DrawShapesMenu();
 };
 

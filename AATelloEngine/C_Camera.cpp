@@ -1,5 +1,6 @@
 #include "C_Camera.h"
-#include "GameObject.h"
+
+#include "Config.h"
 
 C_Camera::C_Camera() : Component(COMPONENT_TYPE::CAMERA)
 {
@@ -72,9 +73,21 @@ float C_Camera::GetVerticalFov() const
 }
 
 
+void C_Camera::SetVerticalFov(float fov)
+{
+	frustum.SetVerticalFovAndAspectRatio(fov, frustum.AspectRatio());
+}
+
+
 float C_Camera::GetAspectRatio() const
 {
 	return frustum.AspectRatio();
+}
+
+
+void C_Camera::SetAspectRatio(float aspRatio)
+{
+	frustum.SetVerticalFovAndAspectRatio(frustum.VerticalFov(), aspRatio);
 }
 
 
@@ -91,4 +104,23 @@ void C_Camera::LookAt(float3& pos)
 
 	frustum.SetFront(look.MulDir(frustum.Front().Normalized()));
 	frustum.SetUp(look.MulDir(frustum.Up().Normalized()));
+}
+
+
+void C_Camera::Load(Config& node)
+{
+	frustum.SetVerticalFovAndAspectRatio(node.GetNum("vertical fov"), node.GetNum("aspect ratio"));
+
+	frustum.SetViewPlaneDistances(node.GetNum("near plane distance"), node.GetNum("far plane distance"));
+}
+
+
+void C_Camera::Save(Config& node) const
+{
+	node.AppendNum("type", (int)COMPONENT_TYPE::CAMERA);
+
+	node.AppendNum("vertical fov", frustum.VerticalFov());
+	node.AppendNum("aspect ratio", frustum.AspectRatio());
+	node.AppendNum("far plane distance", frustum.FarPlaneDistance());
+	node.AppendNum("near plane distance", frustum.NearPlaneDistance());
 }

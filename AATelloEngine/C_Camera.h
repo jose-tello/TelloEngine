@@ -22,10 +22,17 @@ public:
 	void SetFarPlaneDst(float);
 
 	float GetVerticalFov() const;
+	void SetVerticalFov(float fov);
+
 	float GetAspectRatio() const;
+	void SetAspectRatio(float aspRatio);
+
 	void SetProjectionMat(float fov, float aspect);
 
 	void LookAt(float3& pos);
+
+	void Load(Config&) override;
+	void Save(Config&) const override;
 	
 public:
 	Frustum frustum;

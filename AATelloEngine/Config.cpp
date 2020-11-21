@@ -35,9 +35,6 @@ Config::Config(json_object_t* obj) :
 
 Config::~Config()
 {
-	if (node != nullptr)
-		json_object_clear(node);
-
 	if (rootValue != nullptr)
 		json_value_free(rootValue);	
 }

@@ -62,7 +62,7 @@ void W_DockWindow::CreateDockWindow()
 		}
 
 		DrawFileMenu();
-		DrawShapesMenu();		
+		DrawAddMenu();
 
 		ImGui::EndMenuBar();
 	}
@@ -122,9 +122,25 @@ void W_DockWindow::DrawFileMenu()
 }
 
 
+void W_DockWindow::DrawAddMenu()
+{
+	if (ImGui::BeginMenu("Add"))
+	{
+		if (ImGui::Button("Empty"))
+			App->scene->AddEmpty();
+
+		if (ImGui::Button("Camera"))
+			App->scene->AddCamera();
+		
+		DrawShapesMenu();
+		ImGui::EndMenu();
+	}
+}
+
+
 void W_DockWindow::DrawShapesMenu()
 {
-	if (ImGui::BeginMenu("Load shapes"))
+	if (ImGui::BeginMenu("Add shape"))
 	{
 		if (ImGui::Button("Cube"))
 			App->scene->AddPrimitive(PRIMITIVE_TYPE::CUBE);

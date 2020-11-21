@@ -31,6 +31,8 @@ public:
 
 	void AddGameObject(GameObject*);
 	void AddPrimitive(PRIMITIVE_TYPE);
+	void AddEmpty();
+	void AddCamera();
 
 	GameObject* GetGameObject(int uid);
 	void GetGameObjectVector(std::vector<GameObject*>&);

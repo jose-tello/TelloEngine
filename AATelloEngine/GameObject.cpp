@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
+#include "C_Camera.h"
 
 #include "Config.h"
 
@@ -200,6 +201,13 @@ void GameObject::Load(Config& node)
 			AddComponent(material);
 		}
 			break;
+
+		case COMPONENT_TYPE::CAMERA:
+		{
+			C_Camera* camera = new C_Camera();
+			camera->Load(componentNode);
+			AddComponent(camera);
+		}
 
 		default:
 			assert("Invalid component type");

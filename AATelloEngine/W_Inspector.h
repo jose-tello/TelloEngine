@@ -7,6 +7,7 @@ struct GameObject;
 class C_Transform;
 class C_Mesh;
 class C_Material;
+class C_Camera;
 
 #define BACKSPACE 42
 
@@ -33,6 +34,7 @@ private:
 
 	void DrawMeshComp(C_Mesh*);
 	void DrawMaterialComp(C_Material*);
+	void DrawCameraComp(C_Camera*);
 
 private:
 	GameObject* focusedObject = nullptr;
