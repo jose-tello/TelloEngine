@@ -25,6 +25,12 @@ void Component::OnUpdateTransform(float4x4 &)
 }
 
 
+GameObject* Component::GetOwner() const
+{
+	return owner;
+}
+
+
 bool Component::SetOwner(GameObject* gameObject)
 {
 	if (owner == nullptr)

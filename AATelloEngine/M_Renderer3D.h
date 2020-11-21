@@ -9,6 +9,8 @@
 
 #include <string>
 
+class C_Camera;
+
 class M_Renderer3D : public Module
 {
 public:
@@ -20,7 +22,12 @@ public:
 	UPDATE_STATUS PostUpdate(float dt) override;
 	bool CleanUp() override;
 
-	void OnResize(float width, float height);
+	void OnResize(float width, float height, C_Camera* camera);
+	void GenerateFrameBuffer(float width, float height, unsigned int& frameBuffer, 
+							 unsigned int& textureBuffer, unsigned int& depthBuffer);
+	void DeleteBuffers(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int depthBuffer);
+
+	void DrawScene(unsigned int frameBuffer, C_Camera* camera);
 
 	void SetDepthTestEnabled(bool enable);
 	void SetCullFaceEnabled(bool enable);
@@ -31,18 +38,10 @@ public:
 	void SetWireframeMode(bool enable);
 
 private:
-	void GenerateFrameBuffer(float width, float height);
-	
-	void DrawSceneTexture();
 	void DrawObjects();
 
 public:
 	SDL_GLContext context;
-	mat4x4 projectionMatrix;
-
-	uint frameBuffer;
-	uint textureBuffer;
-	uint depthBuffer;
 
 private:
 	bool depthTestEnabled;

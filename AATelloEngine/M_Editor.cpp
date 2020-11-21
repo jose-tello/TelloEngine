@@ -33,9 +33,6 @@ M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 	win = new W_Console(true);
 	windowsVec.push_back(win);
 
-	win = new W_Scene(true);
-	windowsVec.push_back(win);
-
 	win = new W_ObjectHierarchy(true);
 	windowsVec.push_back(win);
 
@@ -97,7 +94,8 @@ bool M_Editor::Init()
 
 bool M_Editor::Start()
 {
-	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
+	int numWindows = windowsVec.size();
+	for (int i = 0; i < numWindows; i++)
 		windowsVec[i]->Start();
 
 	return true;
@@ -106,7 +104,8 @@ bool M_Editor::Start()
 
 UPDATE_STATUS M_Editor::Update(float dt)
 {
-	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
+	int numWindows = windowsVec.size();
+	for (int i = 0; i < numWindows; i++)
 		windowsVec[i]->Update();
 	
 	return UPDATE_STATUS::UPDATE_CONTINUE;
@@ -129,7 +128,8 @@ void M_Editor::Draw()
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 
-	for (int i = 0; i < (int)E_WINDOW_TYPE::MAX; i++)
+	int numWindows = windowsVec.size();
+	for (int i = 0; i < numWindows; i++)
 	{
 		if (windowsVec[i]->open == true)
 			windowsVec[i]->Draw();
@@ -165,9 +165,33 @@ void M_Editor::AddLog(const char* fmt, ...)
 }
 
 
-void M_Editor::OpenWindow(E_WINDOW_TYPE type)
+void M_Editor::OpenWindow(int open)
 {
-	windowsVec[(int)type]->open = true;
+	windowsVec[open]->open = true;
+}
+
+
+void M_Editor::DeleteWindow(E_Window* toDelete)
+{
+	int numWindows = windowsVec.size();
+	for (int i = 0; i < numWindows; i++)
+	{
+		if (windowsVec[i] == toDelete)
+		{
+			delete windowsVec[i];
+			windowsVec.erase(windowsVec.begin() + i);
+			break;
+		}
+	}
+}
+
+
+E_Window* M_Editor::AddSceneWindow(C_Camera* camera)
+{
+	W_Scene* sceneWin = new W_Scene(true, camera);
+	windowsVec.push_back(sceneWin);
+
+	return sceneWin;
 }
 
 

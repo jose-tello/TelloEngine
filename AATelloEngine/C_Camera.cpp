@@ -1,8 +1,13 @@
 #include "C_Camera.h"
 
+#include "Application.h"
+#include "M_Editor.h"
+
+
 #include "Config.h"
 
-C_Camera::C_Camera() : Component(COMPONENT_TYPE::CAMERA)
+C_Camera::C_Camera() : Component(COMPONENT_TYPE::CAMERA),
+	window(nullptr)
 {
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	
@@ -12,12 +17,14 @@ C_Camera::C_Camera() : Component(COMPONENT_TYPE::CAMERA)
 	
 	frustum.SetViewPlaneDistances(0.1, 1000);
 	frustum.SetPerspective(1, 1);
+
+	window = App->editor->AddSceneWindow(this);
 }
 
 
 C_Camera::~C_Camera()
 {
-
+	App->editor->DeleteWindow(window);
 }
 
 

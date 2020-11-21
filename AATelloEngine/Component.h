@@ -27,6 +27,7 @@ public:
 	virtual bool Update(float dt);
 	virtual void OnUpdateTransform(float4x4 &);
 
+	GameObject* GetOwner() const;
 	bool SetOwner(GameObject*);
 	COMPONENT_TYPE GetType();
 

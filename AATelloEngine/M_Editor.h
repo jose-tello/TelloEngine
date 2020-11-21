@@ -5,14 +5,15 @@
 
 #include <vector>
 
-struct GameObject;
-
 #define MAX_LOG_SIZE 80
 #define MAX_RESOLUTION_WIDTH 1920
 #define MAX_RESOLUTION_HEIGHT 1080
 
 class E_Window;
 enum class E_WINDOW_TYPE;
+
+struct GameObject;
+class C_Camera;
 
 class M_Editor : public Module
 {
@@ -29,8 +30,11 @@ public:
 	bool CleanUp() override;
 	
 	void AddLog(const char* fmt, ...);
-	void OpenWindow(E_WINDOW_TYPE type);
 
+	void OpenWindow(int open);
+	void DeleteWindow(E_Window* toDelete);
+
+	E_Window* AddSceneWindow(C_Camera* camera);
 	E_Window* GetWindow(E_WINDOW_TYPE);
 	GameObject* GetFocusedGameObject() const;
 

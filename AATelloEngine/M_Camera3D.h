@@ -16,6 +16,7 @@ public:
 	M_Camera3D(bool start_enabled = true);
 	~M_Camera3D();
 
+	bool Start() override;
 	UPDATE_STATUS Update(float dt);
 
 	float* GetViewMatrix();
@@ -27,6 +28,7 @@ public:
 private:
 
 	void MoveCamera(float dt);
+	void RotateCamera(float dt);
 	void ZoomCamera(int weelMotion, float dt);
 	void MoveCameraSideways(float dt);
 

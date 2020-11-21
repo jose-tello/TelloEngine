@@ -2,27 +2,36 @@
 #include "Application.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
+
 #include "M_Editor.h"
+#include "W_Scene.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
 
-#include "SDL\include\SDL.h"
+#include "SDL\include\SDL_scancode.h"
+#include "SDL\include\SDL_mouse.h"
 
 #include "MathGeoLib/src/MathGeoLib.h"
 
 M_Camera3D::M_Camera3D(bool start_enabled) : Module(start_enabled),
 	camera(nullptr)
 {
-	camera = new C_Camera();
-
-	camera->frustum.SetPos(float3(0, 0, -10));
 }
 
 
 M_Camera3D::~M_Camera3D()
 {
+}
+
+
+bool M_Camera3D::Start()
+{
+	camera = new C_Camera();
+	camera->frustum.SetPos(float3(0, 0, -10));
+
+	return true;
 }
 
 
@@ -41,7 +50,10 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 	}
 
 	else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+	{
 		MoveCamera(dt);
+		RotateCamera(dt);
+	}
 
 	else if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
 		MoveCameraSideways(dt);
@@ -57,6 +69,7 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 		}
 
 		MoveCamera(dt);
+		RotateCamera(dt);
 	}
 
 	int weelMotion = App->input->GetMouseZ();
@@ -93,7 +106,6 @@ void M_Camera3D::Resize(float width, float height)
 }
 
 
-
 void M_Camera3D::MoveCamera(float dt)
 {
 	float3 newPos(0, 0, 0);
@@ -114,11 +126,14 @@ void M_Camera3D::MoveCamera(float dt)
 
 	float3 pos = camera->frustum.Pos();
 	newPos += pos;
-	camera->frustum.SetPos(newPos);
+	camera->frustum.SetPos(newPos);	
+}
 
+
+void M_Camera3D::RotateCamera(float dt)
+{
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
-
 
 	if (dx != 0)
 	{
@@ -126,7 +141,7 @@ void M_Camera3D::MoveCamera(float dt)
 
 		Quat incrementX(float3::unitY, deltaX * DEGTORAD);
 		incrementX.Normalize();
-			
+
 		camera->frustum.SetFront(incrementX.ToFloat3x3() * camera->frustum.Front());
 		camera->frustum.SetUp(incrementX.ToFloat3x3() * camera->frustum.Up());
 	}
@@ -147,7 +162,6 @@ void M_Camera3D::MoveCamera(float dt)
 			camera->frustum.SetUp(float3(-camera->frustum.Front()).Cross(camera->frustum.WorldRight()));
 		}
 	}
-	
 }
 
 

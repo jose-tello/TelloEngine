@@ -3,10 +3,12 @@
 
 #include "E_Window.h"
 
+class C_Camera;
+
 class W_Scene : public E_Window
 {
 public:
-	W_Scene(bool active);
+	W_Scene(bool active, C_Camera*);
 	~W_Scene() override;
 
 	bool Draw() override;
@@ -14,6 +16,12 @@ public:
 private:
 	int windowWidth;
 	int windoHeight;
+
+	unsigned int frameBuffer;
+	unsigned int textureBuffer;
+	unsigned int depthBuffer;
+
+	C_Camera* camera;
 };
 
 #endif // !__E_SCENE_H__

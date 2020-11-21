@@ -96,6 +96,7 @@ bool GameObject::AddComponent(Component* component)
 		return false;
 	
 	components.push_back(component);
+	component->SetOwner(this);
 	
 	return true;
 }

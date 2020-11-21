@@ -1,9 +1,10 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 #include "M_Window.h"
-#include "M_Camera3D.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
+
+#include "C_Camera.h"
 
 #include "Grid.h"
 #include "MathGeoLib/src/MathGeoLib.h"
@@ -20,10 +21,6 @@
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	context(),
-	
-	frameBuffer(0),
-	textureBuffer(0),
-	depthBuffer(0),
 
 	depthTestEnabled(true),
 	cullFaceEnabled(true),
@@ -129,22 +126,13 @@ bool M_Renderer3D::Init()
 		glEnable(GL_TEXTURE_2D);
 	}
 
-	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
-
 	return ret;
 }
 
 
 UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 {
-	glLoadIdentity();
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
-
-	float3 pos = App->camera->GetPosition();
-	light.SetPos(pos.x, pos.y, pos.z);
+	light.SetPos(0, 40, 0);
 	light.Render();
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
@@ -153,7 +141,6 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 
 UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 {
-	DrawSceneTexture();
 	App->editor->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -167,30 +154,74 @@ bool M_Renderer3D::CleanUp()
 
 	SDL_GL_DeleteContext(context);
 
-	glDeleteFramebuffers(1, &frameBuffer);
-	frameBuffer = 0;
-	glDeleteFramebuffers(1, &textureBuffer);
-	textureBuffer = 0;
-	glDeleteFramebuffers(1, &depthBuffer);
-	depthBuffer = 0;
-
 	return true;
 }
 
 
-void M_Renderer3D::OnResize(float width, float height)
+void M_Renderer3D::OnResize(float width, float height, C_Camera* camera)
 {
 	glViewport(0, 0, width, height);
 
+	camera->SetAspectRatio(width / height);
+}
+
+
+void M_Renderer3D::GenerateFrameBuffer(float width, float height, unsigned int& frameBuffer, unsigned int& textureBuffer, unsigned int& depthBuffer)
+{
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	glGenTextures(1, &textureBuffer);
+	glBindTexture(GL_TEXTURE_2D, textureBuffer);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenRenderbuffers(1, &depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureBuffer, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
+void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int depthBuffer)
+{
+	glDeleteFramebuffers(1, &frameBuffer);
+	glDeleteFramebuffers(1, &textureBuffer);
+	glDeleteFramebuffers(1, &depthBuffer);
+}
+
+
+void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera)
+{
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	App->camera->Resize(width, height);
-	glLoadMatrixf(App->camera->GetProjectionMatrix());
-	
+	glLoadMatrixf(camera->GetProjectionMat());
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glLoadMatrixf(camera->GetViewMat());
 
-	GenerateFrameBuffer(width, height);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	if (wireframeModeEnabled == true)
+		glLineWidth(3.0f);
+
+	DrawObjects();
+
+	Grid grid;
+	grid.Draw();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
@@ -284,49 +315,6 @@ void M_Renderer3D::SetWireframeMode(bool enable)
 	{
 		wireframeModeEnabled = enable;
 	}
-}
-
-
-void M_Renderer3D::GenerateFrameBuffer(float width, float height)
-{
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
-	glGenTextures(1, &textureBuffer);
-	glBindTexture(GL_TEXTURE_2D, textureBuffer);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glGenRenderbuffers(1, &depthBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureBuffer, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-
-void M_Renderer3D::DrawSceneTexture()
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	if (wireframeModeEnabled == true)
-		glLineWidth(3.0f);
-
-	DrawObjects();
-
-	Grid grid;
-	grid.Draw();
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 

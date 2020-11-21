@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "MathGeoLib/src/MathGeoLib.h"
 
+class E_Window;
+
 class C_Camera : public Component
 {
 public:
@@ -36,6 +38,9 @@ public:
 	
 public:
 	Frustum frustum;
+
+private:
+	E_Window* window;
 };
 
 #endif // !__C_CAMERA_H__
