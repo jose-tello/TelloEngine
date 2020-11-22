@@ -14,6 +14,8 @@ public:
 
 	void OnUpdateTransform(float4x4& transform) override;
 
+	bool IsInsideFrustum(AABB&);
+
 	float* GetViewMat() const;
 	float* GetProjectionMat() const;
 	

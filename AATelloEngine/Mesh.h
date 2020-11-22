@@ -1,6 +1,8 @@
 #ifndef __MESH_H__
 #define __MESH_H__
 
+#include "MathGeoLib/src/Geometry/AABB.h"
+
 #include <vector>
 #include <string> //TODO: remove
 
@@ -10,6 +12,9 @@ public:
 	Mesh();
 	Mesh(std::vector<float>& vertexBuff, std::vector<float>& normals, std::vector<float> texCoords, std::vector<unsigned int> indices);
 	~Mesh();
+
+	AABB GetAABB() const;
+	void SetAABB(float4x4& transform);
 
 	//Primitive things
 	void InitAsCube();
@@ -47,6 +52,8 @@ private:
 	std::vector<unsigned int> indices;
 
 	int indexArrSize;
+
+	AABB aabb;
 };
 #endif // !__MESH_H__
 

@@ -1,6 +1,7 @@
 #include "M_Scene.h"
 
 #include "Application.h"
+#include "M_Renderer3D.h"
 #include "M_FileManager.h"
 #include "SceneImporter.h"
 
@@ -299,19 +300,24 @@ void M_Scene::DrawObject(GameObject* object, bool blackWireframe)
 	float* color = nullptr;
 
 	C_Mesh* mesh = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
-	C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
 
-	if (material != nullptr)
+	if (App->renderer3D->GetCurrentCamera()->IsInsideFrustum(mesh->GetMesh()->GetAABB()) == true) //Frustum cull
 	{
-		Color col;
-		material->GetDrawVariables(texId, col);
-		color = &col;
-	}
+		C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
 
-	if (blackWireframe)
-		color = &Black;
+		if (material != nullptr)
+		{
+			Color col;
+			material->GetDrawVariables(texId, col);
+			color = &col;
+		}
+
+		if (blackWireframe)
+			color = &Black;
+
+		mesh->Draw(object->transform.GetMatTransform().ptr(), texId, color, blackWireframe);
+	}
 	
-	mesh->Draw(object->transform.GetMatTransform().ptr(), texId, color, blackWireframe);
 }
 
 

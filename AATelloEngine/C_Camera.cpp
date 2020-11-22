@@ -37,6 +37,12 @@ void C_Camera::OnUpdateTransform(float4x4& transform)
 }
 
 
+bool C_Camera::IsInsideFrustum(AABB& aabb)
+{
+	return frustum.ContainsAABB(aabb);
+}
+
+
 float* C_Camera::GetViewMat() const
 {
 	float4x4 mat = frustum.ViewMatrix();

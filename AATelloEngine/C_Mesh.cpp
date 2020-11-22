@@ -34,6 +34,13 @@ C_Mesh::~C_Mesh()
 }
 
 
+
+void C_Mesh::OnUpdateTransform(float4x4& transform)
+{
+	mesh->SetAABB(transform);
+}
+
+
 void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, bool wireFrameBlack) const
 {
 	mesh->Draw(transformMatrix, textureId, color, wireFrameBlack, drawVertexNormals, drawFaceNormals);

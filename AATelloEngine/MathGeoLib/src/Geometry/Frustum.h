@@ -600,6 +600,7 @@ public:
 	bool Contains(const Triangle &triangle) const;
 	bool Contains(const Polygon &polygon) const;
 	bool Contains(const AABB &aabb) const;
+	bool ContainsAABB(const AABB& aabb) const;
 	bool Contains(const OBB &obb) const;
 	bool Contains(const Frustum &frustum) const;
 	bool Contains(const Polyhedron &polyhedron) const;

@@ -648,6 +648,37 @@ bool Frustum::Contains(const AABB &aabb) const
 	return true;
 }
 
+
+bool Frustum::ContainsAABB(const AABB& aabb) const //Homemade :D
+{
+	float3 corners[8];
+	aabb.GetCornerPoints(corners);
+	
+	int inside = 0;
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			if (planes[j].IsOnPositiveSide(corners[i]) == false)
+			{
+				inside++;
+
+				if (inside == 5)
+					return true;
+			}
+			else
+			{
+				inside = 0;
+				break;
+			}
+		}
+	}
+	
+	return false;
+}
+
+
 bool Frustum::Contains(const OBB &obb) const
 {
 	for(int i = 0; i < 8; ++i)

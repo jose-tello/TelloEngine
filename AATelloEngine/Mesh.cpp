@@ -1,13 +1,13 @@
 #include "Mesh.h"
 
+#include "MathGeoLib/src/Geometry/OBB.h"
+
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
 #include <gl/GL.h>
 
 #include "Primitive.h"
-
-#include "glmath.h"
 
 Mesh::Mesh() :
 	meshPath(),
@@ -16,7 +16,9 @@ Mesh::Mesh() :
 	texCoordId(0),
 	indexId(0),
 
-	indexArrSize(0)
+	indexArrSize(0),
+
+	aabb()
 {
 }
 
@@ -28,7 +30,9 @@ Mesh::Mesh(std::vector<float>& vertexBuff, std::vector<float>& normals, std::vec
 	texCoordId(0),
 	indexId(0),
 
-	indexArrSize(0)
+	indexArrSize(0),
+
+	aabb()
 {
 	InitVertexBuffer(&vertexBuff[0], vertexBuff.size() * sizeof(float));
 
@@ -59,6 +63,25 @@ Mesh::~Mesh()
 	normals.clear();
 	texCoords.clear();
 	indices.clear();
+}
+
+
+AABB Mesh::GetAABB() const
+{
+	return aabb;
+}
+
+
+void Mesh::SetAABB(float4x4& transform)
+{
+	aabb.SetNegativeInfinity();
+	aabb.Enclose((float3*)&vertices[0], vertices.size() / 3);
+
+	OBB obb = aabb;
+	obb.Transform(transform);
+
+	aabb.SetNegativeInfinity();
+	aabb.Enclose(obb);
 }
 
 
@@ -274,17 +297,17 @@ void Mesh::DrawFaceNormals() const
 		unsigned int index1 = indices[i + 1];
 		unsigned int index2 = indices[i + 2];
 
-		vec3 P0(vertices[index0 * 3], vertices[index0 * 3 + 1], vertices[index0 * 3 + 2]);
-		vec3 P1(vertices[index1 * 3], vertices[index1 * 3 + 1], vertices[index1 * 3 + 2]);
-		vec3 P2(vertices[index2 * 3], vertices[index2 * 3 + 1], vertices[index2 * 3 + 2]);
+		float3 P0(vertices[index0 * 3], vertices[index0 * 3 + 1], vertices[index0 * 3 + 2]);
+		float3 P1(vertices[index1 * 3], vertices[index1 * 3 + 1], vertices[index1 * 3 + 2]);
+		float3 P2(vertices[index2 * 3], vertices[index2 * 3 + 1], vertices[index2 * 3 + 2]);
 
-		vec3 V0 = P0 - P1;
-		vec3 V1 = P2 - P1;
+		float3 V0 = P0 - P1;
+		float3 V1 = P2 - P1;
 
-		vec3 N = cross(V1, V0);
-		N = normalize(N) * 3;
+		float3 N = V1.Cross(V0);
+		N = N.Normalized() * 3;
 
-		vec3 center = (P0 + P1 + P2) / 3;
+		float3 center = (P0 + P1 + P2) / 3;
 
 		glVertex3f(center.x, center.y, center.z);
 		glVertex3f(center.x + N.x, center.y + N.y, center.z + N.z);

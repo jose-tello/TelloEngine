@@ -28,7 +28,9 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	colorMatEnabled(true),
 	texture2DEnabled(true),
 	fillModeEnabled(true),
-	wireframeModeEnabled(false)
+	wireframeModeEnabled(false),
+
+	currentCamera(nullptr)
 {
 }
 
@@ -201,6 +203,8 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 
 void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera)
 {
+	currentCamera = camera;
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glLoadMatrixf(camera->GetProjectionMat());
@@ -222,6 +226,14 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera)
 	grid.Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	currentCamera = nullptr;
+}
+
+
+C_Camera* M_Renderer3D::GetCurrentCamera()
+{
+	return currentCamera;
 }
 
 

@@ -242,7 +242,7 @@ void W_Inspector::DrawCameraComp(C_Camera* camera)
 		if (ImGui::InputFloat("Far plane distance", &farDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 			camera->SetFarPlaneDst(farDst);
 
-		if (ImGui::InputFloat("Aspect ratio", &nearDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputFloat("Near plane distance", &nearDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 			camera->SetNearPlaneDst(nearDst);
 	}
 

@@ -2,6 +2,7 @@
 #define __C_MESH_H__
 
 #include "Component.h"
+
 #include <vector>
 
 struct Mesh;
@@ -12,6 +13,8 @@ public:
 	C_Mesh();
 	C_Mesh(std::vector<float>& vertexBuff, std::vector<float>& normals, std::vector<float> texCoords, std::vector<unsigned int> indices);
 	~C_Mesh() override;
+
+	void OnUpdateTransform(float4x4& transform) override;
 
 	void Draw(float* transformMatrix, unsigned int textureId, float* col, bool wireframeMode) const;
 
@@ -28,7 +31,6 @@ public:
 
 private:
 	Mesh* mesh = nullptr;
-	
 };
 
 

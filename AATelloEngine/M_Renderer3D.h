@@ -29,6 +29,8 @@ public:
 
 	void DrawScene(unsigned int frameBuffer, C_Camera* camera);
 
+	C_Camera* GetCurrentCamera();
+
 	void SetDepthTestEnabled(bool enable);
 	void SetCullFaceEnabled(bool enable);
 	void SetLightingEnabled(bool enable);
@@ -53,6 +55,10 @@ private:
 	bool wireframeModeEnabled;
 
 	Light light;
+
+	//Camera we are rendering to, used to get the frustum planes to cull meshes,
+	//WARNING: set to nullptr after drawing scene
+	C_Camera* currentCamera = nullptr;
 };
 
 #endif // !__M_RENDERER3D_H__
