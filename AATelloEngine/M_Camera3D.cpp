@@ -106,6 +106,54 @@ void M_Camera3D::Resize(float width, float height)
 }
 
 
+float M_Camera3D::GetNearPlaneDst() const
+{
+	return camera->GetNearPlaneDst();
+}
+
+
+void M_Camera3D::SetNearPlaneDst(float dst)
+{
+	camera->SetNearPlaneDst(dst);
+}
+
+
+float M_Camera3D::GetFarPlaneDst() const
+{
+	return camera->GetFarPlaneDst();
+}
+
+
+void M_Camera3D::SetFarPlaneDst(float dst)
+{
+	camera->SetFarPlaneDst(dst);
+}
+
+
+float M_Camera3D::GetVerticalFov() const
+{
+	return camera->GetVerticalFov();
+}
+
+
+void M_Camera3D::SetVerticalFov(float fov)
+{
+	camera->SetVerticalFov(fov);
+}
+
+
+float M_Camera3D::GetAspectRatio() const
+{
+	return camera->GetAspectRatio();
+}
+
+
+void M_Camera3D::SetAspectRatio(float aspRatio)
+{
+	camera->SetAspectRatio(aspRatio);
+}
+
+
 void M_Camera3D::MoveCamera(float dt)
 {
 	float3 newPos(0, 0, 0);

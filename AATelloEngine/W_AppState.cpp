@@ -4,6 +4,7 @@
 #include "M_Input.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
+#include "M_Camera3D.h"
 
 #include "imgui/imgui.h"
 #include "SDL\include\SDL.h"
@@ -91,6 +92,7 @@ bool W_AppState::Draw()
 	DrawChApplicationState();
 	DrawChWindow();
 	DrawChRenderOptions();
+	DrawCameraOptions();
 	DrawChInput();
 	DrawChHardware();
 
@@ -178,6 +180,30 @@ void W_AppState::DrawChRenderOptions()
 		App->renderer3D->SetTexture2DEnabled(texture2DEnabled);
 		App->renderer3D->SetFillMode(fillModeEnabled);
 		App->renderer3D->SetWireframeMode(wireframeModeEnabled);
+	}
+}
+
+
+void W_AppState::DrawCameraOptions()
+{
+	if (ImGui::CollapsingHeader("Camera"))
+	{
+		float aspectRatio = App->camera->GetAspectRatio();
+		float verticalFov = App->camera->GetVerticalFov();
+		float farDst = App->camera->GetFarPlaneDst();
+		float nearDst = App->camera->GetNearPlaneDst();
+
+		if (ImGui::InputFloat("Aspect ratio", &aspectRatio, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			App->camera->SetAspectRatio(aspectRatio);
+
+		if (ImGui::InputFloat("Vertical fov", &verticalFov, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			App->camera->SetVerticalFov(verticalFov);
+
+		if (ImGui::InputFloat("Far plane distance", &farDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			App->camera->SetFarPlaneDst(farDst);
+
+		if (ImGui::InputFloat("Near plane distance", &nearDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			App->camera->SetNearPlaneDst(nearDst);
 	}
 }
 

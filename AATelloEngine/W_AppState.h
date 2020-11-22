@@ -25,6 +25,7 @@ private:
 	void DrawChApplicationState();
 	void DrawChWindow();
 	void DrawChRenderOptions();
+	void DrawCameraOptions();
 	void DrawChInput();
 	void DrawChHardware();
 

@@ -24,6 +24,19 @@ public:
 	float3 GetPosition();
 
 	void Resize(float width, float height);
+
+	//Getters Setters
+	float GetNearPlaneDst() const;
+	void SetNearPlaneDst(float);
+
+	float GetFarPlaneDst() const;
+	void SetFarPlaneDst(float);
+
+	float GetVerticalFov() const;
+	void SetVerticalFov(float fov);
+
+	float GetAspectRatio() const;
+	void SetAspectRatio(float aspRatio);
 	
 private:
 
