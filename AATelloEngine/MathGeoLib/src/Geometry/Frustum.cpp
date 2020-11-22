@@ -656,26 +656,28 @@ bool Frustum::ContainsAABB(const AABB& aabb) const //Homemade :D
 	
 	int inside = 0;
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 6; i++)
 	{
-		for (int j = 0; j < 6; j++)
+		int inside = 0;
+
+		for (int j = 0; j < 8; j++)
 		{
-			if (planes[j].IsOnPositiveSide(corners[i]) == false)
+			if (planes[i].IsOnPositiveSide(corners[j]) == false)
 			{
 				inside++;
-
-				if (inside == 5)
-					return true;
-			}
-			else
-			{
-				inside = 0;
-				break;
 			}
 		}
+
+		if (inside == 7)
+		{
+			return true;
+		}
+
+		if (inside == 0)
+			return false;
 	}
 	
-	return false;
+	return true;
 }
 
 
