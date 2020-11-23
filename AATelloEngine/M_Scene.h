@@ -2,7 +2,7 @@
 #define __M_SCENE_H__
 
 #include "Module.h"
-
+#include "MathGeoLib/src/MathGeoLibFwd.h"
 #include <vector>
 
 struct GameObject;
@@ -38,6 +38,7 @@ public:
 	void GetGameObjectVector(std::vector<GameObject*>&);
 
 	void DrawGameObjects(bool blackWireframe);
+	void TestRayCollision(LineSegment& ray);
 
 	void LoadScene();
 	void SaveScene();

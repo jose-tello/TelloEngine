@@ -9,8 +9,7 @@
 #include "imgui/imgui.h"
 #include "SDL\include\SDL.h"
 
-W_AppState::W_AppState(bool open) :
-	E_Window(open),
+W_AppState::W_AppState(bool open) :	E_Window(E_WINDOW_TYPE::APPLICATION_STATE, open),
 
 	//Window
 	winFullScreen(false),

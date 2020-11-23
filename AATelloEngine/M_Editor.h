@@ -38,7 +38,10 @@ public:
 	
 	std::vector<E_Window*> GetWindowsVector();
 	E_Window* GetWindow(int win);
+	void GetSceneWindowSize(E_Window*, int& x, int& y, float& mouseX, float& mouseY);
+
 	GameObject* GetFocusedGameObject() const;
+	bool GetFocusedGameObjectPos(float& x, float& y, float& z) const;
 
 private:
 	std::vector<E_Window*> windowsVec;

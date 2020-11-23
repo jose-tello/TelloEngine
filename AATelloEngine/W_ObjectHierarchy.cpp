@@ -13,7 +13,7 @@
 #include <vector>
 
 
-W_ObjectHierarchy::W_ObjectHierarchy(bool open) : E_Window(open)
+W_ObjectHierarchy::W_ObjectHierarchy(bool open) : E_Window(E_WINDOW_TYPE::GAME_OBJECTS, open)
 {
 }
 

@@ -68,6 +68,12 @@ void C_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned 
 }
 
 
+bool C_Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
+{
+	return mesh->TestAABBRayCollision(ray, distance);
+}
+
+
 void C_Mesh::Load(Config& node)
 {
 	if (mesh == nullptr)

@@ -10,7 +10,7 @@
 
 #include "imgui/imgui.h"
 
-W_Inspector::W_Inspector(bool open) : E_Window(open),
+W_Inspector::W_Inspector(bool open) : E_Window(E_WINDOW_TYPE::INSPECTOR, open),
 	focusedObject(nullptr)
 {
 }
@@ -76,6 +76,17 @@ GameObject* W_Inspector::GetFocusedGameObject() const
 }
 
 
+bool W_Inspector::GetFocusedGameObjectPos(float& x, float& y, float& z) const
+{
+	if (focusedObject == nullptr)
+		return false;
+
+	focusedObject->transform.GetPos(x, y, z);
+	return true;
+}
+
+
+
 void W_Inspector::SetFocusedObject(GameObject* obj)
 {
 	focusedObject = obj;
@@ -135,9 +146,8 @@ void W_Inspector::DrawTransformPos(C_Transform* transform)
 	float pos[] = { x, y, z };
 
 	if (ImGui::InputFloat3("Position", pos, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
-	{
 		transform->SetPos(pos[0], pos[1], pos[2]);
-	}
+	
 	ImGui::NewLine();
 	ImGui::Separator();
 }
@@ -151,9 +161,8 @@ void W_Inspector::DrawTransformRot(C_Transform* transform)
 	float rotation[] = { x, y, z };
 
 	if (ImGui::InputFloat3("Rotation", rotation, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
-	{
 		transform->SetEulerAngles(rotation[0], rotation[1], rotation[2]);
-	}
+	
 
 	ImGui::NewLine();
 	ImGui::Separator();
@@ -168,9 +177,8 @@ void W_Inspector::DrawTransformScale(C_Transform* transform)
 	float escale[] = { x, y, z };
 
 	if (ImGui::InputFloat3("Scale", escale, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
-	{
 		transform->SetEscale(escale[0], escale[1], escale[2]);
-	}
+	
 	ImGui::NewLine();
 }
 

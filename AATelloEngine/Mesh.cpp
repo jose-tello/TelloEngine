@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-#include "MathGeoLib/src/Geometry/OBB.h"
+#include "MathGeoLib/src/MathGeoLib.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -82,6 +82,13 @@ void Mesh::SetAABB(float4x4& transform)
 
 	aabb.SetNegativeInfinity();
 	aabb.Enclose(obb);
+}
+
+
+bool Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
+{
+	float farDst;
+	return ray.Intersects(aabb, distance, farDst);
 }
 
 

@@ -2,12 +2,13 @@
 #include "Application.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
+#include "M_Window.h"
+#include "M_Scene.h"
+#include "M_Renderer3D.h"
 
 #include "M_Editor.h"
 #include "W_Scene.h"
 
-#include "GameObject.h"
-#include "C_Transform.h"
 #include "C_Camera.h"
 
 #include "SDL\include\SDL_scancode.h"
@@ -40,13 +41,9 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
 	{
-		GameObject* obj = App->editor->GetFocusedGameObject();
-		if (obj != nullptr)
-		{
-			float3 pos;
-			obj->transform.GetPos(pos.x, pos.y, pos.z);
+		float3 pos;
+		if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
 			camera->LookAt(pos);
-		}
 	}
 
 	else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
@@ -60,13 +57,9 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 
 	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
 	{
-		GameObject* obj = App->editor->GetFocusedGameObject();
-		if (obj != nullptr)
-		{
-			float3 pos;
-			obj->transform.GetPos(pos.x, pos.y, pos.z);
+		float3 pos;
+		if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
 			camera->LookAt(pos);
-		}
 
 		MoveCamera(dt);
 		RotateCamera(dt);
@@ -76,6 +69,9 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 	if (weelMotion != 0)
 		ZoomCamera(weelMotion, dt);
 
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+		ClickSelect();
+	
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -244,4 +240,33 @@ void M_Camera3D::MoveCameraSideways(float dt)
 	float3 position = camera->frustum.Pos();
 	position += newPos;
 	camera->frustum.SetPos(position);
+}
+
+
+void M_Camera3D::ClickSelect()
+{
+	int width, height;
+
+	float mouseX = App->input->GetMouseX();
+	float mouseY = App->input->GetMouseY();
+
+	App->editor->GetSceneWindowSize(camera->GetWindow(), width, height, mouseX, mouseY);
+
+	mouseX = mouseX / width;
+	mouseY = mouseY / height;
+
+	mouseX = (mouseX - 0.5) / 0.5;
+	mouseY = (mouseY - 0.5) / 0.5;
+
+	LineSegment ray = camera->frustum.UnProjectLineSegment(mouseX, -mouseY);
+	
+
+	App->scene->TestRayCollision(ray);
+
+	float3 nearPoint = ray.GetPoint(0);
+	float3 farPoint = ray.GetPoint(50);
+
+	float nearP[3] = { nearPoint.x, nearPoint.y, nearPoint.z };
+	float farP[3] = { farPoint.x, farPoint.y, farPoint.z };
+	App->renderer3D->SetCameraRay(nearP, farP);
 }

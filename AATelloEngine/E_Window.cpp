@@ -1,6 +1,8 @@
 #include "E_Window.h"
 
-E_Window::E_Window(bool open) : open(open)
+E_Window::E_Window(E_WINDOW_TYPE type, bool open) : 
+	type(type),
+	open(open)
 {
 }
 

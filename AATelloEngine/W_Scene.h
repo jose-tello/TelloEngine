@@ -13,6 +13,9 @@ public:
 
 	bool Draw() override;
 
+	void GetWindowMeasures(int& width, int& height) const;
+	void ScreenToWorld(float& x, float& y) const;
+
 private:
 	int windowWidth;
 	int windoHeight;

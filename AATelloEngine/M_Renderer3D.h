@@ -30,6 +30,7 @@ public:
 	void DrawScene(unsigned int frameBuffer, C_Camera* camera);
 
 	C_Camera* GetCurrentCamera();
+	void SetCameraRay(float rayBegin[3], float rayEnd[3]);
 
 	void SetDepthTestEnabled(bool enable);
 	void SetCullFaceEnabled(bool enable);
@@ -59,6 +60,10 @@ private:
 	//Camera we are rendering to, used to get the frustum planes to cull meshes,
 	//WARNING: set to nullptr after drawing scene
 	C_Camera* currentCamera = nullptr;
+
+	bool drawCameraRay;
+	float cameraRay1[3];
+	float cameraRay2[3];
 };
 
 #endif // !__M_RENDERER3D_H__

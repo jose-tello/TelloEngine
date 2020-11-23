@@ -20,6 +20,7 @@ public:
 	bool Draw() override;
 
 	GameObject* GetFocusedGameObject() const;
+	bool GetFocusedGameObjectPos(float& x, float& y, float& z) const;
 	void SetFocusedObject(GameObject* obj);
 	void QuitFocusedObject();
 	bool DeleteFocusedObject();

@@ -16,6 +16,8 @@ public:
 	AABB GetAABB() const;
 	void SetAABB(float4x4& transform);
 
+	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
+
 	//Primitive things
 	void InitAsCube();
 	void InitAsPiramid();

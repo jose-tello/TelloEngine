@@ -11,7 +11,7 @@
 
 #include <string>
 
-W_Scene::W_Scene(bool active, C_Camera* camera) : E_Window(active),
+W_Scene::W_Scene(bool active, C_Camera* camera) : E_Window(E_WINDOW_TYPE::SCENE, active),
 	windowWidth(0),
 	windoHeight(0),
 
@@ -64,4 +64,21 @@ bool W_Scene::Draw()
 	ImGui::End();
 
 	return true;
+}
+
+
+void W_Scene::GetWindowMeasures(int& width, int& height) const
+{
+	width = windowWidth;
+	height = windoHeight;
+}
+
+
+void W_Scene::ScreenToWorld(float& x, float& y) const
+{
+	int width, height;
+	App->window->GetWindowMeasures(width, height);
+
+	x = x / width * windowWidth;
+	y = y / height * windoHeight;
 }

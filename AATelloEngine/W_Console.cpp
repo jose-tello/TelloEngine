@@ -3,8 +3,7 @@
 
 #include "imgui/imgui.h"
 
-W_Console::W_Console(bool open) :
-	E_Window(open),
+W_Console::W_Console(bool open) :	E_Window(E_WINDOW_TYPE::CONSOLE, open),
 	autoScroll(true),
 	scrollToBottom(false)
 {

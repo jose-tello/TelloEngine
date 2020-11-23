@@ -22,6 +22,8 @@ public:
 	Mesh* GetMesh() const;
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
 
+	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
+
 	void Load(Config&) override;
 	void Save(Config&) const override;
 

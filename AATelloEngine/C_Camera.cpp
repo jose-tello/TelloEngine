@@ -120,6 +120,12 @@ void C_Camera::LookAt(float3& pos)
 }
 
 
+E_Window* C_Camera::GetWindow() const
+{
+	return window;
+}
+
+
 void C_Camera::Load(Config& node)
 {
 	frustum.SetVerticalFovAndAspectRatio(node.GetNum("vertical fov"), node.GetNum("aspect ratio"));

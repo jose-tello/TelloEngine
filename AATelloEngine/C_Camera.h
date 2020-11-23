@@ -35,6 +35,8 @@ public:
 
 	void LookAt(float3& pos);
 
+	E_Window* GetWindow() const;
+
 	void Load(Config&) override;
 	void Save(Config&) const override;
 	

@@ -14,6 +14,7 @@
 #include "Globals.h"
 
 #include <stack>
+#include <map>
 
 M_Scene::M_Scene(bool start_enabled) : Module(start_enabled)
 {
@@ -130,8 +131,6 @@ GameObject* M_Scene::GetGameObject(int uid)
 	std::stack<GameObject*> stack;
 	GameObject* node;
 
-	int childCount;
-
 	int gameObjCount = gameObjects.size();
 	for (int i = 0; i < gameObjCount; i++)
 	{
@@ -148,7 +147,7 @@ GameObject* M_Scene::GetGameObject(int uid)
 
 			if (node->childs.empty() == false)
 			{
-				childCount = node->childs.size();
+				int childCount = node->childs.size();
 				for (int j = 0; j < childCount; j++)
 				{
 					stack.push(node->childs[j]);
@@ -318,6 +317,48 @@ void M_Scene::DrawObject(GameObject* object, bool blackWireframe)
 		mesh->Draw(object->transform.GetMatTransform().ptr(), texId, color, blackWireframe);
 	}
 	
+}
+
+
+void M_Scene::TestRayCollision(LineSegment& ray)
+{
+	std::stack<GameObject*> stack;
+	GameObject* node;
+
+	std::map<float, GameObject*> candidates;
+
+	int gameObjCount = gameObjects.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		stack.push(gameObjects[i]);
+
+		while (stack.empty() == false)
+		{
+			node = stack.top();
+			stack.pop();
+
+			Component* component = node->GetComponent(COMPONENT_TYPE::MESH);
+			if (component != nullptr)
+			{
+				float distance;
+				C_Mesh* mesh = (C_Mesh*)component;
+
+				if (mesh->TestAABBRayCollision(ray, distance) == true)
+					candidates.insert(std::pair<float, GameObject*>(distance, node));
+			}
+
+			if (node->childs.empty() == false)
+			{
+				int childCount = node->childs.size();
+				for (int j = 0; j < childCount; j++)
+				{
+					stack.push(node->childs[j]);
+				}
+			}
+		}
+	}
+
+
 }
 
 

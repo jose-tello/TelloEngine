@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 
-W_LoadFile::W_LoadFile(bool open) : E_Window(open)
+W_LoadFile::W_LoadFile(bool open) : E_Window(E_WINDOW_TYPE::LOAD_FILE, open)
 {
 }
 

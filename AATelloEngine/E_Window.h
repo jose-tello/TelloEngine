@@ -17,7 +17,7 @@ enum class E_WINDOW_TYPE : int
 class E_Window
 {
 public:
-	E_Window(bool open = true);
+	E_Window(E_WINDOW_TYPE type, bool open = true);
 	virtual ~E_Window();
 
 	virtual bool Start();
@@ -25,6 +25,7 @@ public:
 	virtual bool Draw();
 
 public:
+	E_WINDOW_TYPE type;
 	bool open;
 };
 

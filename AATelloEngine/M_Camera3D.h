@@ -45,6 +45,8 @@ private:
 	void ZoomCamera(int weelMotion, float dt);
 	void MoveCameraSideways(float dt);
 
+	void ClickSelect();
+
 private:
 	C_Camera* camera = nullptr;
 };

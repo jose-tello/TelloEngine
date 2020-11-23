@@ -6,7 +6,7 @@
 
 #include "imgui/imgui.h"
 
-W_DockWindow::W_DockWindow(bool open) : E_Window(open)
+W_DockWindow::W_DockWindow(bool open) : E_Window(E_WINDOW_TYPE::DOCKING_WINDOW, open)
 {
 }
 

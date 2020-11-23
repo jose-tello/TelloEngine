@@ -207,8 +207,29 @@ E_Window* M_Editor::GetWindow(int win)
 }
 
 
+void M_Editor::GetSceneWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY)
+{
+	if (win->type == E_WINDOW_TYPE::SCENE)
+	{
+		W_Scene* sceneWin = (W_Scene*)win;
+		sceneWin->GetWindowMeasures(x, y);
+		sceneWin->ScreenToWorld(mouseX, mouseY);
+	}
+	else
+		assert("Invalid window type");
+	
+}
+
+
 GameObject* M_Editor::GetFocusedGameObject() const
 {
 	W_Inspector* inspector = (W_Inspector *)windowsVec[(int)E_WINDOW_TYPE::INSPECTOR];
 	return inspector->GetFocusedGameObject();
+}
+
+
+bool M_Editor::GetFocusedGameObjectPos(float& x, float& y, float& z) const
+{
+	W_Inspector* inspector = (W_Inspector*)windowsVec[(int)E_WINDOW_TYPE::INSPECTOR];
+	return inspector->GetFocusedGameObjectPos(x, y, z);
 }
