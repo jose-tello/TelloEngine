@@ -7,7 +7,7 @@
 #include "M_Renderer3D.h"
 
 #include "M_Editor.h"
-#include "W_Scene.h"
+#include "W_CameraView.h"
 
 #include "C_Camera.h"
 
@@ -29,7 +29,7 @@ M_Camera3D::~M_Camera3D()
 
 bool M_Camera3D::Start()
 {
-	camera = new C_Camera();
+	camera = new C_Camera(true);
 	camera->frustum.SetPos(float3(0, 0, -10));
 
 	return true;
@@ -69,10 +69,6 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 	if (weelMotion != 0)
 		ZoomCamera(weelMotion, dt);
 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
-		ClickSelect();
-	
-
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
@@ -99,6 +95,35 @@ float3 M_Camera3D::GetPosition()
 void M_Camera3D::Resize(float width, float height)
 {
 	camera->SetProjectionMat(camera->GetVerticalFov(), width / height);
+}
+
+
+void M_Camera3D::ClickSelect()
+{
+	int width, height;
+
+	float mouseX = App->input->GetMouseX();
+	float mouseY = App->input->GetMouseY();
+
+	App->editor->GetSceneWindowSize(camera->GetWindow(), width, height, mouseX, mouseY);
+
+	mouseX = mouseX / width;
+	mouseY = mouseY / height;
+
+	mouseX = (mouseX - 0.5) / 0.5;
+	mouseY = (mouseY - 0.5) / 0.5;
+
+	LineSegment ray = camera->frustum.UnProjectLineSegment(mouseX, -mouseY);
+
+
+	App->scene->TestRayCollision(ray);
+
+	float3 nearPoint = ray.GetPoint(0);
+	float3 farPoint = ray.GetPoint(50);
+
+	float nearP[3] = { nearPoint.x, nearPoint.y, nearPoint.z };
+	float farP[3] = { farPoint.x, farPoint.y, farPoint.z };
+	App->renderer3D->SetCameraRay(nearP, farP);
 }
 
 
@@ -243,30 +268,3 @@ void M_Camera3D::MoveCameraSideways(float dt)
 }
 
 
-void M_Camera3D::ClickSelect()
-{
-	int width, height;
-
-	float mouseX = App->input->GetMouseX();
-	float mouseY = App->input->GetMouseY();
-
-	App->editor->GetSceneWindowSize(camera->GetWindow(), width, height, mouseX, mouseY);
-
-	mouseX = mouseX / width;
-	mouseY = mouseY / height;
-
-	mouseX = (mouseX - 0.5) / 0.5;
-	mouseY = (mouseY - 0.5) / 0.5;
-
-	LineSegment ray = camera->frustum.UnProjectLineSegment(mouseX, -mouseY);
-	
-
-	App->scene->TestRayCollision(ray);
-
-	float3 nearPoint = ray.GetPoint(0);
-	float3 farPoint = ray.GetPoint(50);
-
-	float nearP[3] = { nearPoint.x, nearPoint.y, nearPoint.z };
-	float farP[3] = { farPoint.x, farPoint.y, farPoint.z };
-	App->renderer3D->SetCameraRay(nearP, farP);
-}

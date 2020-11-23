@@ -9,7 +9,7 @@ class E_Window;
 class C_Camera : public Component
 {
 public:
-	C_Camera();
+	C_Camera(bool isSceneCamera = false);
 	~C_Camera() override;
 
 	void OnUpdateTransform(float4x4& transform) override;

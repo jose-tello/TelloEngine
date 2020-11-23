@@ -24,6 +24,7 @@ public:
 	float3 GetPosition();
 
 	void Resize(float width, float height);
+	void ClickSelect();
 
 	//Getters Setters
 	float GetNearPlaneDst() const;
@@ -44,8 +45,6 @@ private:
 	void RotateCamera(float dt);
 	void ZoomCamera(int weelMotion, float dt);
 	void MoveCameraSideways(float dt);
-
-	void ClickSelect();
 
 private:
 	C_Camera* camera = nullptr;

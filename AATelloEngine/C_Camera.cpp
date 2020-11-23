@@ -6,7 +6,7 @@
 
 #include "Config.h"
 
-C_Camera::C_Camera() : Component(COMPONENT_TYPE::CAMERA),
+C_Camera::C_Camera(bool isSceneCamera) : Component(COMPONENT_TYPE::CAMERA),
 	window(nullptr)
 {
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
@@ -18,7 +18,11 @@ C_Camera::C_Camera() : Component(COMPONENT_TYPE::CAMERA),
 	frustum.SetViewPlaneDistances(0.1, 1000);
 	frustum.SetPerspective(1, 1);
 
-	window = App->editor->AddSceneWindow(this);
+	if (isSceneCamera)
+		window = App->editor->AddSceneWindow(this);
+
+	else
+		window = App->editor->AddCameraWindow(this);
 }
 
 

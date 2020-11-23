@@ -95,13 +95,13 @@ void W_DockWindow::DrawWindowsMenu()
 		ImGui::Checkbox("Console", &App->editor->GetWindow((int)E_WINDOW_TYPE::CONSOLE)->open);
 		ImGui::Checkbox("Inspector", &App->editor->GetWindow((int)E_WINDOW_TYPE::INSPECTOR)->open);
 		ImGui::Checkbox("Object hierarchy", &App->editor->GetWindow((int)E_WINDOW_TYPE::GAME_OBJECTS)->open);
-		ImGui::Checkbox("Scene", &App->editor->GetWindow((int)E_WINDOW_TYPE::SCENE)->open);
+		ImGui::Checkbox("Scene", &App->editor->GetWindow((int)E_WINDOW_TYPE::SCENE_CAMERA)->open);
 		
 
 		std::vector<E_Window*> windows = App->editor->GetWindowsVector();
 
 		int windowsCount = windows.size();
-		for (int i = (int)E_WINDOW_TYPE::SCENE + 1; i < windowsCount; i++)
+		for (int i = (int)E_WINDOW_TYPE::CAMERA_VIEW; i < windowsCount; i++)
 		{
 			ImGui::PushID(i);
 			ImGui::Checkbox("Camera", &App->editor->GetWindow(i)->open);

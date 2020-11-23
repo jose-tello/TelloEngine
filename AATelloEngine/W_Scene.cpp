@@ -1,50 +1,24 @@
 #include "W_Scene.h"
 
 #include "Application.h"
+#include "M_Camera3D.h"
 #include "M_Renderer3D.h"
-#include "M_Window.h"
-
-#include "GameObject.h"
-#include "C_Camera.h"
 
 #include "imgui/imgui.h"
 
-#include <string>
-
-W_Scene::W_Scene(bool active, C_Camera* camera) : E_Window(E_WINDOW_TYPE::SCENE, active),
-	windowWidth(0),
-	windoHeight(0),
-
-	frameBuffer(0),
-	textureBuffer(0),
-	depthBuffer(0),
-
-	camera(camera)
+W_Scene::W_Scene(bool active, C_Camera* camera) : W_CameraView(active, camera, E_WINDOW_TYPE::SCENE_CAMERA)
 {
 }
 
 
 W_Scene::~W_Scene()
 {
-	App->renderer3D->DeleteBuffers(frameBuffer, textureBuffer, depthBuffer);
-	
-	frameBuffer = 0;
-	textureBuffer = 0;
-	depthBuffer = 0;
 }
 
 
 bool W_Scene::Draw()
 {
-	std::string name;
-	GameObject* cam = camera->GetOwner();
-
-	if (cam != nullptr)
-		name = cam->GetName();
-	else
-		name = "Scene";
-
-	ImGui::Begin(name.c_str(), &open);
+	ImGui::Begin("Scene", &open);
 
 	ImGui::BeginChild("Game render");
 	ImVec2 size = ImGui::GetWindowSize();
@@ -60,6 +34,9 @@ bool W_Scene::Draw()
 
 	App->renderer3D->DrawScene(frameBuffer, camera);
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windoHeight), ImVec2(0, 1), ImVec2(1, 0));
+	
+	HandleInput();
+
 	ImGui::EndChild();
 	ImGui::End();
 
@@ -67,18 +44,12 @@ bool W_Scene::Draw()
 }
 
 
-void W_Scene::GetWindowMeasures(int& width, int& height) const
+void W_Scene::HandleInput()
 {
-	width = windowWidth;
-	height = windoHeight;
-}
-
-
-void W_Scene::ScreenToWorld(float& x, float& y) const
-{
-	int width, height;
-	App->window->GetWindowMeasures(width, height);
-
-	x = x / width * windowWidth;
-	y = y / height * windoHeight;
+	if (ImGui::IsItemHovered() == true)
+	{
+		//TODO: this should be done using event manager
+		if (ImGui::IsItemClicked(0))
+			App->camera->ClickSelect();
+	}
 }

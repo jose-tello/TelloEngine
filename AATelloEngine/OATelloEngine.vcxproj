@@ -158,7 +158,7 @@
     <ClInclude Include="W_Inspector.h" />
     <ClInclude Include="W_LoadFile.h" />
     <ClInclude Include="W_ObjectHierarchy.h" />
-    <ClInclude Include="W_Scene.h" />
+    <ClInclude Include="W_CameraView.h" />
     <ClInclude Include="E_Window.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glmath.h" />
@@ -185,6 +185,7 @@
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="PrimitiveVertex.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="W_Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -243,7 +244,7 @@
     <ClCompile Include="W_Inspector.cpp" />
     <ClCompile Include="W_LoadFile.cpp" />
     <ClCompile Include="W_ObjectHierarchy.cpp" />
-    <ClCompile Include="W_Scene.cpp" />
+    <ClCompile Include="W_CameraView.cpp" />
     <ClCompile Include="E_Window.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />
@@ -267,6 +268,7 @@
     <ClCompile Include="M_Window.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="W_Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="imgui\LICENSE.txt" />

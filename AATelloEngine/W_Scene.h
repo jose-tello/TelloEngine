@@ -1,11 +1,10 @@
-#ifndef __E_SCENE_H__
-#define __E_SCENE_H__
+#ifndef __W_SCENE_H__
+#define	__W_SCENE_H__
 
-#include "E_Window.h"
+#include "W_CameraView.h"
 
-class C_Camera;
-
-class W_Scene : public E_Window
+//Window of the scene camera
+class W_Scene : public W_CameraView 
 {
 public:
 	W_Scene(bool active, C_Camera*);
@@ -13,19 +12,8 @@ public:
 
 	bool Draw() override;
 
-	void GetWindowMeasures(int& width, int& height) const;
-	void ScreenToWorld(float& x, float& y) const;
-
 private:
-	int windowWidth;
-	int windoHeight;
-
-	unsigned int frameBuffer;
-	unsigned int textureBuffer;
-	unsigned int depthBuffer;
-
-	C_Camera* camera;
+	void HandleInput();
 };
 
-#endif // !__E_SCENE_H__
-
+#endif // !__W_SCENE_H__

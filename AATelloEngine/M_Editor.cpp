@@ -14,10 +14,11 @@
 #include "W_DockWindow.h"
 #include "W_AppState.h"
 #include "W_Console.h"
-#include "W_Scene.h"
+#include "W_CameraView.h"
 #include "W_ObjectHierarchy.h"
 #include "W_Inspector.h"
 #include "W_LoadFile.h"
+#include "W_Scene.h"
 
 
 M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
@@ -195,6 +196,15 @@ E_Window* M_Editor::AddSceneWindow(C_Camera* camera)
 }
 
 
+E_Window* M_Editor::AddCameraWindow(C_Camera* camera)
+{
+	W_CameraView* sceneWin = new W_CameraView(true, camera);
+	windowsVec.push_back(sceneWin);
+
+	return sceneWin;
+}
+
+
 std::vector<E_Window*> M_Editor::GetWindowsVector()
 {
 	return windowsVec;
@@ -209,9 +219,9 @@ E_Window* M_Editor::GetWindow(int win)
 
 void M_Editor::GetSceneWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY)
 {
-	if (win->type == E_WINDOW_TYPE::SCENE)
+	if (win->type == E_WINDOW_TYPE::SCENE_CAMERA)
 	{
-		W_Scene* sceneWin = (W_Scene*)win;
+		W_CameraView* sceneWin = (W_CameraView*)win;
 		sceneWin->GetWindowMeasures(x, y);
 		sceneWin->ScreenToWorld(mouseX, mouseY);
 	}

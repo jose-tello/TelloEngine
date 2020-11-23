@@ -35,6 +35,7 @@ public:
 	void DeleteWindow(E_Window* toDelete);
 
 	E_Window* AddSceneWindow(C_Camera* camera);
+	E_Window* AddCameraWindow(C_Camera* camera);
 	
 	std::vector<E_Window*> GetWindowsVector();
 	E_Window* GetWindow(int win);
