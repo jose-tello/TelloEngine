@@ -2,6 +2,7 @@
 #define __C_MESH_H__
 
 #include "Component.h"
+#include "MathGeoLib/src/MathGeoLib.h"
 
 #include <vector>
 
@@ -23,6 +24,7 @@ public:
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
 
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
+	float TestTriangleCollision(LineSegment, float4x4& transform);
 
 	void Load(Config&) override;
 	void Save(Config&) const override;

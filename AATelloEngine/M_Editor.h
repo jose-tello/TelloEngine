@@ -41,6 +41,7 @@ public:
 	void GetSceneWindowSize(E_Window*, int& x, int& y, float& mouseX, float& mouseY);
 
 	GameObject* GetFocusedGameObject() const;
+	void SetFocusedGameObject(GameObject*);
 	bool GetFocusedGameObjectPos(float& x, float& y, float& z) const;
 
 private:

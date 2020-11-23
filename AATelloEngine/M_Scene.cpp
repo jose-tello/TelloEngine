@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "M_Renderer3D.h"
+#include "M_Editor.h"
 #include "M_FileManager.h"
 #include "SceneImporter.h"
 
@@ -350,15 +351,37 @@ void M_Scene::TestRayCollision(LineSegment& ray)
 			if (node->childs.empty() == false)
 			{
 				int childCount = node->childs.size();
+
 				for (int j = 0; j < childCount; j++)
-				{
 					stack.push(node->childs[j]);
-				}
 			}
 		}
 	}
 
+	if (candidates.size() == 0)
+		App->editor->SetFocusedGameObject(nullptr);
+	
+	else if (candidates.size() == 1)
+		App->editor->SetFocusedGameObject(candidates.begin()->second);
 
+	else
+	{
+		std::map<float, GameObject*>::iterator it = candidates.begin();
+		std::pair<float, GameObject*> selected(INFINITY, node);
+
+		for (it; it != candidates.end(); it++)
+		{
+			C_Mesh* mesh = (C_Mesh*)it->second->GetComponent(COMPONENT_TYPE::MESH);
+			float distance = mesh->TestTriangleCollision(ray, it->second->transform.GetMatTransform());
+
+			if (distance != 0 && distance < selected.first)
+			{
+				selected.first = distance;
+				selected.second = it->second;
+			}
+		}
+		App->editor->SetFocusedGameObject(selected.second);
+	}
 }
 
 

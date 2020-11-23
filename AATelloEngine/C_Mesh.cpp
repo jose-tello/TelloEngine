@@ -74,6 +74,13 @@ bool C_Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
 }
 
 
+float C_Mesh::TestTriangleCollision(LineSegment ray, float4x4& transform)
+{
+	ray.Transform(transform.Inverted());
+	return mesh->TestTriangleRayCollision(ray);
+}
+
+
 void C_Mesh::Load(Config& node)
 {
 	if (mesh == nullptr)

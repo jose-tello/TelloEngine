@@ -17,6 +17,7 @@ public:
 	void SetAABB(float4x4& transform);
 
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
+	float TestTriangleRayCollision(LineSegment& ray) const;
 
 	//Primitive things
 	void InitAsCube();

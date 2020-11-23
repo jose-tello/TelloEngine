@@ -92,6 +92,37 @@ bool Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
 }
 
 
+float Mesh::TestTriangleRayCollision(LineSegment& ray) const
+{
+	float nearestPoint = 0;
+	int indicesCount = indices.size();
+
+	for (int i = 0; i < indicesCount; i += 3)
+	{
+		unsigned int index0 = indices[i];
+		unsigned int index1 = indices[i + 1];
+		unsigned int index2 = indices[i + 2];
+
+		float3 p0(vertices[index0 * 3], vertices[index0 * 3 + 1], vertices[index0 * 3 + 2]);
+		float3 p1(vertices[index1 * 3], vertices[index1 * 3 + 1], vertices[index1 * 3 + 2]);
+		float3 p2(vertices[index2 * 3], vertices[index2 * 3 + 1], vertices[index2 * 3 + 2]);
+
+		Triangle triangle(p0, p1, p2);
+		float pointDistance;
+		float3 intersection;
+		ray.Intersects(triangle, &pointDistance, &intersection);
+
+		if (pointDistance != 0)
+		{
+			if (nearestPoint == 0 || nearestPoint > pointDistance)
+				nearestPoint = pointDistance;
+		}
+	}
+
+	return nearestPoint;
+}
+
+
 //Primitive things
 void Mesh::InitAsCube()
 {
