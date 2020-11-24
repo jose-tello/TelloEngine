@@ -11,7 +11,8 @@
 #include "imgui/imgui.h"
 
 W_Inspector::W_Inspector(bool open) : E_Window(E_WINDOW_TYPE::INSPECTOR, open),
-	focusedObject(nullptr)
+	focusedObject(nullptr),
+	drawAddMenu(true)
 {
 }
 
@@ -24,10 +25,6 @@ W_Inspector::~W_Inspector()
 
 bool W_Inspector::Draw()
 {
-	if (App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
-		DeleteFocusedObject();
-	
-
 	ImGui::Begin("Inspector", &open);
 	if (focusedObject != nullptr)
 	{
@@ -62,7 +59,17 @@ bool W_Inspector::Draw()
 				break;
 			}
 		}
+
+		ImVec2 size = ImGui::GetWindowSize();
+		size.y = ADD_HEIGHT;
+		if (ImGui::Button("Add", size))
+			drawAddMenu = true;
+
+		if (drawAddMenu == true)
+			DrawAddMenu(focusedObject);
 	}
+	else
+		drawAddMenu = false;
 
 	ImGui::End();
 
@@ -90,6 +97,7 @@ bool W_Inspector::GetFocusedGameObjectPos(float& x, float& y, float& z) const
 void W_Inspector::SetFocusedObject(GameObject* obj)
 {
 	focusedObject = obj;
+	drawAddMenu = false;
 }
 
 
@@ -255,4 +263,20 @@ void W_Inspector::DrawCameraComp(C_Camera* camera)
 	}
 
 	ImGui::NewLine();
+}
+
+
+//TODO: add components
+void W_Inspector::DrawAddMenu(GameObject* gameObject)
+{
+	if (ImGui::Button("Add child"))
+	{
+		std::string name(gameObject->GetName());
+		name.append(" child");
+
+		GameObject* obj = new GameObject(name, gameObject);
+		gameObject->childs.push_back(obj);
+
+		drawAddMenu = false;
+	}
 }

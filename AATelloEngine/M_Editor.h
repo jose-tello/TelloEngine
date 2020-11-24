@@ -45,6 +45,8 @@ public:
 	void SetFocusedGameObject(GameObject*);
 	bool GetFocusedGameObjectPos(float& x, float& y, float& z) const;
 
+	void DeleteFocusedObject();
+
 private:
 	std::vector<E_Window*> windowsVec;
 }; 

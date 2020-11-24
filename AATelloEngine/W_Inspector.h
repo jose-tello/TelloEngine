@@ -10,6 +10,7 @@ class C_Material;
 class C_Camera;
 
 #define BACKSPACE 42
+#define ADD_HEIGHT 20
 
 class W_Inspector : public E_Window
 {
@@ -37,8 +38,11 @@ private:
 	void DrawMaterialComp(C_Material*);
 	void DrawCameraComp(C_Camera*);
 
+	void DrawAddMenu(GameObject*);
+
 private:
 	GameObject* focusedObject = nullptr;
+	bool drawAddMenu;
 };
 
 

@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "M_Scene.h"
 #include "M_Editor.h"
+#include "M_Input.h"
 
 #include "GameObject.h"
 
@@ -43,7 +44,8 @@ bool W_ObjectHierarchy::Draw()
 			inspector->SetFocusedObject(gameObjects[i]);
 		}
 
-
+		if (ImGui::IsWindowFocused() && App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
+			App->editor->DeleteFocusedObject();
 		
 		if (open == true)
 		{
