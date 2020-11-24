@@ -141,6 +141,10 @@ void MeshImporter::Load(Mesh* mesh, const char* path)
 
 		mesh->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
 
+		std::string name;
+		App->fileManager->SplitPath(path, nullptr, &name, nullptr);
+		mesh->meshPath = name;
+
 		delete[] buffer;
 		buffer = nullptr;
 	}

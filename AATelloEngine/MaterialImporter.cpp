@@ -63,6 +63,10 @@ void MaterialImporter::Load(C_Material* material, const char* path)
 			material->SetTexture(TextureImporter::Load(filePath.c_str()));
 			material->textureName = pointer;	
 		}
+
+		std::string name;
+		App->fileManager->SplitPath(path, nullptr, &name, nullptr);
+		material->materialPath = name;
 	}
 
 	delete[] fileBuffer;
