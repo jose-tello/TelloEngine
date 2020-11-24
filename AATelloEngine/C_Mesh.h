@@ -35,6 +35,7 @@ public:
 
 private:
 	Mesh* mesh = nullptr;
+	//AABB aabb;
 };
 
 

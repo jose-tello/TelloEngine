@@ -34,6 +34,9 @@
     <Filter Include="Sources\Tools\MathGeoLib">
       <UniqueIdentifier>{9ac61a69-bd67-408e-ae16-8d6e87cf3994}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Imguizmo">
+      <UniqueIdentifier>{45965b0d-2779-4c08-9324-543a75e5130a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -372,6 +375,9 @@
     <ClInclude Include="W_Scene.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Tools\Imguizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -616,6 +622,9 @@
     </ClCompile>
     <ClCompile Include="W_Scene.cpp">
       <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Tools\Imguizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

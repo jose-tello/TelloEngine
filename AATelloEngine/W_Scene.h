@@ -14,6 +14,7 @@ public:
 
 private:
 	void HandleInput();
+	void HandleGizmo();
 };
 
 #endif // !__W_SCENE_H__

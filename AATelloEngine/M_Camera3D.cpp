@@ -104,8 +104,8 @@ void M_Camera3D::ClickSelect()
 {
 	int width, height;
 
-	float mouseX = App->input->GetMouseX();
-	float mouseY = App->input->GetMouseY();
+	float mouseX /*= App->input->GetMouseX()*/;
+	float mouseY /*= App->input->GetMouseY()*/;
 
 	App->editor->GetSceneWindowSize(camera->GetWindow(), width, height, mouseX, mouseY);
 

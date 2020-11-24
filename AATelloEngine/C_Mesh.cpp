@@ -13,6 +13,7 @@ C_Mesh::C_Mesh() : Component(COMPONENT_TYPE::MESH),
 	drawFaceNormals(false),
 
 	mesh(nullptr)
+	//aabb()
 {
 }
 

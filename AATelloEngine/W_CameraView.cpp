@@ -70,11 +70,8 @@ void W_CameraView::GetWindowMeasures(int& width, int& height) const
 
 void W_CameraView::ScreenToWorld(float& x, float& y) const
 {
-	int width, height;
-	App->window->GetWindowMeasures(width, height);
-
-	x = x / width * windowWidth;
-	y = y / height * windoHeight;
+	x = ImGui::GetMousePos().x;
+	y = ImGui::GetMousePos().y;
 }
 
 

@@ -107,6 +107,7 @@ void C_Transform::SetEscale(float x, float y, float z)
 }
 
 
+//TODO: Write a fucking T at the end
 float4x4 C_Transform::GetMatTransform() const
 {
 	return worldTransform.Transposed();
@@ -124,8 +125,13 @@ void C_Transform::AddTransform(float4x4& transform)
 
 void C_Transform::SetGlobalTransform(float4x4& transform)
 {
-	localTransform = owner->transform.GetMatTransform().Inverted() * transform;
+	if (owner->parent != nullptr)
+		localTransform = owner->parent->transform.GetMatTransform().Transposed().Inverted() * transform;
 
+	else
+		localTransform = transform;
+
+	//worldTransform = transform;
 	UpdateTRS();
 	needUpdate = true;
 }
