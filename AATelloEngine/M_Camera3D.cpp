@@ -17,6 +17,8 @@
 #include "MathGeoLib/src/MathGeoLib.h"
 
 M_Camera3D::M_Camera3D(bool start_enabled) : Module(start_enabled),
+	drawClickRay(false),
+	debugFrustumCull(false),
 	camera(nullptr)
 {
 }

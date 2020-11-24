@@ -46,6 +46,10 @@ private:
 	void ZoomCamera(int weelMotion, float dt);
 	void MoveCameraSideways(float dt);
 
+public:
+	bool drawClickRay;
+	bool debugFrustumCull = false; //Must ALLWAYS be initialized as false
+
 private:
 	C_Camera* camera = nullptr;
 };

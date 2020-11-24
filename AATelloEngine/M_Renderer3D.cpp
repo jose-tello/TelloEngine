@@ -3,6 +3,7 @@
 #include "M_Window.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
+#include "M_Camera3D.h"
 
 #include "C_Camera.h"
 
@@ -31,7 +32,6 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	wireframeModeEnabled(false),
 
 	currentCamera(nullptr),
-	drawCameraRay(false),
 	cameraRay1{ 0, 0, 0 },
 	cameraRay2{ 0, 0, 0 }
 {
@@ -204,9 +204,13 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 }
 
 
-void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera)
+void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera)
 {
-	currentCamera = camera;
+	if (pushCamera == true)
+	{
+		PopCamera();
+		PushCamera(camera);
+	}
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -228,7 +232,7 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera)
 	Grid grid;
 	grid.Draw();
 
-	if (drawCameraRay == true)
+	if (App->camera->drawClickRay == true)
 	{
 		glBegin(GL_LINES);
 
@@ -243,8 +247,6 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera)
 	
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	currentCamera = nullptr;
 }
 
 
@@ -256,7 +258,6 @@ C_Camera* M_Renderer3D::GetCurrentCamera()
 
 void M_Renderer3D::SetCameraRay(float rayBegin[3], float rayEnd[3])
 {
-	drawCameraRay = true;
 	cameraRay1[0] = rayBegin[0];
 	cameraRay1[1] = rayBegin[1];
 	cameraRay1[2] = rayBegin[2];
@@ -357,6 +358,22 @@ void M_Renderer3D::SetWireframeMode(bool enable)
 	{
 		wireframeModeEnabled = enable;
 	}
+}
+
+
+void M_Renderer3D::PushCamera(C_Camera* cam)
+{
+	if (currentCamera == nullptr)
+		currentCamera = cam;
+
+	else
+		assert("Pushing camera without poping the precious one");
+}
+
+
+void M_Renderer3D::PopCamera()
+{
+	currentCamera = nullptr;
 }
 
 

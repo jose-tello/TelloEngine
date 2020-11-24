@@ -27,9 +27,10 @@ public:
 							 unsigned int& textureBuffer, unsigned int& depthBuffer);
 	void DeleteBuffers(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int depthBuffer);
 
-	void DrawScene(unsigned int frameBuffer, C_Camera* camera);
+	void DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera = true);
 
 	C_Camera* GetCurrentCamera();
+	
 	void SetCameraRay(float rayBegin[3], float rayEnd[3]);
 
 	void SetDepthTestEnabled(bool enable);
@@ -41,6 +42,9 @@ public:
 	void SetWireframeMode(bool enable);
 
 private:
+	void PushCamera(C_Camera*);
+	void PopCamera();
+
 	void DrawObjects();
 
 public:
@@ -57,11 +61,10 @@ private:
 
 	Light light;
 
-	//Camera we are rendering to, used to get the frustum planes to cull meshes,
-	//WARNING: set to nullptr after drawing scene
+	//Camera we are rendering to, used to frustum cull
+	//WARNING: use pop / push structure
 	C_Camera* currentCamera = nullptr;
 
-	bool drawCameraRay;
 	float cameraRay1[3];
 	float cameraRay2[3];
 };

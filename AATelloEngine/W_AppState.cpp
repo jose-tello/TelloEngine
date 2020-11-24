@@ -203,6 +203,9 @@ void W_AppState::DrawCameraOptions()
 
 		if (ImGui::InputFloat("Near plane distance", &nearDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 			App->camera->SetNearPlaneDst(nearDst);
+
+		ImGui::Checkbox("Debug mouse pick ray", &App->camera->drawClickRay);
+		ImGui::Checkbox("Debug frustum cull", &App->camera->debugFrustumCull);
 	}
 }
 

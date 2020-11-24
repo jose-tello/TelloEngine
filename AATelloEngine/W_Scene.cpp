@@ -32,7 +32,7 @@ bool W_Scene::Draw()
 		App->renderer3D->GenerateFrameBuffer(windowWidth, windoHeight, frameBuffer, textureBuffer, depthBuffer);
 	}
 
-	App->renderer3D->DrawScene(frameBuffer, camera);
+	App->renderer3D->DrawScene(frameBuffer, camera, !App->camera->debugFrustumCull);
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windoHeight), ImVec2(0, 1), ImVec2(1, 0));
 	
 	HandleInput();
