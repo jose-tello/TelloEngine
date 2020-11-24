@@ -4,6 +4,7 @@
 #include "M_Editor.h"
 #include "M_Camera3D.h"
 #include "M_Renderer3D.h"
+#include "M_Input.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
@@ -13,7 +14,8 @@
 
 #include "MathGeoLib/src/MathGeoLib.h"
 
-W_Scene::W_Scene(bool active, C_Camera* camera) : W_CameraView(active, camera, E_WINDOW_TYPE::SCENE_CAMERA)
+W_Scene::W_Scene(bool active, C_Camera* camera) : W_CameraView(active, camera, E_WINDOW_TYPE::SCENE_CAMERA),
+	gizmoOperation(ImGuizmo::OPERATION::TRANSLATE)
 {
 	ImGuizmo::Enable(true);
 }
@@ -30,22 +32,25 @@ bool W_Scene::Draw()
 
 	ImGui::BeginChild("Game render");
 	ImVec2 size = ImGui::GetWindowSize();
+	ImVec2 winPos = ImGui::GetWindowPos();
+	ImVec2 mousePos = ImGui::GetMousePos();
+	windowPosX = winPos.x;
+	windowPosY = winPos.y;
+	mousePosX = mousePos.x;
+	mousePosY = mousePos.y;
 
-	if (size.x != windowWidth || size.y != windoHeight)
+	if (size.x != windowWidth || size.y != windowHeight)
 		OnResize(size.x, size.y);
 	
-
 	App->renderer3D->DrawScene(frameBuffer, camera, !App->camera->debugFrustumCull);
-	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windoHeight), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	
 	HandleGizmo();
 
 	if (ImGuizmo::IsUsing() == false)
 		HandleInput();
 	
-
 	ImGui::EndChild();
-
 	ImGui::End();
 
 	return true;
@@ -59,6 +64,16 @@ void W_Scene::HandleInput()
 		//TODO: this should be done using event manager
 		if (ImGui::IsItemClicked(0))
 			App->camera->ClickSelect();
+
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_DOWN)
+			gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_DOWN)
+			gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_DOWN)
+			gizmoOperation = ImGuizmo::OPERATION::SCALE;
+
 	}
 }
 
@@ -78,15 +93,11 @@ void W_Scene::HandleGizmo()
 		float4x4 objTransform = focusedGO->transform.GetMatTransform();
 		
 		ImGuizmo::SetDrawlist();
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windoHeight);
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-		ImGuizmo::Manipulate(viewMat.ptr(), projMat.ptr(), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, objTransform.ptr());
+		ImGuizmo::Manipulate(viewMat.ptr(), projMat.ptr(), (ImGuizmo::OPERATION)gizmoOperation, ImGuizmo::MODE::WORLD, objTransform.ptr());
 
 		if (ImGuizmo::IsUsing())
-		{
-			//float3 pos = objTransform.Transposed().TranslatePart();
-			//focusedGO->transform.SetPos(pos.x, pos.y, pos.z);
 			focusedGO->transform.SetGlobalTransform(objTransform.Transposed());
-		}
 	}
 }

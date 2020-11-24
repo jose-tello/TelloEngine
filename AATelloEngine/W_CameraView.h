@@ -14,14 +14,21 @@ public:
 	bool Draw() override; 
 	
 	void GetWindowMeasures(int& width, int& height) const;
-	void ScreenToWorld(float& x, float& y) const;
+	void GetWindowPos(float& x, float& y) const;
+	void GetMousePosInWindow(float& mouseX, float& mouseY) const;
 
 protected:
 	void OnResize(int x, int y);
 
 protected:
 	int windowWidth;
-	int windoHeight;
+	int windowHeight;
+
+	int windowPosX;
+	int windowPosY;
+
+	int mousePosX;
+	int mousePosY;
 
 	unsigned int frameBuffer;
 	unsigned int textureBuffer;

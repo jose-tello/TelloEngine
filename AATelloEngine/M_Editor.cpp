@@ -223,7 +223,7 @@ void M_Editor::GetSceneWindowSize(E_Window* win, int& x, int& y, float& mouseX, 
 	{
 		W_CameraView* sceneWin = (W_CameraView*)win;
 		sceneWin->GetWindowMeasures(x, y);
-		sceneWin->ScreenToWorld(mouseX, mouseY);
+		sceneWin->GetMousePosInWindow(mouseX, mouseY);
 	}
 	else
 		assert("Invalid window type");
