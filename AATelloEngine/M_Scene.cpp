@@ -24,7 +24,6 @@ M_Scene::M_Scene(bool start_enabled) : Module(start_enabled)
 
 M_Scene::~M_Scene()
 {
-	
 }
 
 
@@ -310,7 +309,7 @@ void M_Scene::DrawObject(GameObject* object, bool blackWireframe)
 		if (blackWireframe)
 			color = &Black;
 
-		mesh->Draw(object->transform.GetMatTransform().ptr(), texId, color, blackWireframe);
+		mesh->Draw(object->transform.GetMatTransformT().ptr(), texId, color, blackWireframe);
 	}
 	
 }
@@ -367,7 +366,7 @@ void M_Scene::TestRayCollision(LineSegment& ray)
 		for (it; it != candidates.end(); it++)
 		{
 			C_Mesh* mesh = (C_Mesh*)it->second->GetComponent(COMPONENT_TYPE::MESH);
-			float distance = mesh->TestTriangleCollision(ray, it->second->transform.GetMatTransform());
+			float distance = mesh->TestTriangleCollision(ray, it->second->transform.GetMatTransformT());
 
 			if (distance != 0 && distance < selected.first)
 			{

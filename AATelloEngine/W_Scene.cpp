@@ -90,7 +90,7 @@ void W_Scene::HandleGizmo()
 		float4x4 projMat;
 		projMat.Set(App->camera->GetProjectionMatrix());
 
-		float4x4 objTransform = focusedGO->transform.GetMatTransform();
+		float4x4 objTransform = focusedGO->transform.GetMatTransformT();
 		
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
