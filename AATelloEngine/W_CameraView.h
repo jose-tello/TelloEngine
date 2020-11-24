@@ -17,6 +17,9 @@ public:
 	void ScreenToWorld(float& x, float& y) const;
 
 protected:
+	void OnResize(int x, int y);
+
+protected:
 	int windowWidth;
 	int windoHeight;
 

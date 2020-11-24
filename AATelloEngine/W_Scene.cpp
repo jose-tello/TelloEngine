@@ -24,13 +24,8 @@ bool W_Scene::Draw()
 	ImVec2 size = ImGui::GetWindowSize();
 
 	if (size.x != windowWidth || size.y != windoHeight)
-	{
-		windowWidth = size.x;
-		windoHeight = size.y;
-
-		App->renderer3D->OnResize(windowWidth, windoHeight, camera);
-		App->renderer3D->GenerateFrameBuffer(windowWidth, windoHeight, frameBuffer, textureBuffer, depthBuffer);
-	}
+		OnResize(size.x, size.y);
+	
 
 	App->renderer3D->DrawScene(frameBuffer, camera, !App->camera->debugFrustumCull);
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windoHeight), ImVec2(0, 1), ImVec2(1, 0));

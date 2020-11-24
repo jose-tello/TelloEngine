@@ -30,12 +30,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Start()
 {
-	App->fileManager->LoadFromExporter("/Assets/house/BakerHouse.fbx");
-
-	float4x4 transform = float4x4::FromTRS(float3(0, 0, 0), Quat::FromEulerXYZ(90 * DEGTORAD, 0, 0),
-										   float3(0.05f, 0.05f, 0.05f));
-
-	gameObjects[0]->transform.AddTransform(transform);
+	SceneImporter::Load("test", gameObjects);
 
 	return true;
 }

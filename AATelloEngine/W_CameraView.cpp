@@ -50,13 +50,7 @@ bool W_CameraView::Draw()
 	ImVec2 size = ImGui::GetWindowSize();
 
 	if (size.x != windowWidth || size.y != windoHeight)
-	{
-		windowWidth = size.x;
-		windoHeight = size.y;
-
-		App->renderer3D->OnResize(windowWidth, windoHeight, camera);
-		App->renderer3D->GenerateFrameBuffer(windowWidth, windoHeight, frameBuffer, textureBuffer, depthBuffer);
-	}
+		OnResize(size.x, size.y);
 
 	App->renderer3D->DrawScene(frameBuffer, camera);
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windoHeight), ImVec2(0, 1), ImVec2(1, 0));
@@ -81,4 +75,15 @@ void W_CameraView::ScreenToWorld(float& x, float& y) const
 
 	x = x / width * windowWidth;
 	y = y / height * windoHeight;
+}
+
+
+void W_CameraView::OnResize(int x, int y)
+{
+	windowWidth = x;
+	windoHeight = y;
+
+	App->renderer3D->OnResize(windowWidth, windoHeight, camera);
+	App->renderer3D->DeleteBuffers(frameBuffer, textureBuffer, depthBuffer);
+	App->renderer3D->GenerateFrameBuffer(windowWidth, windoHeight, frameBuffer, textureBuffer, depthBuffer);
 }
