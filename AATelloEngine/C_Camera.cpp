@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "M_Editor.h"
+#include "M_Renderer3D.h"
 
 
 #include "Config.h"
@@ -32,6 +33,13 @@ C_Camera::~C_Camera()
 }
 
 
+bool C_Camera::Update(float dt)
+{
+	App->renderer3D->PushFrustum(this);
+	return true;
+}
+
+
 void C_Camera::OnUpdateTransform(float4x4& transform)
 {
 	frustum.SetUp(transform.WorldY());
@@ -44,6 +52,15 @@ void C_Camera::OnUpdateTransform(float4x4& transform)
 bool C_Camera::IsInsideFrustum(AABB& aabb)
 {
 	return frustum.ContainsAABB(aabb);
+}
+
+
+void C_Camera::DrawFrustum() const
+{
+	float3 corners[8];
+	frustum.GetCornerPoints(corners);
+
+	App->renderer3D->DrawCube((float*)corners);
 }
 
 

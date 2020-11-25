@@ -7,6 +7,7 @@
 
 #include "SDL\include\SDL.h"
 
+#include <vector>
 #include <string>
 
 class C_Camera;
@@ -31,6 +32,7 @@ public:
 	void DrawCube(float*) const;
 
 	C_Camera* GetCurrentCamera();
+	void PushFrustum(C_Camera*);
 	
 	void SetCameraRay(float rayBegin[3], float rayEnd[3]);
 
@@ -47,6 +49,7 @@ private:
 	void PopCamera();
 
 	void DrawObjects(bool drawAABB);
+	void DrawFrustums() const;
 
 public:
 	SDL_GLContext context;
@@ -65,6 +68,8 @@ private:
 	//Camera we are rendering to, used to frustum cull
 	//WARNING: use pop / push structure
 	C_Camera* currentCamera = nullptr;
+
+	std::vector<C_Camera*> frustumVector;
 
 	float cameraRay1[3];
 	float cameraRay2[3];

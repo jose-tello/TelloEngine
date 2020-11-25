@@ -149,6 +149,8 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 	App->editor->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
+	frustumVector.clear();
+
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
@@ -229,6 +231,9 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pu
 
 	DrawObjects(drawAABB);
 
+	if (drawAABB == true)
+		DrawFrustums();
+
 	Grid grid;
 	grid.Draw();
 
@@ -289,6 +294,12 @@ void M_Renderer3D::DrawCube(float* cube) const
 C_Camera* M_Renderer3D::GetCurrentCamera()
 {
 	return currentCamera;
+}
+
+
+void M_Renderer3D::PushFrustum(C_Camera* frustum)
+{
+	frustumVector.push_back(frustum);
 }
 
 
@@ -431,5 +442,15 @@ void M_Renderer3D::DrawObjects(bool drawAABB)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		App->scene->DrawGameObjects(objToDraw, true, false);
+	}
+}
+
+
+void M_Renderer3D::DrawFrustums() const
+{
+	int frustumCount = frustumVector.size();
+	for (int i = 0; i < frustumCount; i++)
+	{
+		frustumVector[i]->DrawFrustum();
 	}
 }

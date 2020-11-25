@@ -12,9 +12,12 @@ public:
 	C_Camera(bool isSceneCamera = false);
 	~C_Camera() override;
 
+	bool Update(float dt) override;
+
 	void OnUpdateTransform(float4x4& transform) override;
 
 	bool IsInsideFrustum(AABB&);
+	void DrawFrustum() const;
 
 	float* GetViewMat() const;
 	float* GetProjectionMat() const;

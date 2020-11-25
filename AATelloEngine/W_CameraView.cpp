@@ -63,6 +63,7 @@ bool W_CameraView::Draw()
 		OnResize(size.x, size.y);
 
 	App->renderer3D->DrawScene(frameBuffer, camera);
+
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::EndChild();
 	ImGui::End();
