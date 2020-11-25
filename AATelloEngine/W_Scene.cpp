@@ -42,7 +42,7 @@ bool W_Scene::Draw()
 	if (size.x != windowWidth || size.y != windowHeight)
 		OnResize(size.x, size.y);
 	
-	App->renderer3D->DrawScene(frameBuffer, camera, !App->camera->debugFrustumCull);
+	App->renderer3D->DrawScene(frameBuffer, camera, !App->camera->debugFrustumCull, App->camera->drawAABB);
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	
 	HandleGizmo();

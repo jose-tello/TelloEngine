@@ -204,7 +204,7 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 }
 
 
-void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera)
+void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera, bool drawAABB)
 {
 	if (pushCamera == true)
 	{
@@ -227,7 +227,7 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pu
 	if (wireframeModeEnabled == true)
 		glLineWidth(3.0f);
 
-	DrawObjects();
+	DrawObjects(drawAABB);
 
 	Grid grid;
 	grid.Draw();
@@ -247,6 +247,42 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pu
 	
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
+void M_Renderer3D::DrawCube(float* cube) const
+{
+	glBegin(GL_LINES);
+
+	glLineWidth(3.0f);
+	glColor3f(0, 0.2f, 0.9f);
+
+	glVertex3f(cube[0], cube[1], cube[2]);
+	glVertex3f(cube[12], cube[13], cube[14]);
+	glVertex3f(cube[0], cube[1], cube[2]);
+	glVertex3f(cube[3], cube[4], cube[5]);
+	glVertex3f(cube[0], cube[1], cube[2]);
+	glVertex3f(cube[6], cube[7], cube[8]);
+	glVertex3f(cube[6], cube[7], cube[8]);
+	glVertex3f(cube[9], cube[10], cube[11]);
+	glVertex3f(cube[3], cube[4], cube[5]);
+	glVertex3f(cube[9], cube[10], cube[11]);
+	glVertex3f(cube[12], cube[13], cube[14]);
+	glVertex3f(cube[15], cube[16], cube[17]);
+	glVertex3f(cube[12], cube[13], cube[14]);
+	glVertex3f(cube[18], cube[19], cube[20]);
+	glVertex3f(cube[15], cube[16], cube[17]);
+	glVertex3f(cube[21], cube[22], cube[23]);
+	glVertex3f(cube[18], cube[19], cube[20]);
+	glVertex3f(cube[21], cube[22], cube[23]);
+	glVertex3f(cube[6], cube[7], cube[8]);
+	glVertex3f(cube[18], cube[19], cube[20]);
+	glVertex3f(cube[3], cube[4], cube[5]);
+	glVertex3f(cube[15], cube[16], cube[17]);
+	glVertex3f(cube[9], cube[10], cube[11]);
+	glVertex3f(cube[21], cube[22], cube[23]);
+
+	glEnd();
 }
 
 
@@ -377,7 +413,7 @@ void M_Renderer3D::PopCamera()
 }
 
 
-void M_Renderer3D::DrawObjects()
+void M_Renderer3D::DrawObjects(bool drawAABB)
 {	
 	if (fillModeEnabled)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -388,12 +424,12 @@ void M_Renderer3D::DrawObjects()
 	std::vector<GameObject*> objToDraw;
 	App->scene->CullGameObjects(objToDraw);
 
-	App->scene->DrawGameObjects(objToDraw, false);
+	App->scene->DrawGameObjects(objToDraw, false, drawAABB);
 
 	if (fillModeEnabled == true && wireframeModeEnabled == true)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		App->scene->DrawGameObjects(objToDraw, true);
+		App->scene->DrawGameObjects(objToDraw, true, false);
 	}
 }

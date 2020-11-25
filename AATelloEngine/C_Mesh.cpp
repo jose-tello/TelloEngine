@@ -5,7 +5,10 @@
 
 #include "Config.h"
 #include "MeshImporter.h"
+
+#include "Application.h"
 #include "M_FileManager.h"
+#include "M_Renderer3D.h"
 
 C_Mesh::C_Mesh() : Component(COMPONENT_TYPE::MESH),
 	
@@ -90,6 +93,23 @@ float C_Mesh::TestTriangleCollision(LineSegment ray, float4x4& transform) const
 {
 	ray.Transform(transform.Inverted());
 	return mesh->TestTriangleRayCollision(ray);
+}
+
+
+void C_Mesh::DrawAABB() const
+{
+	float3 corners[8];
+	aabb.GetCornerPoints(corners);
+
+	float cubeCorners[24];
+	for (int i = 0; i < 8; i++)
+	{
+		cubeCorners[i * 3] = corners[i].x;
+		cubeCorners[i * 3 + 1] = corners[i].y;
+		cubeCorners[i * 3 + 2] = corners[i].z;
+	}
+
+	App->renderer3D->DrawCube(cubeCorners);
 }
 
 

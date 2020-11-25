@@ -49,6 +49,7 @@ private:
 public:
 	bool drawClickRay;
 	bool debugFrustumCull = false; //Must ALLWAYS be initialized as false
+	bool drawAABB;
 
 private:
 	C_Camera* camera = nullptr;

@@ -27,7 +27,8 @@ public:
 							 unsigned int& textureBuffer, unsigned int& depthBuffer);
 	void DeleteBuffers(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int depthBuffer);
 
-	void DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera = true);
+	void DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera = true, bool drawAABB = false);
+	void DrawCube(float*) const;
 
 	C_Camera* GetCurrentCamera();
 	
@@ -45,7 +46,7 @@ private:
 	void PushCamera(C_Camera*);
 	void PopCamera();
 
-	void DrawObjects();
+	void DrawObjects(bool drawAABB);
 
 public:
 	SDL_GLContext context;

@@ -206,6 +206,7 @@ void W_AppState::DrawCameraOptions()
 
 		ImGui::Checkbox("Debug mouse pick ray", &App->camera->drawClickRay);
 		ImGui::Checkbox("Debug frustum cull", &App->camera->debugFrustumCull);
+		ImGui::Checkbox("Draw aabb and frustum boxes", &App->camera->drawAABB);
 	}
 }
 

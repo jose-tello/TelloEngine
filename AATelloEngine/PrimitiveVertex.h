@@ -2,7 +2,7 @@
 #define __PRIMITIVE_VERTEX_H__
 
 //Cube
-float cubeVertexArray[] = {
+static float cubeVertexArray[] = {
 	0.f, 0.f, 0.f,
 	1.f, 0.f, 0.f,
 	1.f, 0.f, -1.f,
@@ -15,7 +15,7 @@ float cubeVertexArray[] = {
 };
 
 
-unsigned int cubeIndexArray[] = {
+static unsigned int cubeIndexArray[] = {
 	4, 0, 1,
 	1, 5, 4,
 
@@ -38,7 +38,7 @@ unsigned int cubeIndexArray[] = {
 
 //Piramid
 
-float piramidVertexArray[] = {
+static float piramidVertexArray[] = {
 
 	0.f, 0.f, 0.f,
 	1.f, 0.f, 0.f,
@@ -49,7 +49,7 @@ float piramidVertexArray[] = {
 };
 
 
-unsigned int piramidIndexArray[] = {
+static unsigned int piramidIndexArray[] = {
 	4, 1, 0,
 	4, 2, 1,
 	4, 3, 2,

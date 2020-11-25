@@ -19,6 +19,8 @@
 M_Camera3D::M_Camera3D(bool start_enabled) : Module(start_enabled),
 	drawClickRay(false),
 	debugFrustumCull(false),
+	drawAABB(true),
+
 	camera(nullptr)
 {
 }
