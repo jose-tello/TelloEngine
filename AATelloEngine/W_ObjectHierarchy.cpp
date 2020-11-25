@@ -31,29 +31,16 @@ bool W_ObjectHierarchy::Draw()
 	std::vector<GameObject*> gameObjects;
 	App->scene->GetGameObjectVector(gameObjects);
 
-	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed;
 
-	int gameObjCount = gameObjects.size();
-	for (int i = 0; i < gameObjCount; i++)
+	bool open = ImGui::TreeNodeEx("Scene", flags);
+		
+	if (open == true)
 	{
-		bool open = ImGui::TreeNodeEx(gameObjects[i]->GetName(), flags);
-		
-		if (ImGui::IsItemClicked())
-		{
-			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow((int)E_WINDOW_TYPE::INSPECTOR);
-			inspector->SetFocusedObject(gameObjects[i]);
-		}
-
-		if (ImGui::IsWindowFocused() && App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
-			App->editor->DeleteFocusedObject();
-		
-		if (open == true)
-		{
-			DrawChildren(gameObjects[i]->childs);
-			ImGui::TreePop();
-		}		
-	}
-
+		DrawChildren(gameObjects);
+		ImGui::TreePop();
+	}		
+	
 	ImGui::End();
 
 	return true;
@@ -73,6 +60,9 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow((int)E_WINDOW_TYPE::INSPECTOR);
 			inspector->SetFocusedObject(vec[i]);
 		}
+
+		if (ImGui::IsWindowFocused() && App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
+			App->editor->DeleteFocusedObject();
 
 		HandleDragAndDrop(vec[i]);
 

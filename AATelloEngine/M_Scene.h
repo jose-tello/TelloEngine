@@ -38,7 +38,7 @@ public:
 	void GetGameObjectVector(std::vector<GameObject*>&);
 
 	void CullGameObjects(std::vector<GameObject*>& objVector);
-	void DrawGameObjects(std::vector<GameObject*>& objVector, bool blackWireframe);
+	void DrawGameObjects(std::vector<GameObject*>& objVector, bool blackWireframe);	//Called from render
 	void TestRayCollision(LineSegment& ray);
 
 	void LoadScene();
