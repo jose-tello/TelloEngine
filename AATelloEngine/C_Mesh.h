@@ -23,8 +23,9 @@ public:
 	Mesh* GetMesh() const;
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
 
+	AABB GetAABB() const;
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
-	float TestTriangleCollision(LineSegment, float4x4& transform);
+	float TestTriangleCollision(LineSegment, float4x4& transform) const;
 
 	void Load(Config&) override;
 	void Save(Config&) const override;
@@ -35,7 +36,7 @@ public:
 
 private:
 	Mesh* mesh = nullptr;
-	//AABB aabb;
+	AABB aabb;
 };
 
 

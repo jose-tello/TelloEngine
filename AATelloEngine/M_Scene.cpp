@@ -161,7 +161,7 @@ void M_Scene::GetGameObjectVector(std::vector<GameObject*>& vec)
 }
 
 
-void M_Scene::DrawGameObjects(bool black)
+void M_Scene::CullGameObjects(std::vector<GameObject*>& objVector)
 {
 	std::stack<GameObject*> stack;
 	GameObject* node;
@@ -178,9 +178,14 @@ void M_Scene::DrawGameObjects(bool black)
 			node = stack.top();
 			stack.pop();
 
-			if (node->GetComponent(COMPONENT_TYPE::MESH) != nullptr)
-				DrawObject(node, black);
-			
+			Component* component = node->GetComponent(COMPONENT_TYPE::MESH);
+			if (component != nullptr)
+			{
+				C_Mesh* mesh = (C_Mesh*)component;
+				if (App->renderer3D->GetCurrentCamera()->IsInsideFrustum(mesh->GetAABB()) == true)
+					objVector.push_back(node);
+			}
+
 
 			if (node->childs.empty() == false)
 			{
@@ -191,6 +196,16 @@ void M_Scene::DrawGameObjects(bool black)
 				}
 			}
 		}
+	}
+}
+
+
+void M_Scene::DrawGameObjects(std::vector<GameObject*>& objVector, bool blackWireframe)
+{
+	int gameObjCount = objVector.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		DrawObject(objVector[i], blackWireframe);
 	}
 }
 
@@ -295,23 +310,19 @@ void M_Scene::DrawObject(GameObject* object, bool blackWireframe)
 
 	C_Mesh* mesh = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
 
-	if (App->renderer3D->GetCurrentCamera()->IsInsideFrustum(mesh->GetMesh()->GetAABB()) == true) //Frustum cull
+	C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
+
+	if (material != nullptr)
 	{
-		C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
-
-		if (material != nullptr)
-		{
-			Color col;
-			material->GetDrawVariables(texId, col);
-			color = &col;
-		}
-
-		if (blackWireframe)
-			color = &Black;
-
-		mesh->Draw(object->transform.GetMatTransformT().ptr(), texId, color, blackWireframe);
+		Color col;
+		material->GetDrawVariables(texId, col);
+		color = &col;
 	}
-	
+
+	if (blackWireframe)
+		color = &Black;
+
+	mesh->Draw(object->transform.GetMatTransformT().ptr(), texId, color, blackWireframe);
 }
 
 
@@ -354,7 +365,7 @@ void M_Scene::TestRayCollision(LineSegment& ray)
 
 	if (candidates.size() == 0)
 		App->editor->SetFocusedGameObject(nullptr);
-	
+
 	else if (candidates.size() == 1)
 		App->editor->SetFocusedGameObject(candidates.begin()->second);
 

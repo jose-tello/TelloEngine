@@ -12,8 +12,8 @@ C_Mesh::C_Mesh() : Component(COMPONENT_TYPE::MESH),
 	drawVertexNormals(false),
 	drawFaceNormals(false),
 
-	mesh(nullptr)
-	//aabb()
+	mesh(nullptr),
+	aabb()
 {
 }
 
@@ -38,7 +38,11 @@ C_Mesh::~C_Mesh()
 
 void C_Mesh::OnUpdateTransform(float4x4& transform)
 {
-	mesh->SetAABB(transform);
+	OBB obb = mesh->GetAABB();
+	obb.Transform(transform);
+
+	aabb.SetNegativeInfinity();
+	aabb.Enclose(obb);
 }
 
 
@@ -69,13 +73,20 @@ void C_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned 
 }
 
 
-bool C_Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
+AABB C_Mesh::GetAABB() const
 {
-	return mesh->TestAABBRayCollision(ray, distance);
+	return aabb;
 }
 
 
-float C_Mesh::TestTriangleCollision(LineSegment ray, float4x4& transform)
+bool C_Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
+{
+	float farDst;
+	return ray.Intersects(aabb, distance, farDst);
+}
+
+
+float C_Mesh::TestTriangleCollision(LineSegment ray, float4x4& transform) const
 {
 	ray.Transform(transform.Inverted());
 	return mesh->TestTriangleRayCollision(ray);

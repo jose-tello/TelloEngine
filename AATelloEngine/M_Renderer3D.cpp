@@ -385,12 +385,15 @@ void M_Renderer3D::DrawObjects()
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	App->scene->DrawGameObjects(false);
+	std::vector<GameObject*> objToDraw;
+	App->scene->CullGameObjects(objToDraw);
+
+	App->scene->DrawGameObjects(objToDraw, false);
 
 	if (fillModeEnabled == true && wireframeModeEnabled == true)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		App->scene->DrawGameObjects(true);
+		App->scene->DrawGameObjects(objToDraw, true);
 	}
 }

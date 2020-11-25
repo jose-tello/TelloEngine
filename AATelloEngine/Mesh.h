@@ -14,9 +14,8 @@ public:
 	~Mesh();
 
 	AABB GetAABB() const;
-	void SetAABB(float4x4& transform);
+	void InitAABB();
 
-	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
 	float TestTriangleRayCollision(LineSegment& ray) const;
 
 	//Primitive things

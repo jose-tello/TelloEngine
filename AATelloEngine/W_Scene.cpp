@@ -92,10 +92,15 @@ void W_Scene::HandleGizmo()
 
 		float4x4 objTransform = focusedGO->transform.GetMatTransformT();
 		
+		ImGuizmo::MODE mode = ImGuizmo::MODE::WORLD;
+
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-		ImGuizmo::Manipulate(viewMat.ptr(), projMat.ptr(), (ImGuizmo::OPERATION)gizmoOperation, ImGuizmo::MODE::WORLD, objTransform.ptr());
+		if ((ImGuizmo::OPERATION)gizmoOperation == ImGuizmo::OPERATION::SCALE)
+			mode = ImGuizmo::MODE::LOCAL;
+
+		ImGuizmo::Manipulate(viewMat.ptr(), projMat.ptr(), (ImGuizmo::OPERATION)gizmoOperation, mode, objTransform.ptr());
 
 		if (ImGuizmo::IsUsing())
 			focusedGO->transform.SetGlobalTransform(objTransform.Transposed());

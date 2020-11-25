@@ -72,23 +72,10 @@ AABB Mesh::GetAABB() const
 }
 
 
-void Mesh::SetAABB(float4x4& transform)
+void Mesh::InitAABB()
 {
 	aabb.SetNegativeInfinity();
 	aabb.Enclose((float3*)&vertices[0], vertices.size() / 3);
-
-	OBB obb = aabb;
-	obb.Transform(transform);
-
-	aabb.SetNegativeInfinity();
-	aabb.Enclose(obb);
-}
-
-
-bool Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
-{
-	float farDst;
-	return ray.Intersects(aabb, distance, farDst);
 }
 
 
@@ -174,6 +161,8 @@ void Mesh::InitVertexBuffer(float* vertexBuffer, size_t vertexArrSize)
 	glBufferData(GL_ARRAY_BUFFER, vertexArrSize, vertexBuffer, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	InitAABB();
 }
 
 
