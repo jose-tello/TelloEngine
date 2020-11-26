@@ -40,14 +40,18 @@ bool C_Transform::Update(float dt)
 
 void C_Transform::GetPos(float& x, float& y, float& z) const
 {
-	/*float3 pos = worldTransform.TranslatePart();
-	x = pos.x;
-	y = pos.y;
-	z = pos.z;*/
-
 	x = localPosition.x;
 	y = localPosition.y;
 	z = localPosition.z;
+}
+
+
+void C_Transform::GetGlobalPos(float& x, float& y, float& z) const
+{
+	float3 pos = worldTransform.TranslatePart();
+	x = pos.x;
+	y = pos.y;
+	z = pos.z;
 }
 
 

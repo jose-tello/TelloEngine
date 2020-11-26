@@ -63,10 +63,7 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 	{
 		float3 pos;
 		if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
-			camera->LookAt(pos);
-
-		MoveCamera();
-		RotateCamera();
+			OrbitCamera(pos);
 	}
 
 	int weelMotion = App->input->GetMouseZ();
@@ -272,3 +269,22 @@ void M_Camera3D::MoveCameraSideways()
 }
 
 
+void M_Camera3D::OrbitCamera(float3& reference)
+{
+	int dx = -App->input->GetMouseXMotion();
+	int dy = -App->input->GetMouseYMotion();
+
+	float deltaX = (float)dx * MOUSE_ORBIT_SENSITIVITY;
+	float deltaY = (float)dy * MOUSE_ORBIT_SENSITIVITY;
+
+	float3 vector = camera->frustum.Pos() - reference;
+
+	Quat quat_y(camera->frustum.Up(), deltaX);
+	Quat quat_x(camera->frustum.WorldRight(), deltaY);
+
+	vector = quat_x.Transform(vector);
+	vector = quat_y.Transform(vector);
+
+	camera->frustum.SetPos(vector + reference);
+	camera->LookAt(reference);
+}

@@ -88,7 +88,7 @@ bool W_Inspector::GetFocusedGameObjectPos(float& x, float& y, float& z) const
 	if (focusedObject == nullptr)
 		return false;
 
-	focusedObject->transform.GetPos(x, y, z);
+	focusedObject->transform.GetGlobalPos(x, y, z);
 	return true;
 }
 

@@ -6,6 +6,7 @@
 
 #define CAMERA_SPEED 1.f
 #define MOUSE_SENSITIVITY 0.25f
+#define MOUSE_ORBIT_SENSITIVITY 0.02f
 #define MOUSE_WEEL_SPEED 25.f
 
 class C_Camera;
@@ -45,6 +46,7 @@ private:
 	void RotateCamera();
 	void ZoomCamera(int weelMotion);
 	void MoveCameraSideways();
+	void OrbitCamera(float3& reference);
 
 public:
 	bool drawClickRay;

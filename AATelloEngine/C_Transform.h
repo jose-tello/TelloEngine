@@ -13,6 +13,7 @@ public:
 	bool Update(float dt) override;
 
 	void GetPos(float& x, float& y, float& z) const;
+	void GetGlobalPos(float& x, float& y, float& z) const;
 	void SetPos(float x, float y, float z);
 
 	void GetRotation(float& angle, float& x, float& y, float& z) const;
