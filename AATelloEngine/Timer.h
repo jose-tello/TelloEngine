@@ -1,14 +1,9 @@
 #ifndef __TIMER_H__
 #define __TIMER_H__
 
-#include "Globals.h"
-
-
-class Timer
+struct Timer
 {
 public:
-
-	// Constructor
 	Timer();
 
 	void Start();
@@ -18,7 +13,7 @@ public:
 
 private:
 
-	bool	running;
+	bool	stopped;
 	unsigned __int32	startedAt;
 	unsigned __int32	stoppedAt;
 };

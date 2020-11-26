@@ -8,7 +8,7 @@
 
 // ---------------------------------------------
 Timer::Timer() : 
-	running(false), 
+	stopped(true), 
 	startedAt(0), 
 	stoppedAt(0)
 {
@@ -18,26 +18,23 @@ Timer::Timer() :
 // ---------------------------------------------
 void Timer::Start()
 {
-	running = true;
+	stopped = false;
 	startedAt = SDL_GetTicks();
 }
 
 // ---------------------------------------------
 void Timer::Stop()
 {
-	running = false;
+	stopped = true;
 	stoppedAt = SDL_GetTicks();
 }
 
 // ---------------------------------------------
 unsigned __int32 Timer::Read()
 {
-	if(running == true)
-	{
+	if(stopped == false)
 		return SDL_GetTicks() - startedAt;
-	}
+	
 	else
-	{
 		return stoppedAt - startedAt;
-	}
 }

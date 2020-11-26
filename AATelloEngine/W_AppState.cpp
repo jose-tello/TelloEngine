@@ -6,6 +6,8 @@
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 
+#include "TimeManager.h"
+
 #include "imgui/imgui.h"
 #include "SDL\include\SDL.h"
 
@@ -130,6 +132,12 @@ void W_AppState::DrawChApplicationState()
 	if (ImGui::CollapsingHeader("Application state"))
 	{
 		ImGui::PlotHistogram("##framerate", &frameRateLog.front(), frameRateLog.size(), 0, "FrameRate", 0.0f, 100.0f, ImVec2(310, 100));
+	
+		TimeManager* time = App->GetTimeManager();
+		ImGui::Text("Time since start: %f", time->GetTimeSinceStart());
+		ImGui::Text("Time since play: %f", time->GetTimeSincePlay());
+		ImGui::Text("Game dt: %f", time->GetDt());
+	
 	}
 }
 

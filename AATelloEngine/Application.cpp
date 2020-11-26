@@ -73,7 +73,6 @@ bool Application::Init()
 		ret = modulesVec[i]->Start();
 	}
 
-	msTimer.Start();
 	return ret;
 }
 
@@ -81,8 +80,8 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)msTimer.Read() / 1000.0f;
-	msTimer.Start();
+	timeManager.Update();
+	dt = timeManager.GetDt();
 }
 
 
@@ -134,6 +133,12 @@ void Application::CloseApplication()
 {
 	editor->AddLog("Closing Application --------------");
 	closeApplication = true;
+}
+
+
+TimeManager* Application::GetTimeManager()
+{
+	return &timeManager;
 }
 
 

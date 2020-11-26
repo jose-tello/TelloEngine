@@ -4,9 +4,9 @@
 #include "Module.h"
 #include "MathGeoLib/src/MathGeoLibFwd.h"
 
-#define CAMERA_SPEED 30.f
+#define CAMERA_SPEED 1.f
 #define MOUSE_SENSITIVITY 0.25f
-#define MOUSE_WEEL_SPEED 250.f
+#define MOUSE_WEEL_SPEED 25.f
 
 class C_Camera;
 
@@ -41,10 +41,10 @@ public:
 	
 private:
 
-	void MoveCamera(float dt);
-	void RotateCamera(float dt);
-	void ZoomCamera(int weelMotion, float dt);
-	void MoveCameraSideways(float dt);
+	void MoveCamera();
+	void RotateCamera();
+	void ZoomCamera(int weelMotion);
+	void MoveCameraSideways();
 
 public:
 	bool drawClickRay;

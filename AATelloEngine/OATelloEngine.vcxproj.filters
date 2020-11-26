@@ -37,6 +37,9 @@
     <Filter Include="Sources\Tools\Imguizmo">
       <UniqueIdentifier>{45965b0d-2779-4c08-9324-543a75e5130a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Containers\Time">
+      <UniqueIdentifier>{cb54197c-1b1a-4900-97c2-2285a866bbc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -50,9 +53,6 @@
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui.h">
       <Filter>Sources\Tools\imgui</Filter>
@@ -378,12 +378,15 @@
     <ClInclude Include="ImGuizmo\ImGuizmo.h">
       <Filter>Sources\Tools\Imguizmo</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Sources\Containers\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>Sources\Containers\Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
@@ -625,6 +628,12 @@
     </ClCompile>
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\Tools\Imguizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Sources\Containers\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>Sources\Containers\Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

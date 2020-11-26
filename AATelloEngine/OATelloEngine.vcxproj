@@ -153,6 +153,7 @@
     <ClInclude Include="parson\parson.h" />
     <ClInclude Include="SceneImporter.h" />
     <ClInclude Include="TextureImporter.h" />
+    <ClInclude Include="TimeManager.h" />
     <ClInclude Include="W_AppState.h" />
     <ClInclude Include="W_Console.h" />
     <ClInclude Include="W_DockWindow.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="SceneImporter.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="W_AppState.cpp" />
     <ClCompile Include="W_Console.cpp" />
     <ClCompile Include="W_DockWindow.cpp" />

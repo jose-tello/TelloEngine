@@ -2,7 +2,7 @@
 #define __APLICATION_H__
 
 #include "Globals.h"
-#include "Timer.h"
+#include "TimeManager.h"
 
 #include <vector>
 
@@ -19,6 +19,22 @@ class M_Scene;
 class Application
 {
 public:
+	Application();
+	~Application();
+
+	bool Init();
+	UPDATE_STATUS Update();
+	bool CleanUp();
+
+	void CloseApplication();
+	
+	TimeManager* GetTimeManager();
+
+private:
+	void AddModule(Module* mod);
+	void PrepareUpdate();
+
+public:
 	M_Window* window = nullptr;
 	M_Input* input = nullptr;
 	M_Renderer3D* renderer3D = nullptr;
@@ -28,24 +44,11 @@ public:
 	M_Scene* scene = nullptr;
 
 private:
-	Timer	msTimer;
+	TimeManager	timeManager;
 	float	dt;
 	std::vector<Module*> modulesVec;
 
 	bool closeApplication;
-
-public:
-	Application();
-	~Application();
-
-	bool Init();
-	UPDATE_STATUS Update();
-	bool CleanUp();
-
-	void CloseApplication();
-
-private:
-	void AddModule(Module* mod);
-	void PrepareUpdate();};
+};
 
 #endif // !__APLICATION_H__
