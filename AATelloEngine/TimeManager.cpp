@@ -17,8 +17,11 @@ void TimeManager::Update()
 	dt = timer.Read();
 	ticksSinceStart += dt;
 	
-	if (playStopped == false)
+	if (playStopped == false || advanceFrame == true)
+	{
 		ticksSincePlay += dt;
+		advanceFrame = false;
+	}
 
 	timer.Start();
 }
@@ -43,7 +46,6 @@ float TimeManager::GetDt()
 			return 0;
 	}
 
-	advanceFrame = false;
 	return (float)dt / 1000.f;
 }
 
@@ -76,5 +78,15 @@ void TimeManager::StopPlayTimer()
 
 void TimeManager::StepFrame()
 {
-	advanceFrame = true;
+	if (ticksSincePlay != 0)
+		advanceFrame = true;
+}
+
+
+bool TimeManager::IsGameStarted()
+{
+	if (ticksSincePlay == 0)
+		return false;
+
+	return true;
 }

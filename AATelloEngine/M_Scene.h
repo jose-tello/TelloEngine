@@ -44,6 +44,10 @@ public:
 	void LoadScene();
 	void SaveScene();
 
+	//TODO: this should be an event
+	void OnGameStart();
+	void OnGameEnd();
+
 private:
 	void UpdateGameObjects(float dt);
 

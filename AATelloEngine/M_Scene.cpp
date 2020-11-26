@@ -227,6 +227,23 @@ void M_Scene::LoadScene()
 }
 
 
+void M_Scene::OnGameStart()
+{
+	std::vector<GameObject*> vec;
+	GetAllGameObjects(vec);
+
+	SceneImporter::Save("before_play", vec);
+}
+
+
+void M_Scene::OnGameEnd()
+{
+	DeleteAllGameObjects();
+
+	SceneImporter::Load("before_play", gameObjects);
+}
+
+
 void M_Scene::UpdateGameObjects(float dt)
 {
 	std::stack<GameObject*> stack;

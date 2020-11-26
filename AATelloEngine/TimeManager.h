@@ -20,6 +20,8 @@ public:
 	void StopPlayTimer();
 	void StepFrame();
 
+	bool IsGameStarted();
+
 private:
 	Timer timer;
 

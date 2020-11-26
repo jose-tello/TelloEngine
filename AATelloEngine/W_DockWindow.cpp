@@ -4,6 +4,8 @@
 #include "M_Scene.h"
 #include "M_Editor.h"
 
+#include "TimeManager.h"
+
 #include "imgui/imgui.h"
 
 W_DockWindow::W_DockWindow(bool open) : E_Window(E_WINDOW_TYPE::DOCKING_WINDOW, open)
@@ -62,6 +64,7 @@ void W_DockWindow::CreateDockWindow()
 
 		DrawFileMenu();
 		DrawAddMenu();
+		DrawStateMenu();
 
 		ImGui::EndMenuBar();
 	}
@@ -164,6 +167,44 @@ void W_DockWindow::DrawShapesMenu()
 		if (ImGui::Button("Cilinder"))
 			App->scene->AddPrimitive(PRIMITIVE_TYPE::CILINDER);
 
+		ImGui::EndMenu();
+	}
+}
+
+
+void W_DockWindow::DrawStateMenu()
+{
+	if (ImGui::BeginMenu("Game"))
+	{
+		TimeManager* time = App->GetTimeManager();
+
+		if (ImGui::Button("Play"))
+		{
+			time->StartPlayTimer();
+
+			App->scene->OnGameStart();
+		}
+
+		if (time->IsGameStarted() == true)
+		{
+			if (ImGui::Button("Pause"))
+				time->PausePlayTimer();
+
+			if (ImGui::Button("Continue"))
+				time->ContinuePlayTimer();
+
+			if (ImGui::Button("Stop"))
+			{
+				time->StopPlayTimer();
+				App->editor->QuitFocusedGameObject();
+
+				App->scene->OnGameEnd();
+			}
+
+			if (ImGui::Button("Step"))
+				time->StepFrame();
+		}
+	
 		ImGui::EndMenu();
 	}
 }

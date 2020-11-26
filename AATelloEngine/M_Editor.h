@@ -44,7 +44,8 @@ public:
 	GameObject* GetFocusedGameObject() const;
 	void SetFocusedGameObject(GameObject*);
 	bool GetFocusedGameObjectPos(float& x, float& y, float& z) const;
-
+	
+	void QuitFocusedGameObject();
 	void DeleteFocusedObject();
 
 private:

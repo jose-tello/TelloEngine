@@ -20,6 +20,8 @@ private:
 
 	void DrawAddMenu();
 	void DrawShapesMenu();
+
+	void DrawStateMenu();
 };
 
 

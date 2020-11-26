@@ -252,6 +252,13 @@ bool M_Editor::GetFocusedGameObjectPos(float& x, float& y, float& z) const
 }
 
 
+void M_Editor::QuitFocusedGameObject()
+{
+	W_Inspector* inspector = (W_Inspector*)windowsVec[(int)E_WINDOW_TYPE::INSPECTOR];
+	inspector->QuitFocusedObject();
+}
+
+
 void M_Editor::DeleteFocusedObject()
 {
 	W_Inspector* inspector = (W_Inspector*)windowsVec[(int)E_WINDOW_TYPE::INSPECTOR];

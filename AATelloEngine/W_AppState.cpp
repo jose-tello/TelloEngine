@@ -137,7 +137,6 @@ void W_AppState::DrawChApplicationState()
 		ImGui::Text("Time since start: %f", time->GetTimeSinceStart());
 		ImGui::Text("Time since play: %f", time->GetTimeSincePlay());
 		ImGui::Text("Game dt: %f", time->GetDt());
-	
 	}
 }
 
