@@ -13,13 +13,7 @@
 #define SCENE_LIBRARY "/Library/Scenes/"
 #define MODEL_LIBRARY "/Library/Model/"
 
-enum class FILE_TYPE : int
-{
-	NONE = -1,
-	MODEL,
-	TEXTURE,
-	MAX
-};
+enum class RESOURCE_TYPE;
 
 
 class M_FileManager : public Module
@@ -42,8 +36,12 @@ public:
 	unsigned int ReadBytes(const char* path, char** buffer) const;
 
 	void SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension);
+	std::string RemoveExtension(const char* path);
 
 	void ExploreDirectory(const char* directory, std::vector<std::string>& filesVec, std::vector<std::string>& dirVec) const;
+
+	unsigned __int64 GetLastModTime(const char* file) const;
+	RESOURCE_TYPE GetFileType(const char* path);
 
 private:
 
@@ -51,7 +49,7 @@ private:
 	void TransformPath(std::string& path);
 
 	//bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
-	FILE_TYPE GetFileType(const char* extension);
+	
 };
 
 #endif // __M_ASSET_MANAGER_H__

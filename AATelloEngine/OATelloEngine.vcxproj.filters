@@ -40,6 +40,9 @@
     <Filter Include="Sources\Containers\Time">
       <UniqueIdentifier>{cb54197c-1b1a-4900-97c2-2285a866bbc1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{44c5dcdc-f639-40f9-8037-ff37fd33ddec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -384,6 +387,12 @@
     <ClInclude Include="TimeManager.h">
       <Filter>Sources\Containers\Time</Filter>
     </ClInclude>
+    <ClInclude Include="M_Resources.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -634,6 +643,12 @@
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Sources\Containers\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="M_Resources.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

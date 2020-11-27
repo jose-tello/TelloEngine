@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include "C_Material.h"
 
+#include "Resource.h"
+
 #include "ModelImporter.h"
 #include "MaterialImporter.h"
 #include "TextureImporter.h"
@@ -72,18 +74,18 @@ bool M_FileManager::CleanUp()
 
 void M_FileManager::LoadFromExporter(const char* path)
 {
-	FILE_TYPE type = GetFileType(path);
+	RESOURCE_TYPE type = GetFileType(path);
 
 	switch (type)
 	{
-	case FILE_TYPE::MODEL:
+	case RESOURCE_TYPE::MODEL:
 	{
 		ModelImporter::Import(path);
 		App->editor->AddLog("Log: Loaded a model");
 	}
 	break;
 
-	case FILE_TYPE::TEXTURE:
+	case RESOURCE_TYPE::MATERIAL:
 
 		GameObject* object = App->editor->GetFocusedGameObject();
 		if (object != nullptr)
@@ -250,6 +252,13 @@ void M_FileManager::SplitPath(const char* fullPath, std::string* path, std::stri
 }
 
 
+std::string M_FileManager::RemoveExtension(const char* path)
+{
+	std::string ret(path);
+	return ret.substr(0, ret.find_last_of("."));
+}
+
+
 void M_FileManager::ExploreDirectory(const char* directory, std::vector<std::string>& filesVec, std::vector<std::string>& dirVec) const
 {
 	char** files = PHYSFS_enumerateFiles(directory);
@@ -260,13 +269,40 @@ void M_FileManager::ExploreDirectory(const char* directory, std::vector<std::str
 	for (iterator = files; *iterator != nullptr; iterator++)
 	{
 		if (PHYSFS_isDirectory((dir + *iterator).c_str()))
+		{
 			dirVec.push_back(*iterator);
-
+			dirVec.back() += "/";
+		}
 		else
 			filesVec.push_back(*iterator);
 	}
 
 	PHYSFS_freeList(files);
+}
+
+
+unsigned __int64 M_FileManager::GetLastModTime(const char* file) const
+{
+	return PHYSFS_getLastModTime(file);
+}
+
+
+RESOURCE_TYPE M_FileManager::GetFileType(const char* path)
+{
+	std::string extension;
+	SplitPath(path, nullptr, nullptr, &extension);
+
+	if (extension == "FBX" || extension == "fbx")
+		return RESOURCE_TYPE::MODEL;
+
+	else if (extension == "PNG" || extension == "png" || extension == "DDS" || extension == "dds" || extension == "jpg")
+		return RESOURCE_TYPE::MATERIAL;
+
+	else
+	{
+		assert(true, "ERROR: not supported type of file");
+		return RESOURCE_TYPE::NONE;
+	}
 }
 
 
@@ -327,23 +363,5 @@ void M_FileManager::TransformPath(std::string& path)
 	}
 }*/
 
-
-FILE_TYPE M_FileManager::GetFileType(const char* path)
-{
-	std::string extension;
-	SplitPath(path, nullptr, nullptr, &extension);
-
-	if (extension == "FBX" || extension == "fbx")
-		return FILE_TYPE::MODEL;
-
-	else if (extension == "PNG" || extension == "png" || extension == "DDS" ||extension == "dds" || extension == "jpg")
-		return FILE_TYPE::TEXTURE;
-
-	else
-	{
-		assert(true, "ERROR: not supported tipe of file");
-		return FILE_TYPE::NONE;
-	}
-}
 
 

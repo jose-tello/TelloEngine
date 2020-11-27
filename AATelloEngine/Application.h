@@ -15,6 +15,7 @@ class M_Console;
 class M_Camera3D;
 class M_FileManager;
 class M_Scene;
+class M_Resources;
 
 class Application
 {
@@ -42,6 +43,7 @@ public:
 	M_Camera3D* camera = nullptr;
 	M_FileManager* fileManager = nullptr;
 	M_Scene* scene = nullptr;
+	M_Resources* resourceManager = nullptr;
 
 private:
 	TimeManager	timeManager;

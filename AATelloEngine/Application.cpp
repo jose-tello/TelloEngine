@@ -8,7 +8,7 @@
 #include "M_Camera3D.h"
 #include "M_FileManager.h"
 #include "M_Scene.h"
-
+#include "M_Resources.h"
 
 Application* App = nullptr; //TODO: Dont know how and why this works, ask marc, should use an extern?
 
@@ -24,12 +24,14 @@ Application::Application() :
 	camera = new M_Camera3D();
 	fileManager = new M_FileManager();
 	scene = new M_Scene();
+	resourceManager = new M_Resources();
 
 	// Main Modules
 	AddModule(window);
 	AddModule(input);
 	AddModule(camera);
 	AddModule(fileManager);
+	AddModule(resourceManager);
 
 	AddModule(scene);
 

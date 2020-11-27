@@ -150,7 +150,9 @@
     <ClInclude Include="MathGeoLib\src\Time\Clock.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshImporter.h" />
+    <ClInclude Include="M_Resources.h" />
     <ClInclude Include="parson\parson.h" />
+    <ClInclude Include="Resource.h" />
     <ClInclude Include="SceneImporter.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="TimeManager.h" />
@@ -238,7 +240,9 @@
     <ClCompile Include="MathGeoLib\src\Time\Clock.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshImporter.cpp" />
+    <ClCompile Include="M_Resources.cpp" />
     <ClCompile Include="parson\parson.c" />
+    <ClCompile Include="Resource.cpp" />
     <ClCompile Include="SceneImporter.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="TimeManager.cpp" />
