@@ -6,11 +6,13 @@
 
 #include "Application.h"
 #include "M_Editor.h"
-#include "M_Scene.h"
 #include "M_FileManager.h"
 
-#include "GameObject.h"
+#include "M_Resources.h"
+#include "R_Model.h"
+
 #include "C_Material.h"
+#include "Assimp/include/material.h"
 
 #include "MathGeoLib/src/MathGeoLib.h"
 
@@ -29,7 +31,7 @@ void ModelImporter::InitDebuggerOptions()
 }
 
 
-void ModelImporter::Import(const char* path)
+void ModelImporter::Import(const char* path, R_Model* model)
 {
 	std::string filePath(path);
 	App->fileManager->AdaptPath(filePath);
@@ -37,69 +39,14 @@ void ModelImporter::Import(const char* path)
 	char* buffer = nullptr;
 	unsigned int bytes = App->fileManager->ReadBytes(filePath.c_str(), &buffer);
 
-	std::string fileName;
-	App->fileManager->SplitPath(filePath.c_str(), nullptr, &fileName, nullptr);
-
-	std::stack<GameObject*> objStack;
-	std::vector<GameObject*> objToSave;
-	GameObject* root = new GameObject(nullptr);
-	GameObject* obj = nullptr;
-
-	std::stack<aiNode*> nodeStack;
-	aiNode* node = nullptr;
+	std::vector<ModelNode> modelNodes;
 
 	const aiScene* scene = aiImportFileFromMemory(buffer, bytes, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		nodeStack.push(scene->mRootNode);
-		objStack.push(root);
-
-		while (nodeStack.empty() == false)
-		{
-			node = nodeStack.top();
-			nodeStack.pop();
-
-			obj = objStack.top();
-			objStack.pop();
-			objToSave.push_back(obj);
-
-			Private::SetObjName(obj, node);
-			Private::InitTransformComponent(obj, node);
-
-			for (int i = 0; i < node->mNumMeshes; i++)
-			{
-				unsigned int meshIterator = node->mMeshes[i];
-
-				aiMesh* mesh = scene->mMeshes[meshIterator];
-				MeshImporter::Import(obj, mesh);
-				
-				aiMaterial* material = scene->mMaterials[scene->mMeshes[meshIterator]->mMaterialIndex];
-				Private::InitMaterialComponent(obj, material, obj->GetName());
-
-				if (node->mNumMeshes > 1) // if there is more than one mesh, create a sibiling
-				{
-					GameObject* it = new GameObject(obj->parent);
-					obj->parent->childs.push_back(it);
-					obj = it;
-					Private::SetObjName(obj, node);
-					Private::InitTransformComponent(obj, node);
-
-					objToSave.push_back(obj);
-				}
-			}
-
-			for (int i = 0; i < node->mNumChildren; i++)
-			{
-				nodeStack.push(node->mChildren[i]);
-
-				obj->childs.push_back(new GameObject(obj));
-				objStack.push(obj->childs[i]);
-			}
-		}
-
-		Save(objToSave, fileName.c_str());
-		App->scene->AddGameObject(root);
+		Private::ImportNode(scene->mRootNode, scene, 0, modelNodes);
+		Save(model);
 
 		aiReleaseImport(scene);
 	}
@@ -113,34 +60,73 @@ void ModelImporter::Import(const char* path)
 }
 
 
-void ModelImporter::Private::SetObjName(GameObject* object, aiNode* node)
+void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec)
 {
-	std::string str(node->mName.C_Str());
+	ModelNode obj;
+	InitObject(obj, parentId, node);
 
-	str = str.substr(0, str.find_first_of("$"));
-	object->SetName(str.c_str());
+	for (int i = 0; i < node->mNumMeshes; i++)
+	{
+		unsigned int meshIterator = node->mMeshes[i];
+
+		aiMesh* mesh = scene->mMeshes[meshIterator];
+		Private::ImportMesh(obj, mesh);
+
+		aiMaterial* material = scene->mMaterials[scene->mMeshes[meshIterator]->mMaterialIndex];
+		Private::ImportMaterial(obj, material);
+
+		nodeVec.push_back(obj);
+
+		if (node->mNumMeshes > 1) // if there is more than one mesh, create a sibiling
+			InitObject(obj, parentId, node);
+	}
+
+	for (int i = 0; i < node->mNumChildren; i++)
+	{
+		Private::ImportNode(node->mChildren[i], scene, obj.uid, nodeVec);
+	}
 }
 
 
-void ModelImporter::Private::InitTransformComponent(GameObject* object, aiNode* node)
+void ModelImporter::Private::InitObject(ModelNode& object, int parentId, aiNode* node)
 {
+	LCG randomNumber;
+	object.uid = randomNumber.IntFast();
+
+	object.parentId = parentId;
+
+	std::string str(node->mName.C_Str());
+	str = str.substr(0, str.find_first_of("$"));
+	object.name = str;
+
 	aiVector3D position;
 	aiQuaternion rotation;
 	aiVector3D scale;
 
 	node->mTransformation.Decompose(scale, rotation, position);
 
-	Quat quat(rotation.x, rotation.y, rotation.z, rotation.w);
-	float3 pos = {position.x, position.y, position.z};
-	float3 scl = { scale.x, scale.y, scale.z };
+	object.position[0] = position.x;
+	object.position[1] = position.y;
+	object.position[2] = position.z;
 
-	float4x4 transform = float4x4::FromTRS(pos, quat, scl);
+	object.rotation[0] = rotation.x;
+	object.rotation[1] = rotation.y;
+	object.rotation[2] = rotation.z;
+	object.rotation[3] = rotation.w;
 
-	object->transform.AddTransform(transform);
+	object.scale[0] = scale.x;
+	object.scale[1] = scale.y;
+	object.scale[2] = scale.z;
 }
 
 
-void ModelImporter::Private::InitMaterialComponent(GameObject* gameObject, aiMaterial* mat, const char* nodeName)
+void ModelImporter::Private::ImportMesh(ModelNode& modelNode, aiMesh* mesh)
+{
+	
+}
+
+
+void ModelImporter::Private::ImportMaterial(ModelNode& modelNode, aiMaterial* mat)
 {
 	aiColor4D color;
 
@@ -149,45 +135,60 @@ void ModelImporter::Private::InitMaterialComponent(GameObject* gameObject, aiMat
 
 	if (hasTextures || hasColor)
 	{
-		C_Material* material = new C_Material();
-		MaterialImporter::Import(mat, material, Color(color.r, color.g, color.b, color.a), hasTextures, hasColor, nodeName);
+		aiString texPath;
+		mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
 
-		gameObject->AddComponent(material);
+		int id = App->resourceManager->SearchMetaFile(texPath.C_Str());
+
+		if (id == 0)
+			modelNode.materialId = App->resourceManager->CreateMeta(texPath.C_Str());
+
+		else
+			modelNode.materialId = id;
 	}	
 }
 
 
 
-void ModelImporter::Load(GameObject* root, const char* path)
+void ModelImporter::Load(R_Model* model)
 {
 	std::string filePath(MODEL_LIBRARY);
-	filePath.append(path);
+	filePath.append(std::to_string(model->GetUid()));
 
 	char* fileBuffer;
 	App->fileManager->Load(filePath.c_str(), &fileBuffer);
 
 	Config rootNode(fileBuffer);
-	ConfigArray gameObjects = rootNode.GetArray("game objects");
-	int objCount = gameObjects.GetSize();
+	ConfigArray nodeArray = rootNode.GetArray("game objects");
 
-	int uuid = rootNode.GetNum("uuid");
-	std::string name = rootNode.GetString("name");
-
-	GameObject* object = new GameObject(name, nullptr, uuid); //Root
-	App->scene->AddGameObject(object);
-
-	for (int i = 1; i < objCount; i++)
+	int nodeCount = nodeArray.GetSize();
+	for (int i = 0; i < nodeCount; i++)
 	{
-		Config node = gameObjects.GetNode(i);
-		
-		int uuid = node.GetNum("uuid");
-		int parentId = node.GetNum("parent");
-		std::string name = node.GetString("name");
+		Config node = nodeArray.GetNode(i);
+		ModelNode modelNode;
 
-		GameObject* parent = App->scene->GetGameObject(uuid);
+		modelNode.uid = node.GetNum("uid");
+		modelNode.parentId = node.GetNum("parent");
+		modelNode.name = node.GetString("name");
 
-		object = new GameObject(name, parent, uuid);
-		parent->childs.push_back(object);
+		ConfigArray arr = node.GetArray("position");
+		modelNode.position[0] = arr.GetNum(0);
+		modelNode.position[1] = arr.GetNum(1);
+		modelNode.position[2] = arr.GetNum(2);
+
+		arr = node.GetArray("rotation");
+		modelNode.rotation[0] = arr.GetNum(0);
+		modelNode.rotation[1] = arr.GetNum(1);
+		modelNode.rotation[2] = arr.GetNum(2);
+		modelNode.rotation[3] = arr.GetNum(3);
+
+		arr = node.GetArray("scale");
+		modelNode.scale[0] = arr.GetNum(0);
+		modelNode.scale[1] = arr.GetNum(1);
+		modelNode.scale[2] = arr.GetNum(2);
+
+		modelNode.meshId = node.GetNum("meshId");
+		modelNode.materialId = node.GetNum("MaterialId");
 	}
 
 	delete[] fileBuffer;
@@ -195,33 +196,64 @@ void ModelImporter::Load(GameObject* root, const char* path)
 }
 
 
+void ModelImporter::Private::LoadNode(ModelNode& modelNode, Config& node)
+{
+
+}
+
+
 //The string returned is the path to the model
-std::string ModelImporter::Save(std::vector<GameObject*>& allGo, const char* fileName)
+void ModelImporter::Save(R_Model* model)
 {
 	std::string filePath(MODEL_LIBRARY);
-	filePath.append(fileName);
+	filePath.append(std::to_string(model->GetUid()));
 
-	Config sceneRoot;
-	
-	sceneRoot.AppendString("Model name", fileName);
+	Config nodeRoot;
+	ConfigArray nodeArray = nodeRoot.AppendArray("nodes");
 
-	ConfigArray gameObjects = sceneRoot.AppendArray("game objects");
+	std::vector<ModelNode> modelVec;
+	model->GetModelNodes(modelVec);
 
-	int objCount = allGo.size();
-	for (int i = 0; i < objCount; i++)
+	int nodeCount = modelVec.size();
+	for (int i = 0; i < nodeCount; i++)
 	{
-		Config node = gameObjects.AppendNode();
-		allGo[i]->Save(node);
+		Config node = nodeArray.AppendNode();
+		Private::SaveNode(modelVec[i], node);
 	}
 
 	char* fileBuffer;
-	unsigned int size = sceneRoot.Serialize(&fileBuffer);
+	unsigned int size = nodeRoot.Serialize(&fileBuffer);
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
+}
 
-	return filePath;
+
+void ModelImporter::Private::SaveNode(ModelNode& modelNode, Config& node)
+{
+	node.AppendNum("uid", modelNode.uid);
+	node.AppendNum("parent", modelNode.parentId);
+	node.AppendString("name", modelNode.name.c_str());
+
+	ConfigArray arr = node.AppendArray("position");
+	arr.AppendNum(modelNode.position[0]);
+	arr.AppendNum(modelNode.position[1]);
+	arr.AppendNum(modelNode.position[2]);
+
+	arr = node.AppendArray("rotation");
+	arr.AppendNum(modelNode.rotation[0]);
+	arr.AppendNum(modelNode.rotation[1]);
+	arr.AppendNum(modelNode.rotation[2]);
+	arr.AppendNum(modelNode.rotation[3]);
+
+	arr = node.AppendArray("scale");
+	arr.AppendNum(modelNode.scale[0]);
+	arr.AppendNum(modelNode.scale[1]);
+	arr.AppendNum(modelNode.scale[2]);
+
+	node.AppendNum("meshId", modelNode.meshId);
+	node.AppendNum("materialId", modelNode.materialId);
 }
 
 

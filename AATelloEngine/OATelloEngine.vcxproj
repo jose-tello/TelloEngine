@@ -153,6 +153,9 @@
     <ClInclude Include="M_Resources.h" />
     <ClInclude Include="parson\parson.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="R_Material.h" />
+    <ClInclude Include="R_Mesh.h" />
+    <ClInclude Include="R_Model.h" />
     <ClInclude Include="SceneImporter.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="TimeManager.h" />
@@ -243,6 +246,9 @@
     <ClCompile Include="M_Resources.cpp" />
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="R_Material.cpp" />
+    <ClCompile Include="R_Mesh.cpp" />
+    <ClCompile Include="R_Model.cpp" />
     <ClCompile Include="SceneImporter.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="TimeManager.cpp" />

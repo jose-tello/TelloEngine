@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "C_Material.h"
 
+#include "M_Resources.h"
 #include "Resource.h"
 
 #include "ModelImporter.h"
@@ -80,7 +81,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 	{
 	case RESOURCE_TYPE::MODEL:
 	{
-		ModelImporter::Import(path);
+		App->resourceManager->DragAndDropImport(path);
 		App->editor->AddLog("Log: Loaded a model");
 	}
 	break;
@@ -295,7 +296,7 @@ RESOURCE_TYPE M_FileManager::GetFileType(const char* path)
 	if (extension == "FBX" || extension == "fbx")
 		return RESOURCE_TYPE::MODEL;
 
-	else if (extension == "PNG" || extension == "png" || extension == "DDS" || extension == "dds" || extension == "jpg")
+	else if (extension == "PNG" || extension == "png" || extension == "DDS" || extension == "dds" || extension == "jpg" || extension == "tga")
 		return RESOURCE_TYPE::MATERIAL;
 
 	else
@@ -303,6 +304,12 @@ RESOURCE_TYPE M_FileManager::GetFileType(const char* path)
 		assert(true, "ERROR: not supported type of file");
 		return RESOURCE_TYPE::NONE;
 	}
+}
+
+
+bool M_FileManager::FileExists(const char* file)
+{
+	return PHYSFS_exists(file);
 }
 
 

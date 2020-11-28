@@ -32,7 +32,19 @@ void Resource::UnLoad()
 }
 
 
+int Resource::GetUid() const
+{
+	return uid;
+}
+
+
 unsigned int Resource::GetReferenceCount() const
 {
 	return referenceCount;
+}
+
+
+std::string Resource::GetAssetPath() const
+{
+	return assetPath;
 }

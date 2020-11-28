@@ -23,14 +23,19 @@ public:
 	virtual void Load();
 	virtual void UnLoad();
 
+	int GetUid() const;
 	unsigned int GetReferenceCount() const;
+	std::string GetAssetPath() const;
+
+protected:
+	int uid;
+
+	bool isLoaded;
 
 private:
-	int uid;
 	std::string assetPath;
 	RESOURCE_TYPE type;
 
-	bool isLoaded;
 	unsigned int referenceCount;
 };
 

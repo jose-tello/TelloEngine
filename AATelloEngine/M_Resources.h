@@ -16,14 +16,23 @@ public:
 	bool Start() override;
 
 	Resource* RequestResource(int uid);
+	int CreateMeta(const char* assetPath);
+
+	//Used when the created resource does not have a .meta (meshes)
+	void PushResource(Resource*, int id);
+
+	int SearchMetaFile(const char*);
+
+	void DragAndDropImport(const char*);
 
 private:
 	void LoadAllAssets(const char* folder = "/Assets/");
 
 	void CreateResource(int uid, int type, const char* path);
-	bool CheckResourceExist(std::string& fileName, std::string& meta, const char* folder);
+	bool CheckMetaExist(std::string& fileName, std::string& meta, const char* folder);
+	bool CheckLibFileExists(int id, int resourceType);
 	void CreateResourceFromMeta(const char* metaPath);
-	void CreateMeta(const char* assetPath);
+	
 
 
 private:

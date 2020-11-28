@@ -43,6 +43,8 @@ public:
 	unsigned __int64 GetLastModTime(const char* file) const;
 	RESOURCE_TYPE GetFileType(const char* path);
 
+	bool FileExists(const char*);
+
 private:
 
 	std::string NormalizePath(const char*);

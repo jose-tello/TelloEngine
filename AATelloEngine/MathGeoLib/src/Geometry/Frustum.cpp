@@ -663,9 +663,7 @@ bool Frustum::ContainsAABB(const AABB& aabb) const //Homemade :D
 		for (int j = 0; j < 8; j++)
 		{
 			if (planes[i].IsOnPositiveSide(corners[j]) == false)
-			{
 				inside++;
-			}
 		}
 
 		if (inside == 7)
