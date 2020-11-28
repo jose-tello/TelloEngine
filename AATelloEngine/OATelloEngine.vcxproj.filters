@@ -150,9 +150,6 @@
     <ClInclude Include="E_Window.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="MaterialImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
@@ -502,9 +499,6 @@
     </ClCompile>
     <ClCompile Include="E_Window.cpp">
       <Filter>Sources\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="MaterialImporter.cpp">
       <Filter>Sources\Importers</Filter>

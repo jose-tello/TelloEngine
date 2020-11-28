@@ -1,8 +1,14 @@
 #include "C_Material.h"
 
 #include "Config.h"
+
+#include "Application.h"
 #include "M_FileManager.h"
 #include "MaterialImporter.h"
+#include "M_Resources.h"
+
+#include "R_Texture.h"
+#include "R_Material.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -10,14 +16,8 @@
 #include <gl/GL.h>
 
 C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
-	textureId(0),
-	color(1.f, 1.f, 1.f),
-
-	texturePath(),
-	textureName(),
-	materialPath(),
-	textureWidth(0),
-	textureHeight(0),
+	material(nullptr),
+	texture(nullptr),
 
 	checkerTexId(0),
 	useCheckerTex(false),
@@ -31,37 +31,63 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 
 C_Material::~C_Material()
 {
-	glDeleteTextures(1, &textureId);
-	textureId = 0;
+	//Desreferentiate
+	material = nullptr;
+	texture = nullptr;
 }
 
 
-void C_Material::SetTexture(unsigned int newTex)
+void C_Material::SetTexture(int newTexId)
 {
-	if (textureId != 0)
+	if (texture != nullptr)
 	{
-		glDeleteTextures(1, &textureId);
-		textureId = 0;
+		//Desreferentiate
+		texture = nullptr;
 	}
 
-	textureId = newTex;
+	texture = (R_Texture*)App->resourceManager->RequestResource(newTexId);
+}
 
-	InitTextureSize();
+
+void C_Material::SetMaterial(int newMat)
+{
+	if (material != nullptr)
+	{
+		//Desreferentiate
+		material = nullptr;
+	}
+
+	material = (R_Material*)App->resourceManager->RequestResource(newMat);
 }
 
 
 void C_Material::GetColor(float& r, float& g, float& b, float& a) const
 {
-	r = color.r;
-	g = color.g;
-	b = color.b;
-	a = color.a;
+	if (material != nullptr)
+		material->GetColor(r, g, b, a);
 }
 
 
-void C_Material::SetColor(Color& col)
+std::string C_Material::GetTexturePath() const
 {
-	color = col;
+	if (texture == nullptr)
+		return "No texture";
+
+	else
+		return texture->GetAssetPath();
+}
+
+
+void C_Material::GetTextureSize(int& width, int& height) const
+{
+	if (texture == nullptr)
+	{
+		width = 0;
+		height = 0;
+	}
+
+	else
+		texture->GetTextureSize(width, height);
 }
 
 
@@ -112,14 +138,14 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 	else
 	{
 		if (textureEnabled == true)
-			texId = textureId;
+			texId = texture->GetTextureId();
 
 		else
 			texId = 0;
 	}
 
 	if (colorEnabled == true)
-		col = color;
+		material->GetColor(col.r, col.g, col.b, col.a);
 
 	else
 		col = { 1.f, 1.f, 1.f, 1.f };
@@ -128,11 +154,11 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 
 void C_Material::Load(Config& node)
 {
-	const char* materialName = node.GetString("material");
-	std::string materialPath(MATERIAL_LIBRARY);
-	materialPath.append(materialName);
+	int materialId = node.GetNum("material");
+	int textureId = node.GetNum("texture");
 
-	//MaterialImporter::Load(this, materialPath.c_str());
+	material = (R_Material*)App->resourceManager->RequestResource(materialId);
+	texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
 }
 
 
@@ -140,19 +166,8 @@ void C_Material::Save(Config& node) const
 {
 	node.AppendNum("type", (int)COMPONENT_TYPE::MATERIAL);
 
-	node.AppendString("material", materialPath.c_str());
-}
-
-
-void C_Material::InitTextureSize()
-{
-	glBindTexture(GL_TEXTURE_2D, textureId);
-
-	int miplevel = 0;
-	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &textureWidth);
-	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &textureHeight);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
+	node.AppendNum("material", material->GetUid());
+	node.AppendNum("texture", texture->GetUid());
 }
 
 
@@ -177,5 +192,7 @@ void C_Material::InitCheckerTex()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+				 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

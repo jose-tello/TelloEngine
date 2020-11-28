@@ -165,14 +165,18 @@ void M_Resources::CreateResource(int uid, int type, const char* path)
 	{
 	case RESOURCE_TYPE::MODEL:
 		resource = new R_Model(uid, path, (RESOURCE_TYPE)type);
+		
 		if (CheckLibFileExists(uid, type) == false)
 			ModelImporter::Import(path, (R_Model*)resource);
+
 		break;
 
 	case RESOURCE_TYPE::TEXTURE:
 		resource = new R_Texture(uid, path, (RESOURCE_TYPE)type);
+		
 		if (CheckLibFileExists(uid, type) == false)
 			TextureImporter::Import(path, (R_Texture*)resource);
+
 		break;
 
 	default:

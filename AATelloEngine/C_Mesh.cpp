@@ -1,14 +1,16 @@
 #include "C_Mesh.h"
 #include "Color.h"
 
-#include "Mesh.h"
-
 #include "Config.h"
 #include "MeshImporter.h"
 
 #include "Application.h"
 #include "M_FileManager.h"
 #include "M_Renderer3D.h"
+#include "M_Resources.h"
+
+#include "R_Mesh.h"
+
 
 C_Mesh::C_Mesh() : Component(COMPONENT_TYPE::MESH),
 	
@@ -21,19 +23,9 @@ C_Mesh::C_Mesh() : Component(COMPONENT_TYPE::MESH),
 }
 
 
-C_Mesh::C_Mesh(std::vector<float>& vertexBuff, std::vector<float>& normals, std::vector<float> texCoords, std::vector<unsigned int> indices) : Component(COMPONENT_TYPE::MESH),
-	drawVertexNormals(false),
-	drawFaceNormals(false),
-
-	mesh(nullptr)
-{
-	mesh = new Mesh(vertexBuff, normals, texCoords, indices);
-}
-
-
 C_Mesh::~C_Mesh()
 {
-	delete mesh;
+	//desreferentiate mesh
 	mesh = nullptr;
 }
 
@@ -55,18 +47,15 @@ void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, 
 }
 
 
-void C_Mesh::SetMesh(Mesh* mesh)
+void C_Mesh::SetMesh(int newMesh)
 {
 	if (this->mesh != nullptr)
-		delete this->mesh;
+	{
+		//desreferentiate mesh
+		mesh = nullptr;
+	}
 
-	this->mesh = mesh;
-}
-
-
-Mesh* C_Mesh::GetMesh() const
-{
-	return mesh;
+	mesh = (R_Mesh*)App->resourceManager->RequestResource(newMesh);
 }
 
 
@@ -107,14 +96,12 @@ void C_Mesh::DrawAABB() const
 
 void C_Mesh::Load(Config& node)
 {
-	if (mesh == nullptr)
-		mesh = new Mesh();
-	
-	const char* meshName = node.GetString("mesh");
-	std::string meshPath(MESH_LIBRARY);
-	meshPath.append(meshName);
+	int meshId = node.GetNum("mesh");
 
-	//MeshImporter::Load(mesh, meshPath.c_str());
+	if (mesh != nullptr)
+		mesh = nullptr;		//desreferentiate
+
+	mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
 }
 
 
@@ -122,5 +109,5 @@ void C_Mesh::Save(Config& node) const
 {
 	node.AppendNum("type", (int)COMPONENT_TYPE::MESH);
 
-	node.AppendString("mesh", mesh->meshPath.c_str());
+	node.AppendNum("mesh", mesh->GetUid());
 }

@@ -148,7 +148,6 @@
     <ClInclude Include="MathGeoLib\src\Math\sse_mathfun.h" />
     <ClInclude Include="MathGeoLib\src\Math\TransformOps.h" />
     <ClInclude Include="MathGeoLib\src\Time\Clock.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshImporter.h" />
     <ClInclude Include="M_Resources.h" />
     <ClInclude Include="parson\parson.h" />
@@ -242,7 +241,6 @@
     <ClCompile Include="MathGeoLib\src\Math\SSEMath.cpp" />
     <ClCompile Include="MathGeoLib\src\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib\src\Time\Clock.cpp" />
-    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshImporter.cpp" />
     <ClCompile Include="M_Resources.cpp" />
     <ClCompile Include="parson\parson.c" />

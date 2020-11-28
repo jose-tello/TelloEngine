@@ -22,13 +22,10 @@ public:
 	int GetResourceTexture() const;
 	void SetResourceTexture(int resource);
 
-	void GetDrawVariables(unsigned int& texId, Color& col) const;
-
 private:
 	Color color;
 
 	int resourceTexture;
-	R_Texture* texture = nullptr;
 };
 
 #endif // !__R_MATERIAL_H__

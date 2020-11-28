@@ -6,21 +6,20 @@
 
 #include <vector>
 
-struct Mesh;
+class R_Mesh;
 
 class C_Mesh : public Component
 {
 public:
 	C_Mesh();
-	C_Mesh(std::vector<float>& vertexBuff, std::vector<float>& normals, std::vector<float> texCoords, std::vector<unsigned int> indices);
 	~C_Mesh() override;
 
 	void OnUpdateTransform(float4x4& transform) override;
 
 	void Draw(float* transformMatrix, unsigned int textureId, float* col, bool wireframeMode) const;
 
-	void SetMesh(Mesh*);
-	Mesh* GetMesh() const;
+	void SetMesh(int meshId);
+
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
 
 	AABB GetAABB() const;
@@ -36,7 +35,7 @@ public:
 	bool drawFaceNormals;
 
 private:
-	Mesh* mesh = nullptr;
+	R_Mesh* mesh = nullptr;
 	AABB aabb;
 };
 

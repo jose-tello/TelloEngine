@@ -6,6 +6,9 @@
 
 #include <string>
 
+class R_Texture;
+class R_Material;
+
 #define CHECKERS_WIDTH 80
 #define CHECKERS_HEIGHT 80
 
@@ -15,9 +18,12 @@ public:
 	C_Material();
 	~C_Material();
 
-	void SetTexture(unsigned int newTex);
+	void SetTexture(int newTex);
+	void SetMaterial(int newMat);
+
 	void GetColor(float& r, float& g, float& b, float& a) const;
-	void SetColor(Color& col);
+	std::string GetTexturePath() const;
+	void GetTextureSize(int& width, int& height) const;
 
 	bool GetTextureEnabled() const;
 	void SetTextureEnable(bool enable);
@@ -34,20 +40,11 @@ public:
 	void Save(Config&) const override;
 
 private:
-	void InitTextureSize();
-	void InitCheckerTex();
-
-public:
-	//TODO: this information will be held by the material/texture resource, but for now it will stay here
-	std::string texturePath;
-	std::string textureName;
-	std::string materialPath;
-	int textureWidth;
-	int textureHeight;
+	void InitCheckerTex();	
 
 private:
-	unsigned int textureId;
-	Color color;
+	R_Material* material = nullptr;
+	R_Texture* texture = nullptr;
 
 	bool textureEnabled;
 	bool colorEnabled;

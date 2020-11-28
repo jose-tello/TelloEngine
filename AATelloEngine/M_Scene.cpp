@@ -8,7 +8,6 @@
 
 #include "GameObject.h"
 #include "C_Mesh.h"
-#include "Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
 
@@ -29,7 +28,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Start()
 {
-	SceneImporter::Load("test", gameObjects);
+	//SceneImporter::Load("test", gameObjects);
 
 	return true;
 }
@@ -68,7 +67,7 @@ void M_Scene::AddGameObject(GameObject* object)
 
 void M_Scene::AddPrimitive(PRIMITIVE_TYPE type)
 {
-	GameObject* object = new GameObject(nullptr);
+	/*GameObject* object = new GameObject(nullptr);
 	C_Mesh* meshComponent = new C_Mesh();
 	Mesh* mesh = new Mesh();
 
@@ -98,7 +97,7 @@ void M_Scene::AddPrimitive(PRIMITIVE_TYPE type)
 	meshComponent->SetMesh(mesh);
 	object->AddComponent(meshComponent);
 	gameObjects.push_back(object);
-	object->transform.SetEscale(10.f, 10.f, 10.f);
+	object->transform.SetEscale(10.f, 10.f, 10.f);*/
 }
 
 

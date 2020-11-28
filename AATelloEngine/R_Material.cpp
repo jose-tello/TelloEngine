@@ -13,8 +13,7 @@
 
 R_Material::R_Material(int uid, const char* assetPath, RESOURCE_TYPE type) : Resource(uid, assetPath, type),
 	color(1.f, 1.f, 1.f),
-	resourceTexture(0),
-	texture(nullptr)
+	resourceTexture(0)
 {
 }
 
@@ -27,16 +26,13 @@ R_Material::~R_Material()
 
 void R_Material::Load()
 {
-	//MaterialImporter::Load(this, uid);
-	texture = (R_Texture*)App->resourceManager->RequestResource(resourceTexture);
+	MaterialImporter::Load(this);
 }
 
 
 void R_Material::UnLoad()
 {
 	resourceTexture = 0;
-	//TODO: notify texture about reference counting
-	texture = nullptr;
 }
 
 
@@ -64,16 +60,4 @@ int R_Material::GetResourceTexture() const
 void R_Material::SetResourceTexture(int resource)
 {
 	resourceTexture = resource;
-}
-
-
-void R_Material::GetDrawVariables(unsigned int& texId, Color& col) const
-{
-	if (texture != nullptr)
-		texId = texture->GetTextureId();
-
-	else
-		texId = 0;
-	
-	col = color;
 }
