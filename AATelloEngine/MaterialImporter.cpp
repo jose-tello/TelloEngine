@@ -13,6 +13,7 @@
 int MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture, bool hasColor, const char* assetPath)
 {
 	LCG random;
+	int textureId = 0;
 
 	R_Material* materialResource = new R_Material(random.IntFast(), assetPath, RESOURCE_TYPE::MATERIAL);
 	if (hasTexture)
@@ -27,16 +28,10 @@ int MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture
 		int id = App->resourceManager->SearchMetaFile(fileName.c_str());
 
 		if (id == 0)
-			materialResource->SetResourceTexture(App->resourceManager->CreateMeta(fileName.c_str()));
-
-		else
-			materialResource->SetResourceTexture(id);
+			id = App->resourceManager->CreateMeta(fileName.c_str());
 	}
 
-	if (hasColor)
-		materialResource->SetColor(color);
-
-	Save(materialResource);
+	Save(color, textureId, materialResource->GetUid());
 
 	App->resourceManager->PushResource(materialResource, materialResource->GetUid());
 	return materialResource->GetUid();
@@ -74,13 +69,12 @@ void MaterialImporter::Load(R_Material* material)
 
 
 //The string returned is the path to the mesh
-void MaterialImporter::Save(R_Material* materialResource)
+void MaterialImporter::Save(Color& col, int textureId, int uid)
 {
 	std::string filePath(MATERIAL_LIBRARY);
-	filePath.append(std::to_string(materialResource->GetUid()));
+	filePath.append(std::to_string(uid));
 
-	float color[4];
-	materialResource->GetColor(color[0], color[1], color[2], color[3]);
+	float color[4] = { col.r, col.g, col.b, col.a };
 
 	unsigned int size = sizeof(color) + sizeof(int);
 	char* fileBuffer = new char[size];
@@ -93,12 +87,10 @@ void MaterialImporter::Save(R_Material* materialResource)
 
 	//Save texture id
 	bytes = sizeof(int);
-	int id = materialResource->GetResourceTexture();
+	int id = textureId;
 	memcpy(pointer, &id, bytes);
 	
-	
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
-	App->editor->AddLog("Log: Saved material %s: ", materialResource->GetAssetPath());
 	
 	delete[] fileBuffer;
 	fileBuffer = nullptr;

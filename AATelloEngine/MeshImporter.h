@@ -6,6 +6,7 @@
 struct aiMesh;
 class R_Mesh;
 
+#include <vector>
 #include <string>
 
 namespace MeshImporter
@@ -13,7 +14,7 @@ namespace MeshImporter
 	int Import(aiMesh* gameObject, const char* assetPath);
 
 	void Load(R_Mesh*);
-	void Save(R_Mesh*);
+	void Save(std::vector<float>&, std::vector<float>&, std::vector<float>&, std::vector<unsigned int>&, int uid);
 }
 
 #endif // !__MESH_IMPORTER_H__

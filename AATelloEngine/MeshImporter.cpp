@@ -64,18 +64,8 @@ int MeshImporter::Import(aiMesh* mesh, const char* assetPath)
 
 	LCG random;
 	R_Mesh* resourceMesh = new R_Mesh(random.IntFast(), assetPath, RESOURCE_TYPE::MESH);
-
-	resourceMesh->InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
-
-	if (normals.size() != 0)
-		resourceMesh->InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
 	
-	if (texCoords.size() != 0)
-		resourceMesh->InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
-	
-	resourceMesh->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
-	
-	Save(resourceMesh);
+	Save(vertices, normals, texCoords, indices, resourceMesh->GetUid());
 	App->resourceManager->PushResource(resourceMesh, resourceMesh->GetUid());
 
 	vertices.clear();
@@ -158,15 +148,11 @@ void MeshImporter::Load(R_Mesh* mesh)
 }
 
 
-void MeshImporter::Save(R_Mesh* mesh)
+void MeshImporter::Save(std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords, 
+						std::vector<unsigned int>& indices, int uid)
 {
 	std::string filePath(MESH_LIBRARY);
-	filePath.append(std::to_string(mesh->GetUid()));
-
-	std::vector<float> vertices, normals, texCoords;
-	std::vector<unsigned int> indices;
-
-	mesh->GetAllVertexData(vertices, normals, texCoords, indices);
+	filePath.append(std::to_string(uid));
 
 	unsigned int ranges[4] = { vertices.size(), normals.size(), texCoords.size(), indices.size() };
 
