@@ -402,6 +402,9 @@
     <ClInclude Include="R_Model.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="R_Texture.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -666,6 +669,9 @@
       <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="R_Model.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Texture.cpp">
       <Filter>Sources\Resources</Filter>
     </ClCompile>
   </ItemGroup>

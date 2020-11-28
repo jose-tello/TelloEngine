@@ -5,6 +5,8 @@
 
 #include "Color.h"
 
+class R_Texture;
+
 class R_Material : public Resource
 {
 public:
@@ -14,21 +16,16 @@ public:
 	void Load() override;
 	void UnLoad() override;
 
-	void SetTexture(unsigned int newTex);
 	void SetColor(Color& col);
+	void SetResourceTexture(int resource);
 
 	void GetDrawVariables(unsigned int& texId, Color& col) const;
 
 private:
-	void InitTextureSize();
-
-public:
-	int textureWidth;
-	int textureHeight;
-
-private:
-	unsigned int textureId;
 	Color color;
+
+	int resourceTexture;
+	R_Texture* texture = nullptr;
 };
 
 #endif // !__R_MATERIAL_H__

@@ -109,7 +109,7 @@ void M_Resources::DragAndDropImport(const char* path)
 	int id = SearchMetaFile(filePath.c_str());
 	if (id != 0)
 	{
-
+		//Do charging and putting on scene things
 	}
 	else
 		CreateMeta(filePath.c_str());

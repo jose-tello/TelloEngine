@@ -1,51 +1,42 @@
 #include "R_Material.h"
 #include "MaterialImporter.h"
 
+#include "Application.h"
+#include "M_Resources.h"
+
+#include "R_Texture.h"
+
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
 #include <gl/GL.h>
 
 R_Material::R_Material(int uid, const char* assetPath, RESOURCE_TYPE type) : Resource(uid, assetPath, type),
-	textureWidth(0),
-	textureHeight(0),
-	textureId(0),
-	color(1.f, 1.f, 1.f)
+	color(1.f, 1.f, 1.f),
+	resourceTexture(0),
+	texture(nullptr)
 {
 }
 
 
 R_Material::~R_Material()
 {
-	glDeleteTextures(1, &textureId);
-	textureId = 0;
+	
 }
 
 
 void R_Material::Load()
 {
 	//MaterialImporter::Load(this, uid);
+	texture = (R_Texture*)App->resourceManager->RequestResource(resourceTexture);
 }
 
 
 void R_Material::UnLoad()
 {
-	glDeleteTextures(1, &textureId);
-	textureId = 0;
-}
-
-
-void R_Material::SetTexture(unsigned int newTex)
-{
-	if (textureId != 0)
-	{
-		glDeleteTextures(1, &textureId);
-		textureId = 0;
-	}
-
-	textureId = newTex;
-
-	InitTextureSize();
+	resourceTexture = 0;
+	//TODO: notify texture about reference counting
+	texture = nullptr;
 }
 
 
@@ -55,20 +46,19 @@ void R_Material::SetColor(Color& col)
 }
 
 
-void R_Material::GetDrawVariables(unsigned int& texId, Color& col) const
+void R_Material::SetResourceTexture(int resource)
 {
-	texId = textureId;
-	col = color;
+	resourceTexture = resource;
 }
 
 
-void R_Material::InitTextureSize()
+void R_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 {
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	if (texture != nullptr)
+		texId = texture->GetTextureId();
 
-	int miplevel = 0;
-	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &textureWidth);
-	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &textureHeight);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
+	else
+		texId = 0;
+	
+	col = color;
 }
