@@ -10,7 +10,7 @@
 #include "Assimp/include/material.h"
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
-void MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture, bool hasColor, const char* assetPath)
+int MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture, bool hasColor, const char* assetPath)
 {
 	LCG random;
 
@@ -39,6 +39,7 @@ void MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTextur
 	Save(materialResource);
 
 	App->resourceManager->PushResource(materialResource, materialResource->GetUid());
+	return materialResource->GetUid();
 }
 
 
@@ -73,7 +74,7 @@ void MaterialImporter::Load(R_Material* material)
 
 
 //The string returned is the path to the mesh
-std::string MaterialImporter::Save(R_Material* materialResource)
+void MaterialImporter::Save(R_Material* materialResource)
 {
 	std::string filePath(MATERIAL_LIBRARY);
 	filePath.append(std::to_string(materialResource->GetUid()));
@@ -101,6 +102,4 @@ std::string MaterialImporter::Save(R_Material* materialResource)
 	
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
-	
-	return filePath;
 }

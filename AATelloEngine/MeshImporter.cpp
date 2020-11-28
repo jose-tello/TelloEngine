@@ -3,14 +3,14 @@
 #include "Application.h"
 #include "M_FileManager.h"
 #include "M_Editor.h"
+#include "M_Resources.h"
 
-#include "GameObject.h"
-#include "C_Mesh.h"
-#include "Mesh.h"
+#include "R_Mesh.h"
 
 #include "Assimp/include/mesh.h"
+#include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
-void MeshImporter::Import(GameObject* gameObject, aiMesh* mesh)
+int MeshImporter::Import(aiMesh* mesh, const char* assetPath)
 {
 	int numVertices = 0;
 	int numTexCoords = 0;
@@ -62,32 +62,41 @@ void MeshImporter::Import(GameObject* gameObject, aiMesh* mesh)
 		}
 	}
 
-	//TODO this is here until resource manager is implemented
-	C_Mesh* meshComponent = new C_Mesh();
-	Mesh* objectMesh = new Mesh(vertices, normals, texCoords, indices);
-	objectMesh->meshPath = gameObject->GetName();
+	LCG random;
+	R_Mesh* resourceMesh = new R_Mesh(random.IntFast(), assetPath, RESOURCE_TYPE::MESH);
 
-	std::string path = Save(objectMesh, gameObject->GetName());
+	resourceMesh->InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
 
-	Load(objectMesh, path.c_str());
-	meshComponent->SetMesh(objectMesh);
+	if (normals.size() != 0)
+		resourceMesh->InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
+	
+	if (texCoords.size() != 0)
+		resourceMesh->InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
+	
+	resourceMesh->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+	
+	Save(resourceMesh);
+	App->resourceManager->PushResource(resourceMesh, resourceMesh->GetUid());
 
 	vertices.clear();
 	normals.clear();
 	texCoords.clear();
 	indices.clear();
 
-	gameObject->AddComponent(meshComponent);
+	return resourceMesh->GetUid();
 }
 
 
-void MeshImporter::Load(Mesh* mesh, const char* path)
+void MeshImporter::Load(R_Mesh* mesh)
 {
 	std::vector<float> vertices, normals, texCoords;
 	std::vector<unsigned int> indices;
 	char* buffer = nullptr;
 
-	unsigned int size = App->fileManager->Load(path, &buffer);
+	std::string path(MESH_LIBRARY);
+	path.append(std::to_string(mesh->GetUid()));
+
+	unsigned int size = App->fileManager->Load(path.c_str(), &buffer);
 
 	char* pointer = buffer;
 	if (pointer != nullptr)
@@ -141,10 +150,6 @@ void MeshImporter::Load(Mesh* mesh, const char* path)
 
 		mesh->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
 
-		std::string name;
-		App->fileManager->SplitPath(path, nullptr, &name, nullptr);
-		mesh->meshPath = name;
-
 		delete[] buffer;
 		buffer = nullptr;
 	}
@@ -153,10 +158,10 @@ void MeshImporter::Load(Mesh* mesh, const char* path)
 }
 
 
-std::string MeshImporter::Save(Mesh* mesh, const char* path)
+void MeshImporter::Save(R_Mesh* mesh)
 {
 	std::string filePath(MESH_LIBRARY);
-	filePath.append(path);
+	filePath.append(std::to_string(mesh->GetUid()));
 
 	std::vector<float> vertices, normals, texCoords;
 	std::vector<unsigned int> indices;
@@ -207,6 +212,4 @@ std::string MeshImporter::Save(Mesh* mesh, const char* path)
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
-
-	return filePath;
 }

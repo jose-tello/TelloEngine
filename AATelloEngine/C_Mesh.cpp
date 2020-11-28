@@ -114,7 +114,7 @@ void C_Mesh::Load(Config& node)
 	std::string meshPath(MESH_LIBRARY);
 	meshPath.append(meshName);
 
-	MeshImporter::Load(mesh, meshPath.c_str());
+	//MeshImporter::Load(mesh, meshPath.c_str());
 }
 
 

@@ -3,18 +3,17 @@
 
 #define MAX_TEX_COORDS 8
 
-struct GameObject;
 struct aiMesh;
-struct Mesh;
+class R_Mesh;
 
 #include <string>
 
 namespace MeshImporter
 {
-	void Import(GameObject* gameObject, aiMesh* mesh);
+	int Import(aiMesh* gameObject, const char* assetPath);
 
-	void Load(Mesh*, const char* path);
-	std::string Save(Mesh*, const char* path);
+	void Load(R_Mesh*);
+	void Save(R_Mesh*);
 }
 
 #endif // !__MESH_IMPORTER_H__

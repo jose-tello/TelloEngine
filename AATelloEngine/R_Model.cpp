@@ -5,8 +5,8 @@ ModelNode::ModelNode() :
 	uid(0),
 	parentId(0),
 	name(name),
-	meshId(0),
-	materialId(0)
+	meshId(-1),
+	materialId(-1)
 {}
 
 

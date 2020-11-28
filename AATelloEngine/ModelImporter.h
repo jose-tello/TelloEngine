@@ -30,13 +30,15 @@ namespace ModelImporter
 
 	namespace Private
 	{
-		void ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec, const char* path);
+		void LinkModelResources(std::vector<ModelNode>& nodes, std::vector<int> meshes, std::vector<int> materials);
+
+		void ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec);
 		void LoadNode(ModelNode& modelNode, Config& node);
 		void SaveNode(ModelNode& modelNode, Config& node);
 
 		void InitObject(ModelNode& object, int parentId, aiNode* node);
-		void ImportMesh(ModelNode& object, aiMesh*);
-		void ImportMaterial(ModelNode& gameObject, aiMaterial* material, const char* path);
+		int ImportMesh(aiMesh*, const char* assetPath);
+		int ImportMaterial(aiMaterial* material, const char* path);
 
 	}
 }

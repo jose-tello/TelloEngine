@@ -10,6 +10,8 @@
 
 #include "M_Resources.h"
 #include "R_Model.h"
+#include "R_Mesh.h"
+#include "R_Material.h"
 
 #include "C_Material.h"
 #include "Assimp/include/material.h"
@@ -45,7 +47,17 @@ void ModelImporter::Import(const char* path, R_Model* model)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		Private::ImportNode(scene->mRootNode, scene, 0, modelNodes, filePath.c_str());
+		std::vector<int> meshesId;
+		for (int i = 0; i < scene->mNumMeshes; ++i)
+			meshesId.push_back(Private::ImportMesh(scene->mMeshes[i], filePath.c_str()));
+		
+		std::vector<int> materialsId;
+		for (int i = 0; i < scene->mNumMaterials; i++)
+			materialsId.push_back(Private::ImportMaterial(scene->mMaterials[i], filePath.c_str()));
+
+		Private::ImportNode(scene->mRootNode, scene, 0, modelNodes);
+		Private::LinkModelResources(modelNodes, meshesId, materialsId);
+
 		Save(model);
 
 		aiReleaseImport(scene);
@@ -60,20 +72,33 @@ void ModelImporter::Import(const char* path, R_Model* model)
 }
 
 
-void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec, const char* path)
+void ModelImporter::Private::LinkModelResources(std::vector<ModelNode>& nodes, std::vector<int> meshes, std::vector<int> materials)
+{
+	int nodesCount = nodes.size();
+	for (int i = 0; i < nodesCount; i++)
+	{
+		if (nodes[i].meshId == -1)
+			nodes[i].meshId = 0;
+
+		else
+			nodes[i].meshId = meshes[nodes[i].meshId];
+
+
+		
+	}
+
+}
+
+
+void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec)
 {
 	ModelNode obj;
 	InitObject(obj, parentId, node);
 
 	for (int i = 0; i < node->mNumMeshes; i++)
 	{
-		unsigned int meshIterator = node->mMeshes[i];
-
-		aiMesh* mesh = scene->mMeshes[meshIterator];
-		Private::ImportMesh(obj, mesh);
-
-		aiMaterial* material = scene->mMaterials[scene->mMeshes[meshIterator]->mMaterialIndex];
-		Private::ImportMaterial(obj, material, path);
+		obj.meshId = node->mMeshes[i];
+		obj.materialId = scene->mMeshes[obj.meshId]->mMaterialIndex;
 
 		nodeVec.push_back(obj);
 
@@ -83,7 +108,7 @@ void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int 
 
 	for (int i = 0; i < node->mNumChildren; i++)
 	{
-		Private::ImportNode(node->mChildren[i], scene, obj.uid, nodeVec, path);
+		Private::ImportNode(node->mChildren[i], scene, obj.uid, nodeVec);
 	}
 }
 
@@ -120,13 +145,13 @@ void ModelImporter::Private::InitObject(ModelNode& object, int parentId, aiNode*
 }
 
 
-void ModelImporter::Private::ImportMesh(ModelNode& modelNode, aiMesh* mesh)
+int ModelImporter::Private::ImportMesh(aiMesh* mesh, const char* assetPath)
 {
-	
+	return MeshImporter::Import(mesh, assetPath);
 }
 
 
-void ModelImporter::Private::ImportMaterial(ModelNode& modelNode, aiMaterial* mat, const char* path)
+int ModelImporter::Private::ImportMaterial(aiMaterial* mat, const char* path)
 {
 	aiColor4D color;
 
@@ -134,7 +159,9 @@ void ModelImporter::Private::ImportMaterial(ModelNode& modelNode, aiMaterial* ma
 	bool hasColor = aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &color) == aiReturn_SUCCESS;
 
 	if (hasTextures || hasColor)
-		MaterialImporter::Import(mat, Color(color.r, color.g, color.b, color.a), hasTextures, hasColor, path);
+		return MaterialImporter::Import(mat, Color(color.r, color.g, color.b, color.a), hasTextures, hasColor, path);
+
+	return 0;
 }
 
 
