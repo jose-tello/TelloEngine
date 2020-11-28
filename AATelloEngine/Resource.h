@@ -9,6 +9,7 @@ enum class RESOURCE_TYPE : int
 	MESH,
 	MODEL,
 	MATERIAL,
+	TEXTURE,
 	MAX
 };
 

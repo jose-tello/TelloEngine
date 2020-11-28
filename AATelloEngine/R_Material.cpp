@@ -40,9 +40,24 @@ void R_Material::UnLoad()
 }
 
 
+void R_Material::GetColor(float& r, float& g, float& b, float& a) const
+{
+	r = color.r;
+	g = color.g;
+	b = color.b;
+	a = color.a;
+}
+
+
 void R_Material::SetColor(Color& col)
 {
 	color = col;
+}
+
+
+int R_Material::GetResourceTexture() const
+{
+	return resourceTexture;
 }
 
 

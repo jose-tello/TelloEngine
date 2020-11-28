@@ -13,14 +13,16 @@ public:
 	void UnLoad() override;
 
 	unsigned int GetTextureId() const;
+	void SetTextureId(unsigned int texId);
 	void GetTextureSize(int& w, int& h) const;
 
 private:
 	void InitTextureSize();
 
-public:
+private:
 	unsigned int textureId;
-	
+
+public:
 	int textureWidth;
 	int textureHeight;
 };

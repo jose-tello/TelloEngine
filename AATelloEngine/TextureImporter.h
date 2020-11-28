@@ -1,14 +1,16 @@
 #ifndef __TEXTURE_IMPORTER_H__
 #define __TEXTURE_IMPORTER_H__
 
+class R_Texture;
+
 namespace TextureImporter
 {
 	void Init();
 
-	unsigned int Import(const char* path, bool pathFromFileManager = true);
+	void Import(const char* path, R_Texture* resource);
 	
-	unsigned int Load(const char* path);
-	void Save(const char* path);
+	void Load(R_Texture*);
+	void Save(R_Texture*);
 }
 #endif // !__TEXTURE_IMPORTER_H__
 

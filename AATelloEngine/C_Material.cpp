@@ -132,7 +132,7 @@ void C_Material::Load(Config& node)
 	std::string materialPath(MATERIAL_LIBRARY);
 	materialPath.append(materialName);
 
-	MaterialImporter::Load(this, materialPath.c_str());
+	//MaterialImporter::Load(this, materialPath.c_str());
 }
 
 

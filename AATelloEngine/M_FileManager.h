@@ -35,6 +35,7 @@ public:
 	void AdaptPath(std::string& path);
 	unsigned int ReadBytes(const char* path, char** buffer) const;
 
+	std::string NormalizePath(const char*);
 	void SplitPath(const char* fullPath, std::string* path, std::string* file, std::string* extension);
 	std::string RemoveExtension(const char* path);
 
@@ -46,8 +47,6 @@ public:
 	bool FileExists(const char*);
 
 private:
-
-	std::string NormalizePath(const char*);
 	void TransformPath(std::string& path);
 
 	//bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);

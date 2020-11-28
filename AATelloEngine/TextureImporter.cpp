@@ -4,6 +4,8 @@
 #include "M_FileManager.h"
 #include "M_Editor.h"
 
+#include "R_Texture.h"
+
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
 #include "Devil\include\ilu.h"
 #pragma comment( lib, "Devil/libx86/ILU.lib" )
@@ -22,16 +24,13 @@ void TextureImporter::Init()
 }
 
 
-unsigned int TextureImporter::Import(const char* path, bool pathFromFileManager)
+void TextureImporter::Import(const char* path, R_Texture* resource)
 {
 	char* buffer = nullptr;
 	unsigned int bytes = 0;
 	unsigned int texId = 0;
 	ILuint imgName = 0;
 	std::string finalPath(path);
-
-	if (pathFromFileManager == true)
-		App->fileManager->AdaptPath(finalPath);
 
 	bytes = App->fileManager->ReadBytes(finalPath.c_str(), &buffer);
 
@@ -42,42 +41,40 @@ unsigned int TextureImporter::Import(const char* path, bool pathFromFileManager)
 
 	texId = ilutGLBindTexImage();
 
-	App->fileManager->SplitPath(path, nullptr, &finalPath, nullptr);
-	Save(finalPath.c_str());
+	Save(resource);
 
 	ilDeleteImage(imgName);
 	delete[] buffer;
 	buffer = nullptr;
-
-	return texId;
 }
 
 
-unsigned int TextureImporter::Load(const char* path)
+void TextureImporter::Load(R_Texture* texture)
 {
 	char* fileBuffer = nullptr;
 	unsigned int bytes = 0;
 	unsigned int texId = 0;
 	ILuint imgName = 0;
 
-	bytes = App->fileManager->ReadBytes(path, &fileBuffer);
+	std::string path(TEXTURE_LIBRARY);
+	path.append(std::to_string(texture->GetUid()));
+
+	bytes = App->fileManager->ReadBytes(path.c_str(), &fileBuffer);
 
 	ilGenImages(1, &imgName);
 	ilBindImage(imgName);
 
 	ilLoadL(IL_TYPE_UNKNOWN, fileBuffer, bytes);
 
-	texId = ilutGLBindTexImage();
+	texture->SetTextureId(ilutGLBindTexImage());
 
 	ilDeleteImage(imgName);
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
-
-	return texId;
 }
 
 
-void TextureImporter::Save(const char* name)
+void TextureImporter::Save(R_Texture* texture)
 {
 	unsigned int size;
 	ILubyte* data;
@@ -94,7 +91,7 @@ void TextureImporter::Save(const char* name)
 			fileBuffer = (char*)data;
 
 			std::string fileName(TEXTURE_LIBRARY);
-			fileName.append(name);
+			fileName.append(std::to_string(texture->GetUid()));
 			App->fileManager->Save(fileName.c_str(), fileBuffer, size);
 		}
 		else

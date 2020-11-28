@@ -16,7 +16,10 @@ public:
 	void Load() override;
 	void UnLoad() override;
 
+	void GetColor(float& r, float& g, float& b, float& a) const;
 	void SetColor(Color& col);
+	
+	int GetResourceTexture() const;
 	void SetResourceTexture(int resource);
 
 	void GetDrawVariables(unsigned int& texId, Color& col) const;

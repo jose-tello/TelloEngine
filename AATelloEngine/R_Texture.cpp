@@ -42,6 +42,12 @@ unsigned int R_Texture::GetTextureId() const
 }
 
 
+void R_Texture::SetTextureId(unsigned int texId)
+{
+	textureId = texId;
+}
+
+
 void R_Texture::GetTextureSize(int& w, int& h) const
 {
 	w = textureWidth;

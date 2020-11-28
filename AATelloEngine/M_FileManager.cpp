@@ -86,12 +86,12 @@ void M_FileManager::LoadFromExporter(const char* path)
 	}
 	break;
 
-	case RESOURCE_TYPE::MATERIAL:
+	case RESOURCE_TYPE::TEXTURE:
 
-		GameObject* object = App->editor->GetFocusedGameObject();
+		/*GameObject* object = App->editor->GetFocusedGameObject();
 		if (object != nullptr)
 		{
-			unsigned int texId = TextureImporter::Import(path);
+			unsigned int texId = MaterialImporter::Import(path);
 
 			C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
 			if (material == nullptr)
@@ -110,7 +110,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 
 		else
 			App->editor->AddLog("[WARNING]: Dont have any game object selected");
-		
+		*/
 		break;
 	}
 
@@ -297,7 +297,7 @@ RESOURCE_TYPE M_FileManager::GetFileType(const char* path)
 		return RESOURCE_TYPE::MODEL;
 
 	else if (extension == "PNG" || extension == "png" || extension == "DDS" || extension == "dds" || extension == "jpg" || extension == "tga")
-		return RESOURCE_TYPE::MATERIAL;
+		return RESOURCE_TYPE::TEXTURE;
 
 	else
 	{

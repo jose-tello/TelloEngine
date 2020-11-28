@@ -1,20 +1,20 @@
 #include "MaterialImporter.h"
-#include "TextureImporter.h"
 
 #include "Application.h"
 #include "M_FileManager.h"
 #include "M_Editor.h"
 
-#include "C_Material.h"
+#include "M_Resources.h"
+#include "R_Material.h"
 
 #include "Assimp/include/material.h"
+#include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
-
-void MaterialImporter::Import(aiMaterial* material, C_Material* materialComponent, Color& color, bool hasTexture, 
-							  bool hasColor, const char* nodeName)
+void MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture, bool hasColor, const char* assetPath)
 {
-	std::string materialName(nodeName);
+	LCG random;
 
+	R_Material* materialResource = new R_Material(random.IntFast(), assetPath, RESOURCE_TYPE::MATERIAL);
 	if (hasTexture)
 	{
 		aiString texPath;
@@ -22,29 +22,32 @@ void MaterialImporter::Import(aiMaterial* material, C_Material* materialComponen
 
 		std::string fileName;
 		std::string fileExtension;
-		App->fileManager->SplitPath(texPath.C_Str(), nullptr, &materialName, &fileExtension);
-		fileName = materialName + "." + fileExtension;
+		App->fileManager->SplitPath(texPath.C_Str(), nullptr, &fileName, &fileExtension);
+		fileName = fileName + "." + fileExtension;
+		int id = App->resourceManager->SearchMetaFile(fileName.c_str());
 
-		materialComponent->SetTexture(TextureImporter::Import(fileName.c_str(), false));
-		materialComponent->texturePath = texPath.C_Str();
-		materialComponent->textureName = materialName;
+		if (id == 0)
+			materialResource->SetResourceTexture(App->resourceManager->CreateMeta(fileName.c_str()));
+
+		else
+			materialResource->SetResourceTexture(id);
 	}
 
-
 	if (hasColor)
-		materialComponent->SetColor(color);
+		materialResource->SetColor(color);
 
-	materialComponent->materialPath = materialName;
+	Save(materialResource);
 
-	std::string materialPath = Save(materialComponent, materialName.c_str());
-	Load(materialComponent, materialPath.c_str());
+	App->resourceManager->PushResource(materialResource, materialResource->GetUid());
 }
 
 
-void MaterialImporter::Load(C_Material* material, const char* path)
+void MaterialImporter::Load(R_Material* material)
 {
 	char* fileBuffer = nullptr;
-	unsigned int size = App->fileManager->Load(path, &fileBuffer);
+	std::string path(MATERIAL_LIBRARY);
+	path.append(std::to_string(material->GetUid()));
+	unsigned int size = App->fileManager->Load(path.c_str(), &fileBuffer);
 	
 	char* pointer = fileBuffer;
 	if (pointer != nullptr)
@@ -56,36 +59,29 @@ void MaterialImporter::Load(C_Material* material, const char* path)
 
 		material->SetColor(Color(color[0], color[1], color[2], color[3]));
 
-		if (bytes < size)
-		{		
-			std::string filePath(TEXTURE_LIBRARY);
-			filePath.append(pointer);	//Name of the file
-			material->SetTexture(TextureImporter::Load(filePath.c_str()));
-			material->textureName = pointer;	
-		}
+		int texId;
+		memcpy(&texId, pointer, sizeof(int));
 
-		std::string name;
-		App->fileManager->SplitPath(path, nullptr, &name, nullptr);
-		material->materialPath = name;
+		material->SetResourceTexture(texId);
 	}
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
 
-	App->editor->AddLog("Log: Loaded material: %s", material->textureName.c_str());
+	App->editor->AddLog("Log: Loaded material: %s", material->GetAssetPath());
 }
 
 
 //The string returned is the path to the mesh
-std::string MaterialImporter::Save(C_Material* materialComponent, const char* fileName)
+std::string MaterialImporter::Save(R_Material* materialResource)
 {
 	std::string filePath(MATERIAL_LIBRARY);
-	filePath.append(fileName);
+	filePath.append(std::to_string(materialResource->GetUid()));
 
 	float color[4];
-	materialComponent->GetColor(color[0], color[1], color[2], color[3]);
+	materialResource->GetColor(color[0], color[1], color[2], color[3]);
 
-	unsigned int size = sizeof(color) + sizeof(char) * materialComponent->textureName.length();
+	unsigned int size = sizeof(color) + sizeof(int);
 	char* fileBuffer = new char[size];
 	char* pointer = fileBuffer;
 
@@ -94,16 +90,14 @@ std::string MaterialImporter::Save(C_Material* materialComponent, const char* fi
 	memcpy(pointer, color, bytes);
 	pointer += bytes;
 
-	//Save texture name
-	if (materialComponent->textureName.length() != 0)
-	{
-		bytes = sizeof(char) * materialComponent->textureName.length();
-		const char* texName = materialComponent->textureName.c_str();
-		memcpy(pointer, texName, bytes);
-	}
+	//Save texture id
+	bytes = sizeof(int);
+	int id = materialResource->GetResourceTexture();
+	memcpy(pointer, &id, bytes);
+	
 	
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
-	App->editor->AddLog("Log: Saved material %s: ", fileName);
+	App->editor->AddLog("Log: Saved material %s: ", materialResource->GetAssetPath());
 	
 	delete[] fileBuffer;
 	fileBuffer = nullptr;

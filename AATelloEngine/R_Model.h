@@ -37,7 +37,6 @@ public:
 	void UnLoad() override;
 
 	void GetModelNodes(std::vector<ModelNode>& modelNodes);
-
 private:
 	std::vector<ModelNode> modelNodes;
 };

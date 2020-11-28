@@ -45,7 +45,7 @@ void ModelImporter::Import(const char* path, R_Model* model)
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		Private::ImportNode(scene->mRootNode, scene, 0, modelNodes);
+		Private::ImportNode(scene->mRootNode, scene, 0, modelNodes, filePath.c_str());
 		Save(model);
 
 		aiReleaseImport(scene);
@@ -60,7 +60,7 @@ void ModelImporter::Import(const char* path, R_Model* model)
 }
 
 
-void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec)
+void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec, const char* path)
 {
 	ModelNode obj;
 	InitObject(obj, parentId, node);
@@ -73,7 +73,7 @@ void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int 
 		Private::ImportMesh(obj, mesh);
 
 		aiMaterial* material = scene->mMaterials[scene->mMeshes[meshIterator]->mMaterialIndex];
-		Private::ImportMaterial(obj, material);
+		Private::ImportMaterial(obj, material, path);
 
 		nodeVec.push_back(obj);
 
@@ -83,7 +83,7 @@ void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int 
 
 	for (int i = 0; i < node->mNumChildren; i++)
 	{
-		Private::ImportNode(node->mChildren[i], scene, obj.uid, nodeVec);
+		Private::ImportNode(node->mChildren[i], scene, obj.uid, nodeVec, path);
 	}
 }
 
@@ -126,7 +126,7 @@ void ModelImporter::Private::ImportMesh(ModelNode& modelNode, aiMesh* mesh)
 }
 
 
-void ModelImporter::Private::ImportMaterial(ModelNode& modelNode, aiMaterial* mat)
+void ModelImporter::Private::ImportMaterial(ModelNode& modelNode, aiMaterial* mat, const char* path)
 {
 	aiColor4D color;
 
@@ -134,18 +134,7 @@ void ModelImporter::Private::ImportMaterial(ModelNode& modelNode, aiMaterial* ma
 	bool hasColor = aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &color) == aiReturn_SUCCESS;
 
 	if (hasTextures || hasColor)
-	{
-		aiString texPath;
-		mat->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &texPath);
-
-		int id = App->resourceManager->SearchMetaFile(texPath.C_Str());
-
-		if (id == 0)
-			modelNode.materialId = App->resourceManager->CreateMeta(texPath.C_Str());
-
-		else
-			modelNode.materialId = id;
-	}	
+		MaterialImporter::Import(mat, Color(color.r, color.g, color.b, color.a), hasTextures, hasColor, path);
 }
 
 

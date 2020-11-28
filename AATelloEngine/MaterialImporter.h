@@ -3,18 +3,18 @@
 
 struct aiMaterial;
 struct Color;
-class C_Material;
+class R_Material;
 
 #include <string>
 
 namespace MaterialImporter
 {
-	void Import(aiMaterial* material, C_Material* materialComponent, Color& col, bool hasTexture, bool hasColor, const char* nodeName);
+	void Import(aiMaterial* material, Color& col, bool hasTexture, bool hasColor, const char* assetPath);
 	
-	void Load(C_Material*, const char* path);
+	void Load(R_Material*);
 	
 	//The string returned is the path to the mesh
-	std::string Save(C_Material* materialComponent, const char* fileName);
+	std::string Save(R_Material*);
 }
 
 #endif // !__IMAGE_IMPORTER_H__

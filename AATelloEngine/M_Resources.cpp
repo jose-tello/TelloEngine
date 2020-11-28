@@ -3,8 +3,10 @@
 #include "R_Mesh.h"
 #include "R_Material.h"
 #include "R_Model.h"
+#include "R_Texture.h"
 
 #include "ModelImporter.h"
+#include "TextureImporter.h"
 
 #include "Application.h"
 #include "M_FileManager.h"
@@ -161,20 +163,16 @@ void M_Resources::CreateResource(int uid, int type, const char* path)
 	//TODO: do the corresponding news and subclasses and import
 	switch ((RESOURCE_TYPE)type)
 	{
-	case RESOURCE_TYPE::MESH:
-		resource = new R_Mesh(uid, path, (RESOURCE_TYPE)type);
-		if (CheckLibFileExists(uid, type) == false);
-		break;
-
 	case RESOURCE_TYPE::MODEL:
 		resource = new R_Model(uid, path, (RESOURCE_TYPE)type);
 		if (CheckLibFileExists(uid, type) == false)
 			ModelImporter::Import(path, (R_Model*)resource);
 		break;
 
-	case RESOURCE_TYPE::MATERIAL:
-		resource = new R_Material(uid, path, (RESOURCE_TYPE)type);
-		CheckLibFileExists(uid, type);
+	case RESOURCE_TYPE::TEXTURE:
+		resource = new R_Texture(uid, path, (RESOURCE_TYPE)type);
+		if (CheckLibFileExists(uid, type) == false)
+			TextureImporter::Import(path, (R_Texture*)resource);
 		break;
 
 	default:
@@ -216,6 +214,14 @@ bool M_Resources::CheckLibFileExists(int id, int resourceType)
 
 	case RESOURCE_TYPE::MATERIAL:
 		path = MATERIAL_LIBRARY + std::to_string(id);
+		break;
+
+	case RESOURCE_TYPE::TEXTURE:
+		path = TEXTURE_LIBRARY + std::to_string(id);
+		break;
+	
+	default:
+		assert("Forgot to add resources");
 		break;
 	}
 
