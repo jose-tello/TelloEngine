@@ -194,19 +194,25 @@ void M_Resources::DragAndDropImport(const char* path, GameObject* object)
 	{
 	case RESOURCE_TYPE::TEXTURE:
 	{
-		Component* comp = object->GetComponent(COMPONENT_TYPE::MATERIAL);
-		if (comp == nullptr)
+		if (object == nullptr)
 		{
-			C_Material* material = new C_Material();
-			material->SetTexture(id);
+			std::string name;
+			App->fileManager->SplitPath(path, nullptr, &name, nullptr);
+			object = new GameObject(name, nullptr, 0);
+			App->scene->AddGameObject(object);
+		}
 
+		C_Material* material;
+		Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+		if (mat == nullptr)
+		{
+			material = new C_Material();
 			object->AddComponent(material);
 		}
 		else
-		{
-			C_Material* material = (C_Material*)comp;
-			material->SetTexture(id);
-		}
+			material = (C_Material*)mat;
+
+		material->SetTexture(id);
 		break;
 	}
 	case RESOURCE_TYPE::MODEL:
@@ -223,82 +229,86 @@ void M_Resources::WindowLoad(int id, GameObject* object)
 {
 	Resource* resource = RequestResource(id);
 
-	switch (resource->GetType())
+	if (resource != nullptr)
 	{
-	case RESOURCE_TYPE::MESH:
-	{
-		if (object == nullptr)
+		switch (resource->GetType())
 		{
-			object = new GameObject(nullptr);
-			App->scene->AddGameObject(object);
-		}
-
-		C_Mesh* mesh;
-		Component* meshComp = object->GetComponent(COMPONENT_TYPE::MESH);
-		if (meshComp == nullptr)
+		case RESOURCE_TYPE::MESH:
 		{
-			mesh = new C_Mesh();
-			object->AddComponent(mesh);
-		}
-		else
-			mesh = (C_Mesh*)meshComp;
+			if (object == nullptr)
+			{
+				object = new GameObject(nullptr);
+				App->scene->AddGameObject(object);
+			}
 
-		mesh->SetMesh(id);
+			C_Mesh* mesh;
+			Component* meshComp = object->GetComponent(COMPONENT_TYPE::MESH);
+			if (meshComp == nullptr)
+			{
+				mesh = new C_Mesh();
+				object->AddComponent(mesh);
+			}
+			else
+				mesh = (C_Mesh*)meshComp;
+
+			mesh->SetMesh(id);
+		}
+		break;
+
+		case RESOURCE_TYPE::MODEL:
+			ModelImporter::LoadToScene((R_Model*)resource);
+			break;
+
+		case RESOURCE_TYPE::MATERIAL:
+		{
+			if (object == nullptr)
+			{
+				object = new GameObject(nullptr);
+				App->scene->AddGameObject(object);
+			}
+
+			C_Material* material;
+			Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+			if (mat == nullptr)
+			{
+				material = new C_Material();
+				object->AddComponent(material);
+			}
+			else
+				material = (C_Material*)mat;
+
+			material->SetMaterial(id);
+		}
+		break;
+
+		case RESOURCE_TYPE::TEXTURE:
+		{
+			if (object == nullptr)
+			{
+				object = new GameObject(nullptr);
+				App->scene->AddGameObject(object);
+			}
+
+			C_Material* material;
+			Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+			if (mat == nullptr)
+			{
+				material = new C_Material();
+				object->AddComponent(material);
+			}
+			else
+				material = (C_Material*)mat;
+
+			material->SetTexture(id);
+		}
+		break;
+
+		default:
+			assert("Forgot to add resources");
+			break;
+		}
 	}
-		break;
-
-	case RESOURCE_TYPE::MODEL:
-		ModelImporter::LoadToScene((R_Model*)resource);
-		break;
-
-	case RESOURCE_TYPE::MATERIAL:
-	{
-		if (object == nullptr)
-		{
-			object = new GameObject(nullptr);
-			App->scene->AddGameObject(object);
-		}
-
-		C_Material* material;
-		Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
-		if (mat == nullptr)
-		{
-			material = new C_Material();
-			object->AddComponent(material);
-		}
-		else
-			material = (C_Material*)mat;
-
-		material->SetMaterial(id);
-	}
-		break;
-
-	case RESOURCE_TYPE::TEXTURE:
-	{
-		if (object == nullptr)
-		{
-			object = new GameObject(nullptr);
-			App->scene->AddGameObject(object);
-		}
-
-		C_Material* material;
-		Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
-		if (mat == nullptr)
-		{
-			material = new C_Material();
-			object->AddComponent(material);
-		}
-		else
-			material = (C_Material*)mat;
-
-		material->SetTexture(id);
-	}
-		break;
-
-	default:
-		assert("Forgot to add resources");
-		break;
-	}
+	
 }
 
 

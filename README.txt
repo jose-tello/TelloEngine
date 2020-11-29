@@ -40,8 +40,12 @@ load/save the scene, start/pause/stop/continue the game simulation, show/hide ed
 -You can drag and drop png and dds diles, wich will be added as material component to the selected game objects, 
 or will change the texture of the material if the game object allready has one. 
 
--Load window: Can charge any asset/resource into the scene by double clicking it, or delete it using backspace. To update the state, press the button update (add new resources, or change them).
+-Load window: Can charge any asset/resource into the scene by double clicking it, or delete it hovering it with the mouse while using backspace (RESOURSES WILL NOT BE AFFECTED, ONLLY ASSETS). 
+	      To update the library and the assets, press the button update.
 
 Additional features:
 -Scene cameras are rendered in their own window (as they have the same name, if there are more than one camera it will be rendered in the same window but you will have to scroll down to see it
 this is due to ImGui limitations os pushing ids).
+
+
+-Assets, library and resources will not be updated unless the button "update" in the Load window is pressed;

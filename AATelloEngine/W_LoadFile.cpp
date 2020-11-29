@@ -4,6 +4,7 @@
 #include "M_FileManager.h"
 #include "M_Editor.h"
 #include "M_Resources.h"
+#include "M_Input.h"
 
 #include "imgui/imgui.h"
 
@@ -37,12 +38,24 @@ bool W_LoadFile::Draw()
 void W_LoadFile::DrawLoadWindow()
 {
 	ImGui::BeginChild("File bowser");
-	DrawDirectory("/Library", "");
+
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Assets");
+	DrawDirectory("/Assets", "");
+
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Materials");
+
+	DrawDirectory(MATERIAL_LIBRARY, "", true);
+
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Meshes");
+
+	DrawDirectory(MESH_LIBRARY, "", true);
 	ImGui::EndChild();
 }
 
 
-void W_LoadFile::DrawDirectory(const char* directory, const char* filterExtension)
+void W_LoadFile::DrawDirectory(const char* directory, const char* filterExtension, bool fromResource)
 {
 	std::vector<std::string> files;
 	std::vector<std::string> folderDirs;
@@ -55,9 +68,9 @@ void W_LoadFile::DrawDirectory(const char* directory, const char* filterExtensio
 	int folderDirsCount = folderDirs.size();
 	for (int i = 0; i < folderDirsCount; i++)
 	{
-		if (ImGui::TreeNodeEx((dir + folderDirs[i]).c_str(), 0, "%s/", folderDirs[i].c_str()))
+		if (ImGui::TreeNodeEx((dir + folderDirs[i]).c_str(), 0, "%s", folderDirs[i].c_str()))
 		{
-			DrawDirectory((dir + folderDirs[i]).c_str(), filterExtension);
+			DrawDirectory((dir + folderDirs[i]).c_str(), filterExtension, fromResource);
 			ImGui::TreePop();
 		}
 	}
@@ -66,21 +79,32 @@ void W_LoadFile::DrawDirectory(const char* directory, const char* filterExtensio
 	for (int i = 0; i < filesCount; i++)
 	{
 		std::string str = files[i];
+		std::string extension;
+		App->fileManager->SplitPath(files[i].c_str(), nullptr, nullptr, &extension);
 
-		str.substr(str.find_last_of(".") + 1);
-
-		if (ImGui::TreeNodeEx(str.c_str(), ImGuiTreeNodeFlags_Leaf))
+		if (extension != "meta")
 		{
-			if (ImGui::IsItemClicked() && ImGui::IsMouseDoubleClicked(0))
+			if (ImGui::TreeNodeEx(str.c_str(), ImGuiTreeNodeFlags_Leaf))
 			{
-				//TODO: Once resource manager is implemented, use this path to load the resource
-				App->editor->AddLog("Test load: %s", files[i].c_str());
-				int id = std::stoi(files[i]);
+				if (ImGui::IsItemClicked() && ImGui::IsMouseDoubleClicked(0))
+				{
+					if (fromResource == true)
+					{
+						int id = std::stoi(files[i]);
+						App->resourceManager->WindowLoad(id, App->editor->GetFocusedGameObject());
+					}
+					else
+						App->resourceManager->DragAndDropImport((dir += files[i]).c_str(), App->editor->GetFocusedGameObject());
+				}
 
-				App->resourceManager->WindowLoad(id, App->editor->GetFocusedGameObject());
+				if (fromResource == false)
+				{
+					if (ImGui::IsItemHovered() && App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
+						App->fileManager->RemoveFile((dir += files[i]).c_str());
+				}
+
+				ImGui::TreePop();
 			}
-
-			ImGui::TreePop();
 		}
 	}
 }
