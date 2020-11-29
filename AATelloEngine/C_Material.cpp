@@ -31,8 +31,14 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 
 C_Material::~C_Material()
 {
-	//Desreferentiate
+	if (material != nullptr)
+		material->QuitReference();
+	
 	material = nullptr;
+
+	if (texture != nullptr)
+		texture->QuitReference();
+
 	texture = nullptr;
 }
 
@@ -41,7 +47,7 @@ void C_Material::SetTexture(int newTexId)
 {
 	if (texture != nullptr)
 	{
-		//Desreferentiate
+		texture->QuitReference();
 		texture = nullptr;
 	}
 
@@ -52,10 +58,13 @@ void C_Material::SetTexture(int newTexId)
 void C_Material::SetMaterial(int newMat)
 {
 	if (material != nullptr)
-	{
-		//Desreferentiate
-		material = nullptr;
-	}
+		material->QuitReference();
+
+	if (texture != nullptr)
+		texture->QuitReference();
+
+	material = nullptr;
+	texture = nullptr;
 
 	material = (R_Material*)App->resourceManager->RequestResource(newMat);
 

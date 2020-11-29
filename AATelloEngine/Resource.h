@@ -25,7 +25,11 @@ public:
 	virtual void UnLoad();
 
 	int GetUid() const;
+
 	unsigned int GetReferenceCount() const;
+	void AddReference();
+	void QuitReference();
+
 	std::string GetAssetPath() const;
 	RESOURCE_TYPE GetType() const;
 

@@ -44,6 +44,21 @@ unsigned int Resource::GetReferenceCount() const
 }
 
 
+void Resource::AddReference()
+{
+	referenceCount++;
+}
+
+
+void Resource::QuitReference()
+{
+	referenceCount--;
+
+	if (referenceCount == 0)
+		UnLoad();
+}
+
+
 std::string Resource::GetAssetPath() const
 {
 	return assetPath;

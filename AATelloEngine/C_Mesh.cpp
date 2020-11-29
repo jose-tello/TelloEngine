@@ -25,7 +25,9 @@ C_Mesh::C_Mesh() : Component(COMPONENT_TYPE::MESH),
 
 C_Mesh::~C_Mesh()
 {
-	//desreferentiate mesh
+	if (mesh != nullptr)
+		mesh->QuitReference();
+
 	mesh = nullptr;
 }
 
@@ -49,11 +51,10 @@ void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, 
 
 void C_Mesh::SetMesh(int newMesh)
 {
-	if (this->mesh != nullptr)
-	{
-		//desreferentiate mesh
-		mesh = nullptr;
-	}
+	if (mesh != nullptr)
+		mesh->QuitReference();
+
+	mesh = nullptr;
 
 	mesh = (R_Mesh*)App->resourceManager->RequestResource(newMesh);
 }

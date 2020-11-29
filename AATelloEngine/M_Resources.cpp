@@ -46,6 +46,7 @@ Resource* M_Resources::RequestResource(int uid)
 	if (iterator != resources.end())
 	{
 		ret = iterator._Ptr->_Myval.second;
+		ret->AddReference();
 
 		if (ret->IsLoaded() == false)
 			ret->Load();
