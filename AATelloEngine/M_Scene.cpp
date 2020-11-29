@@ -28,8 +28,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Start()
 {
-	//SceneImporter::Load("test", gameObjects);
-
+	//Load street
 	return true;
 }
 

@@ -48,6 +48,7 @@ public:
 
 private:
 	void TransformPath(std::string& path);
+	void CreateFolder(const char* directory);
 
 	std::string DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 	

@@ -53,6 +53,13 @@ bool M_FileManager::Init()
 	PHYSFS_mount("Assets", nullptr, 1);
 	PHYSFS_mount("Library", nullptr, 2);
 
+	CreateFolder("/Library/");
+	CreateFolder(MESH_LIBRARY);
+	CreateFolder(MATERIAL_LIBRARY);
+	CreateFolder(TEXTURE_LIBRARY);
+	CreateFolder(SCENE_LIBRARY);
+	CreateFolder(MODEL_LIBRARY);
+
 	return true;
 }
 
@@ -330,6 +337,13 @@ void M_FileManager::TransformPath(std::string& path)
 {
 	int itPos = path.find("Assets");
 	path = path.substr(itPos + ASSETS_LENGHT, path.length());
+}
+
+
+void M_FileManager::CreateFolder(const char* directory)
+{
+	if (!PHYSFS_isDirectory(directory))
+		PHYSFS_mkdir(directory);
 }
 
 
