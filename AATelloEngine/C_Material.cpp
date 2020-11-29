@@ -33,36 +33,50 @@ C_Material::~C_Material()
 {
 	if (materialId != 0)
 	{
-		R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
-
-		if (material != nullptr)
+		Resource* mat = App->resourceManager->RequestResource(materialId);
+		if (mat != nullptr)
+		{
+			R_Material* material = (R_Material*)mat;
 			material->QuitReference();
+		}
 	}
 
 	if (textureId != 0)
 	{
-		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
-
-		if (texture != nullptr)
+		Resource* tex = App->resourceManager->RequestResource(textureId);
+		if (tex != nullptr)
+		{
+			R_Texture* texture = (R_Texture*)tex;
 			texture->QuitReference();
+		}
 	}
 }
 
 
 void C_Material::SetTexture(int newTexId)
 {
+	R_Texture* texture;
+	Resource* tex;
+
 	if (textureId != 0)
 	{
-		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
-
-		if (texture != nullptr)
+		tex = App->resourceManager->RequestResource(textureId);
+		if (tex != nullptr)
+		{
+			texture = (R_Texture*)tex;
 			texture->QuitReference();
+		}
 	}
 
 	textureId = newTexId;
 
-	R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(newTexId);
-	texture->AddReference();
+	tex = App->resourceManager->RequestResource(newTexId);
+	if (tex != nullptr)
+	{
+		texture = (R_Texture*)tex;
+		texture->AddReference();
+	}
+	
 }
 
 
@@ -70,33 +84,50 @@ void C_Material::SetMaterial(int newMat)
 {
 	if (materialId != 0)
 	{
-		R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
-
-		if (material != nullptr)
+		Resource* mat = App->resourceManager->RequestResource(materialId);
+		if (mat != nullptr)
+		{
+			R_Material* material = (R_Material*)mat;
 			material->QuitReference();
+		}
 	}
 
 	if (textureId != 0)
 	{
-		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
-
-		if (texture != nullptr)
+		Resource* tex = App->resourceManager->RequestResource(textureId);
+		if (tex != nullptr)
+		{
+			R_Texture* texture = (R_Texture*)tex;
 			texture->QuitReference();
+		}
 	}
 
 	materialId = newMat;
 
-	R_Material* material = (R_Material*)App->resourceManager->RequestResource(newMat);
-	material->AddReference();
-
-	textureId = material->GetResourceTexture();
-	if (textureId != 0)
+	Resource* mat = App->resourceManager->RequestResource(newMat);
+	if (mat != nullptr)
 	{
-		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+		R_Material* material = (R_Material*)mat;
+		material->AddReference();
 
-		texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
-		texture->AddReference();
+		textureId = material->GetResourceTexture();
+		if (textureId != 0)
+		{
+			Resource* tex = App->resourceManager->RequestResource(textureId);
+			if (tex != nullptr)
+			{
+				R_Texture* texture = (R_Texture*)tex;
+				texture->AddReference();
+			}
+			else
+				textureId = 0;
+		}
 	}
+	else
+	{
+		materialId = 0;
+		textureId = 0;
+	}	
 }
 
 
@@ -104,10 +135,12 @@ void C_Material::GetColor(float& r, float& g, float& b, float& a) const
 {
 	if (materialId != 0)
 	{
-		R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
-
-		if (material != nullptr)
+		Resource* mat = App->resourceManager->RequestResource(materialId);
+		if (mat != nullptr)
+		{
+			R_Material* material = (R_Material*)mat;
 			material->GetColor(r, g, b, a);
+		}
 	}
 }
 
@@ -119,11 +152,12 @@ std::string C_Material::GetTexturePath() const
 
 	else
 	{
-		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
-
-		if (texture != nullptr)
+		Resource* tex = App->resourceManager->RequestResource(textureId);
+		if (tex != nullptr)
+		{
+			R_Texture* texture = (R_Texture*)tex;
 			return texture->GetAssetPath();
-
+		}
 		else
 			return "No texture";
 	}
@@ -137,10 +171,12 @@ void C_Material::GetTextureSize(int& width, int& height) const
 
 	if (textureId != 0)
 	{
-		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
-
-		if (texture != nullptr)
+		Resource* tex = App->resourceManager->RequestResource(textureId);
+		if (tex != nullptr)
+		{
+			R_Texture* texture = (R_Texture*)tex;
 			texture->GetTextureSize(width, height);
+		}
 	}
 }
 
@@ -195,10 +231,12 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 		{
 			if (textureId != 0)
 			{
-				R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
-
-				if (texture != nullptr)
+				Resource* tex = App->resourceManager->RequestResource(textureId);
+				if (tex != nullptr)
+				{
+					R_Texture* texture = (R_Texture*)tex;
 					texId = texture->GetTextureId();
+				}
 
 				else
 					texId = 0;
@@ -206,7 +244,6 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 			else
 				texId = 0;
 		}
-
 		else
 			texId = 0;
 	}
@@ -215,18 +252,18 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 	{
 		if (materialId != 0)
 		{
-			R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
-
-			if (material != nullptr)
+			Resource* mat = App->resourceManager->RequestResource(materialId);
+			if (mat != nullptr)
+			{
+				R_Material* material = (R_Material*)mat;
 				material->GetColor(col.r, col.g, col.b, col.a);
-		
+			}
 			else
 				col = { 1.f, 1.f, 1.f, 1.f };
 		}
 		else
 			col = { 1.f, 1.f, 1.f, 1.f };
 	}
-		
 	else
 		col = { 1.f, 1.f, 1.f, 1.f };
 }
@@ -239,15 +276,24 @@ void C_Material::Load(Config& node)
 
 	if (materialId != 0)
 	{
-		R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
-		material->AddReference();
+		Resource* mat = App->resourceManager->RequestResource(materialId);
+
+		if (mat != nullptr)
+		{
+			R_Material* material = (R_Material*)mat;
+			material->AddReference();
+		}
 	}
 
 	if (textureId != 0)
 	{
-		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
-		texture->AddReference();
-	}	
+		Resource* tex = App->resourceManager->RequestResource(textureId);
+		if (tex != nullptr)
+		{
+			R_Texture* texture = (R_Texture*)tex;
+			texture->AddReference();
+		}
+	}
 }
 
 

@@ -27,24 +27,26 @@ C_Mesh::~C_Mesh()
 {
 	if (meshId != 0)
 	{
-		R_Mesh* mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
-		if (mesh != nullptr)
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
 			mesh->QuitReference();
+		}
 	}
-
 	meshId = 0;
 }
-
 
 
 void C_Mesh::OnUpdateTransform(float4x4& transform)
 {
 	if (meshId != 0)
 	{
-		R_Mesh* mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
-
-		if (mesh != nullptr)
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
 		{
+			R_Mesh* mesh = (R_Mesh*)res;
+
 			OBB obb = mesh->GetAABB();
 			obb.Transform(transform);
 
@@ -67,10 +69,12 @@ void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, 
 {
 	if (meshId != 0)
 	{
-		R_Mesh* mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
-
-		if (mesh != nullptr)
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
 			mesh->Draw(transformMatrix, textureId, color, wireFrameBlack, drawVertexNormals, drawFaceNormals);
+		}
 	}
 }
 
@@ -79,15 +83,26 @@ void C_Mesh::SetMesh(int newMesh)
 {
 	if (meshId != 0)
 	{
-		R_Mesh* mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
-		if (mesh != nullptr)
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
 			mesh->QuitReference();
+		}
+		else
+			meshId = 0;
 	}
 		
 	meshId = newMesh;
 
-	R_Mesh* mesh = (R_Mesh*)App->resourceManager->RequestResource(newMesh);
-	mesh->AddReference();
+	Resource* res = App->resourceManager->RequestResource(meshId);
+	if (res != nullptr)
+	{
+		R_Mesh* mesh = (R_Mesh*)res;
+		mesh->AddReference();
+	}
+	else
+		meshId = 0;
 }
 
 
@@ -95,10 +110,12 @@ void C_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned 
 {
 	if (meshId != 0)
 	{
-		R_Mesh* mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
-
-		if (mesh != nullptr)
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
 			mesh->GetAllVectorsSize(vert, norm, ind);
+		}
 	}
 }
 
@@ -122,10 +139,14 @@ float C_Mesh::TestTriangleCollision(LineSegment ray, float4x4& transform) const
 	{
 		ray.Transform(transform.Inverted());
 
-		R_Mesh* mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
-
-		if (mesh != nullptr)
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
 			return mesh->TestTriangleRayCollision(ray);
+		}
+		else
+			return false;
 	}
 	else
 		return false;
@@ -145,8 +166,14 @@ void C_Mesh::Load(Config& node)
 {
 	meshId = node.GetNum("mesh");
 
-	R_Mesh* mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
-	mesh->AddReference();
+	Resource* res = App->resourceManager->RequestResource(meshId);
+	if (res != nullptr)
+	{
+		R_Mesh* mesh = (R_Mesh*)res;
+		mesh->AddReference();
+	}
+	else
+		meshId = 0;
 }
 
 
