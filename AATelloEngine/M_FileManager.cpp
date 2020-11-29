@@ -14,8 +14,8 @@
 #include "MaterialImporter.h"
 #include "TextureImporter.h"
 
-//#include <fstream>
-//#include <filesystem>
+#include <fstream>
+#include <filesystem>
 #include <assert.h>
 
 #include "PhysFS/include/physfs.h"
@@ -75,6 +75,11 @@ bool M_FileManager::CleanUp()
 
 void M_FileManager::LoadFromExporter(const char* path)
 {
+	std::string filePath(path);
+
+	if (PHYSFS_exists(path) == false)
+		filePath = DuplicateFile(filePath.c_str(), "/Assets/", NormalizePath(path));
+
 	RESOURCE_TYPE type = GetFileType(path);
 
 	switch (type)
@@ -328,7 +333,7 @@ void M_FileManager::TransformPath(std::string& path)
 }
 
 
-/*bool M_FileManager::DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath)
+std::string M_FileManager::DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath)
 {
 	std::string fileStr, extensionStr;
 	SplitPath(file, nullptr, &fileStr, &extensionStr);
@@ -352,7 +357,7 @@ void M_FileManager::TransformPath(std::string& path)
 
 		source.close();
 		destiny.close();
-		return true;
+		return finalPath;
 	}
 
 	else
@@ -361,9 +366,9 @@ void M_FileManager::TransformPath(std::string& path)
 		destiny.close();
 
 		App->editor->AddLog("ERROR: Could not duplicate the file");
-		return false;
+		return "";
 	}
-}*/
+}
 
 
 

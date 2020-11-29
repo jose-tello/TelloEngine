@@ -49,7 +49,7 @@ public:
 private:
 	void TransformPath(std::string& path);
 
-	//bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
+	std::string DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 	
 };
 
