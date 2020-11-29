@@ -4,6 +4,9 @@
 #include "Config.h"
 #include "MeshImporter.h"
 
+#include "GameObject.h"
+#include "C_Transform.h"
+
 #include "Application.h"
 #include "M_FileManager.h"
 #include "M_Renderer3D.h"
@@ -88,6 +91,8 @@ void C_Mesh::SetMesh(int newMesh)
 		{
 			R_Mesh* mesh = (R_Mesh*)res;
 			mesh->QuitReference();
+
+			owner->transform.NotifyNeedUpdate();
 		}
 		else
 			meshId = 0;
@@ -100,6 +105,8 @@ void C_Mesh::SetMesh(int newMesh)
 	{
 		R_Mesh* mesh = (R_Mesh*)res;
 		mesh->AddReference();
+
+		
 	}
 	else
 		meshId = 0;

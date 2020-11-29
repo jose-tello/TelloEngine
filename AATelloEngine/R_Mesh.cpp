@@ -106,47 +106,6 @@ float R_Mesh::TestTriangleRayCollision(LineSegment& ray) const
 }
 
 
-//Primitive things
-/*void Mesh::InitAsCube()
-{
-	Primitive::CreateCube(vertices, indices);
-
-	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
-	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
-}
-
-
-void Mesh::InitAsPiramid()
-{
-	Primitive::CreatePiramid(vertices, indices);
-
-	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
-	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
-}
-
-
-void Mesh::InitAsSphere()
-{
-	Primitive::CreateSphere(2.f, 20, 20, vertices, normals, texCoords, indices);
-
-	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
-	InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
-	InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
-	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
-}
-
-
-void Mesh::InitAsCilinder()
-{
-	Primitive::CreateCilinder(2.f, 20, 3, vertices, normals, texCoords, indices);
-
-	InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
-	InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
-	InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
-	InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
-}*/
-
-
 void R_Mesh::InitVertexBuffer(float* vertexBuffer, size_t vertexArrSize)
 {
 	vertices.resize(vertexArrSize / sizeof(float));
