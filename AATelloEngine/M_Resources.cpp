@@ -314,9 +314,8 @@ void M_Resources::LoadAllAssets(const char* folder)
 
 void M_Resources::CreateResource(int uid, int type, const char* path)
 {
-	Resource* resource;// = new Resource(uid, path, (RESOURCE_TYPE)type);
+	Resource* resource;
 
-	//TODO: do the corresponding news and subclasses and import
 	switch ((RESOURCE_TYPE)type)
 	{
 	case RESOURCE_TYPE::MODEL:

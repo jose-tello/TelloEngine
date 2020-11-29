@@ -375,9 +375,6 @@
     <ClInclude Include="W_Scene.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuizmo\ImGuizmo.h">
-      <Filter>Sources\Tools\Imguizmo</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Sources\Containers\Time</Filter>
     </ClInclude>
@@ -401,6 +398,9 @@
     </ClInclude>
     <ClInclude Include="R_Texture.h">
       <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Tools\Imguizmo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -641,9 +641,6 @@
     <ClCompile Include="W_Scene.cpp">
       <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
-      <Filter>Sources\Tools\Imguizmo</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Sources\Containers\Time</Filter>
     </ClCompile>
@@ -667,6 +664,9 @@
     </ClCompile>
     <ClCompile Include="R_Texture.cpp">
       <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Tools\Imguizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
