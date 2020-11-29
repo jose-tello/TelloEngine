@@ -48,3 +48,9 @@ std::string Resource::GetAssetPath() const
 {
 	return assetPath;
 }
+
+
+RESOURCE_TYPE Resource::GetType() const
+{
+	return type;
+}

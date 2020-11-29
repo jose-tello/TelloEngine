@@ -58,6 +58,10 @@ void C_Material::SetMaterial(int newMat)
 	}
 
 	material = (R_Material*)App->resourceManager->RequestResource(newMat);
+
+	int resourceTexture = material->GetResourceTexture();
+	if (resourceTexture != 0)
+		texture = (R_Texture*)App->resourceManager->RequestResource(resourceTexture);
 }
 
 
@@ -138,7 +142,12 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 	else
 	{
 		if (textureEnabled == true)
-			texId = texture->GetTextureId();
+		{
+			if (texture != nullptr)
+				texId = texture->GetTextureId();
+			else
+				texId = 0;
+		}
 
 		else
 			texId = 0;

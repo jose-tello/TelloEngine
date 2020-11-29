@@ -6,6 +6,7 @@
 #include <map>
 
 class Resource;
+struct Config;
 
 class M_Resources : public Module
 {
@@ -31,8 +32,9 @@ private:
 	void CreateResource(int uid, int type, const char* path);
 	bool CheckMetaExist(std::string& fileName, std::string& meta, const char* folder);
 	bool CheckLibFileExists(int id, int resourceType);
-	void CreateResourceFromMeta(const char* metaPath);
 	
+	void CreateResourceFromMeta(const char* metaPath);
+	void CreateResourcesFromModelMeta(Config&);
 
 
 private:

@@ -25,10 +25,10 @@ int MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture
 		std::string fileExtension;
 		App->fileManager->SplitPath(texPath.C_Str(), nullptr, &fileName, &fileExtension);
 		fileName = fileName + "." + fileExtension;
-		int id = App->resourceManager->SearchMetaFile(fileName.c_str());
+		textureId = App->resourceManager->SearchMetaFile(fileName.c_str());
 
-		if (id == 0)
-			id = App->resourceManager->CreateMeta(fileName.c_str());
+		if (textureId == 0)
+			textureId = App->resourceManager->CreateMeta(fileName.c_str());
 	}
 
 	Save(color, textureId, materialResource->GetUid());

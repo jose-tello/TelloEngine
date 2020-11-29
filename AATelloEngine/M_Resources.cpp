@@ -37,11 +37,18 @@ bool M_Resources::Start()
 
 Resource* M_Resources::RequestResource(int uid)
 {
-	Resource* ret = resources.find(uid)._Ptr->_Myval.second;
+	std::map<int, Resource*>::iterator iterator = resources.find(uid);
+	Resource* ret = nullptr;
 
-	if (ret->IsLoaded() == false)
-		ret->Load();
+	if (iterator != resources.end())
+	{
+		ret = iterator._Ptr->_Myval.second;
 
+		if (ret->IsLoaded() == false)
+			ret->Load();
+	}	
+		
+	
 	return ret;
 }
 
@@ -93,9 +100,13 @@ int M_Resources::SearchMetaFile(const char* fileName)
 		std::map<int, Resource*>::iterator it = resources.begin();
 		for (it; it != resources.end(); it++)
 		{
-			std::string pathName = it->second->GetAssetPath().c_str();
-			if (pathName == name.c_str())
-				return it->first;
+			RESOURCE_TYPE type = it->second->GetType();
+			if (type == RESOURCE_TYPE::MODEL || type == RESOURCE_TYPE::TEXTURE)
+			{
+				std::string pathName = it->second->GetAssetPath().c_str();
+				if (pathName == name.c_str())
+					return it->first;
+			}
 		}
 	}
 
@@ -109,12 +120,24 @@ void M_Resources::DragAndDropImport(const char* path)
 	App->fileManager->AdaptPath(filePath);
 
 	int id = SearchMetaFile(filePath.c_str());
-	if (id != 0)
+	if (id == 0)
+		id = CreateMeta(filePath.c_str());
+
+	Resource* resource = RequestResource(id);
+
+	switch (resource->GetType())
 	{
-		//Do charging and putting on scene things
+	case RESOURCE_TYPE::TEXTURE:
+
+		break;
+
+	case RESOURCE_TYPE::MODEL:
+		ModelImporter::LoadToScene((R_Model*)resource);
+		break;
+
+	default:
+		break;
 	}
-	else
-		CreateMeta(filePath.c_str());
 }
 
 
@@ -240,8 +263,37 @@ void M_Resources::CreateResourceFromMeta(const char* metaPath)
 
 	Config node(fileBuffer);
 
-	CreateResource(node.GetNum("uid"), node.GetNum("type"), node.GetString("asset_path"));
+	int type = node.GetNum("type");
+
+	if (type == (int)RESOURCE_TYPE::MODEL)
+		CreateResourcesFromModelMeta(node);
+
+	CreateResource(node.GetNum("uid"), type, node.GetString("asset_path"));
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
+}
+
+
+void M_Resources::CreateResourcesFromModelMeta(Config& rootNode)
+{
+	ConfigArray meshArray = rootNode.GetArray("meshes");
+
+	int meshesCount = meshArray.GetSize();
+	for (int i = 0; i < meshesCount; i++)
+	{
+		Config node = meshArray.GetNode(i);
+		int id = node.GetNum("id");
+		PushResource(new R_Mesh(id, rootNode.GetString("asset_path"), RESOURCE_TYPE::MESH), id);
+	}
+
+	ConfigArray materialArray = rootNode.GetArray("materials");
+
+	int materialsCount = materialArray.GetSize();
+	for (int i = 0; i < materialsCount; i++)
+	{
+		Config node = materialArray.GetNode(i);
+		int id = node.GetNum("id");
+		PushResource(new R_Material(id, rootNode.GetString("asset_path"), RESOURCE_TYPE::MATERIAL), id);
+	}
 }

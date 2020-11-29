@@ -42,31 +42,26 @@ R_Mesh::~R_Mesh()
 
 void R_Mesh::Load()
 {
-	//MeshImporter::Load(this, uid);
+	MeshImporter::Load(this);
 }
 
 
 void R_Mesh::UnLoad()
 {
-	if (isLoaded == true)
-	{
-		glDeleteBuffers(1, &vertexId);
-		glDeleteBuffers(1, &normalsId);
-		glDeleteBuffers(1, &texCoordId);
-		glDeleteBuffers(1, &indexId);
+	glDeleteBuffers(1, &vertexId);
+	glDeleteBuffers(1, &normalsId);
+	glDeleteBuffers(1, &texCoordId);
+	glDeleteBuffers(1, &indexId);
 
-		vertexId = 0;
-		normalsId = 0;
-		indexId = 0;
-		texCoordId = 0;
+	vertexId = 0;
+	normalsId = 0;
+	indexId = 0;
+	texCoordId = 0;
 
-		vertices.clear();
-		normals.clear();
-		texCoords.clear();
-		indices.clear();
-	}
-
-	isLoaded = false;
+	vertices.clear();
+	normals.clear();
+	texCoords.clear();
+	indices.clear();
 }
 
 

@@ -24,7 +24,7 @@ R_Texture::~R_Texture()
 
 void R_Texture::Load()
 {
-	//TextureImporter::Load()
+	TextureImporter::Load(this);
 	InitTextureSize();
 }
 

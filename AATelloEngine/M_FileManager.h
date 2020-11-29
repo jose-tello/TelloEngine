@@ -15,7 +15,6 @@
 
 enum class RESOURCE_TYPE;
 
-
 class M_FileManager : public Module
 {
 public:

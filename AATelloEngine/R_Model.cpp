@@ -28,7 +28,7 @@ R_Model::~R_Model()
 
 void R_Model::Load()
 {
-
+	ModelImporter::Load(this);
 }
 
 
@@ -38,7 +38,13 @@ void R_Model::UnLoad()
 }
 
 
-void R_Model::GetModelNodes(std::vector<ModelNode>& nodes)
+void R_Model::GetModelNodes(std::vector<ModelNode>& modelNodes) const
 {
-	nodes = modelNodes;
+	modelNodes = this->modelNodes;
+}
+
+
+void R_Model::SetModelNodes(std::vector<ModelNode>& modelNodes)
+{
+	this->modelNodes = modelNodes;
 }

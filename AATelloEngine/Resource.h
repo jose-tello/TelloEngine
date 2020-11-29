@@ -27,6 +27,7 @@ public:
 	int GetUid() const;
 	unsigned int GetReferenceCount() const;
 	std::string GetAssetPath() const;
+	RESOURCE_TYPE GetType() const;
 
 protected:
 	int uid;
