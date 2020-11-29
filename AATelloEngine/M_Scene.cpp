@@ -5,6 +5,7 @@
 #include "M_Editor.h"
 #include "M_FileManager.h"
 #include "SceneImporter.h"
+#include "M_Resources.h"
 
 #include "GameObject.h"
 #include "C_Mesh.h"
@@ -28,7 +29,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Start()
 {
-	//Load street
+	App->resourceManager->DragAndDropImport("/Assets/street/Street environment_V01.fbx", nullptr);
 	return true;
 }
 
