@@ -82,10 +82,13 @@ bool M_FileManager::CleanUp()
 
 void M_FileManager::LoadFromExporter(const char* path)
 {
-	std::string filePath(path);
+	std::string filePath = NormalizePath(path);
 
 	if (PHYSFS_exists(path) == false)
-		filePath = DuplicateFile(filePath.c_str(), "/Assets/", NormalizePath(path));
+		filePath = DuplicateFile(filePath.c_str(), "Assets/");
+
+	else
+		AdaptPath(filePath);
 
 	RESOURCE_TYPE type = GetFileType(path);
 
@@ -93,7 +96,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 	{
 	case RESOURCE_TYPE::MODEL:
 	{
-		App->resourceManager->DragAndDropImport(path, nullptr);
+		App->resourceManager->DragAndDropImport(filePath.c_str(), nullptr);
 		App->editor->AddLog("Log: Added a model");
 	}
 	break;
@@ -102,7 +105,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 		GameObject* focusedGO = App->editor->GetFocusedGameObject();
 		if (focusedGO != nullptr)
 		{
-			App->resourceManager->DragAndDropImport(path, focusedGO);
+			App->resourceManager->DragAndDropImport(filePath.c_str(), focusedGO);
 			App->editor->AddLog("Log: Added a texture");
 		}
 		else
@@ -347,13 +350,12 @@ void M_FileManager::CreateFolder(const char* directory)
 }
 
 
-std::string M_FileManager::DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath)
+std::string M_FileManager::DuplicateFile(const char* file, const char* dstFolder)
 {
 	std::string fileStr, extensionStr;
 	SplitPath(file, nullptr, &fileStr, &extensionStr);
 
-	relativePath = relativePath.append(dstFolder).append("/") + fileStr.append(".") + extensionStr;
-	std::string finalPath = std::string(*PHYSFS_getSearchPath()).append("/") + relativePath;
+	std::string finalPath = dstFolder + fileStr +"." + extensionStr;
 
 	std::ifstream source;	//File that we want to copy
 	source.open(file, std::ios::binary);
@@ -365,23 +367,11 @@ std::string M_FileManager::DuplicateFile(const char* file, const char* dstFolder
 	bool srcOpen = source.is_open();
 	bool dstOpen = destiny.is_open();
 
-	if (srcOpen == true && dstOpen == true)
-	{
-		destiny << source.rdbuf();
+	destiny << source.rdbuf();
 
-		source.close();
-		destiny.close();
-		return finalPath;
-	}
-
-	else
-	{
-		source.close();
-		destiny.close();
-
-		App->editor->AddLog("ERROR: Could not duplicate the file");
-		return "";
-	}
+	source.close();
+	destiny.close();
+	return finalPath;
 }
 
 

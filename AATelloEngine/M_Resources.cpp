@@ -186,7 +186,7 @@ int M_Resources::SearchMetaFile(const char* fileName)
 void M_Resources::DragAndDropImport(const char* path, GameObject* object)
 {
 	std::string filePath(path);
-	App->fileManager->AdaptPath(filePath);
+	//App->fileManager->AdaptPath(filePath);
 
 	int id = SearchMetaFile(filePath.c_str());
 	if (id == 0)

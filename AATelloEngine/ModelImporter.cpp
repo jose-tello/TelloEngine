@@ -41,7 +41,6 @@ void ModelImporter::InitDebuggerOptions()
 void ModelImporter::Import(const char* path, R_Model* model)
 {
 	std::string filePath(path);
-	App->fileManager->AdaptPath(filePath);
 
 	char* buffer = nullptr;
 	unsigned int bytes = App->fileManager->ReadBytes(filePath.c_str(), &buffer);
