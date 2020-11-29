@@ -121,5 +121,5 @@ void W_ObjectHierarchy::ReparentGameObjects(GameObject* parent, GameObject* chil
 		parent->childs.push_back(sceneChild);
 
 	//TODO: make it maintain the transform
-	//sceneChild->transform.NotifyNeedUpdate();
+	sceneChild->transform.SetGlobalTransform(sceneChild->transform.GetMatTransformT().Transposed());
 }
