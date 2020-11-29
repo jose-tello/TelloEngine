@@ -22,7 +22,7 @@ public:
 	void UpdateAllAssets(const char* folder = "/Assets/");
 
 	Resource* RequestResource(int uid);
-	int CreateMeta(const char* assetPath);
+	int CreateMeta(const char* assetPath, int id = 0);
 
 	//Used when the created resource does not have a .meta (meshes)
 	void PushResource(Resource*, int id);

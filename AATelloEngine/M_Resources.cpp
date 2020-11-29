@@ -118,10 +118,14 @@ Resource* M_Resources::RequestResource(int uid)
 }
 
 
-int M_Resources::CreateMeta(const char* assetPath)
+int M_Resources::CreateMeta(const char* assetPath, int uid)
 {
-	LCG randomNumber;
-	int uid = randomNumber.IntFast();
+	if (uid == 0)
+	{
+		LCG randomNumber;
+		uid = randomNumber.IntFast();
+	}
+	
 	unsigned __int64 time = App->fileManager->GetLastModTime(assetPath);
 	RESOURCE_TYPE type = App->fileManager->GetFileType(assetPath);
 
@@ -392,8 +396,24 @@ bool M_Resources::CheckMetaIsUpdated(const char* meta)
 
 	unsigned __int64 assetTime = App->fileManager->GetLastModTime(assetPath);
 
-	if (assetTime == -1 || assetTime != metaTime)
+	if (assetTime == -1)	//asset was deleted
 		DeleteMetaAndLibFiles(metaNode);
+
+	else if (assetTime != metaTime)
+	{
+		int type = metaNode.GetNum("type");
+		if ((RESOURCE_TYPE)type == RESOURCE_TYPE::MODEL)
+			DeleteMetaAndLibFiles(metaNode);
+
+		else if ((RESOURCE_TYPE)type == RESOURCE_TYPE::TEXTURE)
+		{
+			int id = metaNode.GetNum("uid");
+			DeleteLibFile(id, (int)RESOURCE_TYPE::TEXTURE);
+			DeleteResource(id);
+			CreateMeta(assetPath, id);
+			
+		}
+	}
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
