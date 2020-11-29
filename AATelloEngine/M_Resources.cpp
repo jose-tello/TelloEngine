@@ -159,11 +159,8 @@ void M_Resources::PushResource(Resource* resource, int id)
 
 int M_Resources::SearchMetaFile(const char* fileName)
 {
-	std::string path = App->fileManager->RemoveExtension(fileName);
-	path = "/Assets/" + path + ".meta";
+	std::string path(fileName);
 
-	std::string name("/Assets/");
-	name += fileName;
 	if (App->fileManager->FileExists(path.c_str()))
 	{
 		std::map<int, Resource*>::iterator it = resources.begin();
@@ -173,7 +170,7 @@ int M_Resources::SearchMetaFile(const char* fileName)
 			if (type == RESOURCE_TYPE::MODEL || type == RESOURCE_TYPE::TEXTURE)
 			{
 				std::string pathName = it->second->GetAssetPath().c_str();
-				if (pathName == name.c_str())
+				if (pathName == path.c_str())
 					return it->first;
 			}
 		}

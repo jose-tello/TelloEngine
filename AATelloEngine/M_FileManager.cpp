@@ -83,12 +83,13 @@ bool M_FileManager::CleanUp()
 void M_FileManager::LoadFromExporter(const char* path)
 {
 	std::string filePath = NormalizePath(path);
+	AdaptPath(filePath);
 
-	if (PHYSFS_exists(path) == false)
-		filePath = DuplicateFile(filePath.c_str(), "Assets/");
+	if (PHYSFS_exists(filePath.c_str()) == false)
+		filePath = DuplicateFile(path, "/Assets/");
 
 	else
-		AdaptPath(filePath);
+		filePath = "/Assets/" + filePath;
 
 	RESOURCE_TYPE type = GetFileType(path);
 
@@ -352,16 +353,18 @@ void M_FileManager::CreateFolder(const char* directory)
 
 std::string M_FileManager::DuplicateFile(const char* file, const char* dstFolder)
 {
-	std::string fileStr, extensionStr;
-	SplitPath(file, nullptr, &fileStr, &extensionStr);
+	std::string fileStr, extensionStr, normPath;
 
-	std::string finalPath = dstFolder + fileStr +"." + extensionStr;
+	normPath = NormalizePath(file);
+	SplitPath(normPath.c_str(), nullptr, &fileStr, &extensionStr);
+
+	std::string finalPath = dstFolder + fileStr + "." + extensionStr;
 
 	std::ifstream source;	//File that we want to copy
-	source.open(file, std::ios::binary);
+	source.open(normPath.c_str(), std::ios::binary);
 
 	std::ofstream destiny;	//File where we will copy the file
-	destiny.open(finalPath.c_str(), std::ios::binary);
+	destiny.open(("." + finalPath).c_str(), std::ios::binary);
 
 	//Check everything is loaded ok
 	bool srcOpen = source.is_open();
