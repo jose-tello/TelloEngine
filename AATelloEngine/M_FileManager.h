@@ -40,6 +40,7 @@ public:
 
 	void ExploreDirectory(const char* directory, std::vector<std::string>& filesVec, std::vector<std::string>& dirVec) const;
 
+	void RemoveFile(const char* path);
 	unsigned __int64 GetLastModTime(const char* file) const;
 	RESOURCE_TYPE GetFileType(const char* path);
 

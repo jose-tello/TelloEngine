@@ -233,21 +233,30 @@ void W_AppState::DrawReferenceCounting()
 
 		int meshesCount = meshes.size();
 		for (int i = 0; i < meshesCount; i++)
-			ImGui::Text("%i: %i", meshes[i]->GetUid(), meshes[i]->GetReferenceCount());
+		{
+			if (meshes[i]->GetReferenceCount() > 0)
+				ImGui::Text("%i: %i", meshes[i]->GetUid(), meshes[i]->GetReferenceCount());
+		}
 
 		ImGui::Separator();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Materials");
 
 		int materialsCount = materials.size();
 		for (int i = 0; i < materialsCount; i++)
-			ImGui::Text("%i: %i", materials[i]->GetUid(), materials[i]->GetReferenceCount());
+		{
+			if (materials[i]->GetReferenceCount() > 0)
+				ImGui::Text("%i: %i", materials[i]->GetUid(), materials[i]->GetReferenceCount());
+		}
 
 		ImGui::Separator();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Textures");
 
 		int texturesCount = textures.size();
 		for (int i = 0; i < texturesCount; i++)
-			ImGui::Text("%i: %i", textures[i]->GetUid(), textures[i]->GetReferenceCount());
+		{
+			if (textures[i]->GetReferenceCount() > 0)
+				ImGui::Text("%i: %i", textures[i]->GetUid(), textures[i]->GetReferenceCount());
+		}
 	}
 }
 

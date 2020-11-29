@@ -6,8 +6,6 @@
 
 #include <vector>
 
-class R_Mesh;
-
 class C_Mesh : public Component
 {
 public:
@@ -35,7 +33,7 @@ public:
 	bool drawFaceNormals;
 
 private:
-	R_Mesh* mesh = nullptr;
+	int meshId;
 	AABB aabb;
 };
 

@@ -267,6 +267,16 @@ void M_FileManager::ExploreDirectory(const char* directory, std::vector<std::str
 }
 
 
+void M_FileManager::RemoveFile(const char* path)
+{
+	if (PHYSFS_delete(path) != 0)
+		App->editor->AddLog("Log: File deleted: %s", path);
+	
+	else
+		App->editor->AddLog("[WARNING]: Error while deleting [%s]: %s", path, PHYSFS_getLastError());
+}
+
+
 unsigned __int64 M_FileManager::GetLastModTime(const char* file) const
 {
 	return PHYSFS_getLastModTime(file);

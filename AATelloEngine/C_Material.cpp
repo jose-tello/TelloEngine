@@ -16,8 +16,8 @@
 #include <gl/GL.h>
 
 C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
-	material(nullptr),
-	texture(nullptr),
+	materialId(0),
+	textureId(0),
 
 	checkerTexId(0),
 	useCheckerTex(false),
@@ -31,49 +31,70 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 
 C_Material::~C_Material()
 {
-	if (material != nullptr)
-		material->QuitReference();
-	
-	material = nullptr;
+	if (materialId != 0)
+	{
+		R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
 
-	if (texture != nullptr)
-		texture->QuitReference();
+		if (material != nullptr)
+			material->QuitReference();
+	}
 
-	texture = nullptr;
+	if (textureId != 0)
+	{
+		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+
+		if (texture != nullptr)
+			texture->QuitReference();
+	}
 }
 
 
 void C_Material::SetTexture(int newTexId)
 {
-	if (texture != nullptr)
+	if (textureId != 0)
 	{
-		texture->QuitReference();
-		texture = nullptr;
+		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+
+		if (texture != nullptr)
+			texture->QuitReference();
 	}
 
-	texture = (R_Texture*)App->resourceManager->RequestResource(newTexId);
+	textureId = newTexId;
+
+	R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(newTexId);
 	texture->AddReference();
 }
 
 
 void C_Material::SetMaterial(int newMat)
 {
-	if (material != nullptr)
-		material->QuitReference();
+	if (materialId != 0)
+	{
+		R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
 
-	if (texture != nullptr)
-		texture->QuitReference();
+		if (material != nullptr)
+			material->QuitReference();
+	}
 
-	material = nullptr;
-	texture = nullptr;
+	if (textureId != 0)
+	{
+		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
 
-	material = (R_Material*)App->resourceManager->RequestResource(newMat);
+		if (texture != nullptr)
+			texture->QuitReference();
+	}
+
+	materialId = newMat;
+
+	R_Material* material = (R_Material*)App->resourceManager->RequestResource(newMat);
 	material->AddReference();
 
-	int resourceTexture = material->GetResourceTexture();
-	if (resourceTexture != 0)
+	textureId = material->GetResourceTexture();
+	if (textureId != 0)
 	{
-		texture = (R_Texture*)App->resourceManager->RequestResource(resourceTexture);
+		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+
+		texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
 		texture->AddReference();
 	}
 }
@@ -81,31 +102,46 @@ void C_Material::SetMaterial(int newMat)
 
 void C_Material::GetColor(float& r, float& g, float& b, float& a) const
 {
-	if (material != nullptr)
-		material->GetColor(r, g, b, a);
+	if (materialId != 0)
+	{
+		R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
+
+		if (material != nullptr)
+			material->GetColor(r, g, b, a);
+	}
 }
 
 
 std::string C_Material::GetTexturePath() const
 {
-	if (texture == nullptr)
+	if (textureId == 0)
 		return "No texture";
 
 	else
-		return texture->GetAssetPath();
+	{
+		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+
+		if (texture != nullptr)
+			return texture->GetAssetPath();
+
+		else
+			return "No texture";
+	}
 }
 
 
 void C_Material::GetTextureSize(int& width, int& height) const
 {
-	if (texture == nullptr)
-	{
-		width = 0;
-		height = 0;
-	}
+	width = 0;
+	height = 0;
 
-	else
-		texture->GetTextureSize(width, height);
+	if (textureId != 0)
+	{
+		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+
+		if (texture != nullptr)
+			texture->GetTextureSize(width, height);
+	}
 }
 
 
@@ -157,8 +193,16 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 	{
 		if (textureEnabled == true)
 		{
-			if (texture != nullptr)
-				texId = texture->GetTextureId();
+			if (textureId != 0)
+			{
+				R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+
+				if (texture != nullptr)
+					texId = texture->GetTextureId();
+
+				else
+					texId = 0;
+			}
 			else
 				texId = 0;
 		}
@@ -168,8 +212,21 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 	}
 
 	if (colorEnabled == true)
-		material->GetColor(col.r, col.g, col.b, col.a);
+	{
+		if (materialId != 0)
+		{
+			R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
 
+			if (material != nullptr)
+				material->GetColor(col.r, col.g, col.b, col.a);
+		
+			else
+				col = { 1.f, 1.f, 1.f, 1.f };
+		}
+		else
+			col = { 1.f, 1.f, 1.f, 1.f };
+	}
+		
 	else
 		col = { 1.f, 1.f, 1.f, 1.f };
 }
@@ -177,25 +234,20 @@ void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
 
 void C_Material::Load(Config& node)
 {
-	int materialId = node.GetNum("material");
-	int textureId = node.GetNum("texture");
+	materialId = node.GetNum("material");
+	textureId = node.GetNum("texture");
 
 	if (materialId != 0)
 	{
-		material = (R_Material*)App->resourceManager->RequestResource(materialId);
+		R_Material* material = (R_Material*)App->resourceManager->RequestResource(materialId);
 		material->AddReference();
 	}
-	else
-		material = nullptr;
 
 	if (textureId != 0)
 	{
-		texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+		R_Texture* texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
 		texture->AddReference();
-	}
-	else
-		texture = nullptr;
-	
+	}	
 }
 
 
@@ -203,15 +255,8 @@ void C_Material::Save(Config& node) const
 {
 	node.AppendNum("type", (int)COMPONENT_TYPE::MATERIAL);
 
-	if (material == nullptr)
-		node.AppendNum("material", 0);
-	else
-		node.AppendNum("material", material->GetUid());
-	
-	if (texture == nullptr)
-		node.AppendNum("texture", 0);
-	else
-		node.AppendNum("texture", texture->GetUid());
+	node.AppendNum("material", materialId);
+	node.AppendNum("texture", textureId);
 }
 
 

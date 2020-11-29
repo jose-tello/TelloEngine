@@ -6,9 +6,6 @@
 
 #include <string>
 
-class R_Texture;
-class R_Material;
-
 #define CHECKERS_WIDTH 80
 #define CHECKERS_HEIGHT 80
 
@@ -43,8 +40,8 @@ private:
 	void InitCheckerTex();	
 
 private:
-	R_Material* material = nullptr;
-	R_Texture* texture = nullptr;
+	int materialId;
+	int textureId;
 
 	bool textureEnabled;
 	bool colorEnabled;

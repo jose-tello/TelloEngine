@@ -35,7 +35,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Start()
 {
-	LoadAllAssets();
+	UpdateAllAssets();
 	return true;
 }
 
@@ -51,6 +51,53 @@ bool M_Resources::CleanUp()
 
 	resources.clear();
 	return true;
+}
+
+
+void M_Resources::UpdateAllAssets(const char* folder)
+{
+	std::vector<std::string> files;
+	std::vector<std::string> folderDirs;
+
+	App->fileManager->ExploreDirectory(folder, files, folderDirs);
+
+	int filesCount = files.size();
+	for (int i = 0; i < filesCount; i++)
+	{
+		if (files[i].find(".meta") != -1)										// Check if its a .meta
+		{
+			std::string path(folder);
+			path.append(files[i]);
+
+			CheckMetaIsUpdated(path.c_str());
+			continue;
+		}
+
+		else
+		{
+			if (i < filesCount - 1)													//I assume all .meta are adjacent to its asset
+				if (CheckMetaExist(files[i], files[i + 1], folder) == true)
+					continue;
+
+			if (i != 0)
+				if (CheckMetaExist(files[i], files[i - 1], folder) == true)
+					continue;
+
+
+			std::string path = folder;
+			path += files[i].c_str();
+			CreateMeta(path.c_str());
+		}
+	}
+
+	int foldersCount = folderDirs.size();
+	for (int i = 0; i < foldersCount; i++)
+	{
+		std::string path = folder;
+		path += folderDirs[i];
+
+		UpdateAllAssets(path.c_str());
+	}
 }
 
 
@@ -287,44 +334,6 @@ void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Re
 }
 
 
-void M_Resources::LoadAllAssets(const char* folder)
-{
-	std::vector<std::string> files;
-	std::vector<std::string> folderDirs;
-
-	App->fileManager->ExploreDirectory(folder, files, folderDirs);
-
-	int filesCount = files.size();
-	for (int i = 0; i < filesCount; i++)
-	{
-		if (files[i].find(".meta") != -1)										// Check its not a .meta
-			continue;
-
-		if (i < filesCount - 1)													//I assume all .meta are adjacent to its asset
-			if (CheckMetaExist(files[i], files[i + 1], folder) == true)
-				continue;
-
-		if (i != 0)
-			if (CheckMetaExist(files[i], files[i - 1], folder) == true)
-				continue;
-
-
-		std::string path = folder;
-		path += files[i].c_str();
-		CreateMeta(path.c_str());
-	}
-
-	int foldersCount = folderDirs.size();
-	for (int i = 0; i < foldersCount; i++)
-	{
-		std::string path = folder;
-		path += folderDirs[i];
-
-		LoadAllAssets(path.c_str());
-	}
-}
-
-
 void M_Resources::CreateResource(int uid, int type, const char* path)
 {
 	Resource* resource;
@@ -368,6 +377,28 @@ bool M_Resources::CheckMetaExist(std::string& fileName, std::string& meta, const
 	}
 
 	return false;
+}
+
+
+bool M_Resources::CheckMetaIsUpdated(const char* meta)
+{
+	char* fileBuffer;
+	App->fileManager->Load(meta, &fileBuffer);
+
+	Config metaNode(fileBuffer);
+
+	unsigned __int64 metaTime = metaNode.GetNum("time");
+	const char* assetPath = metaNode.GetString("asset_path");
+
+	unsigned __int64 assetTime = App->fileManager->GetLastModTime(assetPath);
+
+	if (assetTime == -1 || assetTime != metaTime)
+		DeleteMetaAndLibFiles(metaNode);
+
+	delete[] fileBuffer;
+	fileBuffer = nullptr;
+
+	return true;
 }
 
 
@@ -441,4 +472,87 @@ void M_Resources::CreateResourcesFromModelMeta(Config& rootNode)
 		int id = node.GetNum("id");
 		PushResource(new R_Material(id, rootNode.GetString("asset_path"), RESOURCE_TYPE::MATERIAL), id);
 	}
+}
+
+
+void M_Resources::DeleteResource(int id)
+{
+	std::map<int, Resource*>::iterator iterator = resources.find(id);
+
+	if (iterator != resources.end())
+	{
+		delete iterator->second;
+		iterator->second = nullptr;
+		resources.erase(iterator);
+	}
+}
+
+
+void M_Resources::DeleteMetaAndLibFiles(Config& metaNode)
+{	
+	int type = metaNode.GetNum("type");
+	int uid = metaNode.GetNum("uid");
+
+	if ((RESOURCE_TYPE)type == RESOURCE_TYPE::MODEL)
+	{
+		ConfigArray meshArray = metaNode.GetArray("meshes");
+
+		int meshesCount = meshArray.GetSize();
+		for (int i = 0; i < meshesCount; i++)
+		{
+			Config node = meshArray.GetNode(i);
+			int id = node.GetNum("id");
+
+			DeleteLibFile(id, (int)RESOURCE_TYPE::MESH);
+		}
+
+		ConfigArray materialArray = metaNode.GetArray("materials");
+
+		int materialsCount = materialArray.GetSize();
+		for (int i = 0; i < materialsCount; i++)
+		{
+			Config node = materialArray.GetNode(i);
+			int id = node.GetNum("id");
+
+			DeleteLibFile(id, (int)RESOURCE_TYPE::MATERIAL);
+		}
+	}
+
+	std::string path = App->fileManager->RemoveExtension(metaNode.GetString("asset_path"));
+	path.append(".meta");
+	App->fileManager->RemoveFile(path.c_str());
+
+	DeleteLibFile(uid, type);
+}
+
+
+void M_Resources::DeleteLibFile(int uid, int type)
+{
+	std::string path;
+
+	switch ((RESOURCE_TYPE)type)
+	{
+	case RESOURCE_TYPE::MESH:
+		path = MESH_LIBRARY + std::to_string(uid);
+		break;
+
+	case RESOURCE_TYPE::MODEL:
+		path = MODEL_LIBRARY + std::to_string(uid);
+		break;
+
+	case RESOURCE_TYPE::MATERIAL:
+		path = MATERIAL_LIBRARY + std::to_string(uid);
+		break;
+
+	case RESOURCE_TYPE::TEXTURE:
+		path = TEXTURE_LIBRARY + std::to_string(uid);
+		break;
+
+	default:
+		assert("Forgot to add resource type");
+		break;
+	}
+
+	DeleteResource(uid);
+	App->fileManager->RemoveFile(path.c_str());
 }

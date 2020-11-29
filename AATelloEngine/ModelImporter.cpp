@@ -273,6 +273,7 @@ void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int 
 	for (int i = 0; i < node->mNumMeshes; i++)
 	{
 		obj.meshId = node->mMeshes[i];
+
 		obj.materialId = scene->mMeshes[obj.meshId]->mMaterialIndex;
 
 		if (node->mNumMeshes > 1) // if there is more than one mesh, create a sibiling

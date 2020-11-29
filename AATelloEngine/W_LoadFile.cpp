@@ -24,6 +24,9 @@ bool W_LoadFile::Draw()
 {
 	ImGui::Begin(("Load file"), &open);
 	
+	if (ImGui::Button("Update state"))
+		App->resourceManager->UpdateAllAssets();
+
 	DrawLoadWindow();
 	ImGui::End();
 	
