@@ -10,11 +10,13 @@
 
 #include "Application.h"
 #include "M_FileManager.h"
+#include "M_Scene.h"
 
 #include "Config.h"
 
 #include "GameObject.h"
 #include "C_Material.h"
+#include "C_Mesh.h"
 
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
@@ -46,7 +48,6 @@ Resource* M_Resources::RequestResource(int uid)
 	if (iterator != resources.end())
 	{
 		ret = iterator._Ptr->_Myval.second;
-		ret->AddReference();
 
 		if (ret->IsLoaded() == false)
 			ret->Load();
@@ -153,6 +154,89 @@ void M_Resources::DragAndDropImport(const char* path, GameObject* object)
 		break;
 
 	default:
+		break;
+	}
+}
+
+
+void M_Resources::WindowLoad(int id, GameObject* object)
+{
+	Resource* resource = RequestResource(id);
+
+	switch (resource->GetType())
+	{
+	case RESOURCE_TYPE::MESH:
+	{
+		if (object == nullptr)
+		{
+			object = new GameObject(nullptr);
+			App->scene->AddGameObject(object);
+		}
+
+		C_Mesh* mesh;
+		Component* meshComp = object->GetComponent(COMPONENT_TYPE::MESH);
+		if (meshComp == nullptr)
+		{
+			mesh = new C_Mesh();
+			object->AddComponent(mesh);
+		}
+		else
+			mesh = (C_Mesh*)meshComp;
+
+		mesh->SetMesh(id);
+	}
+		break;
+
+	case RESOURCE_TYPE::MODEL:
+		ModelImporter::LoadToScene((R_Model*)resource);
+		break;
+
+	case RESOURCE_TYPE::MATERIAL:
+	{
+		if (object == nullptr)
+		{
+			object = new GameObject(nullptr);
+			App->scene->AddGameObject(object);
+		}
+
+		C_Material* material;
+		Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+		if (mat == nullptr)
+		{
+			material = new C_Material();
+			object->AddComponent(material);
+		}
+		else
+			material = (C_Material*)mat;
+
+		material->SetMaterial(id);
+	}
+		break;
+
+	case RESOURCE_TYPE::TEXTURE:
+	{
+		if (object == nullptr)
+		{
+			object = new GameObject(nullptr);
+			App->scene->AddGameObject(object);
+		}
+
+		C_Material* material;
+		Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+		if (mat == nullptr)
+		{
+			material = new C_Material();
+			object->AddComponent(material);
+		}
+		else
+			material = (C_Material*)mat;
+
+		material->SetTexture(id);
+	}
+		break;
+
+	default:
+		assert("Forgot to add resources");
 		break;
 	}
 }

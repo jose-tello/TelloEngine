@@ -27,6 +27,8 @@ public:
 	int SearchMetaFile(const char*);
 
 	void DragAndDropImport(const char*, GameObject*);
+	void WindowLoad(int id, GameObject*);
+
 	void GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, std::vector<Resource*>& models);
 
 private:

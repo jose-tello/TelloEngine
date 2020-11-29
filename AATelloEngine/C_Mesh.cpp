@@ -57,6 +57,7 @@ void C_Mesh::SetMesh(int newMesh)
 	mesh = nullptr;
 
 	mesh = (R_Mesh*)App->resourceManager->RequestResource(newMesh);
+	mesh->AddReference();
 }
 
 
@@ -99,10 +100,8 @@ void C_Mesh::Load(Config& node)
 {
 	int meshId = node.GetNum("mesh");
 
-	if (mesh != nullptr)
-		mesh = nullptr;		//desreferentiate
-
 	mesh = (R_Mesh*)App->resourceManager->RequestResource(meshId);
+	mesh->AddReference();
 }
 
 

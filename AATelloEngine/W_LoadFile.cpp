@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "M_FileManager.h"
 #include "M_Editor.h"
+#include "M_Resources.h"
 
 #include "imgui/imgui.h"
 
@@ -67,11 +68,13 @@ void W_LoadFile::DrawDirectory(const char* directory, const char* filterExtensio
 
 		if (ImGui::TreeNodeEx(str.c_str(), ImGuiTreeNodeFlags_Leaf))
 		{
-
 			if (ImGui::IsItemClicked() && ImGui::IsMouseDoubleClicked(0))
 			{
 				//TODO: Once resource manager is implemented, use this path to load the resource
 				App->editor->AddLog("Test load: %s", files[i].c_str());
+				int id = std::stoi(files[i]);
+
+				App->resourceManager->WindowLoad(id, App->editor->GetFocusedGameObject());
 			}
 
 			ImGui::TreePop();

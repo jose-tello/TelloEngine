@@ -52,6 +52,7 @@ void C_Material::SetTexture(int newTexId)
 	}
 
 	texture = (R_Texture*)App->resourceManager->RequestResource(newTexId);
+	texture->AddReference();
 }
 
 
@@ -67,10 +68,14 @@ void C_Material::SetMaterial(int newMat)
 	texture = nullptr;
 
 	material = (R_Material*)App->resourceManager->RequestResource(newMat);
+	material->AddReference();
 
 	int resourceTexture = material->GetResourceTexture();
 	if (resourceTexture != 0)
+	{
 		texture = (R_Texture*)App->resourceManager->RequestResource(resourceTexture);
+		texture->AddReference();
+	}
 }
 
 
@@ -175,8 +180,22 @@ void C_Material::Load(Config& node)
 	int materialId = node.GetNum("material");
 	int textureId = node.GetNum("texture");
 
-	material = (R_Material*)App->resourceManager->RequestResource(materialId);
-	texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+	if (materialId != 0)
+	{
+		material = (R_Material*)App->resourceManager->RequestResource(materialId);
+		material->AddReference();
+	}
+	else
+		material = nullptr;
+
+	if (textureId != 0)
+	{
+		texture = (R_Texture*)App->resourceManager->RequestResource(textureId);
+		texture->AddReference();
+	}
+	else
+		texture = nullptr;
+	
 }
 
 
