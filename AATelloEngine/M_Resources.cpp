@@ -40,6 +40,20 @@ bool M_Resources::Start()
 }
 
 
+bool M_Resources::CleanUp()
+{
+	std::map<int, Resource*>::iterator it = resources.begin();
+	for (it; it != resources.end(); it++)
+	{
+		delete it->second;
+		it->second = nullptr;
+	}
+
+	resources.clear();
+	return true;
+}
+
+
 Resource* M_Resources::RequestResource(int uid)
 {
 	std::map<int, Resource*>::iterator iterator = resources.find(uid);
@@ -53,7 +67,6 @@ Resource* M_Resources::RequestResource(int uid)
 			ret->Load();
 	}	
 		
-	
 	return ret;
 }
 

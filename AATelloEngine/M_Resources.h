@@ -17,6 +17,7 @@ public:
 	~M_Resources() override;
 
 	bool Start() override;
+	bool CleanUp() override;
 
 	Resource* RequestResource(int uid);
 	int CreateMeta(const char* assetPath);
