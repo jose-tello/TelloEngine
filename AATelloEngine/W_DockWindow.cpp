@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "M_Scene.h"
 #include "M_Editor.h"
+#include "M_Resources.h"
 
 #include "TimeManager.h"
 
@@ -156,16 +157,16 @@ void W_DockWindow::DrawShapesMenu()
 	if (ImGui::BeginMenu("Add shape"))
 	{
 		if (ImGui::Button("Cube"))
-			App->scene->AddPrimitive(PRIMITIVE_TYPE::CUBE);
+			App->resourceManager->DragAndDropImport("Assets/primitives/cube.fbx", nullptr);
 
 		if (ImGui::Button("Piramid"))
-			App->scene->AddPrimitive(PRIMITIVE_TYPE::PIRAMID);
+			App->resourceManager->DragAndDropImport("Assets/primitives/Pyramid.fbx", nullptr);
 
 		if (ImGui::Button("Sphere"))
-			App->scene->AddPrimitive(PRIMITIVE_TYPE::SPHERE);
+			App->resourceManager->DragAndDropImport("Assets/primitives/Sphere.fbx", nullptr);
 
 		if (ImGui::Button("Cilinder"))
-			App->scene->AddPrimitive(PRIMITIVE_TYPE::CILINDER);
+			App->resourceManager->DragAndDropImport("Assets/primitives/Cylinder.fbx", nullptr);
 
 		ImGui::EndMenu();
 	}

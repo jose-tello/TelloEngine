@@ -1,7 +1,7 @@
 {
     "nodes": [
         {
-            "uid": -1016131167,
+            "uid": 1413544632,
             "parent": 0,
             "name": "RootNode",
             "position": [
@@ -24,8 +24,8 @@
             "materialId": 0
         },
         {
-            "uid": -999839853,
-            "parent": -1016131167,
+            "uid": 1437911982,
+            "parent": 1413544632,
             "name": "Sky001_",
             "position": [
                 18.153732,
@@ -47,8 +47,8 @@
             "materialId": 0
         },
         {
-            "uid": -985846032,
-            "parent": -999839853,
+            "uid": 1449260205,
+            "parent": 1437911982,
             "name": "Sky001_",
             "position": [
                 0,
@@ -70,8 +70,8 @@
             "materialId": 0
         },
         {
-            "uid": -970738275,
-            "parent": -985846032,
+            "uid": 1461443880,
+            "parent": 1449260205,
             "name": "Sky001_",
             "position": [
                 0,
@@ -93,8 +93,8 @@
             "materialId": 0
         },
         {
-            "uid": -955212792,
-            "parent": -970738275,
+            "uid": 1474393386,
+            "parent": 1461443880,
             "name": "Sky001",
             "position": [
                 0,
@@ -116,8 +116,8 @@
             "materialId": 0
         },
         {
-            "uid": -932237862,
-            "parent": -1016131167,
+            "uid": 1489292280,
+            "parent": 1413544632,
             "name": "Dummy001_",
             "position": [
                 0,
@@ -139,8 +139,8 @@
             "materialId": 0
         },
         {
-            "uid": -922699785,
-            "parent": -932237862,
+            "uid": 1496950590,
+            "parent": 1489292280,
             "name": "Dummy001_",
             "position": [
                 0,
@@ -162,8 +162,8 @@
             "materialId": 0
         },
         {
-            "uid": -902718558,
-            "parent": -922699785,
+            "uid": 1527374967,
+            "parent": 1496950590,
             "name": "Dummy001",
             "position": [
                 0,
@@ -185,8 +185,8 @@
             "materialId": 0
         },
         {
-            "uid": -895060248,
-            "parent": -902718558,
+            "uid": 1533710477,
+            "parent": 1527374967,
             "name": "City_building_004",
             "position": [
                 -41.475891,
@@ -204,12 +204,12 @@
                 1,
                 1
             ],
-            "meshId": -1484682367,
-            "materialId": -115040027
+            "meshId": 1678359230,
+            "materialId": -888835302
         },
         {
-            "uid": -882249984,
-            "parent": -902718558,
+            "uid": 1543944764,
+            "parent": 1527374967,
             "name": "City_building_001",
             "position": [
                 17.707165,
@@ -227,12 +227,12 @@
                 1,
                 1
             ],
-            "meshId": 917055085,
-            "materialId": 1844443018
+            "meshId": 67233679,
+            "materialId": 1264402987
         },
         {
-            "uid": -853566132,
-            "parent": -902718558,
+            "uid": 1567476662,
+            "parent": 1527374967,
             "name": "City_building_007",
             "position": [
                 16.010492,
@@ -250,12 +250,12 @@
                 1,
                 1
             ],
-            "meshId": 1742085750,
-            "materialId": -309051939
+            "meshId": 1569328568,
+            "materialId": -767951431
         },
         {
-            "uid": -839363448,
-            "parent": -902718558,
+            "uid": 1577850191,
+            "parent": 1527374967,
             "name": "City_building_008",
             "position": [
                 40.979996,
@@ -273,12 +273,12 @@
                 1,
                 1
             ],
-            "meshId": -1027602863,
-            "materialId": 1717197645
+            "meshId": -1051231863,
+            "materialId": 1299513786
         },
         {
-            "uid": -824255691,
-            "parent": -902718558,
+            "uid": 1587666752,
+            "parent": 1527374967,
             "name": "Line002",
             "position": [
                 -2.159772,
@@ -296,12 +296,12 @@
                 1,
                 1
             ],
-            "meshId": 1393180576,
-            "materialId": -676211278
+            "meshId": -1123484998,
+            "materialId": 1821275374
         },
         {
-            "uid": -815970792,
-            "parent": -902718558,
+            "uid": 1594489610,
+            "parent": 1527374967,
             "name": "Plane001",
             "position": [
                 -0.028603,
@@ -319,12 +319,12 @@
                 0.970616,
                 0.996635
             ],
-            "meshId": 1501393425,
-            "materialId": 1376772770
+            "meshId": 706781472,
+            "materialId": -526531794
         },
         {
-            "uid": -782761575,
-            "parent": -902718558,
+            "uid": 1621293695,
+            "parent": 1527374967,
             "name": "City_building_010",
             "position": [
                 25.154011,
@@ -342,12 +342,12 @@
                 1,
                 1
             ],
-            "meshId": -358175133,
-            "materialId": -551010905
+            "meshId": 369197595,
+            "materialId": 1480015048
         },
         {
-            "uid": -771622215,
-            "parent": -902718558,
+            "uid": 1630205183,
+            "parent": 1527374967,
             "name": "City_building_010",
             "position": [
                 25.154011,
@@ -365,12 +365,12 @@
                 1,
                 1
             ],
-            "meshId": -1140554116,
-            "materialId": -551010905
+            "meshId": -336459047,
+            "materialId": 1480015048
         },
         {
-            "uid": -761944896,
-            "parent": -902718558,
+            "uid": 1637933114,
+            "parent": 1527374967,
             "name": "City_building_010",
             "position": [
                 25.154011,
@@ -388,12 +388,12 @@
                 1,
                 1
             ],
-            "meshId": -1140554116,
-            "materialId": -551010905
+            "meshId": -336459047,
+            "materialId": 1480015048
         },
         {
-            "uid": -750805536,
-            "parent": -902718558,
+            "uid": 1647053465,
+            "parent": 1527374967,
             "name": "City_building_011",
             "position": [
                 30.134541,
@@ -411,12 +411,12 @@
                 1,
                 1
             ],
-            "meshId": 1742085750,
-            "materialId": -309051939
+            "meshId": 1569328568,
+            "materialId": -767951431
         },
         {
-            "uid": -738621861,
-            "parent": -902718558,
+            "uid": 1664110610,
+            "parent": 1527374967,
             "name": "City_building_013",
             "position": [
                 -42.288055,
@@ -434,12 +434,12 @@
                 1,
                 1
             ],
-            "meshId": 813868411,
-            "materialId": 1646018992
+            "meshId": 1977207840,
+            "materialId": -667005157
         },
         {
-            "uid": -726368565,
-            "parent": -902718558,
+            "uid": 1678452536,
+            "parent": 1527374967,
             "name": "City_building_014",
             "position": [
                 -19.439707,
@@ -457,12 +457,12 @@
                 1,
                 1
             ],
-            "meshId": 994087013,
-            "materialId": -115040027
+            "meshId": 128322398,
+            "materialId": -888835302
         },
         {
-            "uid": -676032582,
-            "parent": -902718558,
+            "uid": 1729554350,
+            "parent": 1527374967,
             "name": "City_building_016",
             "position": [
                 34.270424,
@@ -480,12 +480,12 @@
                 1,
                 1
             ],
-            "meshId": -358175133,
-            "materialId": -551010905
+            "meshId": 369197595,
+            "materialId": 1480015048
         },
         {
-            "uid": -665380569,
-            "parent": -902718558,
+            "uid": 1738396217,
+            "parent": 1527374967,
             "name": "City_building_016",
             "position": [
                 34.270424,
@@ -503,12 +503,12 @@
                 1,
                 1
             ],
-            "meshId": -1140554116,
-            "materialId": -551010905
+            "meshId": -336459047,
+            "materialId": 1480015048
         },
         {
-            "uid": -655912113,
-            "parent": -902718558,
+            "uid": 1746124148,
+            "parent": 1527374967,
             "name": "City_building_016",
             "position": [
                 34.270424,
@@ -526,12 +526,12 @@
                 1,
                 1
             ],
-            "meshId": -1140554116,
-            "materialId": -551010905
+            "meshId": -336459047,
+            "materialId": 1480015048
         },
         {
-            "uid": -644772753,
-            "parent": -902718558,
+            "uid": 1755174878,
+            "parent": 1527374967,
             "name": "City_building_017",
             "position": [
                 44.260082,
@@ -549,12 +549,12 @@
                 1,
                 1
             ],
-            "meshId": -358175133,
-            "materialId": -551010905
+            "meshId": 369197595,
+            "materialId": 1480015048
         },
         {
-            "uid": -634120740,
-            "parent": -902718558,
+            "uid": 1763599019,
+            "parent": 1527374967,
             "name": "City_building_017",
             "position": [
                 44.260082,
@@ -572,12 +572,12 @@
                 1,
                 1
             ],
-            "meshId": -1140554116,
-            "materialId": -551010905
+            "meshId": -336459047,
+            "materialId": 1480015048
         },
         {
-            "uid": -624582663,
-            "parent": -902718558,
+            "uid": 1771187708,
+            "parent": 1527374967,
             "name": "City_building_017",
             "position": [
                 44.260082,
@@ -595,12 +595,12 @@
                 1,
                 1
             ],
-            "meshId": -1140554116,
-            "materialId": -551010905
+            "meshId": -336459047,
+            "materialId": 1480015048
         },
         {
-            "uid": -613512924,
-            "parent": -902718558,
+            "uid": 1780168817,
+            "parent": 1527374967,
             "name": "City_building_022",
             "position": [
                 -20.831324,
@@ -618,12 +618,12 @@
                 1,
                 1
             ],
-            "meshId": -81026460,
-            "materialId": -545767515
+            "meshId": -740573674,
+            "materialId": 1603266032
         },
         {
-            "uid": -601259628,
-            "parent": -902718558,
+            "uid": 1790124620,
+            "parent": 1527374967,
             "name": "City_building_023",
             "position": [
                 42.130642,
@@ -641,12 +641,12 @@
                 1,
                 1
             ],
-            "meshId": 1742085750,
-            "materialId": -309051939
+            "meshId": 1569328568,
+            "materialId": -767951431
         },
         {
-            "uid": -589215195,
-            "parent": -902718558,
+            "uid": 1800289286,
+            "parent": 1527374967,
             "name": "City_building_024",
             "position": [
                 -20.572771,
@@ -664,12 +664,12 @@
                 1,
                 1
             ],
-            "meshId": -1027602863,
-            "materialId": 1717197645
+            "meshId": -1051231863,
+            "materialId": 1299513786
         },
         {
-            "uid": -514720725,
-            "parent": -902718558,
+            "uid": 1857030401,
+            "parent": 1527374967,
             "name": "City_building_026",
             "position": [
                 31.511889,
@@ -687,12 +687,12 @@
                 1,
                 1
             ],
-            "meshId": -1593150950,
-            "materialId": -545767515
+            "meshId": -1766813205,
+            "materialId": 1603266032
         },
         {
-            "uid": -502328187,
-            "parent": -902718558,
+            "uid": 1867055825,
+            "parent": 1527374967,
             "name": "City_building_028",
             "position": [
                 13.387990,
@@ -710,12 +710,12 @@
                 1,
                 1
             ],
-            "meshId": 80176323,
-            "materialId": -1845500149
+            "meshId": 1373010812,
+            "materialId": -494740988
         },
         {
-            "uid": -490144512,
-            "parent": -902718558,
+            "uid": 1877011628,
+            "parent": 1527374967,
             "name": "Object010",
             "position": [
                 -2.503353,
@@ -733,12 +733,12 @@
                 1,
                 1
             ],
-            "meshId": -557377518,
-            "materialId": 247167870
+            "meshId": -749141233,
+            "materialId": 1692681211
         },
         {
-            "uid": -481859613,
-            "parent": -902718558,
+            "uid": 1883764865,
+            "parent": 1527374967,
             "name": "City_building_030",
             "position": [
                 -42.807240,
@@ -756,12 +756,12 @@
                 1,
                 1
             ],
-            "meshId": 80176323,
-            "materialId": -1845500149
+            "meshId": 1373010812,
+            "materialId": -494740988
         },
         {
-            "uid": -469606317,
-            "parent": -902718558,
+            "uid": 1893511805,
+            "parent": 1527374967,
             "name": "City_building_031",
             "position": [
                 -34.679482,
@@ -779,12 +779,12 @@
                 1,
                 1
             ],
-            "meshId": 80176323,
-            "materialId": -1845500149
+            "meshId": 1373010812,
+            "materialId": -494740988
         },
         {
-            "uid": -457492263,
-            "parent": -902718558,
+            "uid": 1903189124,
+            "parent": 1527374967,
             "name": "City_building_032",
             "position": [
                 -29.478403,
@@ -802,12 +802,12 @@
                 1,
                 1
             ],
-            "meshId": -1484682367,
-            "materialId": -115040027
+            "meshId": 1678359230,
+            "materialId": -888835302
         },
         {
-            "uid": -445447830,
-            "parent": -902718558,
+            "uid": 1912936064,
+            "parent": 1527374967,
             "name": "City_building_033",
             "position": [
                 -32.361496,
@@ -825,12 +825,12 @@
                 1,
                 1
             ],
-            "meshId": -505048517,
-            "materialId": 1646018992
+            "meshId": -1277799477,
+            "materialId": -667005157
         },
         {
-            "uid": -433403397,
-            "parent": -902718558,
+            "uid": 1922752625,
+            "parent": 1527374967,
             "name": "City_building_034",
             "position": [
                 16.049517,
@@ -848,12 +848,12 @@
                 1,
                 1
             ],
-            "meshId": -1801487149,
-            "materialId": -545767515
+            "meshId": 1485967176,
+            "materialId": 1603266032
         },
         {
-            "uid": -421289343,
-            "parent": -902718558,
+            "uid": 1932569186,
+            "parent": 1527374967,
             "name": "City_building_035",
             "position": [
                 13.387990,
@@ -871,12 +871,12 @@
                 1,
                 1
             ],
-            "meshId": 80176323,
-            "materialId": -1845500149
+            "meshId": 1373010812,
+            "materialId": -494740988
         },
         {
-            "uid": -409105668,
-            "parent": -902718558,
+            "uid": 1942594610,
+            "parent": 1527374967,
             "name": "City_building_036",
             "position": [
                 -31.216331,
@@ -894,12 +894,12 @@
                 1,
                 1
             ],
-            "meshId": 813868411,
-            "materialId": 1646018992
+            "meshId": 1977207840,
+            "materialId": -667005157
         },
         {
-            "uid": -396921993,
-            "parent": -902718558,
+            "uid": 1952271929,
+            "parent": 1527374967,
             "name": "City_building_037",
             "position": [
                 -20.317694,
@@ -917,12 +917,12 @@
                 1,
                 1
             ],
-            "meshId": 355950215,
-            "materialId": -545767515
+            "meshId": -784678110,
+            "materialId": 1603266032
         },
         {
-            "uid": -384738318,
-            "parent": -902718558,
+            "uid": 1962088490,
+            "parent": 1527374967,
             "name": "City_building_038",
             "position": [
                 -41.649002,
@@ -940,12 +940,12 @@
                 1,
                 1
             ],
-            "meshId": -1366220833,
-            "materialId": -545767515
+            "meshId": -2145725030,
+            "materialId": 1603266032
         },
         {
-            "uid": -372624264,
-            "parent": -902718558,
+            "uid": 1971835430,
+            "parent": 1527374967,
             "name": "City_building_039",
             "position": [
                 -42.807240,
@@ -963,12 +963,12 @@
                 1,
                 1
             ],
-            "meshId": 80176323,
-            "materialId": -1845500149
+            "meshId": 1373010812,
+            "materialId": -494740988
         },
         {
-            "uid": -360649452,
-            "parent": -902718558,
+            "uid": 1981721612,
+            "parent": 1527374967,
             "name": "City_building_040",
             "position": [
                 -34.679482,
@@ -986,12 +986,12 @@
                 1,
                 1
             ],
-            "meshId": 80176323,
-            "materialId": -1845500149
+            "meshId": 1373010812,
+            "materialId": -494740988
         },
         {
-            "uid": -210198471,
-            "parent": -902718558,
+            "uid": 2097292472,
+            "parent": 1527374967,
             "name": "City_building_041",
             "position": [
                 30.695278,
@@ -1009,12 +1009,12 @@
                 1,
                 1
             ],
-            "meshId": 917055085,
-            "materialId": 1844443018
+            "meshId": 67233679,
+            "materialId": 1264402987
         },
         {
-            "uid": -193837536,
-            "parent": -1016131167,
+            "uid": 2108640695,
+            "parent": 1413544632,
             "name": "Camera001_",
             "position": [
                 -78.312431,
@@ -1036,8 +1036,8 @@
             "materialId": 0
         },
         {
-            "uid": -184786806,
-            "parent": -193837536,
+            "uid": 2115881279,
+            "parent": 2108640695,
             "name": "Camera001_",
             "position": [
                 0,
@@ -1059,8 +1059,8 @@
             "materialId": 0
         },
         {
-            "uid": -176084181,
-            "parent": -184786806,
+            "uid": 2122982621,
+            "parent": 2115881279,
             "name": "Camera001_",
             "position": [
                 0,
@@ -1082,8 +1082,8 @@
             "materialId": 0
         },
         {
-            "uid": -167311935,
-            "parent": -176084181,
+            "uid": 2130014342,
+            "parent": 2122982621,
             "name": "Camera001",
             "position": [
                 0,
@@ -1105,8 +1105,8 @@
             "materialId": 0
         },
         {
-            "uid": -157773858,
-            "parent": -1016131167,
+            "uid": 2137811894,
+            "parent": 1413544632,
             "name": "Camera001.Target_",
             "position": [
                 -28.132622,
@@ -1128,8 +1128,8 @@
             "materialId": 0
         },
         {
-            "uid": -145242078,
-            "parent": -157773858,
+            "uid": 2146932245,
+            "parent": 2137811894,
             "name": "Camera001.Target_",
             "position": [
                 0,
@@ -1151,8 +1151,8 @@
             "materialId": 0
         },
         {
-            "uid": -133963476,
-            "parent": -145242078,
+            "uid": -2138845079,
+            "parent": 2146932245,
             "name": "Camera001.Target_",
             "position": [
                 0,
@@ -1174,8 +1174,8 @@
             "materialId": 0
         },
         {
-            "uid": -122684874,
-            "parent": -133963476,
+            "uid": -2129794349,
+            "parent": -2138845079,
             "name": "Camera001.Target",
             "position": [
                 0,
@@ -1197,8 +1197,8 @@
             "materialId": 0
         },
         {
-            "uid": -103817583,
-            "parent": -1016131167,
+            "uid": -2118237263,
+            "parent": 1413544632,
             "name": "Spot001_",
             "position": [
                 -66.721268,
@@ -1220,8 +1220,8 @@
             "materialId": 0
         },
         {
-            "uid": -95045337,
-            "parent": -103817583,
+            "uid": -2111135921,
+            "parent": -2118237263,
             "name": "Spot001_",
             "position": [
                 0,
@@ -1243,8 +1243,8 @@
             "materialId": 0
         },
         {
-            "uid": -86481954,
-            "parent": -95045337,
+            "uid": -2104173821,
+            "parent": -2111135921,
             "name": "Spot001_",
             "position": [
                 0,
@@ -1266,8 +1266,8 @@
             "materialId": 0
         },
         {
-            "uid": -77848950,
-            "parent": -86481954,
+            "uid": -2097211721,
+            "parent": -2104173821,
             "name": "Spot001_",
             "position": [
                 0,
@@ -1289,8 +1289,8 @@
             "materialId": 0
         },
         {
-            "uid": -69007083,
-            "parent": -77848950,
+            "uid": -2090388863,
+            "parent": -2097211721,
             "name": "Spot001",
             "position": [
                 0,
@@ -1312,8 +1312,8 @@
             "materialId": 0
         },
         {
-            "uid": -59051280,
-            "parent": -1016131167,
+            "uid": -2082243206,
+            "parent": 1413544632,
             "name": "Spot001.Target_",
             "position": [
                 28.890945,
@@ -1335,8 +1335,8 @@
             "materialId": 0
         },
         {
-            "uid": -50279034,
-            "parent": -59051280,
+            "uid": -2075072243,
+            "parent": -2082243206,
             "name": "Spot001.Target_",
             "position": [
                 0,
@@ -1358,8 +1358,8 @@
             "materialId": 0
         },
         {
-            "uid": -41576409,
-            "parent": -50279034,
+            "uid": -2067762038,
+            "parent": -2075072243,
             "name": "Spot001.Target_",
             "position": [
                 0,
@@ -1381,8 +1381,8 @@
             "materialId": 0
         },
         {
-            "uid": -32873784,
-            "parent": -41576409,
+            "uid": -2060660696,
+            "parent": -2067762038,
             "name": "Spot001.Target",
             "position": [
                 0,
