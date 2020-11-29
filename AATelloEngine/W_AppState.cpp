@@ -5,6 +5,9 @@
 #include "M_Window.h"
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
+#include "M_Resources.h"
+
+#include "Resource.h"
 
 #include "TimeManager.h"
 
@@ -94,6 +97,7 @@ bool W_AppState::Draw()
 	DrawChWindow();
 	DrawChRenderOptions();
 	DrawCameraOptions();
+	DrawReferenceCounting();
 	DrawChInput();
 	DrawChHardware();
 
@@ -214,6 +218,36 @@ void W_AppState::DrawCameraOptions()
 		ImGui::Checkbox("Debug mouse pick ray", &App->camera->drawClickRay);
 		ImGui::Checkbox("Debug frustum cull", &App->camera->debugFrustumCull);
 		ImGui::Checkbox("Draw aabb and frustum boxes", &App->camera->drawAABB);
+	}
+}
+
+
+void W_AppState::DrawReferenceCounting()
+{
+	if (ImGui::CollapsingHeader("Reference counting"))
+	{
+		std::vector<Resource*> meshes, materials, textures, models;
+		App->resourceManager->GetAllResources(meshes, materials, textures, models);
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Meshes");
+
+		int meshesCount = meshes.size();
+		for (int i = 0; i < meshesCount; i++)
+			ImGui::Text("%i: %i", meshes[i]->GetUid(), meshes[i]->GetReferenceCount());
+
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Materials");
+
+		int materialsCount = materials.size();
+		for (int i = 0; i < materialsCount; i++)
+			ImGui::Text("%i: %i", materials[i]->GetUid(), materials[i]->GetReferenceCount());
+
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Textures");
+
+		int texturesCount = textures.size();
+		for (int i = 0; i < texturesCount; i++)
+			ImGui::Text("%i: %i", textures[i]->GetUid(), textures[i]->GetReferenceCount());
 	}
 }
 

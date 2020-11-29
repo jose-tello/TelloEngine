@@ -4,6 +4,7 @@
 #include "Module.h"
 #include <string>
 #include <map>
+#include <vector>
 
 class Resource;
 struct GameObject;
@@ -26,6 +27,7 @@ public:
 	int SearchMetaFile(const char*);
 
 	void DragAndDropImport(const char*, GameObject*);
+	void GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, std::vector<Resource*>& models);
 
 private:
 	void LoadAllAssets(const char* folder = "/Assets/");

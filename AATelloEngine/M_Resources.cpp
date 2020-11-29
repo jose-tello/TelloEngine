@@ -158,6 +158,38 @@ void M_Resources::DragAndDropImport(const char* path, GameObject* object)
 }
 
 
+void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, 
+								  std::vector<Resource*>& models)
+{
+	std::map<int, Resource*>::iterator it = resources.begin();
+	for (it; it != resources.end(); it++)
+	{
+		switch (it->second->GetType())
+		{
+		case RESOURCE_TYPE::MESH:
+			meshes.push_back(it->second);
+			break;
+
+		case RESOURCE_TYPE::MODEL:
+			models.push_back(it->second);
+			break;
+
+		case RESOURCE_TYPE::MATERIAL:
+			materials.push_back(it->second);
+			break;
+
+		case RESOURCE_TYPE::TEXTURE:
+			textures.push_back(it->second);
+			break;
+
+		default:
+			assert("Forgot to add resources");
+			break;
+		}
+	}
+}
+
+
 void M_Resources::LoadAllAssets(const char* folder)
 {
 	std::vector<std::string> files;
