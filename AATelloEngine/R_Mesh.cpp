@@ -43,6 +43,8 @@ R_Mesh::~R_Mesh()
 void R_Mesh::Load()
 {
 	MeshImporter::Load(this);
+
+	isLoaded = true;
 }
 
 
@@ -62,6 +64,8 @@ void R_Mesh::UnLoad()
 	normals.clear();
 	texCoords.clear();
 	indices.clear();
+
+	isLoaded = false;
 }
 
 

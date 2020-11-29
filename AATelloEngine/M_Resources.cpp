@@ -13,6 +13,9 @@
 
 #include "Config.h"
 
+#include "GameObject.h"
+#include "C_Material.h"
+
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
 #include <vector>
@@ -114,7 +117,7 @@ int M_Resources::SearchMetaFile(const char* fileName)
 }
 
 
-void M_Resources::DragAndDropImport(const char* path)
+void M_Resources::DragAndDropImport(const char* path, GameObject* object)
 {
 	std::string filePath(path);
 	App->fileManager->AdaptPath(filePath);
@@ -128,9 +131,22 @@ void M_Resources::DragAndDropImport(const char* path)
 	switch (resource->GetType())
 	{
 	case RESOURCE_TYPE::TEXTURE:
+	{
+		Component* comp = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+		if (comp == nullptr)
+		{
+			C_Material* material = new C_Material();
+			material->SetTexture(id);
 
+			object->AddComponent(material);
+		}
+		else
+		{
+			C_Material* material = (C_Material*)comp;
+			material->SetTexture(id);
+		}
 		break;
-
+	}
 	case RESOURCE_TYPE::MODEL:
 		ModelImporter::LoadToScene((R_Model*)resource);
 		break;

@@ -175,8 +175,15 @@ void C_Material::Save(Config& node) const
 {
 	node.AppendNum("type", (int)COMPONENT_TYPE::MATERIAL);
 
-	node.AppendNum("material", material->GetUid());
-	node.AppendNum("texture", texture->GetUid());
+	if (material == nullptr)
+		node.AppendNum("material", 0);
+	else
+		node.AppendNum("material", material->GetUid());
+	
+	if (texture == nullptr)
+		node.AppendNum("texture", 0);
+	else
+		node.AppendNum("texture", texture->GetUid());
 }
 
 

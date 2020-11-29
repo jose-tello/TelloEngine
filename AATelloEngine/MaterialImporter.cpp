@@ -64,7 +64,7 @@ void MaterialImporter::Load(R_Material* material)
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
 
-	App->editor->AddLog("Log: Loaded material: %s", material->GetAssetPath());
+	App->editor->AddLog("Log: Loaded material from: %s", material->GetAssetPath().c_str());
 }
 
 

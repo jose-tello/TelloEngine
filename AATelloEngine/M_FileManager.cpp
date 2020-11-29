@@ -81,36 +81,21 @@ void M_FileManager::LoadFromExporter(const char* path)
 	{
 	case RESOURCE_TYPE::MODEL:
 	{
-		App->resourceManager->DragAndDropImport(path);
-		App->editor->AddLog("Log: Loaded a model");
+		App->resourceManager->DragAndDropImport(path, nullptr);
+		App->editor->AddLog("Log: Added a model");
 	}
 	break;
 
 	case RESOURCE_TYPE::TEXTURE:
-
-		/*GameObject* object = App->editor->GetFocusedGameObject();
-		if (object != nullptr)
+		GameObject* focusedGO = App->editor->GetFocusedGameObject();
+		if (focusedGO != nullptr)
 		{
-			unsigned int texId = MaterialImporter::Import(path);
-
-			C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
-			if (material == nullptr)
-			{
-				material = new C_Material();
-				object->AddComponent(material);
-			}
-			
-			std::string fileName;
-			SplitPath(path, nullptr, &fileName, nullptr);
-
-			material->SetTexture(texId);
-			material->textureName = fileName;
-			material->texturePath = path;
+			App->resourceManager->DragAndDropImport(path, focusedGO);
+			App->editor->AddLog("Log: Added a texture");
 		}
-
 		else
-			App->editor->AddLog("[WARNING]: Dont have any game object selected");
-		*/
+			App->editor->AddLog("[WARNING]: No focused game object");
+		
 		break;
 	}
 

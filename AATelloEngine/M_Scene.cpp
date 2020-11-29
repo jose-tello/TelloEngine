@@ -28,7 +28,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Start()
 {
-	//SceneImporter::Load("test", gameObjects);
+	SceneImporter::Load("test", gameObjects);
 
 	return true;
 }

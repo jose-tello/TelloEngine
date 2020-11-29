@@ -27,12 +27,16 @@ R_Material::~R_Material()
 void R_Material::Load()
 {
 	MaterialImporter::Load(this);
+
+	isLoaded = true;
 }
 
 
 void R_Material::UnLoad()
 {
 	resourceTexture = 0;
+
+	isLoaded = false;
 }
 
 

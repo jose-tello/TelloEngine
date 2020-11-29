@@ -6,6 +6,7 @@
 #include <map>
 
 class Resource;
+struct GameObject;
 struct Config;
 
 class M_Resources : public Module
@@ -24,7 +25,7 @@ public:
 
 	int SearchMetaFile(const char*);
 
-	void DragAndDropImport(const char*);
+	void DragAndDropImport(const char*, GameObject*);
 
 private:
 	void LoadAllAssets(const char* folder = "/Assets/");

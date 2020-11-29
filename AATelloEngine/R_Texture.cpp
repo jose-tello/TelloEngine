@@ -26,6 +26,8 @@ void R_Texture::Load()
 {
 	TextureImporter::Load(this);
 	InitTextureSize();
+
+	isLoaded = true;
 }
 
 
@@ -33,6 +35,8 @@ void R_Texture::UnLoad()
 {
 	glDeleteTextures(1, &textureId);
 	textureId = 0;
+
+	isLoaded = false;
 }
 
 

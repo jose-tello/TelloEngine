@@ -29,12 +29,16 @@ R_Model::~R_Model()
 void R_Model::Load()
 {
 	ModelImporter::Load(this);
+
+	isLoaded = true;
 }
 
 
 void R_Model::UnLoad()
 {
 	modelNodes.clear();
+
+	isLoaded = false;
 }
 
 
