@@ -56,15 +56,7 @@ void C_Mesh::OnUpdateTransform(float4x4& transform)
 			aabb.SetNegativeInfinity();
 			aabb.Enclose(obb);
 		}
-		else
-		{
-			meshId = 0;
-			aabb.SetNegativeInfinity();
-		}
 	}
-
-	else
-		aabb.SetNegativeInfinity();
 }
 
 
@@ -91,8 +83,6 @@ void C_Mesh::SetMesh(int newMesh)
 		{
 			R_Mesh* mesh = (R_Mesh*)res;
 			mesh->QuitReference();
-
-			owner->transform.NotifyNeedUpdate();
 		}
 		else
 			meshId = 0;
@@ -104,9 +94,10 @@ void C_Mesh::SetMesh(int newMesh)
 	if (res != nullptr)
 	{
 		R_Mesh* mesh = (R_Mesh*)res;
-		mesh->AddReference();
+		mesh->AddReference();		
 
-		
+		if (owner != nullptr)
+			owner->transform.NotifyNeedUpdate();
 	}
 	else
 		meshId = 0;
@@ -140,7 +131,7 @@ bool C_Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
 }
 
 
-float C_Mesh::TestTriangleCollision(LineSegment ray, float4x4& transform) const
+float C_Mesh::TestTriangleCollision(LineSegment& ray, float4x4& transform) const
 {
 	if (meshId != 0)
 	{

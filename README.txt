@@ -1,4 +1,4 @@
-First release of an engine made for a university project.
+Second release of an engine made for a university project.
 
 Link to the repository: https://github.com/jose-tello/TelloEngine
 

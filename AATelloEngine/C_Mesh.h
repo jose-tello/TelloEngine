@@ -22,7 +22,7 @@ public:
 
 	AABB GetAABB() const;
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
-	float TestTriangleCollision(LineSegment, float4x4& transform) const;
+	float TestTriangleCollision(LineSegment&, float4x4& transform) const;
 	void DrawAABB() const;
 
 	void Load(Config&) override;

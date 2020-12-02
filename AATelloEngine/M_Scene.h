@@ -30,7 +30,6 @@ public:
 	bool CleanUp() override;
 
 	void AddGameObject(GameObject*);
-	void AddPrimitive(PRIMITIVE_TYPE);
 	void AddEmpty();
 	void AddCamera();
 

@@ -164,9 +164,9 @@ void ModelImporter::LoadToScene(R_Model* model)
 		if (modelNodes[i].meshId != 0)
 		{
 			C_Mesh* mesh = new C_Mesh();
-			mesh->SetMesh(modelNodes[i].meshId);
 
 			gameObject->AddComponent(mesh);
+			mesh->SetMesh(modelNodes[i].meshId);
 		}
 
 		if (modelNodes[i].materialId != 0)

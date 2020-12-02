@@ -65,42 +65,6 @@ void M_Scene::AddGameObject(GameObject* object)
 }
 
 
-void M_Scene::AddPrimitive(PRIMITIVE_TYPE type)
-{
-	/*GameObject* object = new GameObject(nullptr);
-	C_Mesh* meshComponent = new C_Mesh();
-	Mesh* mesh = new Mesh();
-
-	switch (type)
-	{
-	case PRIMITIVE_TYPE::CUBE:
-		object->SetName("Cube");
-		mesh->InitAsCube();
-		break;
-
-	case PRIMITIVE_TYPE::PIRAMID:
-		object->SetName("Piramid");
-		mesh->InitAsPiramid();
-		break;
-
-	case PRIMITIVE_TYPE::SPHERE:
-		object->SetName("Sphere");
-		mesh->InitAsSphere();
-		break;
-
-	case PRIMITIVE_TYPE::CILINDER:
-		object->SetName("Cilinder");
-		mesh->InitAsCilinder();
-		break;
-	}
-
-	meshComponent->SetMesh(mesh);
-	object->AddComponent(meshComponent);
-	gameObjects.push_back(object);
-	object->transform.SetEscale(10.f, 10.f, 10.f);*/
-}
-
-
 void M_Scene::AddEmpty()
 {
 	GameObject* object = new GameObject(nullptr);
@@ -348,7 +312,6 @@ void M_Scene::DrawObject(GameObject* object, bool blackWireframe, bool drawAABB)
 void M_Scene::TestRayCollision(LineSegment& ray)
 {
 	std::stack<GameObject*> stack;
-	GameObject* node;
 
 	std::map<float, GameObject*> candidates;
 
@@ -359,7 +322,7 @@ void M_Scene::TestRayCollision(LineSegment& ray)
 
 		while (stack.empty() == false)
 		{
-			node = stack.top();
+			GameObject* node = stack.top();
 			stack.pop();
 
 			Component* component = node->GetComponent(COMPONENT_TYPE::MESH);
@@ -391,7 +354,7 @@ void M_Scene::TestRayCollision(LineSegment& ray)
 	else
 	{
 		std::map<float, GameObject*>::iterator it = candidates.begin();
-		std::pair<float, GameObject*> selected(INFINITY, node);
+		std::pair<float, GameObject*> selected(INFINITY, nullptr);
 
 		for (it; it != candidates.end(); it++)
 		{
