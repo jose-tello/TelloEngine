@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
-#include "M_FileManager.h"
 #include "SceneImporter.h"
 #include "M_Resources.h"
 
@@ -11,8 +10,6 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
-
-#include "Globals.h"
 
 #include <stack>
 #include <map>

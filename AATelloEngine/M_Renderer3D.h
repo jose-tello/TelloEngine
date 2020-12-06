@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Light.h"
-#include "glmath.h"
 
 #include "SDL\include\SDL.h"
 
