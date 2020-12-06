@@ -91,9 +91,8 @@ float R_Mesh::TestTriangleRayCollision(LineSegment& ray) const
 		float3 p2(vertices[index2 * 3], vertices[index2 * 3 + 1], vertices[index2 * 3 + 2]);
 
 		Triangle triangle(p0, p1, p2);
-		float pointDistance;
-		float3 intersection;
-		ray.Intersects(triangle, &pointDistance, &intersection);
+		float pointDistance = 0;
+		ray.Intersects(triangle, &pointDistance, nullptr);
 
 		if (pointDistance != 0)
 		{

@@ -345,9 +345,6 @@ void M_Scene::TestRayCollision(LineSegment& ray)
 	if (candidates.size() == 0)
 		App->editor->SetFocusedGameObject(nullptr);
 
-	else if (candidates.size() == 1)
-		App->editor->SetFocusedGameObject(candidates.begin()->second);
-
 	else
 	{
 		std::map<float, GameObject*>::iterator it = candidates.begin();

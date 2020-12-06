@@ -135,19 +135,20 @@ float C_Mesh::TestTriangleCollision(LineSegment& ray, float4x4& transform) const
 {
 	if (meshId != 0)
 	{
-		ray.Transform(transform.Inverted());
+		LineSegment auxRay = ray;
+		auxRay.Transform(transform.Transposed().Inverted());
 
 		Resource* res = App->resourceManager->RequestResource(meshId);
 		if (res != nullptr)
 		{
 			R_Mesh* mesh = (R_Mesh*)res;
-			return mesh->TestTriangleRayCollision(ray);
+			return mesh->TestTriangleRayCollision(auxRay);
 		}
 		else
-			return false;
+			return 0;
 	}
 	else
-		return false;
+		return 0;
 }
 
 
