@@ -2,16 +2,11 @@
 
 #include "Application.h"
 #include "M_Editor.h"
-#include "W_Inspector.h"
-
-#include "GameObject.h"
-#include "C_Material.h"
 
 #include "M_Resources.h"
 #include "Resource.h"
 
 #include "ModelImporter.h"
-#include "MaterialImporter.h"
 #include "TextureImporter.h"
 
 #include <fstream>
