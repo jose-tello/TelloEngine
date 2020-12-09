@@ -34,7 +34,6 @@ public:
 	~R_Model() override;
 
 	void Load() override;
-	void UnLoad() override;
 
 	void GetModelNodes(std::vector<ModelNode>& modelNodes) const;
 	void SetModelNodes(std::vector<ModelNode>& modelNodes);

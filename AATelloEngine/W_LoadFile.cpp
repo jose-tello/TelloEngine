@@ -40,7 +40,7 @@ void W_LoadFile::DrawLoadWindow()
 	ImGui::BeginChild("File bowser");
 
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Assets");
-	DrawDirectory("/Assets", "");
+	DrawDirectory("/Assets/", "");
 
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Materials");
@@ -61,7 +61,6 @@ void W_LoadFile::DrawDirectory(const char* directory, const char* filterExtensio
 	std::vector<std::string> folderDirs;
 
 	std::string dir(directory);
-	dir += "/";
 
 	App->fileManager->ExploreDirectory(dir.c_str(), files, folderDirs);
 
