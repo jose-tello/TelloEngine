@@ -5,8 +5,6 @@ struct aiMaterial;
 struct Color;
 class R_Material;
 
-#include <string>
-
 namespace MaterialImporter
 {
 	int Import(aiMaterial* material, Color& col, bool hasTexture, bool hasColor, const char* assetPath);

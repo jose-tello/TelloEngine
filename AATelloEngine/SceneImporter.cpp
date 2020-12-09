@@ -1,11 +1,11 @@
 #include "SceneImporter.h"
+
+#include "Application.h"
+#include "M_FileManager.h"
 #include "M_Scene.h"
 
 #include "Config.h"
 #include "GameObject.h"
-
-#include "Application.h"
-#include "M_FileManager.h"
 
 void SceneImporter::Load(const char* path, std::vector<GameObject*>& objVector)
 {

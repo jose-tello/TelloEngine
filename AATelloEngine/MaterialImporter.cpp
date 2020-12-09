@@ -3,8 +3,8 @@
 #include "Application.h"
 #include "M_FileManager.h"
 #include "M_Editor.h"
-
 #include "M_Resources.h"
+
 #include "R_Material.h"
 
 #include "Assimp/include/material.h"

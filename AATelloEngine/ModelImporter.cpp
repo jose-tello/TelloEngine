@@ -8,18 +8,14 @@
 #include "M_Editor.h"
 #include "M_FileManager.h"
 #include "M_Scene.h"
-
 #include "M_Resources.h"
+
 #include "R_Model.h"
-#include "R_Mesh.h"
-#include "R_Material.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
-
-#include "Assimp/include/material.h"
 
 #include "MathGeoLib/src/MathGeoLib.h"
 

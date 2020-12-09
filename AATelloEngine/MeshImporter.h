@@ -7,7 +7,6 @@ struct aiMesh;
 class R_Mesh;
 
 #include <vector>
-#include <string>
 
 namespace MeshImporter
 {
