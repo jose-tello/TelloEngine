@@ -121,64 +121,6 @@ int M_Resources::CreateResource(const char* assetPath, int id)
 }
 
 
-void M_Resources::UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder)
-{
-	if (previousFile != nullptr)
-	{
-		if (CheckMetaExist(file, *previousFile, folder) == true)
-		{
-			std::string path(folder);
-			path.append(previousFile->c_str());
-			InitResourceFromMeta(path.c_str());
-			return;
-		}
-	}
-
-	if (nextFile != nullptr)
-	{
-		if (CheckMetaExist(file, *nextFile, folder) == true)
-		{
-			std::string path(folder);
-			path.append(nextFile->c_str());
-			InitResourceFromMeta(path.c_str());
-			return;
-		}
-	}
-
-	std::string path = folder;
-	path += file.c_str();
-	CreateResource(path.c_str());
-}
-
-
-int M_Resources::CreateMeta(const char* assetPath, int uid)
-{
-	if (uid == 0)
-	{
-		LCG randomNumber;
-		uid = randomNumber.IntFast();
-	}
-
-	Config node;
-	node.AppendNum("uid", uid);
-	node.AppendNum("time", App->fileManager->GetLastModTime(assetPath));
-	node.AppendNum("type", (int)App->fileManager->GetFileType(assetPath));
-	node.AppendString("asset_path", assetPath);
-
-	std::string metaName = App->fileManager->RemoveExtension(assetPath);
-	metaName += ".meta";
-
-	char* fileBuffer;
-	unsigned int size = node.Serialize(&fileBuffer);
-	App->fileManager->Save(metaName.c_str(), fileBuffer, size);
-
-	delete[] fileBuffer;
-	fileBuffer = nullptr;
-
-	return uid;
-}
-
-
 void M_Resources::PushResource(Resource* resource, int id)
 {
 	resources.insert(std::pair<int, Resource*>(id, resource));
@@ -372,6 +314,36 @@ void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Re
 }
 
 
+void M_Resources::UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder)
+{
+	if (previousFile != nullptr)
+	{
+		if (CheckMetaExist(file, *previousFile, folder) == true)
+		{
+			std::string path(folder);
+			path.append(previousFile->c_str());
+			InitResourceFromMeta(path.c_str());
+			return;
+		}
+	}
+
+	if (nextFile != nullptr)
+	{
+		if (CheckMetaExist(file, *nextFile, folder) == true)
+		{
+			std::string path(folder);
+			path.append(nextFile->c_str());
+			InitResourceFromMeta(path.c_str());
+			return;
+		}
+	}
+
+	std::string path = folder;
+	path += file.c_str();
+	CreateResource(path.c_str());
+}
+
+
 void M_Resources::UpdateMetaFile(std::string& file, const char* folder)
 {
 	std::string path(folder);
@@ -386,7 +358,7 @@ void M_Resources::UpdateMetaFile(std::string& file, const char* folder)
 
 	if (timeDiference == -1)	//asset was deleted
 		DeleteMetaAndLibFiles(metaNode);
-	
+
 	else if (timeDiference > 0)
 	{
 		int type = metaNode.GetNum("type");
@@ -408,34 +380,31 @@ void M_Resources::UpdateMetaFile(std::string& file, const char* folder)
 }
 
 
-void M_Resources::InitResource(int uid, int type, const char* path)
+int M_Resources::CreateMeta(const char* assetPath, int uid)
 {
-	Resource* resource;
-
-	switch ((RESOURCE_TYPE)type)
+	if (uid == 0)
 	{
-	case RESOURCE_TYPE::MODEL:
-		resource = new R_Model(uid, path, (RESOURCE_TYPE)type);
-		
-		if (CheckLibFileExists(uid, type) == false)
-			ModelImporter::Import(path, (R_Model*)resource);
-
-		break;
-
-	case RESOURCE_TYPE::TEXTURE:
-		resource = new R_Texture(uid, path, (RESOURCE_TYPE)type);
-		
-		if (CheckLibFileExists(uid, type) == false)
-			TextureImporter::Import(path, (R_Texture*)resource);
-
-		break;
-
-	default:
-		assert("Forgot to add resource type");
-		break;
+		LCG randomNumber;
+		uid = randomNumber.IntFast();
 	}
 
-	resources.insert(std::pair<int, Resource*>(uid, resource));
+	Config node;
+	node.AppendNum("uid", uid);
+	node.AppendNum("time", App->fileManager->GetLastModTime(assetPath));
+	node.AppendNum("type", (int)App->fileManager->GetFileType(assetPath));
+	node.AppendString("asset_path", assetPath);
+
+	std::string metaName = App->fileManager->RemoveExtension(assetPath);
+	metaName += ".meta";
+
+	char* fileBuffer;
+	unsigned int size = node.Serialize(&fileBuffer);
+	App->fileManager->Save(metaName.c_str(), fileBuffer, size);
+
+	delete[] fileBuffer;
+	fileBuffer = nullptr;
+
+	return uid;
 }
 
 
@@ -487,13 +456,44 @@ bool M_Resources::CheckLibFileExists(int id, int resourceType) const
 	case RESOURCE_TYPE::TEXTURE:
 		path = TEXTURE_LIBRARY + std::to_string(id);
 		break;
-	
+
 	default:
 		assert("Forgot to add resources");
 		break;
 	}
 
 	return App->fileManager->FileExists(path.c_str());
+}
+
+
+void M_Resources::InitResource(int uid, int type, const char* path)
+{
+	Resource* resource;
+
+	switch ((RESOURCE_TYPE)type)
+	{
+	case RESOURCE_TYPE::MODEL:
+		resource = new R_Model(uid, path, (RESOURCE_TYPE)type);
+		
+		if (CheckLibFileExists(uid, type) == false)
+			ModelImporter::Import(path, (R_Model*)resource);
+
+		break;
+
+	case RESOURCE_TYPE::TEXTURE:
+		resource = new R_Texture(uid, path, (RESOURCE_TYPE)type);
+		
+		if (CheckLibFileExists(uid, type) == false)
+			TextureImporter::Import(path, (R_Texture*)resource);
+
+		break;
+
+	default:
+		assert("Forgot to add resource type");
+		break;
+	}
+
+	resources.insert(std::pair<int, Resource*>(uid, resource));
 }
 
 

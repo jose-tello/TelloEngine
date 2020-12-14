@@ -23,7 +23,6 @@ public:
 
 	Resource* RequestResource(int uid);
 	int CreateResource(const char* assetPath, int id = 0);
-
 	//Used when the created resource does not have a .meta (meshes)
 	void PushResource(Resource*, int id);
 
@@ -36,9 +35,9 @@ public:
 
 private:
 	void UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder);
+	void UpdateMetaFile(std::string& file, const char* folder);
 
 	int CreateMeta(const char* assetPath, int id);
-	void UpdateMetaFile(std::string& file, const char* folder);
 	bool CheckMetaExist(std::string& fileName, std::string& meta, const char* folder) const;
 	unsigned __int64 CheckMetaIsUpdated(Config& metaNode) const;
 
