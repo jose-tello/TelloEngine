@@ -39,18 +39,19 @@ void W_LoadFile::DrawLoadWindow()
 {
 	ImGui::BeginChild("File bowser");
 
-	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Assets");
-	DrawDirectory("/Assets/", "");
+	if (ImGui::CollapsingHeader("Assets"))
+		DrawDirectory("/Assets/", "");
 
 	ImGui::Separator();
-	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Materials");
 
-	DrawDirectory(MATERIAL_LIBRARY, "", true);
+	if (ImGui::CollapsingHeader("Materials"))
+		DrawDirectory(MATERIAL_LIBRARY, "", true);
 
 	ImGui::Separator();
-	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Meshes");
 
-	DrawDirectory(MESH_LIBRARY, "", true);
+	if (ImGui::CollapsingHeader("Meshes"))
+		DrawDirectory(MESH_LIBRARY, "", true);
+
 	ImGui::EndChild();
 }
 
