@@ -22,7 +22,7 @@ public:
 	void UpdateAllAssets(const char* folder = "/Assets/");
 
 	Resource* RequestResource(int uid);
-	int CreateMeta(const char* assetPath, int id = 0);
+	int CreateResource(const char* assetPath, int id = 0);
 
 	//Used when the created resource does not have a .meta (meshes)
 	void PushResource(Resource*, int id);
@@ -35,14 +35,18 @@ public:
 	void GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, std::vector<Resource*>& models);
 
 private:
+	void UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder);
 
-	void CreateResource(int uid, int type, const char* path);
-	bool CheckMetaExist(std::string& fileName, std::string& meta, const char* folder);
-	bool CheckMetaIsUpdated(const char* meta);
-	bool CheckLibFileExists(int id, int resourceType);
+	int CreateMeta(const char* assetPath, int id);
+	void UpdateMetaFile(std::string& file, const char* folder);
+	bool CheckMetaExist(std::string& fileName, std::string& meta, const char* folder) const;
+	unsigned __int64 CheckMetaIsUpdated(Config& metaNode) const;
+
+	bool CheckLibFileExists(int id, int resourceType) const;
 	
-	void CreateResourceFromMeta(const char* metaPath);
-	void CreateResourcesFromModelMeta(Config&);
+	void InitResource(int uid, int type, const char* path);
+	void InitResourceFromMeta(const char* metaPath);
+	void InitResourcesFromModelMeta(Config&);
 
 	void DeleteResource(int id);
 	void DeleteMetaAndLibFiles(Config& metaNode);

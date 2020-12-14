@@ -66,27 +66,21 @@ void M_Resources::UpdateAllAssets(const char* folder)
 	{
 		if (files[i].find(".meta") != -1)										// Check if its a .meta
 		{
-			std::string path(folder);
-			path.append(files[i]);
-
-			CheckMetaIsUpdated(path.c_str());
+			UpdateMetaFile(files[i], folder);
 			continue;
 		}
 
 		else
 		{
-			if (i < filesCount - 1)													//I assume all .meta are adjacent to its asset
-				if (CheckMetaExist(files[i], files[i + 1], folder) == true)
-					continue;
+			std::string* nextFile = nullptr;
+			std::string* previousFile = nullptr;
+			if (i < filesCount - 1)												//I assume all .meta are adjacent to its asset
+				nextFile = &files[i + 1];
 
 			if (i != 0)
-				if (CheckMetaExist(files[i], files[i - 1], folder) == true)
-					continue;
+				previousFile = &files[i - 1];
 
-
-			std::string path = folder;
-			path += files[i].c_str();
-			CreateMeta(path.c_str());
+			UpdateFile(files[i], previousFile, nextFile, folder);
 		}
 	}
 
@@ -118,6 +112,45 @@ Resource* M_Resources::RequestResource(int uid)
 }
 
 
+int M_Resources::CreateResource(const char* assetPath, int id)
+{
+	id = CreateMeta(assetPath, id);
+	InitResource(id, (int)App->fileManager->GetFileType(assetPath), assetPath);
+
+	return id;
+}
+
+
+void M_Resources::UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder)
+{
+	if (previousFile != nullptr)
+	{
+		if (CheckMetaExist(file, *previousFile, folder) == true)
+		{
+			std::string path(folder);
+			path.append(previousFile->c_str());
+			InitResourceFromMeta(path.c_str());
+			return;
+		}
+	}
+
+	if (nextFile != nullptr)
+	{
+		if (CheckMetaExist(file, *nextFile, folder) == true)
+		{
+			std::string path(folder);
+			path.append(nextFile->c_str());
+			InitResourceFromMeta(path.c_str());
+			return;
+		}
+	}
+
+	std::string path = folder;
+	path += file.c_str();
+	CreateResource(path.c_str());
+}
+
+
 int M_Resources::CreateMeta(const char* assetPath, int uid)
 {
 	if (uid == 0)
@@ -125,14 +158,11 @@ int M_Resources::CreateMeta(const char* assetPath, int uid)
 		LCG randomNumber;
 		uid = randomNumber.IntFast();
 	}
-	
-	unsigned __int64 time = App->fileManager->GetLastModTime(assetPath);
-	RESOURCE_TYPE type = App->fileManager->GetFileType(assetPath);
 
 	Config node;
 	node.AppendNum("uid", uid);
-	node.AppendNum("time", time);
-	node.AppendNum("type", (int)type);
+	node.AppendNum("time", App->fileManager->GetLastModTime(assetPath));
+	node.AppendNum("type", (int)App->fileManager->GetFileType(assetPath));
 	node.AppendString("asset_path", assetPath);
 
 	std::string metaName = App->fileManager->RemoveExtension(assetPath);
@@ -144,8 +174,6 @@ int M_Resources::CreateMeta(const char* assetPath, int uid)
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
-
-	CreateResource(uid, (int)type, assetPath);
 
 	return uid;
 }
@@ -186,7 +214,7 @@ void M_Resources::DragAndDropImport(const char* path, GameObject* object)
 
 	int id = SearchMetaFile(filePath.c_str());
 	if (id == 0)
-		id = CreateMeta(filePath.c_str());
+		id = CreateResource(filePath.c_str());
 
 	Resource* resource = RequestResource(id);
 
@@ -312,8 +340,8 @@ void M_Resources::WindowLoad(int id, GameObject* object)
 }
 
 
-void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, 
-								  std::vector<Resource*>& models)
+void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, 
+								  std::vector<Resource*>& textures, std::vector<Resource*>& models)
 {
 	std::map<int, Resource*>::iterator it = resources.begin();
 	for (it; it != resources.end(); it++)
@@ -344,7 +372,43 @@ void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Re
 }
 
 
-void M_Resources::CreateResource(int uid, int type, const char* path)
+void M_Resources::UpdateMetaFile(std::string& file, const char* folder)
+{
+	std::string path(folder);
+	path.append(file);
+
+	char* fileBuffer;
+	App->fileManager->Load(path.c_str(), &fileBuffer);
+
+	Config metaNode(fileBuffer);
+
+	float timeDiference = CheckMetaIsUpdated(metaNode);
+
+	if (timeDiference == -1)	//asset was deleted
+		DeleteMetaAndLibFiles(metaNode);
+	
+	else if (timeDiference > 0)
+	{
+		int type = metaNode.GetNum("type");
+		if ((RESOURCE_TYPE)type == RESOURCE_TYPE::MODEL)
+			DeleteMetaAndLibFiles(metaNode);
+
+		else if ((RESOURCE_TYPE)type == RESOURCE_TYPE::TEXTURE)
+		{
+			int id = metaNode.GetNum("uid");
+			const char* assetPath = metaNode.GetString("asset_path");
+			DeleteLibFile(id, (int)RESOURCE_TYPE::TEXTURE);
+			DeleteResource(id);
+			CreateResource(assetPath, id);
+		}
+	}
+
+	delete[] fileBuffer;
+	fileBuffer = nullptr;
+}
+
+
+void M_Resources::InitResource(int uid, int type, const char* path)
 {
 	Resource* resource;
 
@@ -375,60 +439,35 @@ void M_Resources::CreateResource(int uid, int type, const char* path)
 }
 
 
-bool M_Resources::CheckMetaExist(std::string& fileName, std::string& meta, const char* folder)
+bool M_Resources::CheckMetaExist(std::string& fileName, std::string& meta, const char* folder) const
 {
 	std::string file = App->fileManager->RemoveExtension(fileName.c_str());
 	if ((meta.find(file.c_str()) + file.length()) == meta.find(".meta"))
-	{
-		std::string path(folder);
-		path.append(file + ".meta");
-		CreateResourceFromMeta(path.c_str());
 		return true;
-	}
 
 	return false;
 }
 
 
-bool M_Resources::CheckMetaIsUpdated(const char* meta)
+unsigned __int64 M_Resources::CheckMetaIsUpdated(Config& metaNode) const
 {
-	char* fileBuffer;
-	App->fileManager->Load(meta, &fileBuffer);
-
-	Config metaNode(fileBuffer);
-
 	unsigned __int64 metaTime = metaNode.GetNum("time");
 	const char* assetPath = metaNode.GetString("asset_path");
 
 	unsigned __int64 assetTime = App->fileManager->GetLastModTime(assetPath);
 
-	if (assetTime == -1)	//asset was deleted
-		DeleteMetaAndLibFiles(metaNode);
+	if (assetTime == -1) // file was deleted
+		return -1;
 
-	else if (assetTime != metaTime)
-	{
-		int type = metaNode.GetNum("type");
-		if ((RESOURCE_TYPE)type == RESOURCE_TYPE::MODEL)
-			DeleteMetaAndLibFiles(metaNode);
+	else if (assetTime < metaTime) //file is older than meta
+		return 0;
 
-		else if ((RESOURCE_TYPE)type == RESOURCE_TYPE::TEXTURE)
-		{
-			int id = metaNode.GetNum("uid");
-			DeleteLibFile(id, (int)RESOURCE_TYPE::TEXTURE);
-			DeleteResource(id);
-			CreateMeta(assetPath, id);
-			
-		}
-	}
-
-	delete[] fileBuffer;
-	fileBuffer = nullptr;
-
-	return true;
+	unsigned __int64 timeDiference = assetTime - metaTime;
+	return timeDiference;
 }
 
 
-bool M_Resources::CheckLibFileExists(int id, int resourceType)
+bool M_Resources::CheckLibFileExists(int id, int resourceType) const
 {
 	std::string path;
 	switch ((RESOURCE_TYPE)resourceType)
@@ -458,7 +497,7 @@ bool M_Resources::CheckLibFileExists(int id, int resourceType)
 }
 
 
-void M_Resources::CreateResourceFromMeta(const char* metaPath)
+void M_Resources::InitResourceFromMeta(const char* metaPath)
 {
 	char* fileBuffer;
 	App->fileManager->Load(metaPath, &fileBuffer);
@@ -468,16 +507,16 @@ void M_Resources::CreateResourceFromMeta(const char* metaPath)
 	int type = node.GetNum("type");
 
 	if (type == (int)RESOURCE_TYPE::MODEL)
-		CreateResourcesFromModelMeta(node);
+		InitResourcesFromModelMeta(node);
 
-	CreateResource(node.GetNum("uid"), type, node.GetString("asset_path"));
+	InitResource(node.GetNum("uid"), type, node.GetString("asset_path"));
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
 }
 
 
-void M_Resources::CreateResourcesFromModelMeta(Config& rootNode)
+void M_Resources::InitResourcesFromModelMeta(Config& rootNode)
 {
 	ConfigArray meshArray = rootNode.GetArray("meshes");
 
