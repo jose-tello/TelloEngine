@@ -21,6 +21,8 @@ public:
 	bool AddComponent(Component* component);
 	bool DeleteComponent(COMPONENT_TYPE componentType);
 
+	void AddResource(int resourceUid, int resourceType);
+
 	void Update(float dt);
 	void OnUpdateTransform(float4x4& globalTransform);
 

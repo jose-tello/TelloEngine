@@ -4,6 +4,8 @@
 #include "C_Material.h"
 #include "C_Camera.h"
 
+#include "Resource.h"
+
 #include "Config.h"
 
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
@@ -114,6 +116,66 @@ bool GameObject::DeleteComponent(COMPONENT_TYPE componentType)
 
 			return true;
 		}
+	}
+}
+
+
+void GameObject::AddResource(int resourceUid, int resourceType)
+{
+	switch ((RESOURCE_TYPE)resourceType)
+	{
+	case RESOURCE_TYPE::MESH:
+	{
+		C_Mesh* mesh;
+		Component* meshComp = GetComponent(COMPONENT_TYPE::MESH);
+		if (meshComp == nullptr)
+		{
+			mesh = new C_Mesh();
+			AddComponent(mesh);
+		}
+		else
+			mesh = (C_Mesh*)meshComp;
+
+		mesh->SetMesh(resourceUid);
+	}
+		break;
+
+	case RESOURCE_TYPE::MATERIAL:
+	{
+		C_Material* material;
+		Component* mat = GetComponent(COMPONENT_TYPE::MATERIAL);
+		if (mat == nullptr)
+		{
+			material = new C_Material();
+			AddComponent(material);
+		}
+		else
+			material = (C_Material*)mat;
+
+		material->SetMaterial(resourceUid);
+	}
+
+		break;
+
+	case RESOURCE_TYPE::TEXTURE:
+	{
+		C_Material* material;
+		Component* mat = GetComponent(COMPONENT_TYPE::MATERIAL);
+		if (mat == nullptr)
+		{
+			material = new C_Material();
+			AddComponent(material);
+		}
+		else
+			material = (C_Material*)mat;
+
+		material->SetTexture(resourceUid);
+	}
+		break;
+
+	default:
+		assert("passed an incorrect type of resource");
+		break;
 	}
 }
 

@@ -27,7 +27,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Start()
 {
-	App->resourceManager->DragAndDropImport("/Assets/street/Street environment_V01.fbx", nullptr);
+	App->resourceManager->DragAndDropImport("/Assets/street/Street environment_V01.FBX", nullptr);
 	return true;
 }
 

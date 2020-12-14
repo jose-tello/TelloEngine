@@ -24,7 +24,7 @@ int MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture
 		std::string fileName;
 		std::string fileExtension;
 		App->fileManager->SplitPath(texPath.C_Str(), nullptr, &fileName, &fileExtension);
-		fileName = "Assets/" + fileName + "." + fileExtension;
+		fileName = "/Assets/" + fileName + "." + fileExtension;
 		textureId = App->resourceManager->SearchMetaFile(fileName.c_str());
 
 		if (textureId == 0)
