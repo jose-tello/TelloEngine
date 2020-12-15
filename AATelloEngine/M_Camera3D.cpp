@@ -256,12 +256,13 @@ void M_Camera3D::MoveCameraSideways()
 {
 	float3 newPos(0, 0, 0);
 	float3 X = camera->frustum.WorldRight();
+	float3 Y = camera->frustum.Up();
 
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
 
-	newPos += dx * X * CAMERA_SPEED * 0.25f;
-	newPos.y -= dy * CAMERA_SPEED * 0.25f;
+	newPos += dx * X * CAMERA_SPEED;
+	newPos -= dy * Y * CAMERA_SPEED;
 	
 	float3 position = camera->frustum.Pos();
 	position += newPos;

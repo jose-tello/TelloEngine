@@ -183,6 +183,7 @@ void ModelImporter::LoadToScene(R_Model* model)
 	}
 
 	App->scene->AddGameObject(addedGameObjects[0]);
+	addedGameObjects.clear();
 }
 
 
