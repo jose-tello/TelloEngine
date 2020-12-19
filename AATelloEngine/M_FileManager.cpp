@@ -54,6 +54,7 @@ bool M_FileManager::Init()
 	CreateFolder(TEXTURE_LIBRARY);
 	CreateFolder(SCENE_LIBRARY);
 	CreateFolder(MODEL_LIBRARY);
+	CreateFolder(SHADER_LIBRARY);
 
 	return true;
 }

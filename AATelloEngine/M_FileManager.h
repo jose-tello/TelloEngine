@@ -12,6 +12,7 @@
 #define TEXTURE_LIBRARY "/Library/Textures/"
 #define SCENE_LIBRARY "/Library/Scenes/"
 #define MODEL_LIBRARY "/Library/Model/"
+#define SHADER_LIBRARY "/Library/Shader/"
 
 enum class RESOURCE_TYPE;
 

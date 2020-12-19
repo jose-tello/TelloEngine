@@ -81,15 +81,15 @@ void MeshImporter::Load(R_Mesh* mesh)
 {
 	std::vector<float> vertices, normals, texCoords;
 	std::vector<unsigned int> indices;
-	char* buffer = nullptr;
+	char* fileBuffer = nullptr;
 
 	std::string path(MESH_LIBRARY);
 	path.append(std::to_string(mesh->GetUid()));
 
-	unsigned int size = App->fileManager->Load(path.c_str(), &buffer);
+	unsigned int size = App->fileManager->Load(path.c_str(), &fileBuffer);
+	char* pointer = fileBuffer;
 
-	char* pointer = buffer;
-	if (pointer != nullptr)
+	if (size > 0)
 	{
 		//Ranges
 		unsigned int ranges[4];
@@ -140,11 +140,12 @@ void MeshImporter::Load(R_Mesh* mesh)
 
 		mesh->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
 
-		delete[] buffer;
-		buffer = nullptr;
+		delete[] fileBuffer;
+		fileBuffer = nullptr;
+		pointer = nullptr;
 	}
 	else
-		App->editor->AddLog("[WARNING], geometry face with != 3 indices!");
+		App->editor->AddLog("[WARNING], mesh not loaded correctlly from: %s", path.c_str());
 }
 
 

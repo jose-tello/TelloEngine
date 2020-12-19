@@ -155,8 +155,10 @@
     <ClInclude Include="R_Material.h" />
     <ClInclude Include="R_Mesh.h" />
     <ClInclude Include="R_Model.h" />
+    <ClInclude Include="R_Shader.h" />
     <ClInclude Include="R_Texture.h" />
     <ClInclude Include="SceneImporter.h" />
+    <ClInclude Include="ShaderImporter.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="W_AppState.h" />
@@ -245,8 +247,10 @@
     <ClCompile Include="R_Material.cpp" />
     <ClCompile Include="R_Mesh.cpp" />
     <ClCompile Include="R_Model.cpp" />
+    <ClCompile Include="R_Shader.cpp" />
     <ClCompile Include="R_Texture.cpp" />
     <ClCompile Include="SceneImporter.cpp" />
+    <ClCompile Include="ShaderImporter.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="W_AppState.cpp" />
