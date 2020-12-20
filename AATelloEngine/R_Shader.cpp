@@ -64,16 +64,21 @@ unsigned int R_Shader::GetProgramId() const
 const char* R_Shader::GetProgramCode() const
 {
 	char* code = nullptr;
-
+	
 	int binaryLenght = 0;
 	glGetProgramiv(programId, GL_PROGRAM_BINARY_LENGTH, &binaryLenght);
 
 	if (binaryLenght > 0)
 	{
+		code = new char[binaryLenght];
 		GLenum format;
-		glGetProgramBinary(programId, binaryLenght, nullptr, &format, code);
+		GLsizei writtenLength = 0;
+		glGetProgramBinary(programId, binaryLenght, &writtenLength, &format, code);
+
+		return code;
 	}
 
+	glUseProgram(0);
 	return code;
 }
 
@@ -146,10 +151,10 @@ bool R_Shader::CheckShadersCompile(unsigned int vertexShader, unsigned int fragm
 {
 	bool ret = true;
 	int success = 0;
-	char* log = nullptr;
+	char log[512];
 
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
+	if (success == false)
 	{
 		glGetShaderInfoLog(vertexShader, 512, NULL, log);
 		App->editor->AddLog("[ERROR] vertex shader error: %s", log);
@@ -157,7 +162,7 @@ bool R_Shader::CheckShadersCompile(unsigned int vertexShader, unsigned int fragm
 	}
 
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
+	if (success == false)
 	{
 		glGetShaderInfoLog(fragmentShader, 512, NULL, log);
 		App->editor->AddLog("[ERROR] fragment shader error: %s", log);
@@ -172,7 +177,7 @@ bool R_Shader::CheckProgramCompiles() const
 {
 	bool ret = true;
 	int success = 0;
-	char* log = nullptr;
+	char log[512];
 
 	glGetProgramiv(programId, GL_LINK_STATUS, &success);
 	if (!success)

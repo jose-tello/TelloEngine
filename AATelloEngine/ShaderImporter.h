@@ -3,6 +3,7 @@
 
 class R_Shader;
 
+#define DEFAULT_SHADER_PATH "/Assets/defaultAssets/defaultShader.txt"
 #define VERTEX_SHADER_KEY "__VERTEX_SHADER__"
 #define FRAGMENT_SHADER_KEY "__FRAGMENT_SHADER__"
 

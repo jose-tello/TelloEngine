@@ -306,6 +306,9 @@ RESOURCE_TYPE M_FileManager::GetFileType(const char* path)
 	else if (extension == "PNG" || extension == "png" || extension == "DDS" || extension == "dds" || extension == "jpg" || extension == "tga")
 		return RESOURCE_TYPE::TEXTURE;
 
+	else if (extension == "txt")
+		return RESOURCE_TYPE::SHADER;
+
 	else
 	{
 		assert(true, "ERROR: not supported type of file");

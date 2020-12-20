@@ -4,9 +4,11 @@
 #include "R_Material.h"
 #include "R_Model.h"
 #include "R_Texture.h"
+#include "R_Shader.h"
 
 #include "ModelImporter.h"
 #include "TextureImporter.h"
+#include "ShaderImporter.h"
 
 #include "Application.h"
 #include "M_FileManager.h"
@@ -21,7 +23,8 @@
 #include <vector>
 #include <assert.h>
 
-M_Resources::M_Resources(bool startEnabled) : Module(startEnabled)
+M_Resources::M_Resources(bool startEnabled) : Module(startEnabled),
+	defaultShaderId(0)
 {
 }
 
@@ -135,7 +138,7 @@ int M_Resources::SearchMetaFile(const char* fileName)
 		for (it; it != resources.end(); it++)
 		{
 			RESOURCE_TYPE type = it->second->GetType();
-			if (type == RESOURCE_TYPE::MODEL || type == RESOURCE_TYPE::TEXTURE)
+			if (type == RESOURCE_TYPE::MODEL || type == RESOURCE_TYPE::TEXTURE || type == RESOURCE_TYPE::SHADER)
 			{
 				std::string pathName = it->second->GetAssetPath().c_str();
 				if (pathName == path.c_str())
@@ -173,6 +176,20 @@ void M_Resources::DragAndDropImport(const char* path, GameObject* object)
 		object->AddResource(resource->GetUid(), (int)RESOURCE_TYPE::TEXTURE);
 		break;
 	}
+	
+	case RESOURCE_TYPE::SHADER:
+		if (object == nullptr)
+		{
+			std::string name;
+			App->fileManager->SplitPath(path, nullptr, &name, nullptr);
+			object = new GameObject(name, nullptr, 0);
+			App->scene->AddGameObject(object);
+		}
+
+		object->AddResource(resource->GetUid(), (int)RESOURCE_TYPE::SHADER);
+		break;
+		
+
 	case RESOURCE_TYPE::MODEL:
 		ModelImporter::LoadToScene((R_Model*)resource);
 		break;
@@ -207,8 +224,8 @@ void M_Resources::WindowLoad(int id, GameObject* object)
 }
 
 
-void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, 
-								  std::vector<Resource*>& textures, std::vector<Resource*>& models)
+void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials,
+	std::vector<Resource*>& textures, std::vector<Resource*>& models, std::vector<Resource*>& shaders)
 {
 	std::map<int, Resource*>::iterator it = resources.begin();
 	for (it; it != resources.end(); it++)
@@ -231,11 +248,30 @@ void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Re
 			textures.push_back(it->second);
 			break;
 
+		case RESOURCE_TYPE::SHADER:
+			shaders.push_back(it->second);
+			break;
+
 		default:
 			assert("Forgot to add resources");
 			break;
 		}
 	}
+}
+
+
+int M_Resources::GetDefaultResourceShader() const
+{
+	if (defaultShaderId == 0)
+		assert(true, "Default shader not initialized");
+
+	return defaultShaderId;
+}
+
+
+void M_Resources::SetDefaultResourceShader(int shaderResourceUid)
+{
+	defaultShaderId = shaderResourceUid;
 }
 
 
@@ -295,6 +331,15 @@ void M_Resources::UpdateMetaFile(std::string& file, const char* folder)
 			int id = metaNode.GetNum("uid");
 			const char* assetPath = metaNode.GetString("asset_path");
 			DeleteLibFile(id, (int)RESOURCE_TYPE::TEXTURE);
+			DeleteResource(id);
+			CreateResource(assetPath, id);
+		}
+
+		else if ((RESOURCE_TYPE)type == RESOURCE_TYPE::SHADER)
+		{
+			int id = metaNode.GetNum("uid");
+			const char* assetPath = metaNode.GetString("asset_path");
+			DeleteLibFile(id, (int)RESOURCE_TYPE::SHADER);
 			DeleteResource(id);
 			CreateResource(assetPath, id);
 		}
@@ -382,6 +427,10 @@ bool M_Resources::CheckLibFileExists(int id, int resourceType) const
 		path = TEXTURE_LIBRARY + std::to_string(id);
 		break;
 
+	case RESOURCE_TYPE::SHADER:
+		path = SHADER_LIBRARY + std::to_string(id);
+		break;
+
 	default:
 		assert("Forgot to add resources");
 		break;
@@ -410,6 +459,14 @@ void M_Resources::InitResource(int uid, int type, const char* path)
 		
 		if (CheckLibFileExists(uid, type) == false)
 			TextureImporter::Import(path, (R_Texture*)resource);
+
+		break;
+
+	case RESOURCE_TYPE::SHADER:
+		resource = new R_Shader(uid, path, (RESOURCE_TYPE)type);
+
+		if (CheckLibFileExists(uid, type) == false)
+			ShaderImporter::Import(path, (R_Shader*)resource);
 
 		break;
 
@@ -536,6 +593,10 @@ void M_Resources::DeleteLibFile(int uid, int type)
 
 	case RESOURCE_TYPE::TEXTURE:
 		path = TEXTURE_LIBRARY + std::to_string(uid);
+		break;
+
+	case RESOURCE_TYPE::SHADER:
+		path = SHADER_LIBRARY + std::to_string(uid);
 		break;
 
 	default:

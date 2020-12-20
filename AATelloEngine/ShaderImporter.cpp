@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "M_FileManager.h"
 #include "M_Editor.h"
+#include "M_Resources.h"
 
 #include "R_Shader.h"
 
@@ -14,12 +15,13 @@ void ShaderImporter::Import(const char* path, R_Shader* shader)
 	unsigned int bytes = App->fileManager->ReadBytes(filePath.c_str(), &buffer);
 
 	std::string programCode(buffer);
+	programCode = programCode.substr(0, programCode.find_last_of("}") + 1);
 	const size_t vertexIterator = programCode.find(VERTEX_SHADER_KEY);
 	const size_t fragmentIterator = programCode.find(FRAGMENT_SHADER_KEY);
 
 	if (vertexIterator != std::string::npos && fragmentIterator != std::string::npos)
 	{
-		std::string vertexCode = programCode.substr(vertexIterator + VERTEX_KEY_LENGHT, fragmentIterator);
+		std::string vertexCode = programCode.substr(vertexIterator + VERTEX_KEY_LENGHT, fragmentIterator - FRAGMENT_KEY_LENGHT);
 		std::string fragmentCode = programCode.substr(fragmentIterator + FRAGMENT_KEY_LENGHT);
 
 		shader->InitShader(vertexCode.c_str(), fragmentCode.c_str());
@@ -33,6 +35,10 @@ void ShaderImporter::Import(const char* path, R_Shader* shader)
 	}
 	
 	//TODO: Should unload the resource?
+	//TODO: Shoul not do it by name?
+	if (filePath == DEFAULT_SHADER_PATH)
+		App->resourceManager->SetDefaultResourceShader(shader->GetUid());
+
 }
 
 

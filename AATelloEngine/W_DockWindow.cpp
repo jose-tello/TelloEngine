@@ -159,16 +159,16 @@ void W_DockWindow::DrawShapesMenu()
 	if (ImGui::BeginMenu("Add shape"))
 	{
 		if (ImGui::Button("Cube"))
-			App->resourceManager->DragAndDropImport("/Assets/primitives/cube.fbx", nullptr);
+			App->resourceManager->DragAndDropImport("/Assets/defaultAssets/primitives/cube.fbx", nullptr);
 
 		if (ImGui::Button("Piramid"))
-			App->resourceManager->DragAndDropImport("/Assets/primitives/Pyramid.fbx", nullptr);
+			App->resourceManager->DragAndDropImport("/Assets/defaultAssets/primitives/Pyramid.fbx", nullptr);
 
 		if (ImGui::Button("Sphere"))
-			App->resourceManager->DragAndDropImport("/Assets/primitives/Sphere.fbx", nullptr);
+			App->resourceManager->DragAndDropImport("/Assets/defaultAssets/primitives/Sphere.fbx", nullptr);
 
 		if (ImGui::Button("Cilinder"))
-			App->resourceManager->DragAndDropImport("/Assets/primitives/Cylinder.fbx", nullptr);
+			App->resourceManager->DragAndDropImport("/Assets/defaultAssets/primitives/Cylinder.fbx", nullptr);
 
 		ImGui::EndMenu();
 	}

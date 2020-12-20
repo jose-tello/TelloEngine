@@ -226,8 +226,8 @@ void W_AppState::DrawReferenceCounting()
 {
 	if (ImGui::CollapsingHeader("Reference counting"))
 	{
-		std::vector<Resource*> meshes, materials, textures, models;
-		App->resourceManager->GetAllResources(meshes, materials, textures, models);
+		std::vector<Resource*> meshes, materials, textures, models, shaders;
+		App->resourceManager->GetAllResources(meshes, materials, textures, models, shaders);
 
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Meshes");
 

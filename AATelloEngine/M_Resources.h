@@ -31,7 +31,11 @@ public:
 	void DragAndDropImport(const char*, GameObject*);
 	void WindowLoad(int id, GameObject*);
 
-	void GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, std::vector<Resource*>& models);
+	void GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, 
+						 std::vector<Resource*>& models, std::vector<Resource*>& shaders);
+
+	int GetDefaultResourceShader() const;
+	void SetDefaultResourceShader(int shaderResourceUid);
 
 private:
 	void UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder);
@@ -53,6 +57,8 @@ private:
 
 private:
 	std::map<int, Resource*> resources;
+	int defaultShaderId = 0;			//Since it will be requested frequentlly multiple times per frame, 
+										//it has its own getter and setter
 };
 
 #endif // !__M_RESOURCES_H__

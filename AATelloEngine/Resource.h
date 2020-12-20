@@ -10,6 +10,7 @@ enum class RESOURCE_TYPE : int
 	MODEL,
 	MATERIAL,
 	TEXTURE,
+	SHADER,
 	MAX
 };
 

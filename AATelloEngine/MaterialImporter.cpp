@@ -28,7 +28,7 @@ int MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture
 		textureId = App->resourceManager->SearchMetaFile(fileName.c_str());
 
 		if (textureId == 0)
-			textureId = App->resourceManager->CreateResource(fileName.c_str());
+			textureId = App->resourceManager->CreateResource(fileName.c_str(), false);
 	}
 
 	Save(color, textureId, materialResource->GetUid());
