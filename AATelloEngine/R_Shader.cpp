@@ -38,8 +38,8 @@ void R_Shader::Load()
 
 void R_Shader::UnLoad()
 {
-	glDeleteProgram(programId);
-	programId = 0;
+	/*glDeleteProgram(programId);
+	programId = 0;*/
 }
 
 

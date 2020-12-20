@@ -1,6 +1,13 @@
 #include "R_Mesh.h"
 #include "MeshImporter.h"
 
+#include "Application.h"
+#include "M_Resources.h"
+#include "M_Renderer3D.h"
+#include "C_Camera.h"
+
+#include "R_Shader.h"
+
 #include "MathGeoLib/src/MathGeoLib.h"
 
 #include "Glew/include/glew.h"
@@ -9,34 +16,15 @@
 #include <gl/GL.h>
 
 R_Mesh::R_Mesh(int uid, const char* path, RESOURCE_TYPE type) : Resource(uid, path, type),
-	vertexId(0),
-	normalsId(0),
-	texCoordId(0),
-	indexId(0),
-
-	indexArrSize(0),
-
-	aabb()
+VAO(0),
+aabb()
 {
 }
 
 
 R_Mesh::~R_Mesh()
 {
-	glDeleteBuffers(1, &vertexId);
-	glDeleteBuffers(1, &normalsId);
-	glDeleteBuffers(1, &texCoordId);
-	glDeleteBuffers(1, &indexId);
-
-	vertexId = 0;
-	normalsId = 0;
-	indexId = 0;
-	texCoordId = 0;
-
-	vertices.clear();
-	normals.clear();
-	texCoords.clear();
-	indices.clear();
+	UnLoad();
 }
 
 
@@ -50,15 +38,9 @@ void R_Mesh::Load()
 
 void R_Mesh::UnLoad()
 {
-	glDeleteBuffers(1, &vertexId);
-	glDeleteBuffers(1, &normalsId);
-	glDeleteBuffers(1, &texCoordId);
-	glDeleteBuffers(1, &indexId);
+	glDeleteBuffers(1, &VAO);
 
-	vertexId = 0;
-	normalsId = 0;
-	indexId = 0;
-	texCoordId = 0;
+	VAO = 0;
 
 	vertices.clear();
 	normals.clear();
@@ -72,6 +54,27 @@ void R_Mesh::UnLoad()
 AABB R_Mesh::GetAABB() const
 {
 	return aabb;
+}
+
+
+void R_Mesh::InitVAO(float* vertices, size_t vertSize, unsigned int* indices, size_t indexSize, float* normals,
+	size_t normalsSize, float* texCoords, size_t texCoordsSize)
+{
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	InitVertexBuffer(vertices, vertSize);
+	InitIndexBuffer(indices, indexSize);
+
+	//Set the vertex attrib pointer
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	if (normalsSize != 0)
+		InitNormalBuffer(normals, normalsSize);
+
+	if (texCoordsSize != 0)
+		InitTexCoordBuffer(texCoords, texCoordsSize);
 }
 
 
@@ -107,57 +110,69 @@ float R_Mesh::TestTriangleRayCollision(LineSegment& ray) const
 
 void R_Mesh::InitVertexBuffer(float* vertexBuffer, size_t vertexArrSize)
 {
+	unsigned int VBO;
+
 	vertices.resize(vertexArrSize / sizeof(float));
 	memcpy(&vertices[0], vertexBuffer, vertexArrSize);
 
-	glGenBuffers(1, (GLuint*)&(vertexId));
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertexArrSize, vertexBuffer, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);	//TODO: idk if i shoul get rid of this
 
 	InitAABB();
 }
 
 
-void R_Mesh::InitNormalBuffer(float* normalsBuffer, size_t normalsArrSize)
+void R_Mesh::InitNormalBuffer(float* normalsArr, size_t normalsArrSize)
 {
+	unsigned int normalBuffer;
+
 	normals.resize(normalsArrSize / sizeof(float));
-	memcpy(&normals[0], normalsBuffer, normalsArrSize);
+	memcpy(&normals[0], normalsArr, normalsArrSize);
 
-	glGenBuffers(1, (GLuint*)&(normalsId));
-	glBindBuffer(GL_ARRAY_BUFFER, normalsId);
-	glBufferData(GL_ARRAY_BUFFER, normalsArrSize, normalsBuffer, GL_STATIC_DRAW);
+	glGenBuffers(1, &normalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, normalsArrSize, normalsArr, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
-void R_Mesh::InitTexCoordBuffer(float* texBuffer, size_t texArrSize)
+void R_Mesh::InitTexCoordBuffer(float* texArray, size_t texArrSize)
 {
+	unsigned int textureBuffer;
+
 	texCoords.resize(texArrSize / sizeof(float));
-	memcpy(&texCoords[0], texBuffer, texArrSize);
+	memcpy(&texCoords[0], texArray, texArrSize);
 
-	glGenBuffers(1, (GLuint*)&(texCoordId));
-	glBindBuffer(GL_ARRAY_BUFFER, texCoordId);
-	glBufferData(GL_ARRAY_BUFFER, texArrSize, texBuffer, GL_STATIC_DRAW);
+	glGenBuffers(1, &textureBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
+	glBufferData(GL_ARRAY_BUFFER, texArrSize, texArray, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(2);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
 void R_Mesh::InitIndexBuffer(unsigned int* indexBuffer, size_t indexArrSize)
 {
-	this->indexArrSize = indexArrSize;
+	unsigned int EBO;
 
 	indices.resize(indexArrSize / sizeof(unsigned int));
 	memcpy(&indices[0], indexBuffer, indexArrSize);
 
-	glGenBuffers(1, (GLuint*)&(indexId));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexArrSize, indexBuffer, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 
@@ -171,7 +186,8 @@ void R_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned 
 
 void R_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, bool wireFrameBlack, bool drawVertexNormals, bool drawFaceNormals) const
 {
-	glPushMatrix();
+	
+	/*glPushMatrix();
 	glMultMatrixf(transformMatrix);
 
 	if (color != nullptr)
@@ -232,7 +248,19 @@ void R_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, 
 			DrawFaceNormals();
 	}
 
-	glPopMatrix();
+	glPopMatrix();*/
+}
+
+
+unsigned int R_Mesh::GetVAO() const
+{
+	return VAO;
+}
+
+
+unsigned int R_Mesh::GetIndicesSize() const
+{
+	return indices.size();
 }
 
 
@@ -254,7 +282,7 @@ void R_Mesh::InitAABB()
 
 void R_Mesh::DrawVertexNormals() const
 {
-	if (normalsId != 0)
+	if (normals.empty() == false)
 	{
 		glLineWidth(3.0f);
 		glColor3f(0, 0, 1);

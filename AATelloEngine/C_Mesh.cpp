@@ -118,6 +118,38 @@ void C_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned 
 }
 
 
+unsigned int C_Mesh::GetVAO() const
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetVAO();
+		}
+	}
+
+	return 0;
+}
+
+
+unsigned int C_Mesh::GetIndicesSize() const
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetIndicesSize();
+		}
+	}
+
+	return 0;
+}
+
+
 AABB C_Mesh::GetAABB() const
 {
 	return aabb;

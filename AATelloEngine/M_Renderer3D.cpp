@@ -4,8 +4,15 @@
 #include "M_Editor.h"
 #include "M_Scene.h"
 #include "M_Camera3D.h"
+#include "M_Resources.h"
+
+#include "GameObject.h"
 
 #include "C_Camera.h"
+#include "C_Material.h"
+#include "C_Mesh.h"
+
+#include "R_Shader.h"
 
 #include "Grid.h"
 #include "MathGeoLib/src/MathGeoLib.h"
@@ -105,6 +112,7 @@ bool M_Renderer3D::Init()
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
+			//TODO: i gotcha bitch
 			App->editor->AddLog("[ERROR]: Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
@@ -291,7 +299,7 @@ void M_Renderer3D::DrawCube(float* cube) const
 }
 
 
-C_Camera* M_Renderer3D::GetCurrentCamera()
+C_Camera* M_Renderer3D::GetCurrentCamera() const
 {
 	return currentCamera;
 }
@@ -426,23 +434,81 @@ void M_Renderer3D::PopCamera()
 
 void M_Renderer3D::DrawObjects(bool drawAABB)
 {	
-	if (fillModeEnabled)
+	/*if (fillModeEnabled)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
 	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
 
 	std::vector<GameObject*> objToDraw;
 	App->scene->CullGameObjects(objToDraw);
 
-	App->scene->DrawGameObjects(objToDraw, false, drawAABB);
+	//App->scene->DrawGameObjects(objToDraw, false, drawAABB);
 
-	if (fillModeEnabled == true && wireframeModeEnabled == true)
+	/*if (fillModeEnabled == true && wireframeModeEnabled == true)
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		App->scene->DrawGameObjects(objToDraw, true, false);
+	}*/
+
+	int objectsCount = objToDraw.size();
+	for (int i = 0; i < objectsCount; i++)
+	{
+		DrawMesh(objToDraw[i], false, true);
+	}	
+}
+
+
+void M_Renderer3D::DrawMesh(GameObject* object, bool blackWireframe, bool drawAABB) const
+{
+	unsigned int texId = 0;
+	Color color;
+
+	C_Mesh* mesh = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
+
+	Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+	if (mat != nullptr)
+	{
+		C_Material* material = (C_Material*)mat;
+		material->GetDrawVariables(texId, color);
 	}
+
+	if (blackWireframe)
+		color = Black;
+
+	int shaderId = App->resourceManager->GetDefaultResourceShader();
+	R_Shader* shader = (R_Shader*)App->resourceManager->RequestResource(shaderId);
+
+	glUseProgram(shader->GetProgramId());
+
+	if (texId != 0)
+		glBindTexture(GL_TEXTURE_2D, texId);
+
+	unsigned int colorUniform = glGetUniformLocation(shader->GetProgramId(), "base_color");
+	glUniform3fv(colorUniform, 1, &color);
+
+	unsigned int modelMat = glGetUniformLocation(shader->GetProgramId(), "model_matrix");
+	glUniformMatrix4fv(modelMat, 1, GL_FALSE, object->transform.GetMatTransformT().ptr());
+
+	unsigned int projMat = glGetUniformLocation(shader->GetProgramId(), "projection");
+	glUniformMatrix4fv(projMat, 1, GL_FALSE, GetCurrentCamera()->GetProjectionMat());
+
+	unsigned int viewMat = glGetUniformLocation(shader->GetProgramId(), "view");
+	glUniformMatrix4fv(viewMat, 1, GL_FALSE, GetCurrentCamera()->GetViewMat());
+
+	glBindVertexArray(mesh->GetVAO());
+
+	glDrawElements(GL_TRIANGLES, mesh->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glFrontFace(GL_CCW);
+	glUseProgram(0);
+	glBindVertexArray(0);
+
+	if (drawAABB == true)
+		mesh->DrawAABB();
 }
 
 

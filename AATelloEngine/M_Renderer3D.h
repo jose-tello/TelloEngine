@@ -10,6 +10,7 @@
 #include <string>
 
 class C_Camera;
+struct GameObject;
 
 class M_Renderer3D : public Module
 {
@@ -30,7 +31,7 @@ public:
 	void DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera = true, bool drawAABB = false);
 	void DrawCube(float*) const;
 
-	C_Camera* GetCurrentCamera();
+	C_Camera* GetCurrentCamera() const;
 	void PushFrustum(C_Camera*);
 	
 	void SetCameraRay(float rayBegin[3], float rayEnd[3]);
@@ -48,6 +49,7 @@ private:
 	void PopCamera();
 
 	void DrawObjects(bool drawAABB);
+	void DrawMesh(GameObject* object, bool blackWireframe, bool drawAABB) const;
 	void DrawFrustums() const;
 
 public:

@@ -18,14 +18,14 @@ public:
 
 	AABB GetAABB() const;
 
+	void InitVAO(float* vertices, size_t vertSize, unsigned int* indices, size_t indexSize, float* normals,
+		size_t normalsSize, float* texCoords, size_t texCoordsSize);
+
 	float TestTriangleRayCollision(LineSegment& ray) const;
 
-	void InitVertexBuffer(float*, size_t);
-	void InitNormalBuffer(float*, size_t);
-	void InitTexCoordBuffer(float*, size_t);
-	void InitIndexBuffer(unsigned int*, size_t);
-
 	void Draw(float* transformMatrix, unsigned int textureId, float* color, bool wireFrameBlack, bool drawVertexNormals, bool drawFaceNormals) const;
+	unsigned int GetVAO() const;
+	unsigned int GetIndicesSize() const;
 
 	void GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const;
 	void GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const;
@@ -36,18 +36,18 @@ private:
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
 
+	void InitVertexBuffer(float*, size_t);
+	void InitNormalBuffer(float*, size_t);
+	void InitTexCoordBuffer(float*, size_t);
+	void InitIndexBuffer(unsigned int*, size_t);
+
 private:
-	unsigned int vertexId;
-	unsigned int normalsId;
-	unsigned int texCoordId;
-	unsigned int indexId;
+	unsigned int VAO = 0;
 
 	std::vector<float> vertices;
 	std::vector<float> normals;
 	std::vector<float> texCoords;
 	std::vector<unsigned int> indices;
-
-	int indexArrSize;
 
 	AABB aabb;
 

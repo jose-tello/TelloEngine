@@ -19,6 +19,8 @@ public:
 	void SetMesh(int meshId);
 
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
+	unsigned int GetVAO() const;
+	unsigned int GetIndicesSize() const;
 
 	AABB GetAABB() const;
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;

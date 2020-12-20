@@ -37,7 +37,6 @@ public:
 	void GetGameObjectVector(std::vector<GameObject*>&);
 
 	void CullGameObjects(std::vector<GameObject*>& objVector);
-	void DrawGameObjects(std::vector<GameObject*>& objVector, bool blackWireframe, bool drawAABB);	//Called from render
 	void TestRayCollision(LineSegment& ray);
 
 	void LoadScene();
@@ -51,8 +50,6 @@ private:
 	void UpdateGameObjects(float dt);
 
 	void CheckObjectsToDelete();
-
-	void DrawObject(GameObject*, bool blackWireframe, bool drawAABB);
 
 	void GetAllGameObjects(std::vector<GameObject*>& vector) const;
 	void DeleteAllGameObjects();

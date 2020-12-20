@@ -161,16 +161,6 @@ void M_Scene::CullGameObjects(std::vector<GameObject*>& objVector)
 }
 
 
-void M_Scene::DrawGameObjects(std::vector<GameObject*>& objVector, bool blackWireframe, bool drawAABB)
-{
-	int gameObjCount = objVector.size();
-	for (int i = 0; i < gameObjCount; i++)
-	{
-		DrawObject(objVector[i], blackWireframe, drawAABB);
-	}
-}
-
-
 void M_Scene::SaveScene()
 {
 	std::vector<GameObject*> vec;
@@ -278,32 +268,6 @@ void M_Scene::CheckObjectsToDelete()
 			}
 		}
 	}
-}
-
-
-void M_Scene::DrawObject(GameObject* object, bool blackWireframe, bool drawAABB)
-{
-	unsigned int texId = 0;
-	float* color = nullptr;
-
-	C_Mesh* mesh = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
-
-	C_Material* material = (C_Material*)object->GetComponent(COMPONENT_TYPE::MATERIAL);
-
-	if (material != nullptr)
-	{
-		Color col;
-		material->GetDrawVariables(texId, col);
-		color = &col;
-	}
-
-	if (blackWireframe)
-		color = &Black;
-
-	mesh->Draw(object->transform.GetMatTransformT().ptr(), texId, color, blackWireframe);
-
-	if (drawAABB == true)
-		mesh->DrawAABB();
 }
 
 

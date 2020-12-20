@@ -130,15 +130,13 @@ void MeshImporter::Load(R_Mesh* mesh)
 		indices.resize(ranges[3]);
 		memcpy(&indices[0], pointer, bytes);
 
-		mesh->InitVertexBuffer(&vertices[0], vertices.size() * sizeof(float));
+		if (normals.empty() == false && texCoords.empty() == false)
+		{
+			mesh->InitVAO(&vertices[0], vertices.size() * sizeof(float), &indices[0], indices.size() * sizeof(unsigned int),
+				&normals[0], normals.size() * sizeof(float), &texCoords[0], texCoords.size() * sizeof(float));
+		}
 
-		if (normals.empty() == false)
-			mesh->InitNormalBuffer(&normals[0], normals.size() * sizeof(float));
-
-		if (texCoords.empty() == false)
-			mesh->InitTexCoordBuffer(&texCoords[0], texCoords.size() * sizeof(float));
-
-		mesh->InitIndexBuffer(&indices[0], indices.size() * sizeof(unsigned int));
+		
 
 		delete[] fileBuffer;
 		fileBuffer = nullptr;
