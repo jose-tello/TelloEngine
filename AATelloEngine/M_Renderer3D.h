@@ -49,7 +49,7 @@ private:
 	void PopCamera();
 
 	void DrawObjects(bool drawAABB);
-	void DrawMesh(GameObject* object, bool blackWireframe, bool drawAABB) const;
+	void DrawMesh(GameObject* object, bool wireframeMode, bool drawAABB) const;
 	void DrawFrustums() const;
 
 public:

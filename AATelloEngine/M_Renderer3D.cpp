@@ -393,33 +393,35 @@ void M_Renderer3D::PopCamera()
 
 void M_Renderer3D::DrawObjects(bool drawAABB)
 {	
-	/*if (fillModeEnabled)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	
-	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
-
 	std::vector<GameObject*> objToDraw;
 	App->scene->CullGameObjects(objToDraw);
 
-	//App->scene->DrawGameObjects(objToDraw, false, drawAABB);
-
-	/*if (fillModeEnabled == true && wireframeModeEnabled == true)
+	if (fillModeEnabled == true)
 	{
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-		App->scene->DrawGameObjects(objToDraw, true, false);
-	}*/
+		int objectsCount = objToDraw.size();
+		for (int i = 0; i < objectsCount; i++)
+		{
+			DrawMesh(objToDraw[i], false, true);
+		}
+	}
 
-	int objectsCount = objToDraw.size();
-	for (int i = 0; i < objectsCount; i++)
+	if (wireframeModeEnabled == true)
 	{
-		DrawMesh(objToDraw[i], false, true);
-	}	
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		int objectsCount = objToDraw.size();
+		for (int i = 0; i < objectsCount; i++)
+		{
+			DrawMesh(objToDraw[i], true, true);
+		}
+	}
+	
 }
 
 
-void M_Renderer3D::DrawMesh(GameObject* object, bool blackWireframe, bool drawAABB) const
+void M_Renderer3D::DrawMesh(GameObject* object, bool wireframeMode, bool drawAABB) const
 {
 	unsigned int texId = 0;
 	Color color;
@@ -427,14 +429,17 @@ void M_Renderer3D::DrawMesh(GameObject* object, bool blackWireframe, bool drawAA
 
 	C_Mesh* mesh = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
 
-	Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
-	if (mat != nullptr)
+	if (wireframeMode == false)
 	{
-		C_Material* material = (C_Material*)mat;
-		material->GetDrawVariables(texId, color);
+		Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+		if (mat != nullptr)
+		{
+			C_Material* material = (C_Material*)mat;
+			material->GetDrawVariables(texId, color);
+		}
 	}
 
-	if (blackWireframe)
+	else
 		color = Black;
 
 	int shaderId = App->resourceManager->GetDefaultResourceShader();
@@ -442,7 +447,7 @@ void M_Renderer3D::DrawMesh(GameObject* object, bool blackWireframe, bool drawAA
 
 	glUseProgram(shader->GetProgramId());
 
-	if (texId != 0)
+	if (texId != 0 && wireframeMode == false)
 	{
 		glBindTexture(GL_TEXTURE_2D, texId);
 		hasTexture = true;
