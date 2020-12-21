@@ -184,12 +184,21 @@ float C_Mesh::TestTriangleCollision(LineSegment& ray, float4x4& transform) const
 }
 
 
-void C_Mesh::DrawAABB() const
+//Handles aabb, vertex normals and face normals draw calls
+void C_Mesh::HandleDebugDraws(bool drawAABB) const
 {
-	float3 corners[8];
-	aabb.GetCornerPoints(corners);
+	Resource* res = App->resourceManager->RequestResource(meshId);
+	if (res != nullptr)
+	{
+		R_Mesh* mesh = (R_Mesh*)res;
+		
+		if (drawVertexNormals == true)
+			mesh->DrawVertexNormals();
 
-	App->renderer3D->DrawCube((float*)corners);
+		if (drawFaceNormals == true)
+			mesh->DrawFaceNormals();
+	}
+	
 }
 
 
@@ -213,4 +222,13 @@ void C_Mesh::Save(Config& node) const
 	node.AppendNum("type", (int)COMPONENT_TYPE::MESH);
 
 	node.AppendNum("mesh", meshId);
+}
+
+
+void C_Mesh::DrawAABB() const
+{
+	float3 corners[8];
+	aabb.GetCornerPoints(corners);
+
+	App->renderer3D->DrawCube((float*)corners);
 }

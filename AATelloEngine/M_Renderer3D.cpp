@@ -480,6 +480,12 @@ void M_Renderer3D::DrawMesh(GameObject* object, bool wireframeMode, bool drawAAB
 
 	if (drawAABB == true)
 		mesh->DrawAABB();
+
+	//debug draws
+	glPushMatrix();
+	glMultMatrixf(object->transform.GetMatTransformT().ptr());
+	mesh->HandleDebugDraws(drawAABB);
+	glPopMatrix();
 }
 
 

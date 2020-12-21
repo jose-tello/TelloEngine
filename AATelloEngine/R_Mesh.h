@@ -30,11 +30,11 @@ public:
 	void GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const;
 	void GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const;
 
-private:
-	void InitAABB();
-
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
+
+private:
+	void InitAABB();
 
 	void InitArrayBuffer(float*, size_t, float*, size_t, float*, size_t);
 	void InitIndexBuffer(unsigned int*, size_t);

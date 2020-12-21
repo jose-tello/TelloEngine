@@ -255,13 +255,6 @@ void R_Mesh::GetAllVertexData(std::vector<float>& vertexArray, std::vector<float
 }
 
 
-void R_Mesh::InitAABB()
-{
-	aabb.SetNegativeInfinity();
-	aabb.Enclose((float3*)&vertices[0], vertices.size() / 3);
-}
-
-
 void R_Mesh::DrawVertexNormals() const
 {
 	if (normals.empty() == false)
@@ -312,4 +305,11 @@ void R_Mesh::DrawFaceNormals() const
 	}
 
 	glEnd();
+}
+
+
+void R_Mesh::InitAABB()
+{
+	aabb.SetNegativeInfinity();
+	aabb.Enclose((float3*)&vertices[0], vertices.size() / 3);
 }

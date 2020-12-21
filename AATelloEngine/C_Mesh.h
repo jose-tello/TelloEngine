@@ -25,10 +25,14 @@ public:
 	AABB GetAABB() const;
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
 	float TestTriangleCollision(LineSegment&, float4x4& transform) const;
-	void DrawAABB() const;
+
+	//Handles aabb, vertex normals and face normals draw calls
+	void HandleDebugDraws(bool drawAABB) const;
 
 	void Load(Config&) override;
 	void Save(Config&) const override;
+
+	void DrawAABB() const;
 
 public:
 	bool drawVertexNormals;
