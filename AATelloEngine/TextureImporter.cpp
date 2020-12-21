@@ -18,6 +18,7 @@ void TextureImporter::Init()
 {
 	ilInit();
 	iluInit();
+	ilutInit();
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
 	ilutRenderer(ILUT_OPENGL);

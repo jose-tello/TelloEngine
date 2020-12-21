@@ -63,18 +63,8 @@ void R_Mesh::InitVAO(float* vertices, size_t vertSize, unsigned int* indices, si
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	InitVertexBuffer(vertices, vertSize);
+	InitArrayBuffer(vertices, vertSize, normals, normalsSize, texCoords, texCoordsSize);
 	InitIndexBuffer(indices, indexSize);
-
-	//Set the vertex attrib pointer
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	if (normalsSize != 0)
-		InitNormalBuffer(normals, normalsSize);
-
-	if (texCoordsSize != 0)
-		InitTexCoordBuffer(texCoords, texCoordsSize);
 }
 
 
@@ -108,56 +98,48 @@ float R_Mesh::TestTriangleRayCollision(LineSegment& ray) const
 }
 
 
-void R_Mesh::InitVertexBuffer(float* vertexBuffer, size_t vertexArrSize)
+void R_Mesh::InitArrayBuffer(float* vertArray, size_t vertexArrSize, float* normalArray, size_t normalArrSize, float* texCoordsArray, size_t texCoordsArrSize)
 {
 	unsigned int VBO;
 
 	vertices.resize(vertexArrSize / sizeof(float));
-	memcpy(&vertices[0], vertexBuffer, vertexArrSize);
+	memcpy(&vertices[0], vertArray, vertexArrSize);
+
+	normals.resize(normalArrSize / sizeof(float));
+	memcpy(&normals[0], normalArray, normalArrSize);
+
+	texCoords.resize(texCoordsArrSize / sizeof(float));
+	memcpy(&texCoords[0], texCoordsArray, texCoordsArrSize);
+
+	int count = vertices.size();
+	for (int i = 0, j = 0; i < count; i+=3, j += 2)
+	{
+		arrayBuffer.push_back(vertArray[i]);
+		arrayBuffer.push_back(vertArray[i + 1]);
+		arrayBuffer.push_back(vertArray[i + 2]);
+
+		/*arrayBuffer.push_back(normalArray[i]);
+		arrayBuffer.push_back(normalArray[i + 1]);
+		arrayBuffer.push_back(normalArray[i + 2]);*/
+
+		arrayBuffer.push_back(texCoordsArray[j]);
+		arrayBuffer.push_back(texCoordsArray[j + 1]);
+	}
 
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertexArrSize, vertexBuffer, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, arrayBuffer.size() * sizeof(float), &arrayBuffer[0], GL_STATIC_DRAW);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);	//TODO: idk if i shoul get rid of this
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
-	InitAABB();
-}
+	/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);*/
 
-
-void R_Mesh::InitNormalBuffer(float* normalsArr, size_t normalsArrSize)
-{
-	unsigned int normalBuffer;
-
-	normals.resize(normalsArrSize / sizeof(float));
-	memcpy(&normals[0], normalsArr, normalsArrSize);
-
-	glGenBuffers(1, &normalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, normalsArrSize, normalsArr, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-
-void R_Mesh::InitTexCoordBuffer(float* texArray, size_t texArrSize)
-{
-	unsigned int textureBuffer;
-
-	texCoords.resize(texArrSize / sizeof(float));
-	memcpy(&texCoords[0], texArray, texArrSize);
-
-	glGenBuffers(1, &textureBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-	glBufferData(GL_ARRAY_BUFFER, texArrSize, texArray, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(2);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	InitAABB();
 }
 
 

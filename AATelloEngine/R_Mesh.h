@@ -36,9 +36,7 @@ private:
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
 
-	void InitVertexBuffer(float*, size_t);
-	void InitNormalBuffer(float*, size_t);
-	void InitTexCoordBuffer(float*, size_t);
+	void InitArrayBuffer(float*, size_t, float*, size_t, float*, size_t);
 	void InitIndexBuffer(unsigned int*, size_t);
 
 private:
@@ -48,6 +46,7 @@ private:
 	std::vector<float> normals;
 	std::vector<float> texCoords;
 	std::vector<unsigned int> indices;
+	std::vector<float> arrayBuffer;
 
 	AABB aabb;
 

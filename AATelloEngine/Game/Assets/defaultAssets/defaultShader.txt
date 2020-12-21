@@ -1,29 +1,39 @@
 __VERTEX_SHADER__ 
 #version 330 core
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 normals;
-layout (location = 2) in vec2 texCoord;
-out vec3 ourColor;
+layout (location = 1) in vec2 texCoord;
+
 out vec2 TexCoord;
+out vec3 diffuse_color;
+
+uniform vec3 material_color;
 uniform mat4 model_matrix;
 uniform mat4 view;
 uniform mat4 projection;
-uniform vec3 base_color;
+
 void main()
 {
  gl_Position = projection * view * model_matrix * vec4(position, 1.0f);
- ourColor = base_color;
  TexCoord = texCoord;
+ diffuse_color = material_color;
 }
 
 
 __FRAGMENT_SHADER__
 #version 330 core
-in vec3 ourColor;
 in vec2 TexCoord;
+in vec3 diffuse_color;
+
 out vec4 color;
+
 uniform sampler2D ourTexture;
+uniform bool has_texture;
+
 void main()
 {
- color = texture(ourTexture, TexCoord);
+ if (has_texture == true)
+  color = normalize(texture(ourTexture, TexCoord) * vec4(diffuse_color, 1.0));
+
+ else
+  color = vec4(diffuse_color, 1.0);
 }

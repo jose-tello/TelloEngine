@@ -79,8 +79,8 @@ bool M_Renderer3D::Init()
 			App->editor->AddLog("[ERROR]: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
+		/*glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();*/
 
 		//Check for error
 		GLenum error = glGetError();
@@ -89,48 +89,6 @@ bool M_Renderer3D::Init()
 			App->editor->AddLog("[ERROR]: Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-
-		//Initialize Modelview Matrix
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		//Check for error
-		error = glGetError();
-		if(error != GL_NO_ERROR)
-		{
-			App->editor->AddLog("[ERROR]: Error initializing OpenGL! %s\n", gluErrorString(error));
-			ret = false;
-		}
-		
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glClearDepth(1.0f);
-		
-		//Initialize clear color
-		glClearColor(0.f, 0.f, 0.f, 1.f);
-
-		//Check for error
-		error = glGetError();
-		if(error != GL_NO_ERROR)
-		{
-			//TODO: i gotcha bitch
-			App->editor->AddLog("[ERROR]: Error initializing OpenGL! %s\n", gluErrorString(error));
-			ret = false;
-		}
-		
-		GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-		
-		light.ref = GL_LIGHT0;
-		light.ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		light.diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		light.Init();
-		light.Active(true);
-
-		GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
-
-		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
@@ -146,7 +104,7 @@ bool M_Renderer3D::Init()
 UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 {
 	light.SetPos(0, 40, 0);
-	light.Render();
+	
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -154,6 +112,7 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 
 UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 {
+	light.Render();
 	App->editor->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -464,6 +423,7 @@ void M_Renderer3D::DrawMesh(GameObject* object, bool blackWireframe, bool drawAA
 {
 	unsigned int texId = 0;
 	Color color;
+	bool hasTexture = false;
 
 	C_Mesh* mesh = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
 
@@ -483,9 +443,12 @@ void M_Renderer3D::DrawMesh(GameObject* object, bool blackWireframe, bool drawAA
 	glUseProgram(shader->GetProgramId());
 
 	if (texId != 0)
+	{
 		glBindTexture(GL_TEXTURE_2D, texId);
+		hasTexture = true;
+	}
 
-	unsigned int colorUniform = glGetUniformLocation(shader->GetProgramId(), "base_color");
+	unsigned int colorUniform = glGetUniformLocation(shader->GetProgramId(), "material_color");
 	glUniform3fv(colorUniform, 1, &color);
 
 	unsigned int modelMat = glGetUniformLocation(shader->GetProgramId(), "model_matrix");
@@ -497,13 +460,16 @@ void M_Renderer3D::DrawMesh(GameObject* object, bool blackWireframe, bool drawAA
 	unsigned int viewMat = glGetUniformLocation(shader->GetProgramId(), "view");
 	glUniformMatrix4fv(viewMat, 1, GL_FALSE, GetCurrentCamera()->GetViewMat());
 
+	unsigned int hasTextureUniform = glGetUniformLocation(shader->GetProgramId(), "has_texture");
+	glUniform1i(hasTextureUniform, hasTexture);
+
 	glBindVertexArray(mesh->GetVAO());
 
 	glDrawElements(GL_TRIANGLES, mesh->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glFrontFace(GL_CCW);
+	//glFrontFace(GL_CCW);
 	glUseProgram(0);
 	glBindVertexArray(0);
 
