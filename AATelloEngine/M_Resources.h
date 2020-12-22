@@ -10,6 +10,12 @@ class Resource;
 struct GameObject;
 struct Config;
 
+enum class DEFAULT_RESOURCE : int
+{
+	NONE = 0,
+	SHADER = 1,
+};
+
 class M_Resources : public Module
 {
 public:
@@ -34,8 +40,7 @@ public:
 	void GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, 
 						 std::vector<Resource*>& models, std::vector<Resource*>& shaders);
 
-	int GetDefaultResourceShader() const;
-	void SetDefaultResourceShader(int shaderResourceUid);
+	Resource* GetDefaultResource(DEFAULT_RESOURCE resourceId);
 
 private:
 	void UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder);
@@ -57,8 +62,6 @@ private:
 
 private:
 	std::map<int, Resource*> resources;
-	int defaultShaderId = 0;			//Since it will be requested frequentlly multiple times per frame, 
-										//it has its own getter and setter
 };
 
 #endif // !__M_RESOURCES_H__

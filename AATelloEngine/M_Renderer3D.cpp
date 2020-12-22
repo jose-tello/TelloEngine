@@ -442,8 +442,7 @@ void M_Renderer3D::DrawMesh(GameObject* object, bool wireframeMode, bool drawAAB
 	else
 		color = Black;
 
-	int shaderId = App->resourceManager->GetDefaultResourceShader();
-	R_Shader* shader = (R_Shader*)App->resourceManager->RequestResource(shaderId);
+	R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
 
 	glUseProgram(shader->GetProgramId());
 

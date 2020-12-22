@@ -23,8 +23,7 @@
 #include <vector>
 #include <assert.h>
 
-M_Resources::M_Resources(bool startEnabled) : Module(startEnabled),
-	defaultShaderId(0)
+M_Resources::M_Resources(bool startEnabled) : Module(startEnabled)
 {
 }
 
@@ -260,18 +259,9 @@ void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Re
 }
 
 
-int M_Resources::GetDefaultResourceShader() const
+Resource* M_Resources::GetDefaultResource(DEFAULT_RESOURCE resourceId)
 {
-	if (defaultShaderId == 0)
-		assert(true, "Default shader not initialized");
-
-	return defaultShaderId;
-}
-
-
-void M_Resources::SetDefaultResourceShader(int shaderResourceUid)
-{
-	defaultShaderId = shaderResourceUid;
+	return RequestResource((int)resourceId);
 }
 
 

@@ -3,6 +3,8 @@
 
 class R_Shader;
 
+#include <string>
+
 #define DEFAULT_SHADER_PATH "/Assets/defaultAssets/defaultShader.txt"
 #define VERTEX_SHADER_KEY "__VERTEX_SHADER__"
 #define FRAGMENT_SHADER_KEY "__FRAGMENT_SHADER__"
@@ -15,7 +17,7 @@ namespace ShaderImporter
 	void Import(const char* path, R_Shader*);
 	
 	void Load(R_Shader* shader);
-	void Save(const R_Shader* shader);
+	void Save(std::string& shaderCode, int uid);
 	void SaveAsAsset(const R_Shader* shader);
 }
 

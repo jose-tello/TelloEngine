@@ -32,20 +32,22 @@ R_Shader::~R_Shader()
 
 void R_Shader::Load()
 {
-
+	ShaderImporter::Load(this);
+	isLoaded = true;
 }
 
 
 void R_Shader::UnLoad()
 {
-	/*glDeleteProgram(programId);
-	programId = 0;*/
+	glDeleteProgram(programId);
+	programId = 0;
+	isLoaded = false;
 }
 
 
 void R_Shader::Save() const
 {
-	ShaderImporter::Save(this);
+	//ShaderImporter::Save(this);
 }
 
 
