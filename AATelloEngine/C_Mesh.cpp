@@ -171,7 +171,7 @@ float C_Mesh::TestTriangleCollision(LineSegment& ray, float4x4& transform) const
 
 
 //Handles aabb, vertex normals and face normals draw calls
-void C_Mesh::HandleDebugDraws(bool drawAABB) const
+void C_Mesh::HandleDebugDraws() const
 {
 	Resource* res = App->resourceManager->RequestResource(meshId);
 	if (res != nullptr)

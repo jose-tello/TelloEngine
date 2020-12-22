@@ -7,9 +7,9 @@
 #include "SDL\include\SDL.h"
 
 #include <vector>
-#include <string>
 
 class C_Camera;
+class C_Mesh;
 struct GameObject;
 
 class M_Renderer3D : public Module
@@ -32,6 +32,7 @@ public:
 	void DrawCube(float*) const;
 
 	C_Camera* GetCurrentCamera() const;
+
 	void PushFrustum(C_Camera*);
 	
 	void SetCameraRay(float rayBegin[3], float rayEnd[3]);
@@ -48,9 +49,14 @@ private:
 	void PushCamera(C_Camera*);
 	void PopCamera();
 
-	void DrawObjects(bool drawAABB);
-	void DrawMesh(GameObject* object, bool wireframeMode, bool drawAABB) const;
+	void DrawObjects(C_Camera* camera, bool drawAABB) const;
 	void DrawFrustums() const;
+	void DrawClickRay() const;
+	void DrawMesh(GameObject* object, C_Camera* camera, bool wireframeMode, bool drawAABB) const;
+
+	void GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId, Color& color, unsigned int& programId) const;
+	void SetShaderUniforms(int programId, float* color, float* modelMat, C_Camera* camera, bool hasTexture) const;
+	void HandleMeshDebugDraw(C_Mesh* mesh, bool drawAABB, float* transform) const;	//Handles aabb, vertex normals and face normals draw calls
 
 public:
 	SDL_GLContext context;
@@ -67,7 +73,7 @@ private:
 	Light light;
 
 	//Camera we are rendering to, used to frustum cull
-	//WARNING: use pop / push structure
+	//WARNING: use pop / push fuctions
 	C_Camera* currentCamera = nullptr;
 
 	std::vector<C_Camera*> frustumVector;

@@ -24,8 +24,7 @@ public:
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
 	float TestTriangleCollision(LineSegment&, float4x4& transform) const;
 
-	//Handles aabb, vertex normals and face normals draw calls
-	void HandleDebugDraws(bool drawAABB) const;
+	void HandleDebugDraws() const;
 
 	void Load(Config&) override;
 	void Save(Config&) const override;

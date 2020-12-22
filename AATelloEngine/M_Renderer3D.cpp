@@ -28,19 +28,19 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
-	context(),
+context(),
 
-	depthTestEnabled(true),
-	cullFaceEnabled(true),
-	lightingEnabled(true),
-	colorMatEnabled(true),
-	texture2DEnabled(true),
-	fillModeEnabled(true),
-	wireframeModeEnabled(false),
+depthTestEnabled(true),
+cullFaceEnabled(true),
+lightingEnabled(true),
+colorMatEnabled(true),
+texture2DEnabled(true),
+fillModeEnabled(true),
+wireframeModeEnabled(false),
 
-	currentCamera(nullptr),
-	cameraRay1{ 0, 0, 0 },
-	cameraRay2{ 0, 0, 0 }
+currentCamera(nullptr),
+cameraRay1{ 0, 0, 0 },
+cameraRay2{ 0, 0, 0 }
 {
 }
 
@@ -54,10 +54,10 @@ bool M_Renderer3D::Init()
 {
 	App->editor->AddLog("Log: Creating 3D Renderer context");
 	bool ret = true;
-	
+
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
-	if(context == NULL)
+	if (context == NULL)
 	{
 		App->editor->AddLog("[ERROR]: OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
@@ -65,31 +65,27 @@ bool M_Renderer3D::Init()
 	else
 	{
 		GLenum glewError = glewInit();
-		
+
 		if (glewError != GLEW_OK)
 		{
 			App->editor->AddLog("[ERROR]: Error initializing GLEW! %s\n", glewGetErrorString(glewError));
 		}
 	}
 
-	if(ret == true)
+	if (ret == true)
 	{
 		//Use Vsync
-		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if (VSYNC && SDL_GL_SetSwapInterval(1) < 0)
 			App->editor->AddLog("[ERROR]: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
-
-		//Initialize Projection Matrix
-		/*glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();*/
 
 		//Check for error
 		GLenum error = glGetError();
-		if(error != GL_NO_ERROR)
+		if (error != GL_NO_ERROR)
 		{
 			App->editor->AddLog("[ERROR]: Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-		
+
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_LIGHTING);
@@ -104,7 +100,7 @@ bool M_Renderer3D::Init()
 UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 {
 	light.SetPos(0, 40, 0);
-	
+
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -196,7 +192,7 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pu
 	if (wireframeModeEnabled == true)
 		glLineWidth(3.0f);
 
-	DrawObjects(drawAABB);
+	DrawObjects(camera, drawAABB);
 
 	if (drawAABB == true)
 		DrawFrustums();
@@ -205,18 +201,7 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pu
 	grid.Draw();
 
 	if (App->camera->drawClickRay == true)
-	{
-		glBegin(GL_LINES);
-
-		glLineWidth(1.0f);
-		glColor3f(1, 0, 0);
-
-		glVertex3f(cameraRay1[0], cameraRay1[1], cameraRay1[2]);
-		glVertex3f(cameraRay2[0], cameraRay2[1], cameraRay2[2]);
-
-		glEnd();
-	}
-	
+		DrawClickRay();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -321,7 +306,7 @@ void M_Renderer3D::SetLightingEnabled(bool enable)
 
 		else
 			glDisable(GL_LIGHTING);
-	
+
 		lightingEnabled = enable;
 	}
 }
@@ -334,7 +319,7 @@ void M_Renderer3D::SetColorMatEnabled(bool enable)
 		if (enable == true)
 			glEnable(GL_COLOR_MATERIAL);
 
-		else 
+		else
 			glDisable(GL_COLOR_MATERIAL);
 
 		colorMatEnabled = enable;
@@ -391,100 +376,60 @@ void M_Renderer3D::PopCamera()
 }
 
 
-void M_Renderer3D::DrawObjects(bool drawAABB)
-{	
+void M_Renderer3D::DrawObjects(C_Camera* camera, bool drawAABB) const
+{
 	std::vector<GameObject*> objToDraw;
 	App->scene->CullGameObjects(objToDraw);
 
-	if (fillModeEnabled == true)
+	int objectsCount = objToDraw.size();
+	for (int i = 0; i < objectsCount; i++)
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		int objectsCount = objToDraw.size();
-		for (int i = 0; i < objectsCount; i++)
+		if (fillModeEnabled == true)
 		{
-			DrawMesh(objToDraw[i], false, true);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			DrawMesh(objToDraw[i], camera, false, drawAABB);
+		}
+
+		if (wireframeModeEnabled == true)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			DrawMesh(objToDraw[i], camera, true, drawAABB);
 		}
 	}
-
-	if (wireframeModeEnabled == true)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-		int objectsCount = objToDraw.size();
-		for (int i = 0; i < objectsCount; i++)
-		{
-			DrawMesh(objToDraw[i], true, true);
-		}
-	}
-	
 }
 
 
-void M_Renderer3D::DrawMesh(GameObject* object, bool wireframeMode, bool drawAABB) const
+void M_Renderer3D::DrawMesh(GameObject* object, C_Camera* camera, bool wireframeMode, bool drawAABB) const
 {
+	C_Mesh* mesh;
 	unsigned int texId = 0;
 	Color color;
-	bool hasTexture = false;
+	unsigned int programId = 0;
 
-	C_Mesh* mesh = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
+	GetDrawVariables(object, &mesh, texId, color, programId);
 
-	if (wireframeMode == false)
-	{
-		Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
-		if (mat != nullptr)
-		{
-			C_Material* material = (C_Material*)mat;
-			material->GetDrawVariables(texId, color);
-		}
-	}
-
-	else
+	if (wireframeMode == true)
 		color = Black;
 
-	R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
+	glUseProgram(programId);
 
-	glUseProgram(shader->GetProgramId());
-
+	bool hasTexture = false;
 	if (texId != 0 && wireframeMode == false)
 	{
 		glBindTexture(GL_TEXTURE_2D, texId);
 		hasTexture = true;
 	}
 
-	unsigned int colorUniform = glGetUniformLocation(shader->GetProgramId(), "material_color");
-	glUniform3fv(colorUniform, 1, &color);
-
-	unsigned int modelMat = glGetUniformLocation(shader->GetProgramId(), "model_matrix");
-	glUniformMatrix4fv(modelMat, 1, GL_FALSE, object->transform.GetMatTransformT().ptr());
-
-	unsigned int projMat = glGetUniformLocation(shader->GetProgramId(), "projection");
-	glUniformMatrix4fv(projMat, 1, GL_FALSE, GetCurrentCamera()->GetProjectionMat());
-
-	unsigned int viewMat = glGetUniformLocation(shader->GetProgramId(), "view");
-	glUniformMatrix4fv(viewMat, 1, GL_FALSE, GetCurrentCamera()->GetViewMat());
-
-	unsigned int hasTextureUniform = glGetUniformLocation(shader->GetProgramId(), "has_texture");
-	glUniform1i(hasTextureUniform, hasTexture);
-
+	SetShaderUniforms(programId, &color, object->transform.GetMatTransformT().ptr(), camera, hasTexture);
 	glBindVertexArray(mesh->GetVAO());
 
 	glDrawElements(GL_TRIANGLES, mesh->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-	//glFrontFace(GL_CCW);
 	glUseProgram(0);
 	glBindVertexArray(0);
 
-	if (drawAABB == true)
-		mesh->DrawAABB();
-
-	//debug draws
-	glPushMatrix();
-	glMultMatrixf(object->transform.GetMatTransformT().ptr());
-	mesh->HandleDebugDraws(drawAABB);
-	glPopMatrix();
+	HandleMeshDebugDraw(mesh, drawAABB, object->transform.GetMatTransformT().ptr());
 }
 
 
@@ -495,4 +440,67 @@ void M_Renderer3D::DrawFrustums() const
 	{
 		frustumVector[i]->DrawFrustum();
 	}
+}
+
+
+void M_Renderer3D::DrawClickRay() const
+{
+	glBegin(GL_LINES);
+
+	glLineWidth(1.0f);
+	glColor3f(1, 0, 0);
+
+	glVertex3f(cameraRay1[0], cameraRay1[1], cameraRay1[2]);
+	glVertex3f(cameraRay2[0], cameraRay2[1], cameraRay2[2]);
+
+	glEnd();
+}
+
+
+void M_Renderer3D::GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId,
+									Color& color, unsigned int& programId) const
+{
+	*meshPointer = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
+
+	Component* mat = object->GetComponent(COMPONENT_TYPE::MATERIAL);
+	if (mat != nullptr)
+	{
+		C_Material* material = (C_Material*)mat;
+		material->GetDrawVariables(textureId, color);
+	}
+
+	R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
+	programId = shader->GetProgramId();
+}
+
+
+void M_Renderer3D::SetShaderUniforms(int programId, float* color, float* modelMat, C_Camera* camera, bool hasTexture) const
+{
+	unsigned int colorUniform = glGetUniformLocation(programId, "material_color");
+	glUniform3fv(colorUniform, 1, color);
+
+	unsigned int modelMatUniform = glGetUniformLocation(programId, "model_matrix");
+	glUniformMatrix4fv(modelMatUniform, 1, GL_FALSE, modelMat);
+
+	unsigned int projMat = glGetUniformLocation(programId, "projection");
+	glUniformMatrix4fv(projMat, 1, GL_FALSE, camera->GetProjectionMat());
+
+	unsigned int viewMat = glGetUniformLocation(programId, "view");
+	glUniformMatrix4fv(viewMat, 1, GL_FALSE, camera->GetViewMat());
+
+	unsigned int hasTextureUniform = glGetUniformLocation(programId, "has_texture");
+	glUniform1i(hasTextureUniform, hasTexture);
+}
+
+
+//Handles aabb, vertex normals and face normals draw calls
+void M_Renderer3D::HandleMeshDebugDraw(C_Mesh* mesh, bool drawAABB, float* transform) const
+{
+	if (drawAABB == true)
+		mesh->DrawAABB();
+
+	glPushMatrix();
+	glMultMatrixf(transform);
+	mesh->HandleDebugDraws();
+	glPopMatrix();
 }
