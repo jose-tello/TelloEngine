@@ -65,6 +65,8 @@ void R_Mesh::InitVAO(float* vertices, size_t vertSize, unsigned int* indices, si
 
 	InitArrayBuffer(vertices, vertSize, normals, normalsSize, texCoords, texCoordsSize);
 	InitIndexBuffer(indices, indexSize);
+
+	glBindVertexArray(0);
 }
 
 
@@ -105,14 +107,20 @@ void R_Mesh::InitArrayBuffer(float* vertArray, size_t vertexArrSize, float* norm
 	vertices.resize(vertexArrSize / sizeof(float));
 	memcpy(&vertices[0], vertArray, vertexArrSize);
 
-	normals.resize(normalArrSize / sizeof(float));
-	memcpy(&normals[0], normalArray, normalArrSize);
+	if (normalArray != nullptr)
+	{
+		normals.resize(normalArrSize / sizeof(float));
+		memcpy(&normals[0], normalArray, normalArrSize);
+	}
 
-	texCoords.resize(texCoordsArrSize / sizeof(float));
-	memcpy(&texCoords[0], texCoordsArray, texCoordsArrSize);
+	if (texCoordsArray != nullptr)
+	{
+		texCoords.resize(texCoordsArrSize / sizeof(float));
+		memcpy(&texCoords[0], texCoordsArray, texCoordsArrSize);
+	}
 
 	int count = vertices.size();
-	for (int i = 0, j = 0; i < count; i+=3, j += 2)
+	for (int i = 0, j = 0; i < count; i += 3, j += 2)
 	{
 		arrayBuffer.push_back(vertArray[i]);
 		arrayBuffer.push_back(vertArray[i + 1]);
@@ -122,8 +130,17 @@ void R_Mesh::InitArrayBuffer(float* vertArray, size_t vertexArrSize, float* norm
 		arrayBuffer.push_back(normalArray[i + 1]);
 		arrayBuffer.push_back(normalArray[i + 2]);*/
 
-		arrayBuffer.push_back(texCoordsArray[j]);
-		arrayBuffer.push_back(texCoordsArray[j + 1]);
+		if (texCoordsArray != nullptr)
+		{
+			arrayBuffer.push_back(texCoordsArray[j]);
+			arrayBuffer.push_back(texCoordsArray[j + 1]);
+		}
+		else
+		{
+			arrayBuffer.push_back(0);
+			arrayBuffer.push_back(0);
+		}
+
 	}
 
 	glGenBuffers(1, &VBO);
@@ -153,8 +170,6 @@ void R_Mesh::InitIndexBuffer(unsigned int* indexBuffer, size_t indexArrSize)
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexArrSize, indexBuffer, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 
@@ -163,74 +178,6 @@ void R_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned 
 	vert = vertices.size();
 	norm = normals.size();
 	ind = indices.size();
-}
-
-
-void R_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, bool wireFrameBlack, bool drawVertexNormals, bool drawFaceNormals) const
-{
-	
-	/*glPushMatrix();
-	glMultMatrixf(transformMatrix);
-
-	if (color != nullptr)
-		glColor3f(color[0], color[1], color[2]);
-	else
-		glColor3f(1.f, 1.f, 1.f);	//Reset the color
-
-	int idSize = indexArrSize / sizeof(unsigned int);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-	if (normalsId != 0)
-		glEnableClientState(GL_NORMAL_ARRAY);
-
-	if (texCoordId != 0)
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	if (normalsId != 0)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, normalsId);
-		glNormalPointer(GL_FLOAT, 0, NULL);
-	}
-
-
-	if (texCoordId != 0)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, texCoordId);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-		if (textureId != 0)
-		{
-			glBindTexture(GL_TEXTURE_2D, textureId);
-		}
-	}
-
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glDrawElements(GL_TRIANGLES, idSize, GL_UNSIGNED_INT, NULL);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	if (wireFrameBlack == false)
-	{
-		if (drawVertexNormals)
-			DrawVertexNormals();
-
-		if (drawFaceNormals == true)
-			DrawFaceNormals();
-	}
-
-	glPopMatrix();*/
 }
 
 

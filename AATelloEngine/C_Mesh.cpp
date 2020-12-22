@@ -60,20 +60,6 @@ void C_Mesh::OnUpdateTransform(float4x4& transform)
 }
 
 
-void C_Mesh::Draw(float* transformMatrix, unsigned int textureId, float* color, bool wireFrameBlack) const
-{
-	if (meshId != 0)
-	{
-		Resource* res = App->resourceManager->RequestResource(meshId);
-		if (res != nullptr)
-		{
-			R_Mesh* mesh = (R_Mesh*)res;
-			mesh->Draw(transformMatrix, textureId, color, wireFrameBlack, drawVertexNormals, drawFaceNormals);
-		}
-	}
-}
-
-
 void C_Mesh::SetMesh(int newMesh)
 {
 	if (meshId != 0)
@@ -198,7 +184,6 @@ void C_Mesh::HandleDebugDraws(bool drawAABB) const
 		if (drawFaceNormals == true)
 			mesh->DrawFaceNormals();
 	}
-	
 }
 
 

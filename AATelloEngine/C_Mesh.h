@@ -14,8 +14,6 @@ public:
 
 	void OnUpdateTransform(float4x4& transform) override;
 
-	void Draw(float* transformMatrix, unsigned int textureId, float* col, bool wireframeMode) const;
-
 	void SetMesh(int meshId);
 
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;

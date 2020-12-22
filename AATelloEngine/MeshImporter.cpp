@@ -64,7 +64,7 @@ int MeshImporter::Import(aiMesh* mesh, const char* assetPath)
 
 	LCG random;
 	R_Mesh* resourceMesh = new R_Mesh(random.IntFast(), assetPath, RESOURCE_TYPE::MESH);
-	
+
 	Save(vertices, normals, texCoords, indices, resourceMesh->GetUid());
 	App->resourceManager->PushResource(resourceMesh, resourceMesh->GetUid());
 
@@ -130,13 +130,17 @@ void MeshImporter::Load(R_Mesh* mesh)
 		indices.resize(ranges[3]);
 		memcpy(&indices[0], pointer, bytes);
 
-		if (normals.empty() == false && texCoords.empty() == false)
-		{
-			mesh->InitVAO(&vertices[0], vertices.size() * sizeof(float), &indices[0], indices.size() * sizeof(unsigned int),
-				&normals[0], normals.size() * sizeof(float), &texCoords[0], texCoords.size() * sizeof(float));
-		}
+		float* normalsPointer = nullptr;
+		float* texCoordsPointer = nullptr;
 
-		
+		if (normals.empty() == false)
+			normalsPointer = &normals[0];
+
+		if (texCoords.empty() == false)
+			texCoordsPointer = &texCoords[0];
+
+		mesh->InitVAO(&vertices[0], vertices.size() * sizeof(float), &indices[0], indices.size() * sizeof(unsigned int),
+			normalsPointer, normals.size() * sizeof(float), texCoordsPointer, texCoords.size() * sizeof(float));
 
 		delete[] fileBuffer;
 		fileBuffer = nullptr;
@@ -147,8 +151,8 @@ void MeshImporter::Load(R_Mesh* mesh)
 }
 
 
-void MeshImporter::Save(std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords, 
-						std::vector<unsigned int>& indices, int uid)
+void MeshImporter::Save(std::vector<float>& vertices, std::vector<float>& normals, std::vector<float>& texCoords,
+	std::vector<unsigned int>& indices, int uid)
 {
 	std::string filePath(MESH_LIBRARY);
 	filePath.append(std::to_string(uid));

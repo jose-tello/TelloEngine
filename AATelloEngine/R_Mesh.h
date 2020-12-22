@@ -23,7 +23,6 @@ public:
 
 	float TestTriangleRayCollision(LineSegment& ray) const;
 
-	void Draw(float* transformMatrix, unsigned int textureId, float* color, bool wireFrameBlack, bool drawVertexNormals, bool drawFaceNormals) const;
 	unsigned int GetVAO() const;
 	unsigned int GetIndicesSize() const;
 
