@@ -25,7 +25,6 @@ void TextureImporter::Init()
 }
 
 
-//TODO: need to check its working correctlly
 void TextureImporter::Import(const char* path, R_Texture* resource)
 {
 	char* buffer = nullptr;
@@ -45,6 +44,7 @@ void TextureImporter::Import(const char* path, R_Texture* resource)
 
 	Save(resource);
 
+	resource->UnLoad();
 	ilDeleteImage(imgName);
 	delete[] buffer;
 	buffer = nullptr;

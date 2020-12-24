@@ -9,7 +9,6 @@
 
 #include "GameObject.h"
 #include "C_Mesh.h"
-#include "C_Material.h"
 #include "C_Camera.h"
 
 #include <stack>
@@ -105,9 +104,7 @@ GameObject* M_Scene::GetGameObject(int uid)
 			{
 				int childCount = node->childs.size();
 				for (int j = 0; j < childCount; j++)
-				{
 					stack.push(node->childs[j]);
-				}
 			}
 		}
 	}
@@ -152,9 +149,7 @@ void M_Scene::CullGameObjects(std::vector<GameObject*>& objVector)
 			{
 				childCount = node->childs.size();
 				for (int j = 0; j < childCount; j++)
-				{
 					stack.push(node->childs[j]);
-				}
 			}
 		}
 	}
@@ -218,9 +213,7 @@ void M_Scene::UpdateGameObjects(float dt)
 			{
 				childCount = node->childs.size();
 				for (int j = 0; j < childCount; j++)
-				{
 					stack.push(node->childs[j]);
-				}
 			}
 		}
 	}
@@ -354,9 +347,7 @@ void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector) const
 			{
 				childCount = node->childs.size();
 				for (int j = 0; j < childCount; j++)
-				{
 					stack.push(node->childs[j]);
-				}
 			}
 		}
 	}

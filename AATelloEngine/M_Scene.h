@@ -7,16 +7,6 @@
 
 struct GameObject;
 
-enum class PRIMITIVE_TYPE : int
-{
-	NONE = -1,
-	CUBE,
-	PIRAMID,
-	SPHERE,
-	CILINDER
-};
-
-
 class M_Scene : public Module
 {
 public:
