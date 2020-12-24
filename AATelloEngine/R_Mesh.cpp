@@ -42,6 +42,7 @@ void R_Mesh::UnLoad()
 	normals.clear();
 	texCoords.clear();
 	indices.clear();
+	arrayBuffer.clear();
 
 	isLoaded = false;
 }

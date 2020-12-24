@@ -30,9 +30,7 @@ void ShaderImporter::Import(const char* path, R_Shader* shader)
 		App->editor->AddLog("Log: Imported shader from: %s", path);
 	}
 	else
-	{
 		App->editor->AddLog("[ERROR] Could not find vertex/fragment key words of shader from: %s", path);
-	}
 	
 
 	delete[] buffer;
@@ -62,7 +60,6 @@ void ShaderImporter::Load(R_Shader* shader)
 		std::string fragmentCode = code.substr(fragmentIterator + FRAGMENT_KEY_LENGHT);
 
 		shader->InitShader(vertexCode.c_str(), fragmentCode.c_str());
-		//shader->InitShaderFromBinary(programCode, size);
 	}
 	else
 		App->editor->AddLog("[WARNING], shader not loaded correctlly from: %s", path.c_str());
@@ -94,4 +91,5 @@ void ShaderImporter::Save(std::string& shaderCode, int uid)
 void ShaderImporter::SaveAsAsset(const R_Shader* shader)
 {
 	//TODO: ill figure it out later
+
 }

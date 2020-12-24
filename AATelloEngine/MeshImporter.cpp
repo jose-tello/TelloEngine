@@ -183,7 +183,6 @@ void MeshImporter::Save(std::vector<float>& vertices, std::vector<float>& normal
 		pointer += bytes;
 	}
 
-
 	//Store tex coords
 	if (texCoords.empty() == false)
 	{
@@ -191,7 +190,6 @@ void MeshImporter::Save(std::vector<float>& vertices, std::vector<float>& normal
 		memcpy(pointer, &texCoords[0], bytes);
 		pointer += bytes;
 	}
-
 
 	//Store indices
 	bytes = sizeof(unsigned int) * indices.size();
@@ -201,4 +199,5 @@ void MeshImporter::Save(std::vector<float>& vertices, std::vector<float>& normal
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
+	pointer = nullptr;
 }

@@ -65,6 +65,7 @@ unsigned int R_Shader::GetProgramId() const
 
 const char* R_Shader::GetProgramCode() const
 {
+	glUseProgram(programId);
 	char* code = nullptr;
 	
 	int binaryLenght = 0;
@@ -116,7 +117,7 @@ void R_Shader::InitShader(const char* vertCode, const char* fragCode)
 	else
 		disabled = true;
 
-	if (disabled == false)	//TODO: Test this thing works properlly
+	if (disabled == false) //If shader program compiled properlly
 	{
 		glDetachShader(programId, vertexShader);
 		glDetachShader(programId, fragmentShader);
