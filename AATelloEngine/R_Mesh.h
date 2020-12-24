@@ -19,7 +19,7 @@ public:
 	AABB GetAABB() const;
 
 	void InitVAO(float* vertices, size_t vertSize, unsigned int* indices, size_t indexSize, float* normals,
-		size_t normalsSize, float* texCoords, size_t texCoordsSize);
+				 size_t normalsSize, float* texCoords, size_t texCoordsSize);
 
 	float TestTriangleRayCollision(LineSegment& ray) const;
 

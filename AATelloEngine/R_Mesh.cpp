@@ -3,10 +3,6 @@
 
 #include "Application.h"
 #include "M_Resources.h"
-#include "M_Renderer3D.h"
-#include "C_Camera.h"
-
-#include "R_Shader.h"
 
 #include "MathGeoLib/src/MathGeoLib.h"
 
@@ -16,8 +12,8 @@
 #include <gl/GL.h>
 
 R_Mesh::R_Mesh(int uid, const char* path, RESOURCE_TYPE type) : Resource(uid, path, type),
-VAO(0),
-aabb()
+	VAO(0),
+	aabb()
 {
 }
 
@@ -58,7 +54,7 @@ AABB R_Mesh::GetAABB() const
 
 
 void R_Mesh::InitVAO(float* vertices, size_t vertSize, unsigned int* indices, size_t indexSize, float* normals,
-	size_t normalsSize, float* texCoords, size_t texCoordsSize)
+					 size_t normalsSize, float* texCoords, size_t texCoordsSize)
 {
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -97,6 +93,95 @@ float R_Mesh::TestTriangleRayCollision(LineSegment& ray) const
 	}
 
 	return nearestPoint;
+}
+
+
+unsigned int R_Mesh::GetVAO() const
+{
+	return VAO;
+}
+
+
+unsigned int R_Mesh::GetIndicesSize() const
+{
+	return indices.size();
+}
+
+
+void R_Mesh::GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const
+{
+	vertexArray = vertices;
+	normalsArray = normals;
+	texCoordArray = texCoords;
+	indicesArray = indices;
+}
+
+
+void R_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const
+{
+	vert = vertices.size();
+	norm = normals.size();
+	ind = indices.size();
+}
+
+
+void R_Mesh::DrawVertexNormals() const
+{
+	if (normals.empty() == false)
+	{
+		glLineWidth(3.0f);
+		glColor3f(0, 0, 1);
+
+		glBegin(GL_LINES);
+
+		for (int i = 0; i < vertices.size(); i += 3)
+		{
+			glVertex3f(vertices[i], vertices[i + 1], vertices[i + 2]);
+			glVertex3f(vertices[i] + normals[i], vertices[i + 1] + normals[i + 1], vertices[i + 2] + normals[i + 2]);
+		}
+
+		glEnd();
+	}
+}
+
+
+void R_Mesh::DrawFaceNormals() const
+{
+	glLineWidth(3.0f);
+	glColor3f(0, 1, 0);
+
+	glBegin(GL_LINES);
+
+	for (int i = 0; i < indices.size(); i += 3)
+	{
+		unsigned int index0 = indices[i];
+		unsigned int index1 = indices[i + 1];
+		unsigned int index2 = indices[i + 2];
+
+		float3 P0(vertices[index0 * 3], vertices[index0 * 3 + 1], vertices[index0 * 3 + 2]);
+		float3 P1(vertices[index1 * 3], vertices[index1 * 3 + 1], vertices[index1 * 3 + 2]);
+		float3 P2(vertices[index2 * 3], vertices[index2 * 3 + 1], vertices[index2 * 3 + 2]);
+
+		float3 V0 = P0 - P1;
+		float3 V1 = P2 - P1;
+
+		float3 N = V1.Cross(V0);
+		N = N.Normalized() * 3;
+
+		float3 center = (P0 + P1 + P2) / 3;
+
+		glVertex3f(center.x, center.y, center.z);
+		glVertex3f(center.x + N.x, center.y + N.y, center.z + N.z);
+	}
+
+	glEnd();
+}
+
+
+void R_Mesh::InitAABB()
+{
+	aabb.SetNegativeInfinity();
+	aabb.Enclose((float3*)&vertices[0], vertices.size() / 3);
 }
 
 
@@ -180,93 +265,4 @@ void R_Mesh::InitIndexBuffer(unsigned int* indexBuffer, size_t indexArrSize)
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexArrSize, indexBuffer, GL_STATIC_DRAW);
-}
-
-
-void R_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const
-{
-	vert = vertices.size();
-	norm = normals.size();
-	ind = indices.size();
-}
-
-
-unsigned int R_Mesh::GetVAO() const
-{
-	return VAO;
-}
-
-
-unsigned int R_Mesh::GetIndicesSize() const
-{
-	return indices.size();
-}
-
-
-void R_Mesh::GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const
-{
-	vertexArray = vertices;
-	normalsArray = normals;
-	texCoordArray = texCoords;
-	indicesArray = indices;
-}
-
-
-void R_Mesh::DrawVertexNormals() const
-{
-	if (normals.empty() == false)
-	{
-		glLineWidth(3.0f);
-		glColor3f(0, 0, 1);
-
-		glBegin(GL_LINES);
-
-		for (int i = 0; i < vertices.size(); i += 3)
-		{
-			glVertex3f(vertices[i], vertices[i + 1], vertices[i + 2]);
-			glVertex3f(vertices[i] + normals[i], vertices[i + 1] + normals[i + 1], vertices[i + 2] + normals[i + 2]);
-		}
-
-		glEnd();
-	}
-}
-
-
-void R_Mesh::DrawFaceNormals() const
-{
-	glLineWidth(3.0f);
-	glColor3f(0, 1, 0);
-
-	glBegin(GL_LINES);
-
-	for (int i = 0; i < indices.size(); i += 3)
-	{
-		unsigned int index0 = indices[i];
-		unsigned int index1 = indices[i + 1];
-		unsigned int index2 = indices[i + 2];
-
-		float3 P0(vertices[index0 * 3], vertices[index0 * 3 + 1], vertices[index0 * 3 + 2]);
-		float3 P1(vertices[index1 * 3], vertices[index1 * 3 + 1], vertices[index1 * 3 + 2]);
-		float3 P2(vertices[index2 * 3], vertices[index2 * 3 + 1], vertices[index2 * 3 + 2]);
-
-		float3 V0 = P0 - P1;
-		float3 V1 = P2 - P1;
-
-		float3 N = V1.Cross(V0);
-		N = N.Normalized() * 3;
-
-		float3 center = (P0 + P1 + P2) / 3;
-
-		glVertex3f(center.x, center.y, center.z);
-		glVertex3f(center.x + N.x, center.y + N.y, center.z + N.z);
-	}
-
-	glEnd();
-}
-
-
-void R_Mesh::InitAABB()
-{
-	aabb.SetNegativeInfinity();
-	aabb.Enclose((float3*)&vertices[0], vertices.size() / 3);
 }

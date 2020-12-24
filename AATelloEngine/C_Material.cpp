@@ -3,8 +3,6 @@
 #include "Config.h"
 
 #include "Application.h"
-#include "M_FileManager.h"
-#include "MaterialImporter.h"
 #include "M_Resources.h"
 
 #include "R_Texture.h"
@@ -19,11 +17,11 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 	materialId(0),
 	textureId(0),
 
-	checkerTexId(0),
-	useCheckerTex(false),
-
 	textureEnabled(true),
-	colorEnabled(true)
+	colorEnabled(true),
+
+	checkerTexId(0),
+	useCheckerTex(false)
 {
 	InitCheckerTex();
 }
@@ -76,6 +74,8 @@ void C_Material::SetTexture(int newTexId)
 		texture = (R_Texture*)tex;
 		texture->AddReference();
 	}
+	else
+		textureId = 0;
 	
 }
 
@@ -92,16 +92,6 @@ void C_Material::SetMaterial(int newMat)
 		}
 	}
 
-	if (textureId != 0)
-	{
-		Resource* tex = App->resourceManager->RequestResource(textureId);
-		if (tex != nullptr)
-		{
-			R_Texture* texture = (R_Texture*)tex;
-			texture->QuitReference();
-		}
-	}
-
 	materialId = newMat;
 
 	Resource* mat = App->resourceManager->RequestResource(newMat);
@@ -110,21 +100,11 @@ void C_Material::SetMaterial(int newMat)
 		R_Material* material = (R_Material*)mat;
 		material->AddReference();
 
-		textureId = material->GetResourceTexture();
-		if (textureId != 0)
-		{
-			Resource* tex = App->resourceManager->RequestResource(textureId);
-			if (tex != nullptr)
-			{
-				R_Texture* texture = (R_Texture*)tex;
-				texture->AddReference();
-			}
-			else
-				textureId = 0;
-		}
+		SetTexture(material->GetResourceTexture());
 	}
 	else
 	{
+		SetTexture(0);
 		materialId = 0;
 		textureId = 0;
 	}	
