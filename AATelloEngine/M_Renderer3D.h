@@ -49,9 +49,9 @@ private:
 	void PushCamera(C_Camera*);
 	void PopCamera();
 
-	void DrawObjects(C_Camera* camera, bool drawAABB) const;
 	void DrawFrustums() const;
 	void DrawClickRay() const;
+	void DrawObjects(C_Camera* camera, bool drawAABB) const;
 	void DrawMesh(GameObject* object, C_Camera* camera, bool wireframeMode, bool drawAABB) const;
 
 	void GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId, Color& color, unsigned int& programId) const;

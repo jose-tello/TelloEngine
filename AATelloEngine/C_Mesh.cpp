@@ -62,7 +62,7 @@ void C_Mesh::OnUpdateTransform(float4x4& transform)
 
 void C_Mesh::SetMesh(int newMesh)
 {
-	if (meshId != 0)
+	if (meshId != 0)	//Quit reference to current resource
 	{
 		Resource* res = App->resourceManager->RequestResource(meshId);
 		if (res != nullptr)
@@ -77,7 +77,8 @@ void C_Mesh::SetMesh(int newMesh)
 	meshId = newMesh;
 
 	Resource* res = App->resourceManager->RequestResource(meshId);
-	if (res != nullptr)
+
+	if (res != nullptr) //Add reference to new resource
 	{
 		R_Mesh* mesh = (R_Mesh*)res;
 		mesh->AddReference();		

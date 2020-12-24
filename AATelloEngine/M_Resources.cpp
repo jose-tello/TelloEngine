@@ -160,35 +160,24 @@ void M_Resources::DragAndDropImport(const char* path, GameObject* object)
 
 	Resource* resource = RequestResource(id);
 
+	if (resource->GetType() != RESOURCE_TYPE::MODEL && object == nullptr)
+	{
+		std::string name;
+		App->fileManager->SplitPath(path, nullptr, &name, nullptr);
+		object = new GameObject(name, nullptr, 0);
+		App->scene->AddGameObject(object);
+	}
+
 	switch (resource->GetType())
 	{
 	case RESOURCE_TYPE::TEXTURE:
-	{
-		if (object == nullptr)
-		{
-			std::string name;
-			App->fileManager->SplitPath(path, nullptr, &name, nullptr);
-			object = new GameObject(name, nullptr, 0);
-			App->scene->AddGameObject(object);
-		}
-
 		object->AddResource(resource->GetUid(), (int)RESOURCE_TYPE::TEXTURE);
 		break;
-	}
 	
 	case RESOURCE_TYPE::SHADER:
-		if (object == nullptr)
-		{
-			std::string name;
-			App->fileManager->SplitPath(path, nullptr, &name, nullptr);
-			object = new GameObject(name, nullptr, 0);
-			App->scene->AddGameObject(object);
-		}
-
 		object->AddResource(resource->GetUid(), (int)RESOURCE_TYPE::SHADER);
 		break;
 		
-
 	case RESOURCE_TYPE::MODEL:
 		ModelImporter::LoadToScene((R_Model*)resource);
 		break;

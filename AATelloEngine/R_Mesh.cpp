@@ -126,9 +126,19 @@ void R_Mesh::InitArrayBuffer(float* vertArray, size_t vertexArrSize, float* norm
 		arrayBuffer.push_back(vertArray[i + 1]);
 		arrayBuffer.push_back(vertArray[i + 2]);
 
-		/*arrayBuffer.push_back(normalArray[i]);
-		arrayBuffer.push_back(normalArray[i + 1]);
-		arrayBuffer.push_back(normalArray[i + 2]);*/
+		if (normalArray != nullptr)
+		{
+			arrayBuffer.push_back(normalArray[i]);
+			arrayBuffer.push_back(normalArray[i + 1]);
+			arrayBuffer.push_back(normalArray[i + 2]);
+		}
+		else
+		{
+			arrayBuffer.push_back(0);
+			arrayBuffer.push_back(0);
+			arrayBuffer.push_back(0);
+		}
+
 
 		if (texCoordsArray != nullptr)
 		{
@@ -147,14 +157,14 @@ void R_Mesh::InitArrayBuffer(float* vertArray, size_t vertexArrSize, float* norm
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, arrayBuffer.size() * sizeof(float), &arrayBuffer[0], GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);*/
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	InitAABB();
 }

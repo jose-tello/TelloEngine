@@ -28,19 +28,19 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
-context(),
+	context(),
 
-depthTestEnabled(true),
-cullFaceEnabled(true),
-lightingEnabled(true),
-colorMatEnabled(true),
-texture2DEnabled(true),
-fillModeEnabled(true),
-wireframeModeEnabled(false),
+	depthTestEnabled(true),
+	cullFaceEnabled(true),
+	lightingEnabled(true),
+	colorMatEnabled(true),
+	texture2DEnabled(true),
+	fillModeEnabled(true),
+	wireframeModeEnabled(false),
 
-currentCamera(nullptr),
-cameraRay1{ 0, 0, 0 },
-cameraRay2{ 0, 0, 0 }
+	currentCamera(nullptr),
+	cameraRay1{ 0, 0, 0 },
+	cameraRay2{ 0, 0, 0 }
 {
 }
 
@@ -100,7 +100,6 @@ bool M_Renderer3D::Init()
 UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 {
 	light.SetPos(0, 40, 0);
-
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -376,6 +375,30 @@ void M_Renderer3D::PopCamera()
 }
 
 
+void M_Renderer3D::DrawFrustums() const
+{
+	int frustumCount = frustumVector.size();
+	for (int i = 0; i < frustumCount; i++)
+	{
+		frustumVector[i]->DrawFrustum();
+	}
+}
+
+
+void M_Renderer3D::DrawClickRay() const
+{
+	glBegin(GL_LINES);
+
+	glLineWidth(1.0f);
+	glColor3f(1, 0, 0);
+
+	glVertex3f(cameraRay1[0], cameraRay1[1], cameraRay1[2]);
+	glVertex3f(cameraRay2[0], cameraRay2[1], cameraRay2[2]);
+
+	glEnd();
+}
+
+
 void M_Renderer3D::DrawObjects(C_Camera* camera, bool drawAABB) const
 {
 	std::vector<GameObject*> objToDraw;
@@ -430,30 +453,6 @@ void M_Renderer3D::DrawMesh(GameObject* object, C_Camera* camera, bool wireframe
 	glBindVertexArray(0);
 
 	HandleMeshDebugDraw(mesh, drawAABB, object->transform.GetMatTransformT().ptr());
-}
-
-
-void M_Renderer3D::DrawFrustums() const
-{
-	int frustumCount = frustumVector.size();
-	for (int i = 0; i < frustumCount; i++)
-	{
-		frustumVector[i]->DrawFrustum();
-	}
-}
-
-
-void M_Renderer3D::DrawClickRay() const
-{
-	glBegin(GL_LINES);
-
-	glLineWidth(1.0f);
-	glColor3f(1, 0, 0);
-
-	glVertex3f(cameraRay1[0], cameraRay1[1], cameraRay1[2]);
-	glVertex3f(cameraRay2[0], cameraRay2[1], cameraRay2[2]);
-
-	glEnd();
 }
 
 

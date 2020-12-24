@@ -34,6 +34,9 @@ void ShaderImporter::Import(const char* path, R_Shader* shader)
 		App->editor->AddLog("[ERROR] Could not find vertex/fragment key words of shader from: %s", path);
 	}
 	
+
+	delete[] buffer;
+	buffer = nullptr;
 	shader->UnLoad();
 }
 
