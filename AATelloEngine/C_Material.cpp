@@ -17,6 +17,7 @@
 C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 	materialId(0),
 	textureId(0),
+	shaderId(0),
 
 	textureEnabled(true),
 	colorEnabled(true),
@@ -32,83 +33,107 @@ C_Material::~C_Material()
 {
 	if (materialId != 0)
 	{
-		Resource* mat = App->resourceManager->RequestResource(materialId);
-		if (mat != nullptr)
-		{
-			R_Material* material = (R_Material*)mat;
+		Resource* material = App->resourceManager->RequestResource(materialId);
+
+		if (material != nullptr)
 			material->QuitReference();
-		}
 	}
 
 	if (textureId != 0)
 	{
-		Resource* tex = App->resourceManager->RequestResource(textureId);
-		if (tex != nullptr)
-		{
-			R_Texture* texture = (R_Texture*)tex;
+		Resource* texture = App->resourceManager->RequestResource(textureId);
+		
+		if (texture != nullptr)
 			texture->QuitReference();
-		}
 	}
-}
 
-
-void C_Material::SetTexture(int newTexId)
-{
-	R_Texture* texture;
-	Resource* tex;
-
-	if (textureId != 0)
+	if (shaderId != 0)
 	{
-		tex = App->resourceManager->RequestResource(textureId);
-		if (tex != nullptr)
-		{
-			texture = (R_Texture*)tex;
-			texture->QuitReference();
-		}
+		Resource* shader = App->resourceManager->RequestResource(shaderId);
+		
+		if (shader != nullptr)
+			shader->QuitReference();
 	}
-
-	textureId = newTexId;
-
-	tex = App->resourceManager->RequestResource(newTexId);
-	if (tex != nullptr)
-	{
-		texture = (R_Texture*)tex;
-		texture->AddReference();
-	}
-	else
-		textureId = 0;
-	
 }
 
 
 void C_Material::SetMaterial(int newMat)
 {
+	Resource* mat = nullptr;
+
 	if (materialId != 0)
 	{
-		Resource* mat = App->resourceManager->RequestResource(materialId);
+		mat = App->resourceManager->RequestResource(materialId);
 		if (mat != nullptr)
-		{
-			R_Material* material = (R_Material*)mat;
-			material->QuitReference();
-		}
+			mat->QuitReference();
 	}
 
 	materialId = newMat;
 
-	Resource* mat = App->resourceManager->RequestResource(newMat);
+	mat = App->resourceManager->RequestResource(newMat);
 	if (mat != nullptr)
 	{
 		R_Material* material = (R_Material*)mat;
 		material->AddReference();
 
 		SetTexture(material->GetResourceTexture());
+		SetShader(material->GetResourceShader());
 	}
 	else
 	{
 		SetTexture(0);
 		materialId = 0;
 		textureId = 0;
-	}	
+		shaderId = 0;
+	}
+}
+
+
+void C_Material::SetTexture(int newTexId)
+{
+	Resource* texture = nullptr;
+
+	if (textureId != 0)
+	{
+		texture = App->resourceManager->RequestResource(textureId);
+
+		if (texture != nullptr)
+			texture->QuitReference();
+	}
+
+	textureId = newTexId;
+
+	texture = App->resourceManager->RequestResource(newTexId);
+
+	if (texture != nullptr)
+		texture->AddReference();
+
+	else
+		textureId = 0;
+}
+
+
+void C_Material::SetShader(int newShader)
+{
+	Resource* shader = nullptr;
+
+	if (shaderId != 0)
+	{
+		shader = App->resourceManager->RequestResource(shaderId);
+
+		if (shader != nullptr)
+			shader->QuitReference();
+	}
+
+	shaderId = newShader;
+
+	shader = App->resourceManager->RequestResource(newShader);
+
+	if (shader != nullptr)
+		shader->AddReference();
+
+	else
+		shaderId = 0;
 }
 
 
@@ -213,26 +238,28 @@ void C_Material::Load(Config& node)
 {
 	materialId = node.GetNum("material");
 	textureId = node.GetNum("texture");
+	shaderId = node.GetNum("shader");
 
 	if (materialId != 0)
 	{
-		Resource* mat = App->resourceManager->RequestResource(materialId);
+		Resource* material = App->resourceManager->RequestResource(materialId);
 
-		if (mat != nullptr)
-		{
-			R_Material* material = (R_Material*)mat;
+		if (material != nullptr)
 			material->AddReference();
-		}
 	}
 
 	if (textureId != 0)
 	{
-		Resource* tex = App->resourceManager->RequestResource(textureId);
-		if (tex != nullptr)
-		{
-			R_Texture* texture = (R_Texture*)tex;
+		Resource* texture = App->resourceManager->RequestResource(textureId);
+		if (texture != nullptr)
 			texture->AddReference();
-		}
+	}
+
+	if (shaderId != 0)
+	{
+		Resource* shader = App->resourceManager->RequestResource(shaderId);
+		if (shader != nullptr)
+			shader->AddReference();
 	}
 }
 
@@ -243,6 +270,7 @@ void C_Material::Save(Config& node) const
 
 	node.AppendNum("material", materialId);
 	node.AppendNum("texture", textureId);
+	node.AppendNum("shader", shaderId);
 }
 
 

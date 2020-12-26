@@ -133,8 +133,6 @@ void W_Inspector::DrawTransformComp(C_Transform* transform)
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		float x, y, z, angle;
-
 		DrawTransformPos(transform);
 
 		DrawTransformRot(transform);

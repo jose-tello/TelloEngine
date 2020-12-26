@@ -99,7 +99,7 @@ void MaterialImporter::Save(Color& col, int textureId, int uid)
 
 	//Save shader id
 	bytes = sizeof(int);
-	int id = (int)DEFAULT_RESOURCE::SHADER;
+	int id = 0;
 	memcpy(pointer, &id, bytes);
 	
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);

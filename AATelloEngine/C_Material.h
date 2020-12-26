@@ -15,8 +15,9 @@ public:
 	C_Material();
 	~C_Material();
 
-	void SetTexture(int newTex);
 	void SetMaterial(int newMat);
+	void SetTexture(int newTex);
+	void SetShader(int newShader);
 
 	void GetColor(float& r, float& g, float& b, float& a) const;
 	std::string GetTexturePath() const;
