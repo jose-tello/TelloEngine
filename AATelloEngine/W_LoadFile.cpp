@@ -52,6 +52,11 @@ void W_LoadFile::DrawLoadWindow()
 	if (ImGui::CollapsingHeader("Meshes"))
 		DrawDirectory(MESH_LIBRARY, "", true);
 
+	ImGui::Separator();
+
+	if (ImGui::CollapsingHeader("Shaders"))
+		DrawDirectory(SHADER_LIBRARY, "", true);
+
 	ImGui::EndChild();
 }
 

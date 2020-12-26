@@ -117,6 +117,8 @@ bool GameObject::DeleteComponent(COMPONENT_TYPE componentType)
 			return true;
 		}
 	}
+
+	return false;
 }
 
 
@@ -172,6 +174,22 @@ void GameObject::AddResource(int resourceUid, int resourceType)
 		material->SetTexture(resourceUid);
 	}
 		break;
+
+	case RESOURCE_TYPE::SHADER:
+	{
+		C_Material* material;
+		Component* mat = GetComponent(COMPONENT_TYPE::MATERIAL);
+		if (mat == nullptr)
+		{
+			material = new C_Material();
+			AddComponent(material);
+		}
+		else
+			material = (C_Material*)mat;
+
+		material->SetShader(resourceUid);
+	}
+	break;
 
 	default:
 		assert("passed an incorrect type of resource");

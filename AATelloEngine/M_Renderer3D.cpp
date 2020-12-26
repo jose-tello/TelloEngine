@@ -12,8 +12,6 @@
 #include "C_Material.h"
 #include "C_Mesh.h"
 
-#include "R_Shader.h"
-
 #include "Grid.h"
 #include "MathGeoLib/src/MathGeoLib.h"
 
@@ -467,8 +465,6 @@ void M_Renderer3D::GetDrawVariables(GameObject* object, C_Mesh** meshPointer, un
 		C_Material* material = (C_Material*)mat;
 		material->GetDrawVariables(color, textureId, programId);
 	}
-
-	R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
 }
 
 

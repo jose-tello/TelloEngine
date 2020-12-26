@@ -257,6 +257,16 @@ void W_AppState::DrawReferenceCounting()
 			if (textures[i]->GetReferenceCount() > 0)
 				ImGui::Text("%i: %i", textures[i]->GetUid(), textures[i]->GetReferenceCount());
 		}
+
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Shaders");
+
+		int shadersCount = shaders.size();
+		for (int i = 0; i < shadersCount; i++)
+		{
+			if (shaders[i]->GetReferenceCount() > 0)
+				ImGui::Text("%i: %i", shaders[i]->GetUid(), shaders[i]->GetReferenceCount());
+		}
 	}
 }
 

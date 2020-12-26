@@ -88,6 +88,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 		filePath = "/Assets/" + filePath;
 
 	RESOURCE_TYPE type = GetFileType(path);
+	GameObject* focusedGO = nullptr;
 
 	switch (type)
 	{
@@ -99,7 +100,7 @@ void M_FileManager::LoadFromExporter(const char* path)
 	break;
 
 	case RESOURCE_TYPE::TEXTURE:
-		GameObject* focusedGO = App->editor->GetFocusedGameObject();
+		focusedGO = App->editor->GetFocusedGameObject();
 		if (focusedGO != nullptr)
 		{
 			App->resourceManager->DragAndDropImport(filePath.c_str(), focusedGO);
@@ -109,8 +110,19 @@ void M_FileManager::LoadFromExporter(const char* path)
 			App->editor->AddLog("[WARNING]: No focused game object");
 		
 		break;
-	}
 
+	case RESOURCE_TYPE::SHADER:
+		focusedGO = App->editor->GetFocusedGameObject();
+		if (focusedGO != nullptr)
+		{
+			App->resourceManager->DragAndDropImport(filePath.c_str(), focusedGO);
+			App->editor->AddLog("Log: Added a shader");
+		}
+		else
+			App->editor->AddLog("[WARNING]: No focused game object");
+
+		break;
+	}
 }
 
 
