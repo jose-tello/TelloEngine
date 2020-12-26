@@ -7,6 +7,7 @@
 
 #include "R_Texture.h"
 #include "R_Material.h"
+#include "R_Shader.h"
 
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
@@ -200,52 +201,11 @@ void C_Material::SetCheckerTextureEnable(bool enable)
 }
 
 
-void C_Material::GetDrawVariables(unsigned int& texId, Color& col) const
+void C_Material::GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId) const
 {
-	if (useCheckerTex == true)
-		texId = checkerTexId;
-
-	else
-	{
-		if (textureEnabled == true)
-		{
-			if (textureId != 0)
-			{
-				Resource* tex = App->resourceManager->RequestResource(textureId);
-				if (tex != nullptr)
-				{
-					R_Texture* texture = (R_Texture*)tex;
-					texId = texture->GetTextureId();
-				}
-
-				else
-					texId = 0;
-			}
-			else
-				texId = 0;
-		}
-		else
-			texId = 0;
-	}
-
-	if (colorEnabled == true)
-	{
-		if (materialId != 0)
-		{
-			Resource* mat = App->resourceManager->RequestResource(materialId);
-			if (mat != nullptr)
-			{
-				R_Material* material = (R_Material*)mat;
-				material->GetColor(col.r, col.g, col.b, col.a);
-			}
-			else
-				col = { 1.f, 1.f, 1.f, 1.f };
-		}
-		else
-			col = { 1.f, 1.f, 1.f, 1.f };
-	}
-	else
-		col = { 1.f, 1.f, 1.f, 1.f };
+	GetDrawColor(col);
+	texId = GetTextureId();
+	shaderProgramId = GetShaderProgram();
 }
 
 
@@ -311,4 +271,69 @@ void C_Material::InitCheckerTex()
 				 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+void C_Material::GetDrawColor(Color& col) const
+{
+	if (colorEnabled == true)
+	{
+		if (materialId != 0)
+		{
+			Resource* mat = App->resourceManager->RequestResource(materialId);
+			if (mat != nullptr)
+			{
+				R_Material* material = (R_Material*)mat;
+				material->GetColor(col.r, col.g, col.b, col.a);
+				return;
+			}
+		}
+	}
+
+	col = { 1.f, 1.f, 1.f, 1.f };
+}
+
+
+unsigned int C_Material::GetTextureId() const
+{
+	if (useCheckerTex == true)
+		return checkerTexId;
+
+	else
+	{
+		if (textureEnabled == true)
+		{
+			if (textureId != 0)
+			{
+				Resource* tex = App->resourceManager->RequestResource(textureId);
+				if (tex != nullptr)
+				{
+					R_Texture* texture = (R_Texture*)tex;
+					return texture->GetTextureId();
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+
+unsigned int C_Material::GetShaderProgram() const
+{
+	if (shaderId != 0)
+	{
+		Resource* resourceShader = App->resourceManager->RequestResource(shaderId);
+		if (resourceShader != nullptr)
+		{
+			R_Shader* shader = (R_Shader*)resourceShader;
+			return shader->GetProgramId();
+		}
+	}
+
+	else
+	{
+		R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
+		return shader->GetProgramId();
+	}
 }

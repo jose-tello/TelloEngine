@@ -31,7 +31,7 @@ public:
 	bool GetCheckerTextureEnabled() const;
 	void SetCheckerTextureEnable(bool enable);
 
-	void GetDrawVariables(unsigned int& texId, Color& col) const;
+	void GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId) const;
 
 	void Load(Config&) override;
 	void Save(Config&) const override;
@@ -39,9 +39,14 @@ public:
 private:
 	void InitCheckerTex();	
 
+	void GetDrawColor(Color&) const;
+	unsigned int GetTextureId() const;
+	unsigned int GetShaderProgram() const;
+
 private:
-	int materialId;
-	int textureId;
+	int materialId = 0;
+	int textureId = 0;
+	int shaderId = 0;
 
 	bool textureEnabled;
 	bool colorEnabled;

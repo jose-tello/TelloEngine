@@ -53,22 +53,29 @@ void MaterialImporter::Load(R_Material* material)
 		memcpy(color, pointer, bytes);
 		pointer += bytes;
 
+		int texId = 0;
+		bytes = sizeof(int);
+		memcpy(&texId, pointer, bytes);
+		pointer += bytes;
+
+		int shaderId = 0;
+		bytes = sizeof(int);
+		memcpy(&shaderId, pointer, bytes);
+
 		material->SetColor(Color(color[0], color[1], color[2], color[3]));
-
-		int texId;
-		memcpy(&texId, pointer, sizeof(int));
-
 		material->SetResourceTexture(texId);
+		material->SetResourceShader(shaderId);
 	}
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
+	pointer = nullptr;
 
 	App->editor->AddLog("Log: Loaded material from: %s", material->GetAssetPath().c_str());
 }
 
 
-//The string returned is the path to the mesh
+//TODO: import the shader correctlly, for now saving allways the default shader
 void MaterialImporter::Save(Color& col, int textureId, int uid)
 {
 	std::string filePath(MATERIAL_LIBRARY);
@@ -76,7 +83,7 @@ void MaterialImporter::Save(Color& col, int textureId, int uid)
 
 	float color[4] = { col.r, col.g, col.b, col.a };
 
-	unsigned int size = sizeof(color) + sizeof(int);
+	unsigned int size = sizeof(color) + sizeof(int) + sizeof(int);
 	char* fileBuffer = new char[size];
 	char* pointer = fileBuffer;
 
@@ -87,7 +94,12 @@ void MaterialImporter::Save(Color& col, int textureId, int uid)
 
 	//Save texture id
 	bytes = sizeof(int);
-	int id = textureId;
+	memcpy(pointer, &textureId, bytes);
+	pointer += bytes;
+
+	//Save shader id
+	bytes = sizeof(int);
+	int id = (int)DEFAULT_RESOURCE::SHADER;
 	memcpy(pointer, &id, bytes);
 	
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);

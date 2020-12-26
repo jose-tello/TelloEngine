@@ -20,12 +20,16 @@ public:
 	void SetColor(Color& col);
 	
 	int GetResourceTexture() const;
-	void SetResourceTexture(int resource);
+	void SetResourceTexture(int texture);
+
+	int GetResourceShader() const;
+	void SetResourceShader(int shader);
 
 private:
 	Color color;
 
-	int resourceTexture;
+	int resourceTexture = 0;
+	int resourceShader = 0;
 };
 
 #endif // !__R_MATERIAL_H__

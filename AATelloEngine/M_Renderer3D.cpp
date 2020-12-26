@@ -465,11 +465,10 @@ void M_Renderer3D::GetDrawVariables(GameObject* object, C_Mesh** meshPointer, un
 	if (mat != nullptr)
 	{
 		C_Material* material = (C_Material*)mat;
-		material->GetDrawVariables(textureId, color);
+		material->GetDrawVariables(color, textureId, programId);
 	}
 
 	R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
-	programId = shader->GetProgramId();
 }
 
 
