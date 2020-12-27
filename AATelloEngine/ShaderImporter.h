@@ -18,7 +18,7 @@ namespace ShaderImporter
 	
 	void Load(R_Shader* shader);
 	void Save(std::string& shaderCode, int uid);
-	void SaveAsAsset(const R_Shader* shader);
+	void SaveAsAsset(int shaderId, const char* code);
 }
 
 #endif // !__SHADER_IMPORTER_H__

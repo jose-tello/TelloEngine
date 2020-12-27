@@ -7,7 +7,9 @@
 #include "M_Resources.h"
 #include "M_FileManager.h"
 
-W_ShaderEditor::W_ShaderEditor() : E_Window(E_WINDOW_TYPE::EDIT_SHADER, true),
+#include "ShaderImporter.h"
+
+W_ShaderEditor::W_ShaderEditor() : E_Window(E_WINDOW_TYPE::EDIT_SHADER, false),
 	currentShader(0),
 	textEditor(nullptr)
 {
@@ -25,6 +27,10 @@ W_ShaderEditor::~W_ShaderEditor()
 bool W_ShaderEditor::Draw()
 {
 	ImGui::Begin("Shader editor", &open);
+	
+	if (ImGui::Button("Save"))
+		SaveShader();
+	
 	textEditor->Render("Shader editor");
 
 	ImGui::End();
@@ -48,10 +54,18 @@ void W_ShaderEditor::OpenShaderCode(int resourceShader)
 		code = code.substr(0, code.find_last_of("}") + 1);
 
 		textEditor->InsertText(code.c_str());
+		currentShader = resourceShader;
+		open = true;
 	}
 	else
 		App->editor->AddLog("[WARNING], shader not loaded correctlly from: %s", path.c_str());
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;
+}
+
+
+void W_ShaderEditor::SaveShader()
+{
+	ShaderImporter::SaveAsAsset(currentShader, textEditor->GetText().c_str());
 }

@@ -88,8 +88,24 @@ void ShaderImporter::Save(std::string& shaderCode, int uid)
 }
 
 
-void ShaderImporter::SaveAsAsset(const R_Shader* shader)
+void ShaderImporter::SaveAsAsset(int shaderId, const char* code)
 {
-	//TODO: ill figure it out later
+	Resource* shader = App->resourceManager->RequestResource(shaderId);
+	std::string filePath = shader->GetAssetPath();
 
+	std::string shaderCode(code);
+
+	unsigned int size = shaderCode.length() * sizeof(char);
+
+	char* fileBuffer = new char[size];
+
+	unsigned int bytes = shaderCode.length() * sizeof(char);
+	memcpy(fileBuffer, shaderCode.c_str(), bytes);
+
+	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
+
+	delete[] fileBuffer;
+	fileBuffer = nullptr;
+
+	App->resourceManager->UpdateAllAssets();
 }

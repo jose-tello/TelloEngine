@@ -15,6 +15,9 @@ public:
 
 	void OpenShaderCode(int resourceShader);
 
+private: 
+	void SaveShader();
+
 private:
 	int currentShader = 0;
 
