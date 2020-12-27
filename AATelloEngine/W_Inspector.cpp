@@ -7,6 +7,7 @@
 
 #include "Application.h"
 #include "M_Input.h"
+#include "M_Editor.h"
 
 #include "imgui/imgui.h"
 
@@ -234,6 +235,13 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 		material->SetTextureEnable(texEnabled);
 		material->SetColorEnable(colEnabled);
 		material->SetCheckerTextureEnable(checkEnabled);
+
+		ImGui::Spacing();
+		ImGui::Separator();
+
+		ImGui::Text("Shader: %s", material->GetShaderName().c_str());
+		if (ImGui::Button("Edit shader"))
+			App->editor->OpenShaderEditor(material->GetShader());
 	}
 
 	ImGui::NewLine();

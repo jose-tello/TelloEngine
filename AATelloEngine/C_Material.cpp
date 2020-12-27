@@ -187,6 +187,31 @@ void C_Material::GetTextureSize(int& width, int& height) const
 }
 
 
+int C_Material::GetShader() const
+{
+	return shaderId;
+}
+
+
+std::string C_Material::GetShaderName() const
+{
+	if (shaderId == 0)
+		return "No shader";
+
+	else
+	{
+		Resource* shaderResource = App->resourceManager->RequestResource(shaderId);
+		if (shaderResource != nullptr)
+		{
+			R_Shader* shader = (R_Shader*)shaderResource;
+			return shader->GetShaderName();
+		}
+		else
+			return "No shader";
+	}
+}
+
+
 bool C_Material::GetTextureEnabled() const
 {
 	return textureEnabled;

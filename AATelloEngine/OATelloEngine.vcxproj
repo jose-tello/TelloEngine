@@ -83,6 +83,7 @@
     <ClInclude Include="C_Mesh.h" />
     <ClInclude Include="C_Transform.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="ImGuiColorTextEdit\TextEditor.h" />
     <ClInclude Include="ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="MathGeoLib\src\Algorithm\GJK.h" />
     <ClInclude Include="MathGeoLib\src\Algorithm\Random\LCG.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="M_Window.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="W_Scene.h" />
+    <ClInclude Include="W_ShaderEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -203,6 +205,7 @@
     <ClCompile Include="C_Mesh.cpp" />
     <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="ImGuiColorTextEdit\TextEditor.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="MathGeoLib\src\Algorithm\GJK.cpp" />
     <ClCompile Include="MathGeoLib\src\Algorithm\Random\LCG.cpp" />
@@ -282,6 +285,7 @@
     <ClCompile Include="M_Window.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="W_Scene.cpp" />
+    <ClCompile Include="W_ShaderEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="imgui\LICENSE.txt" />

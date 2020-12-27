@@ -30,6 +30,7 @@ public:
 	bool CleanUp() override;
 	
 	void AddLog(const char* fmt, ...);
+	void OpenShaderEditor(int shaderId) const;
 
 	void OpenWindow(int open);
 	void DeleteWindow(E_Window* toDelete);

@@ -22,6 +22,8 @@ public:
 	void GetColor(float& r, float& g, float& b, float& a) const;
 	std::string GetTexturePath() const;
 	void GetTextureSize(int& width, int& height) const;
+	int GetShader() const;
+	std::string GetShaderName() const;
 
 	bool GetTextureEnabled() const;
 	void SetTextureEnable(bool enable);

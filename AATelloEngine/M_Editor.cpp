@@ -19,6 +19,7 @@
 #include "W_Inspector.h"
 #include "W_LoadFile.h"
 #include "W_Scene.h"
+#include "W_ShaderEditor.h"
 
 
 M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
@@ -41,6 +42,9 @@ M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 	windowsVec.push_back(win);
 
 	win = new W_LoadFile(false);
+	windowsVec.push_back(win);
+
+	win = new W_ShaderEditor();
 	windowsVec.push_back(win);
 }
 
@@ -163,6 +167,13 @@ void M_Editor::AddLog(const char* fmt, ...)
 	
 	W_Console* console = (W_Console*)windowsVec[(int)E_WINDOW_TYPE::CONSOLE];
 	console->AddLog(buf);
+}
+
+
+void M_Editor::OpenShaderEditor(int shaderId) const
+{
+	W_ShaderEditor* shaderEditor = (W_ShaderEditor*)windowsVec[(int)E_WINDOW_TYPE::EDIT_SHADER];
+	shaderEditor->OpenShaderCode(shaderId);
 }
 
 

@@ -43,6 +43,9 @@
     <Filter Include="Sources\Resources">
       <UniqueIdentifier>{44c5dcdc-f639-40f9-8037-ff37fd33ddec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\ImGuiTextEditor">
+      <UniqueIdentifier>{ce15298e-fcc6-4f37-a83a-6e115b3fcd51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -399,6 +402,12 @@
     <ClInclude Include="ShaderImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuiColorTextEdit\TextEditor.h">
+      <Filter>Sources\Tools\ImGuiTextEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="W_ShaderEditor.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -664,6 +673,12 @@
     </ClCompile>
     <ClCompile Include="ShaderImporter.cpp">
       <Filter>Sources\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiColorTextEdit\TextEditor.cpp">
+      <Filter>Sources\Tools\ImGuiTextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="W_ShaderEditor.cpp">
+      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
