@@ -5,6 +5,7 @@
 #include "Light.h"
 
 #include "SDL\include\SDL.h"
+#include "MathGeoLib/include/MathGeoLibFwd.h"
 
 #include <vector>
 
@@ -55,7 +56,7 @@ private:
 	void DrawMesh(GameObject* object, C_Camera* camera, bool wireframeMode, bool drawAABB) const;
 
 	void GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId, Color& color, unsigned int& programId) const;
-	void SetShaderUniforms(int programId, float* color, float* modelMat, C_Camera* camera, bool hasTexture) const;
+	void SetShaderUniforms(int programId, float* color, float4x4& modelMat, C_Camera* camera, bool hasTexture) const;
 	void HandleMeshDebugDraw(C_Mesh* mesh, bool drawAABB, float* transform) const;	//Handles aabb, vertex normals and face normals draw calls
 
 public:

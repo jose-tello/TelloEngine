@@ -177,11 +177,11 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pu
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(camera->GetProjectionMat());
+	glLoadMatrixf(camera->GetProjectionMat().ptr());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glLoadMatrixf(camera->GetViewMat());
+	glLoadMatrixf(camera->GetViewMat().ptr());
 
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -442,7 +442,7 @@ void M_Renderer3D::DrawMesh(GameObject* object, C_Camera* camera, bool wireframe
 		hasTexture = true;
 	}
 
-	SetShaderUniforms(programId, &color, object->transform.GetMatTransformT().ptr(), camera, hasTexture);
+	SetShaderUniforms(programId, &color, object->transform.GetMatTransformT(), camera, hasTexture);
 	glBindVertexArray(mesh->GetVAO());
 
 	glDrawElements(GL_TRIANGLES, mesh->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
@@ -469,25 +469,25 @@ void M_Renderer3D::GetDrawVariables(GameObject* object, C_Mesh** meshPointer, un
 }
 
 
-void M_Renderer3D::SetShaderUniforms(int programId, float* color, float* modelMat, C_Camera* camera, bool hasTexture) const
+void M_Renderer3D::SetShaderUniforms(int programId, float* color, float4x4& modelMat, C_Camera* camera, bool hasTexture) const
 {
 	unsigned int colorUniform = glGetUniformLocation(programId, "material_color");
 	glUniform3fv(colorUniform, 1, color);
 
 	unsigned int modelMatUniform = glGetUniformLocation(programId, "model_matrix");
-	glUniformMatrix4fv(modelMatUniform, 1, GL_FALSE, modelMat);
+	glUniformMatrix4fv(modelMatUniform, 1, GL_FALSE, modelMat.ptr());
 
 	unsigned int projMat = glGetUniformLocation(programId, "projection");
-	glUniformMatrix4fv(projMat, 1, GL_FALSE, camera->GetProjectionMat());
+	glUniformMatrix4fv(projMat, 1, GL_FALSE, camera->GetProjectionMat().ptr());
 
 	unsigned int viewMat = glGetUniformLocation(programId, "view");
-	glUniformMatrix4fv(viewMat, 1, GL_FALSE, camera->GetViewMat());
+	glUniformMatrix4fv(viewMat, 1, GL_FALSE, camera->GetViewMat().ptr());
 
 	unsigned int hasTextureUniform = glGetUniformLocation(programId, "has_texture");
 	glUniform1i(hasTextureUniform, hasTexture);
 
 	unsigned int timeUniform = glGetUniformLocation(programId, "timer");
-	glUniform1f(timeUniform, timer);
+	glUniform1f(timeUniform, App->GetTimeManager()->GetTimeSinceStart());
 }
 
 

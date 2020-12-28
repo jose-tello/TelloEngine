@@ -20,8 +20,8 @@ public:
 	bool Start() override;
 	UPDATE_STATUS Update(float dt);
 
-	float* GetViewMatrix();
-	float* GetProjectionMatrix();
+	float4x4 GetViewMatrix();
+	float4x4 GetProjectionMatrix();
 	float3 GetPosition();
 
 	void Resize(float width, float height);

@@ -75,13 +75,13 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 
 
 // -----------------------------------------------------------------
-float* M_Camera3D::GetViewMatrix()
+float4x4 M_Camera3D::GetViewMatrix()
 {
 	return camera->GetViewMat();
 }
 
 
-float* M_Camera3D::GetProjectionMatrix()
+float4x4 M_Camera3D::GetProjectionMatrix()
 {
 	return camera->GetProjectionMat();
 }

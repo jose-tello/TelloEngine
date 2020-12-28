@@ -19,8 +19,8 @@ public:
 	bool IsInsideFrustum(AABB&);
 	void DrawFrustum() const;
 
-	float* GetViewMat() const;
-	float* GetProjectionMat() const;
+	float4x4 GetViewMat() const;
+	float4x4 GetProjectionMat() const;
 	
 	float GetNearPlaneDst() const;
 	void SetNearPlaneDst(float);

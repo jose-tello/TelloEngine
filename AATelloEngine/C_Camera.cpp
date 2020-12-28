@@ -64,16 +64,16 @@ void C_Camera::DrawFrustum() const
 }
 
 
-float* C_Camera::GetViewMat() const
+float4x4 C_Camera::GetViewMat() const
 {
 	float4x4 mat = frustum.ViewMatrix();
-	return mat.Transposed().ptr();
+	return mat.Transposed();
 }
 
 
-float* C_Camera::GetProjectionMat() const
+float4x4 C_Camera::GetProjectionMat() const
 {
-	return frustum.ProjectionMatrix().Transposed().ptr();
+	return frustum.ProjectionMatrix().Transposed();
 }
 
 

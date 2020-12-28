@@ -9,15 +9,15 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform float timer;
 
-float wave_lenght = 4;
-float wave_amplitude = 0.3;
+float wave_lenght = 6;
+float wave_amplitude = 0.6;
 float PI = 3.14;
 
 
-float GenerateWaterOffset(float x, float z, float val1, float val2)
+float GenerateWaterOffset(float x, float z, float time_mod)
 {
- float x_radians = ((x * val1 / wave_lenght) + timer / 2.5) * PI;
- float z_radians = ((z * val2 / wave_lenght) + timer / 2.5) * PI;
+ float x_radians = ((x / wave_lenght) + time_mod / 2.5) * PI;
+ float z_radians = ((z / wave_lenght) + time_mod / 2.5) * PI;
  
  return (wave_amplitude * 0.5 * (sin(z_radians) + cos(x_radians)));
 }
@@ -25,9 +25,9 @@ float GenerateWaterOffset(float x, float z, float val1, float val2)
 
 vec3 ApplyWaterDistortion()
 {
- float x_offset = GenerateWaterOffset(position.x, position.z, 1.2, 1.3);
- float y_offset = GenerateWaterOffset(position.x, position.z, 1.1, 1.4);
- float z_offset = GenerateWaterOffset(position.x, position.z, 1.15, 1.2);
+ float x_offset = GenerateWaterOffset(position.x, position.z, timer);
+ float y_offset = GenerateWaterOffset(position.x, position.z, 0);
+ float z_offset = GenerateWaterOffset(position.x, position.z, timer);
  
  return position + vec3(x_offset, y_offset, z_offset);
 }
@@ -50,4 +50,3 @@ void main()
 
  color = vec4(waterPos.z, waterPos.z, 1.0, 1.0);
 }
-§§§§нн
