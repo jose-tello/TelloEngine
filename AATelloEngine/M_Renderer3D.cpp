@@ -98,6 +98,7 @@ bool M_Renderer3D::Init()
 UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 {
 	light.SetPos(0, 40, 0);
+	timer += 0.16;
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -484,6 +485,9 @@ void M_Renderer3D::SetShaderUniforms(int programId, float* color, float* modelMa
 
 	unsigned int hasTextureUniform = glGetUniformLocation(programId, "has_texture");
 	glUniform1i(hasTextureUniform, hasTexture);
+
+	unsigned int timeUniform = glGetUniformLocation(programId, "timer");
+	glUniform1f(timeUniform, timer);
 }
 
 

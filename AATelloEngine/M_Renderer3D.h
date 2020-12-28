@@ -80,6 +80,8 @@ private:
 
 	float cameraRay1[3];
 	float cameraRay2[3];
+
+	float timer = 0;
 };
 
 #endif // !__M_RENDERER3D_H__

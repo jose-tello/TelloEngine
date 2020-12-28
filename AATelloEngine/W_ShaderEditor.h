@@ -3,6 +3,8 @@
 
 #include "E_Window.h"
 
+#include <string>
+
 class TextEditor;
 
 class W_ShaderEditor : public E_Window
@@ -13,13 +15,14 @@ public:
 
 	bool Draw() override;
 
-	void OpenShaderCode(int resourceShader);
+	void OpenShaderCode(int resourceShader, const char* shaderName);
 
 private: 
 	void SaveShader();
 
 private:
 	int currentShader = 0;
+	std::string currentShaderName;
 
 	TextEditor* textEditor = nullptr;
 };

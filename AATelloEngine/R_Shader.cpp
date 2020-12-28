@@ -45,18 +45,6 @@ void R_Shader::UnLoad()
 }
 
 
-void R_Shader::Save() const
-{
-	//ShaderImporter::Save(this);
-}
-
-
-void R_Shader::Rewrite(const char* file)
-{
-	//TODO: I have to think about this one
-}
-
-
 unsigned int R_Shader::GetProgramId() const
 {
 	return programId;

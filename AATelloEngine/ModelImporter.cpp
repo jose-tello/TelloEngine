@@ -84,19 +84,22 @@ void ModelImporter::Load(R_Model* model)
 	Config rootNode(fileBuffer);
 	ConfigArray nodeArray = rootNode.GetArray("nodes");
 
-	std::vector<ModelNode> modelNodeVector;
-
-	int nodeCount = nodeArray.GetSize();
-	for (int i = 0; i < nodeCount; i++)
+	if (nodeArray.GetSize() != 0)
 	{
-		Config node = nodeArray.GetNode(i);
-		ModelNode modelNode;
+		std::vector<ModelNode> modelNodeVector;
 
-		Private::LoadNode(modelNode, node);
-		modelNodeVector.push_back(modelNode);
+		int nodeCount = nodeArray.GetSize();
+		for (int i = 0; i < nodeCount; i++)
+		{
+			Config node = nodeArray.GetNode(i);
+			ModelNode modelNode;
+
+			Private::LoadNode(modelNode, node);
+			modelNodeVector.push_back(modelNode);
+		}
+
+		model->SetModelNodes(modelNodeVector);
 	}
-
-	model->SetModelNodes(modelNodeVector);
 
 	delete[] fileBuffer;
 	fileBuffer = nullptr;

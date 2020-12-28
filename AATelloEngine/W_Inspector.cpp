@@ -241,7 +241,7 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 
 		ImGui::Text("Shader: %s", material->GetShaderName().c_str());
 		if (ImGui::Button("Edit shader"))
-			App->editor->OpenShaderEditor(material->GetShader());
+			App->editor->OpenShaderEditor(material->GetShader(), material->GetShaderName().c_str());
 	}
 
 	ImGui::NewLine();

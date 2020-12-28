@@ -19,6 +19,7 @@ W_ShaderEditor::W_ShaderEditor() : E_Window(E_WINDOW_TYPE::EDIT_SHADER, false),
 
 W_ShaderEditor::~W_ShaderEditor()
 {
+	currentShader = 0;
 	delete textEditor;
 	textEditor = nullptr;
 }
@@ -28,6 +29,11 @@ bool W_ShaderEditor::Draw()
 {
 	ImGui::Begin("Shader editor", &open);
 	
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), currentShaderName.c_str());
+	ImGui::SameLine();
+	ImGui::Spacing();
+	ImGui::SameLine();
+
 	if (ImGui::Button("Save"))
 		SaveShader();
 	
@@ -39,9 +45,11 @@ bool W_ShaderEditor::Draw()
 }
 
 
-void W_ShaderEditor::OpenShaderCode(int resourceShader)
+void W_ShaderEditor::OpenShaderCode(int resourceShader, const char* shaderName)
 {
 	char* fileBuffer = nullptr;
+	textEditor->SelectAll();
+	textEditor->Delete();
 
 	std::string path(SHADER_LIBRARY);
 	path.append(std::to_string(resourceShader));
@@ -55,6 +63,7 @@ void W_ShaderEditor::OpenShaderCode(int resourceShader)
 
 		textEditor->InsertText(code.c_str());
 		currentShader = resourceShader;
+		currentShaderName = shaderName;
 		open = true;
 	}
 	else

@@ -170,10 +170,10 @@ void M_Editor::AddLog(const char* fmt, ...)
 }
 
 
-void M_Editor::OpenShaderEditor(int shaderId) const
+void M_Editor::OpenShaderEditor(int shaderId, const char* shaderName) const
 {
 	W_ShaderEditor* shaderEditor = (W_ShaderEditor*)windowsVec[(int)E_WINDOW_TYPE::EDIT_SHADER];
-	shaderEditor->OpenShaderCode(shaderId);
+	shaderEditor->OpenShaderCode(shaderId, shaderName);
 }
 
 

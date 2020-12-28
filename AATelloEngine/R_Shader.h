@@ -12,9 +12,6 @@ public:
 	void Load() override;
 	void UnLoad() override;
 
-	void Save() const;
-	void Rewrite(const char* file);
-
 	unsigned int GetProgramId() const;
 	const char* GetProgramCode() const;
 	
