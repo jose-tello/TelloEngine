@@ -16,7 +16,6 @@ R_Shader::R_Shader(int uid, const char* assetPath, RESOURCE_TYPE type) :
 	Resource(uid, assetPath, type),
 
 	programId(0),
-
 	disabled(true)
 {
 	App->fileManager->SplitPath(assetPath, nullptr, &name, nullptr);
@@ -121,6 +120,33 @@ void R_Shader::InitShaderFromBinary(const char* programCode, unsigned int size)
 	programId = glCreateProgram();
 	glProgramBinary(programId, 36385, programCode, size);
 }
+
+
+/*void R_Shader::SetUniform(char* uniformName, bool boolVar)
+{
+	unsigned int uniformLocation = glGetUniformLocation(programId, "has_texture");
+	glUniform1i(uniformLocation, boolVar);
+}
+
+
+void R_Shader::SetUniform(char* uniformName, unsigned int uintVar)
+{
+
+}
+
+
+void R_Shader::SetUniform(char* uniformName, int intVar)
+{
+	unsigned int hasTextureUniform = glGetUniformLocation(programId, "has_texture");
+	glUniform1i(hasTextureUniform, hasTexture);
+}
+
+
+void R_Shader::SetUniform(char* uniformName, float floatVar)
+{
+	unsigned int timeUniform = glGetUniformLocation(programId, "timer");
+	glUniform1f(timeUniform, App->GetTimeManager()->GetTimeSinceStart());
+}*/
 
 
 void R_Shader::CreateShaderProgram(unsigned int vertexShader, unsigned int fragmentShader)

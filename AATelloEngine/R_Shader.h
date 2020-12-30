@@ -21,6 +21,11 @@ public:
 	void InitShader(const char* vertCode, const char* fragCode);
 	void InitShaderFromBinary(const char* programCode, unsigned int size);
 
+	/*void SetUniform(char* uniformName, bool boolVar);
+	void SetUniform(char* uniformName, unsigned int uintVar);
+	void SetUniform(char* uniformName, int intVar);
+	void SetUniform(char* uniformName, float floatVar);*/
+
 private:
 	void CreateShaderProgram(unsigned int vertexShader, unsigned int fragmentShader);
 

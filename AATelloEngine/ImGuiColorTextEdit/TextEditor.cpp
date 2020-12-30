@@ -29,7 +29,7 @@ bool equals(InputIt1 first1, InputIt1 last1,
 TextEditor::TextEditor()
 	: mLineSpacing(1.2f)
 	, mUndoIndex(0)
-	, mTabSize(6)
+	, mTabSize(4)
 	, mOverwrite(false)
 	, mReadOnly(false)
 	, mWithinRender(false)
