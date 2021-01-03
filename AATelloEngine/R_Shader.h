@@ -3,6 +3,10 @@
 
 #include "Resource.h"
 
+#include <vector>
+
+struct UniformHandle;
+
 class R_Shader : public Resource
 {
 public:
@@ -13,24 +17,28 @@ public:
 	void UnLoad() override;
 
 	unsigned int GetProgramId() const;
-	const char* GetProgramCode() const;
+	void GetProgramUniforms(std::vector<UniformHandle>&) const;
 	
 	const char* GetShaderName() const;
 	void SetShaderName(const char* name);
 
 	void InitShader(const char* vertCode, const char* fragCode);
-	void InitShaderFromBinary(const char* programCode, unsigned int size);
 
-	/*void SetUniform(char* uniformName, bool boolVar);
-	void SetUniform(char* uniformName, unsigned int uintVar);
-	void SetUniform(char* uniformName, int intVar);
-	void SetUniform(char* uniformName, float floatVar);*/
+	void UseShaderProgram() const;
+	void UnuseShaderProgram() const;
+
+	void SetBoolUniform(const char* uniformName, bool boolVar);
+	void SetUintUniform(const char* uniformName, unsigned int uintVar);
+	void SetIntUniform(const char* uniformName, int intVar);
+	void SetFloatUniform(const char* uniformName, float floatVar);
 
 private:
 	void CreateShaderProgram(unsigned int vertexShader, unsigned int fragmentShader);
 
 	bool CheckShadersCompile(unsigned int vertShader, unsigned int fragShader) const;
 	bool CheckProgramCompiles() const;
+
+	int GetUniformType(unsigned int) const;
 
 private:
 	unsigned int programId;

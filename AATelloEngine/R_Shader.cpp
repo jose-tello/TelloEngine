@@ -6,6 +6,10 @@
 #include "M_Editor.h"
 #include "M_FileManager.h"
 
+#include "UniformHandle.h"
+
+#include <assert.h>
+
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
@@ -50,26 +54,24 @@ unsigned int R_Shader::GetProgramId() const
 }
 
 
-const char* R_Shader::GetProgramCode() const
+void R_Shader::GetProgramUniforms(std::vector<UniformHandle>& uniformVector) const
 {
-	glUseProgram(programId);
-	char* code = nullptr;
-	
-	int binaryLenght = 0;
-	glGetProgramiv(programId, GL_PROGRAM_BINARY_LENGTH, &binaryLenght);
+	int uniformCount = 0;
+	glGetProgramiv(programId, GL_ACTIVE_UNIFORMS, &uniformCount);
 
-	if (binaryLenght > 0)
+	char uniformName[256];
+	GLenum type;
+	int size;
+
+	for (int i = 0; i < uniformCount; i++)
 	{
-		code = new char[binaryLenght];
-		GLenum format;
-		GLsizei writtenLength = 0;
-		glGetProgramBinary(programId, binaryLenght, &writtenLength, &format, code);
+		glGetActiveUniform(programId, i, sizeof(uniformName), nullptr, &size, &type, uniformName);
 
-		return code;
+		std::string name(uniformName);
+		VARIABLE_TYPE variableType = (VARIABLE_TYPE)GetUniformType(type);
+
+		uniformVector.push_back(UniformHandle(name, variableType));
 	}
-
-	glUseProgram(0);
-	return code;
 }
 
 
@@ -115,38 +117,44 @@ void R_Shader::InitShader(const char* vertCode, const char* fragCode)
 }
 
 
-void R_Shader::InitShaderFromBinary(const char* programCode, unsigned int size)
+void R_Shader::UseShaderProgram() const
 {
-	programId = glCreateProgram();
-	glProgramBinary(programId, 36385, programCode, size);
+	glUseProgram(programId);
 }
 
 
-/*void R_Shader::SetUniform(char* uniformName, bool boolVar)
+void R_Shader::UnuseShaderProgram() const
 {
-	unsigned int uniformLocation = glGetUniformLocation(programId, "has_texture");
+	glUseProgram(0);
+}
+
+
+void R_Shader::SetBoolUniform(const char* uniformName, bool boolVar)
+{
+	unsigned int uniformLocation = glGetUniformLocation(programId, uniformName);
 	glUniform1i(uniformLocation, boolVar);
 }
 
 
-void R_Shader::SetUniform(char* uniformName, unsigned int uintVar)
+void R_Shader::SetUintUniform(const char* uniformName, unsigned int uintVar)
 {
-
+	unsigned int uniformLocation = glGetUniformLocation(programId, uniformName);
+	glUniform1ui(uniformLocation, uintVar);
 }
 
 
-void R_Shader::SetUniform(char* uniformName, int intVar)
+void R_Shader::SetIntUniform(const char* uniformName, int intVar)
 {
-	unsigned int hasTextureUniform = glGetUniformLocation(programId, "has_texture");
-	glUniform1i(hasTextureUniform, hasTexture);
+	unsigned int hasTextureUniform = glGetUniformLocation(programId, uniformName);
+	glUniform1i(hasTextureUniform, intVar);
 }
 
 
-void R_Shader::SetUniform(char* uniformName, float floatVar)
+void R_Shader::SetFloatUniform(const char* uniformName, float floatVar)
 {
-	unsigned int timeUniform = glGetUniformLocation(programId, "timer");
-	glUniform1f(timeUniform, App->GetTimeManager()->GetTimeSinceStart());
-}*/
+	unsigned int timeUniform = glGetUniformLocation(programId, uniformName);
+	glUniform1f(timeUniform, floatVar);
+}
 
 
 void R_Shader::CreateShaderProgram(unsigned int vertexShader, unsigned int fragmentShader)
@@ -205,4 +213,80 @@ bool R_Shader::CheckProgramCompiles() const
 	}
 
 	return ret;
+}
+
+
+int R_Shader::GetUniformType(unsigned int type) const
+{
+	switch (type)
+	{
+	case GL_FLOAT:
+		return (int)VARIABLE_TYPE::FLOAT;
+		break;
+
+	case GL_FLOAT_VEC2:
+		return (int)VARIABLE_TYPE::FLOAT_VEC2;
+		break;
+
+	case GL_FLOAT_VEC3:
+		return (int)VARIABLE_TYPE::FLOAT_VEC3;
+		break;
+
+	case GL_FLOAT_VEC4:
+		return (int)VARIABLE_TYPE::FLOAT_VEC4;
+		break;
+
+	case GL_INT:
+		return (int)VARIABLE_TYPE::INT;
+		break;
+
+	case GL_INT_VEC2:
+		return (int)VARIABLE_TYPE::INT_VEC2;
+		break;
+
+	case GL_INT_VEC3:
+		return (int)VARIABLE_TYPE::INT_VEC3;
+		break;
+
+	case GL_INT_VEC4:
+		return (int)VARIABLE_TYPE::INT_VEC4;
+		break;
+
+	case GL_UNSIGNED_INT:
+		return (int)VARIABLE_TYPE::UINT;
+		break;
+
+	case GL_UNSIGNED_INT_VEC2:
+		return (int)VARIABLE_TYPE::UINT_VEC2;
+		break;
+
+	case GL_UNSIGNED_INT_VEC3:
+		return (int)VARIABLE_TYPE::UINT_VEC3;
+		break;
+
+	case GL_UNSIGNED_INT_VEC4:
+		return (int)VARIABLE_TYPE::UINT_VEC4;
+		break;
+
+	case GL_BOOL:
+		return (int)VARIABLE_TYPE::BOOL;
+		break;
+
+	case GL_FLOAT_MAT2:
+		return (int)VARIABLE_TYPE::FLOAT_MAT2;
+		break;
+
+	case GL_FLOAT_MAT3:
+		return (int)VARIABLE_TYPE::FLOAT_MAT3;
+		break;
+
+	case GL_FLOAT_MAT4:
+		return (int)VARIABLE_TYPE::FLOAT_MAT4;
+		break;
+
+	default:
+		assert("Unsuported uniform type");
+		return -1;
+		break;
+	}
 }

@@ -4,6 +4,8 @@
 #include "E_Window.h"
 
 struct GameObject;
+struct UniformHandle;
+
 class C_Transform;
 class C_Mesh;
 class C_Material;
@@ -36,6 +38,8 @@ private:
 
 	void DrawMeshComp(C_Mesh*);
 	void DrawMaterialComp(C_Material*);
+	void DrawShaderInfo(C_Material*);
+	void DrawShaderUniform(UniformHandle&);
 	void DrawCameraComp(C_Camera*);
 
 	void DrawAddMenu(GameObject*);

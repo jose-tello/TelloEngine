@@ -9,6 +9,9 @@
 #define CHECKERS_WIDTH 80
 #define CHECKERS_HEIGHT 80
 
+struct UniformHandle;
+class R_Shader;
+
 class C_Material : public Component
 {
 public:
@@ -24,6 +27,7 @@ public:
 	void GetTextureSize(int& width, int& height) const;
 	int GetShader() const;
 	std::string GetShaderName() const;
+	std::vector<UniformHandle> GetUniformVector() const;
 
 	bool GetTextureEnabled() const;
 	void SetTextureEnable(bool enable);
@@ -46,6 +50,8 @@ private:
 	unsigned int GetTextureId() const;
 	unsigned int GetShaderProgram() const;
 
+	void UpdateUniformArray(R_Shader* shader);
+
 private:
 	int materialId = 0;
 	int textureId = 0;
@@ -53,6 +59,8 @@ private:
 
 	bool textureEnabled;
 	bool colorEnabled;
+
+	std::vector<UniformHandle> shaderUniformsVector;
 
 	//This will be a material on its own, but for now this is "accetable"
 	unsigned int checkerTexId;

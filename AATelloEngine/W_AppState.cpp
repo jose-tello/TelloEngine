@@ -19,7 +19,7 @@ W_AppState::W_AppState(bool open) :	E_Window(E_WINDOW_TYPE::APPLICATION_STATE, o
 	//Window
 	winFullScreen(false),
 	winFullScreenDesktop(false),
-	winResizable(false),
+	winResizable(true),
 	winBorderless(true),
 
 	brightness(100),

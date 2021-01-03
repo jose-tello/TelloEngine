@@ -9,6 +9,8 @@
 #include "M_Input.h"
 #include "M_Editor.h"
 
+#include "UniformHandle.h"
+
 #include "imgui/imgui.h"
 
 W_Inspector::W_Inspector(bool open) : E_Window(E_WINDOW_TYPE::INSPECTOR, open),
@@ -239,12 +241,225 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 		ImGui::Spacing();
 		ImGui::Separator();
 
-		ImGui::Text("Shader: %s", material->GetShaderName().c_str());
-		if (ImGui::Button("Edit shader"))
-			App->editor->OpenShaderEditor(material->GetShader(), material->GetShaderName().c_str());
+		DrawShaderInfo(material);
 	}
 
 	ImGui::NewLine();
+}
+
+
+void W_Inspector::DrawShaderInfo(C_Material* material)
+{
+	ImGui::Text("Shader: %s", material->GetShaderName().c_str());
+	if (ImGui::Button("Edit shader"))
+		App->editor->OpenShaderEditor(material->GetShader(), material->GetShaderName().c_str());
+
+	ImGui::NewLine();
+
+	std::vector<UniformHandle> uniformVector = material->GetUniformVector();
+
+	int uniformCount = uniformVector.size();
+	for (int i = 0; i < uniformCount; i++)
+	{
+		DrawShaderUniform(uniformVector[i]);
+
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::NewLine();
+	}
+}
+
+
+void W_Inspector::DrawShaderUniform(UniformHandle& uniform)
+{
+	switch (uniform.GetVartiableType())
+	{
+	case VARIABLE_TYPE::NONE:
+		break;
+
+
+	case VARIABLE_TYPE::BOOL:
+	{
+		bool value = uniform.GetBool();
+		ImGui::Checkbox(uniform.GetName(), &value);
+
+		uniform.SetBool(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::UINT:
+	{
+		int value = uniform.GetUint();
+		ImGui::InputInt(uniform.GetName(), &value);	//Imgui doesn't support uint input...
+
+		uniform.SetUint(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::UINT_VEC2:
+	{
+		int value[2];
+		uniform.GetUintVec2((unsigned int*)value);
+
+		ImGui::InputInt2(uniform.GetName(), value);
+
+		uniform.SetUintVec2((unsigned int*)value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::UINT_VEC3:
+	{
+		int value[3];
+		uniform.GetUintVec3((unsigned int*)value);
+
+		ImGui::InputInt3(uniform.GetName(), value);
+
+		uniform.SetUintVec3((unsigned int*)value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::UINT_VEC4:
+	{
+		int value[4];
+		uniform.GetUintVec4((unsigned int*)value);
+
+		ImGui::InputInt4(uniform.GetName(), value);
+
+		uniform.SetUintVec4((unsigned int*)value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::INT:
+	{
+		int value = uniform.GetInt();
+		ImGui::InputInt(uniform.GetName(), &value);
+
+		uniform.SetInt(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::INT_VEC2:
+	{
+		int value[2];
+		uniform.GetIntVec2(value);
+
+		ImGui::InputInt2(uniform.GetName(), value);
+		uniform.SetIntVec2(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::INT_VEC3:
+	{
+		int value[3];
+		uniform.GetIntVec3(value);
+
+		ImGui::InputInt3(uniform.GetName(), value);
+		uniform.SetIntVec3(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::INT_VEC4:
+	{
+		int value[4];
+		uniform.GetIntVec4(value);
+
+		ImGui::InputInt4(uniform.GetName(), value);
+		uniform.SetIntVec4(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::FLOAT:
+	{
+		float value = uniform.GetFloat();
+
+		ImGui::InputFloat(uniform.GetName(), &value, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		uniform.SetFloat(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::FLOAT_VEC2:
+	{
+		float value[2];
+		uniform.GetFloatVec2(value);
+
+		ImGui::InputFloat2(uniform.GetName(), value, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		uniform.SetFloatVec2(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::FLOAT_VEC3:
+	{
+		float value[3];
+		uniform.GetFloatVec3(value);
+
+		ImGui::InputFloat3(uniform.GetName(), value, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		uniform.SetFloatVec3(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::FLOAT_VEC4:
+	{
+		float value[4];
+		uniform.GetFloatVec4(value);
+
+		ImGui::InputFloat4(uniform.GetName(), value, 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		uniform.SetFloatVec4(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::FLOAT_MAT2:
+	{
+		float value[4];
+		uniform.GetMat2(value);
+
+		ImGui::InputFloat2(uniform.GetName(), &value[0], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::InputFloat2(uniform.GetName(), &value[2], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		uniform.SetMat2(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::FLOAT_MAT3:
+	{
+		float value[9];
+		uniform.GetMat3(value);
+
+		ImGui::InputFloat3(uniform.GetName(), &value[0], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::InputFloat3(uniform.GetName(), &value[3], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::InputFloat3(uniform.GetName(), &value[6], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		uniform.SetMat3(value);
+	}
+	break;
+
+
+	case VARIABLE_TYPE::FLOAT_MAT4:
+	{
+		float value[16];
+		uniform.GetMat4(value);
+
+		ImGui::InputFloat4(uniform.GetName(), &value[0], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::InputFloat4(uniform.GetName(), &value[4], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::InputFloat4(uniform.GetName(), &value[8], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::InputFloat4(uniform.GetName(), &value[12], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+		uniform.SetMat4(value);
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 

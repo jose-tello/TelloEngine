@@ -162,6 +162,7 @@
     <ClInclude Include="ShaderImporter.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="UniformHandle.h" />
     <ClInclude Include="W_AppState.h" />
     <ClInclude Include="W_Console.h" />
     <ClInclude Include="W_DockWindow.h" />
@@ -256,6 +257,7 @@
     <ClCompile Include="ShaderImporter.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="UniformHandle.cpp" />
     <ClCompile Include="W_AppState.cpp" />
     <ClCompile Include="W_Console.cpp" />
     <ClCompile Include="W_DockWindow.cpp" />

@@ -9,6 +9,8 @@
 #include "R_Material.h"
 #include "R_Shader.h"
 
+#include "UniformHandle.h"
+
 #include "Glew/include/glew.h"
 #pragma comment(lib,"Glew/libx86/glew32.lib")
 
@@ -130,7 +132,10 @@ void C_Material::SetShader(int newShader)
 	shader = App->resourceManager->RequestResource(newShader);
 
 	if (shader != nullptr)
+	{
 		shader->AddReference();
+		UpdateUniformArray((R_Shader*)shader);
+	}
 
 	else
 		shaderId = 0;
@@ -209,6 +214,12 @@ std::string C_Material::GetShaderName() const
 		else
 			return "No shader";
 	}
+}
+
+
+std::vector<UniformHandle> C_Material::GetUniformVector() const
+{
+	return shaderUniformsVector;
 }
 
 
@@ -389,4 +400,16 @@ unsigned int C_Material::GetShaderProgram() const
 		R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
 		return shader->GetProgramId();
 	}
+}
+
+
+void C_Material::UpdateUniformArray(R_Shader* shader)
+{
+	shaderUniformsVector.clear();
+
+	shader->UseShaderProgram();
+
+	shader->GetProgramUniforms(shaderUniformsVector);
+
+	shader->UnuseShaderProgram();
 }

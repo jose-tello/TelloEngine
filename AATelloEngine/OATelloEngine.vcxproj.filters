@@ -408,6 +408,9 @@
     <ClInclude Include="W_ShaderEditor.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="UniformHandle.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -679,6 +682,9 @@
     </ClCompile>
     <ClCompile Include="W_ShaderEditor.cpp">
       <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="UniformHandle.cpp">
+      <Filter>Sources\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
