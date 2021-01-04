@@ -27,7 +27,11 @@ public:
 	void GetTextureSize(int& width, int& height) const;
 	int GetShader() const;
 	std::string GetShaderName() const;
+	UniformHandle* GetUniform(const char* name);
+
 	std::vector<UniformHandle> GetUniformVector() const;
+	void SetUniformVector(std::vector<UniformHandle>& vector);
+	void SetUniformsToShader() const;
 
 	bool GetTextureEnabled() const;
 	void SetTextureEnable(bool enable);

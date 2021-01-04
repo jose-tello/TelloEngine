@@ -27,6 +27,8 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 	checkerTexId(0),
 	useCheckerTex(false)
 {
+	SetShader(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER)->GetUid());
+	
 	InitCheckerTex();
 }
 
@@ -217,9 +219,188 @@ std::string C_Material::GetShaderName() const
 }
 
 
+UniformHandle* C_Material::GetUniform(const char* name)
+{
+	std::string nameToSearch(name);
+
+	int uniformCount = shaderUniformsVector.size();
+	for (int i = 0; i < uniformCount; i++)
+	{
+		std::string aux = shaderUniformsVector[i].GetName();
+
+		if (nameToSearch == aux)
+			return &shaderUniformsVector[i];
+	}
+
+	return nullptr;
+}
+
+
 std::vector<UniformHandle> C_Material::GetUniformVector() const
 {
 	return shaderUniformsVector;
+}
+
+
+void C_Material::SetUniformVector(std::vector<UniformHandle>& vector)
+{
+	shaderUniformsVector = vector;
+}
+
+
+void C_Material::SetUniformsToShader() const
+{
+	unsigned int programId = GetShaderProgram();
+
+	int uniformCount = shaderUniformsVector.size();
+	for (int i = 0; i < uniformCount; i++)
+	{
+		unsigned int uniformLocation = glGetUniformLocation(programId, shaderUniformsVector[i].GetName());
+
+		switch (shaderUniformsVector[i].GetVartiableType())
+		{
+		case VARIABLE_TYPE::NONE:
+			break;
+
+
+		case VARIABLE_TYPE::BOOL: glUniform1i(uniformLocation, shaderUniformsVector[i].GetBool());	break;
+
+
+		case VARIABLE_TYPE::UINT: glUniform1ui(uniformLocation, shaderUniformsVector[i].GetUint());	break;
+
+
+		case VARIABLE_TYPE::UINT_VEC2: 
+		{
+			unsigned int value[2];
+			shaderUniformsVector[i].GetUintVec2(value);
+
+			glUniform2ui(uniformLocation, value[0], value[1]);
+		}
+			break;
+
+
+		case VARIABLE_TYPE::UINT_VEC3:
+		{
+			unsigned int value[3];
+			shaderUniformsVector[i].GetUintVec3(value);
+
+			glUniform3ui(uniformLocation, value[0], value[1], value[2]);
+		}
+		break;
+
+
+		case VARIABLE_TYPE::UINT_VEC4:
+		{
+			unsigned int value[4];
+			shaderUniformsVector[i].GetUintVec4(value);
+
+			glUniform4ui(uniformLocation, value[0], value[1], value[2], value[3]);
+		}
+		break;
+
+
+		case VARIABLE_TYPE::INT: glUniform1i(uniformLocation, shaderUniformsVector[i].GetInt());	break;
+
+
+		case VARIABLE_TYPE::INT_VEC2:
+		{
+			int value[2];
+			shaderUniformsVector[i].GetIntVec2(value);
+
+			glUniform2i(uniformLocation, value[0], value[1]);
+		}
+		break;
+
+
+		case VARIABLE_TYPE::INT_VEC3:
+		{
+			int value[3];
+			shaderUniformsVector[i].GetIntVec3(value);
+
+			glUniform3i(uniformLocation, value[0], value[1], value[2]);
+		}
+		break;
+
+
+		case VARIABLE_TYPE::INT_VEC4:
+		{
+			int value[4];
+			shaderUniformsVector[i].GetIntVec4(value);
+
+			glUniform4i(uniformLocation, value[0], value[1], value[2], value[3]);
+		}
+		
+		break;
+
+
+		case VARIABLE_TYPE::FLOAT: glUniform1f(uniformLocation, shaderUniformsVector[i].GetFloat());	break;
+
+
+		case VARIABLE_TYPE::FLOAT_VEC2:
+		{
+			float value[2];
+			shaderUniformsVector[i].GetFloatVec2(value);
+
+			glUniform2f(uniformLocation, value[0], value[1]);
+		}
+		
+		break;
+
+
+		case VARIABLE_TYPE::FLOAT_VEC3:
+		{
+			float value[3];
+			shaderUniformsVector[i].GetFloatVec3(value);
+
+			glUniform3f(uniformLocation, value[0], value[1], value[2]);
+		}
+		break;
+
+
+		case VARIABLE_TYPE::FLOAT_VEC4:
+		{
+			float value[4];
+			shaderUniformsVector[i].GetFloatVec4(value);
+
+			glUniform4f(uniformLocation, value[0], value[1], value[2], value[3]);
+		}
+		break;
+
+
+		case VARIABLE_TYPE::FLOAT_MAT2:
+		{
+			float value[4];
+			shaderUniformsVector[i].GetMat2(value);
+
+			glUniformMatrix2fv(uniformLocation, 1, GL_FALSE, value);
+		}
+		break;
+
+
+		case VARIABLE_TYPE::FLOAT_MAT3:
+		{
+			float value[9];
+			shaderUniformsVector[i].GetMat3(value);
+
+			glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, value);
+		}
+		break;
+
+
+		case VARIABLE_TYPE::FLOAT_MAT4:
+		{
+			float value[16];
+			shaderUniformsVector[i].GetMat4(value);
+
+			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, value);
+		}
+		break;
+
+		default:
+			break;
+		}
+
+	}
 }
 
 

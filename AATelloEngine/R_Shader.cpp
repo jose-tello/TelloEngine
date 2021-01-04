@@ -70,7 +70,9 @@ void R_Shader::GetProgramUniforms(std::vector<UniformHandle>& uniformVector) con
 		std::string name(uniformName);
 		VARIABLE_TYPE variableType = (VARIABLE_TYPE)GetUniformType(type);
 
-		uniformVector.push_back(UniformHandle(name, variableType));
+		if (variableType != VARIABLE_TYPE::NONE)
+			uniformVector.push_back(UniformHandle(name, variableType));
+		
 	}
 }
 
@@ -286,6 +288,7 @@ int R_Shader::GetUniformType(unsigned int type) const
 
 	default:
 		assert("Unsuported uniform type");
+		App->editor->AddLog("[WARNING] unsing non supported uniform, will not be displayed nor updated every frame");
 		return -1;
 		break;
 	}

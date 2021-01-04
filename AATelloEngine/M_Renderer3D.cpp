@@ -13,6 +13,8 @@
 #include "C_Mesh.h"
 
 #include "Grid.h"
+#include "UniformHandle.h"
+
 #include "MathGeoLib/src/MathGeoLib.h"
 
 #include "Glew/include/glew.h"
@@ -421,6 +423,7 @@ void M_Renderer3D::DrawObjects(C_Camera* camera, bool drawAABB) const
 }
 
 
+//TODO: Reorganize this
 void M_Renderer3D::DrawMesh(GameObject* object, C_Camera* camera, bool wireframeMode, bool drawAABB) const
 {
 	C_Mesh* mesh;
@@ -428,7 +431,7 @@ void M_Renderer3D::DrawMesh(GameObject* object, C_Camera* camera, bool wireframe
 	Color color;
 	unsigned int programId = 0;
 
-	GetDrawVariables(object, &mesh, texId, color, programId);
+	C_Material* material = GetDrawVariables(object, &mesh, texId, color, programId);
 
 	if (wireframeMode == true)
 		color = Black;
@@ -442,7 +445,7 @@ void M_Renderer3D::DrawMesh(GameObject* object, C_Camera* camera, bool wireframe
 		hasTexture = true;
 	}
 
-	SetShaderUniforms(programId, &color, object->transform.GetMatTransformT(), camera, hasTexture);
+	SetShaderUniforms(material, programId, &color, object->transform.GetMatTransformT(), camera, hasTexture);
 	glBindVertexArray(mesh->GetVAO());
 
 	glDrawElements(GL_TRIANGLES, mesh->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
@@ -455,7 +458,7 @@ void M_Renderer3D::DrawMesh(GameObject* object, C_Camera* camera, bool wireframe
 }
 
 
-void M_Renderer3D::GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId,
+C_Material* M_Renderer3D::GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId,
 									Color& color, unsigned int& programId) const
 {
 	*meshPointer = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
@@ -465,29 +468,54 @@ void M_Renderer3D::GetDrawVariables(GameObject* object, C_Mesh** meshPointer, un
 	{
 		C_Material* material = (C_Material*)mat;
 		material->GetDrawVariables(color, textureId, programId);
+
+		return material;
 	}
+
+	return nullptr;
 }
 
 
-void M_Renderer3D::SetShaderUniforms(int programId, float* color, float4x4& modelMat, C_Camera* camera, bool hasTexture) const
+void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float* color, float4x4& modelMat, C_Camera* camera, bool hasTexture) const
 {
-	unsigned int colorUniform = glGetUniformLocation(programId, "material_color");
-	glUniform3fv(colorUniform, 1, color);
+	if (material != nullptr)
+	{
+		UniformHandle* uniform = nullptr;
+		
+		uniform = material->GetUniform("material_color");
 
-	unsigned int modelMatUniform = glGetUniformLocation(programId, "model_matrix");
-	glUniformMatrix4fv(modelMatUniform, 1, GL_FALSE, modelMat.ptr());
+		if (uniform != nullptr)
+			uniform->SetFloatVec3(color);
+		
+		uniform = material->GetUniform("model_matrix");
 
-	unsigned int projMat = glGetUniformLocation(programId, "projection");
-	glUniformMatrix4fv(projMat, 1, GL_FALSE, camera->GetProjectionMat().ptr());
+		if (uniform != nullptr)
+			uniform->SetMat4(modelMat.ptr());
 
-	unsigned int viewMat = glGetUniformLocation(programId, "view");
-	glUniformMatrix4fv(viewMat, 1, GL_FALSE, camera->GetViewMat().ptr());
+		uniform = material->GetUniform("projection");
 
-	unsigned int hasTextureUniform = glGetUniformLocation(programId, "has_texture");
-	glUniform1i(hasTextureUniform, hasTexture);
+		if (uniform != nullptr)
+			uniform->SetMat4(camera->GetProjectionMat().ptr());
 
-	unsigned int timeUniform = glGetUniformLocation(programId, "timer");
-	glUniform1f(timeUniform, App->GetTimeManager()->GetTimeSinceStart());
+		uniform = material->GetUniform("view");
+
+		if (uniform != nullptr)
+			uniform->SetMat4(camera->GetViewMat().ptr());
+			
+		uniform = material->GetUniform("has_texture");
+
+		if (uniform != nullptr)
+			uniform->SetBool(hasTexture);
+
+		uniform = material->GetUniform("timer");
+
+		if (uniform != nullptr)
+			uniform->SetFloat(App->GetTimeManager()->GetTimeSinceStart());
+	
+
+		material->SetUniformsToShader();
+	}
+	
 }
 
 

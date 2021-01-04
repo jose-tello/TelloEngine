@@ -11,6 +11,7 @@
 
 class C_Camera;
 class C_Mesh;
+class C_Material;
 struct GameObject;
 
 class M_Renderer3D : public Module
@@ -55,8 +56,8 @@ private:
 	void DrawObjects(C_Camera* camera, bool drawAABB) const;
 	void DrawMesh(GameObject* object, C_Camera* camera, bool wireframeMode, bool drawAABB) const;
 
-	void GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId, Color& color, unsigned int& programId) const;
-	void SetShaderUniforms(int programId, float* color, float4x4& modelMat, C_Camera* camera, bool hasTexture) const;
+	C_Material* GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId, Color& color, unsigned int& programId) const;
+	void SetShaderUniforms(C_Material* material, int programId, float* color, float4x4& modelMat, C_Camera* camera, bool hasTexture) const;
 	void HandleMeshDebugDraw(C_Mesh* mesh, bool drawAABB, float* transform) const;	//Handles aabb, vertex normals and face normals draw calls
 
 public:
