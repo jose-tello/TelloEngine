@@ -10,6 +10,7 @@
 #define CHECKERS_HEIGHT 80
 
 struct UniformHandle;
+
 class R_Shader;
 
 class C_Material : public Component
@@ -55,6 +56,9 @@ private:
 	unsigned int GetShaderProgram() const;
 
 	void UpdateUniformArray(R_Shader* shader);
+
+	void LoadUniformArray(Config& node);
+	void SaveUniformArray(Config& node) const;
 
 private:
 	int materialId = 0;

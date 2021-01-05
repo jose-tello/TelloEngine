@@ -453,9 +453,13 @@ void C_Material::GetDrawVariables(Color& col, unsigned int& texId, unsigned int&
 
 void C_Material::Load(Config& node)
 {
+	shaderUniformsVector.clear();
+
 	materialId = node.GetNum("material");
 	textureId = node.GetNum("texture");
 	shaderId = node.GetNum("shader");
+
+	LoadUniformArray(node);
 
 	if (materialId != 0)
 	{
@@ -488,6 +492,9 @@ void C_Material::Save(Config& node) const
 	node.AppendNum("material", materialId);
 	node.AppendNum("texture", textureId);
 	node.AppendNum("shader", shaderId);
+
+	
+	SaveUniformArray(node);
 }
 
 
@@ -588,9 +595,59 @@ void C_Material::UpdateUniformArray(R_Shader* shader)
 {
 	shaderUniformsVector.clear();
 
-	shader->UseShaderProgram();
-
 	shader->GetProgramUniforms(shaderUniformsVector);
+}
 
-	shader->UnuseShaderProgram();
+
+void C_Material::LoadUniformArray(Config& node)
+{
+	ConfigArray uniformArray = node.GetArray("uniforms");
+
+	int uniformCount = uniformArray.GetSize();
+
+	for (int i = 0; i < uniformCount; i++)
+	{
+		Config auxNode = uniformArray.GetNode(i);
+		
+		shaderUniformsVector.push_back(UniformHandle(std::string(auxNode.GetString("name")), (VARIABLE_TYPE)auxNode.GetNum("type")));
+
+		float value[16];
+
+		ConfigArray valueArray = auxNode.GetArray("value_array");
+		for (int i = 0; i < 16; i++)
+		{
+			Config valueNode = valueArray.GetNode(i);
+			value[i] = valueNode.GetNum("value");
+		}
+
+
+		shaderUniformsVector[i].SetMat4(value);
+	}
+}
+
+
+void C_Material::SaveUniformArray(Config& node) const
+{
+	ConfigArray arr = node.AppendArray("uniforms");
+	int uniformCount = shaderUniformsVector.size();
+
+	for (int i = 0; i < uniformCount; i++)
+	{
+		Config auxNode = arr.AppendNode();
+		auxNode.AppendString("name", shaderUniformsVector[i].GetName());
+
+		auxNode.AppendNum("type", (int)shaderUniformsVector[i].GetVartiableType());
+
+		float value[16];
+
+		shaderUniformsVector[i].GetMat4((float*)value);
+
+		ConfigArray valueArray = auxNode.AppendArray("value_array");
+
+		for (int i = 0; i < 16; i++)
+		{
+			Config valueNode = valueArray.AppendNode();
+			valueNode.AppendNum("value", value[i]);
+		}
+	}
 }

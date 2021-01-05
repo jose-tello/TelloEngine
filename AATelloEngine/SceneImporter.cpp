@@ -16,7 +16,7 @@ void SceneImporter::Load(const char* path, std::vector<GameObject*>& objVector)
 	App->fileManager->Load(filePath.c_str(), &fileBuffer);
 
 	Config rootNode(fileBuffer);
-	ConfigArray gameObjects = rootNode.GetArray("game objects");
+	ConfigArray gameObjects = rootNode.GetArray("game_objects");
 	int objCount = gameObjects.GetSize();
 
 	for (int i = 0; i < objCount; i++)
@@ -63,9 +63,9 @@ void SceneImporter::Save(const char* sceneName, std::vector<GameObject*> objVect
 	filePath.append(sceneName);
 
 	Config sceneRoot;
-	sceneRoot.AppendString("Scene name", sceneName);
+	sceneRoot.AppendString("scene_name", sceneName);
 
-	ConfigArray gameObjects = sceneRoot.AppendArray("game objects");
+	ConfigArray gameObjects = sceneRoot.AppendArray("game_objects");
 
 	int objCount = objVector.size();
 

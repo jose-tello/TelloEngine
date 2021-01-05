@@ -3,13 +3,10 @@
 
 UniformHandle::UniformHandle(std::string& name, VARIABLE_TYPE type) :
 	name(name),
-	type(type),
+	type(type)
 
-	boolValue(false),
-	uintValue(0),
-	intValue(0),
-	floatValue(0.0f)
 {
+	memset(mat4, 0, sizeof(mat4));
 }
 
 

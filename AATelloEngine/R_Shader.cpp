@@ -72,7 +72,6 @@ void R_Shader::GetProgramUniforms(std::vector<UniformHandle>& uniformVector) con
 
 		if (variableType != VARIABLE_TYPE::NONE)
 			uniformVector.push_back(UniformHandle(name, variableType));
-		
 	}
 }
 
