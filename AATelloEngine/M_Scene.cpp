@@ -9,6 +9,7 @@
 
 #include "GameObject.h"
 #include "C_Mesh.h"
+#include "C_Material.h"
 #include "C_Camera.h"
 
 #include <stack>
@@ -78,6 +79,44 @@ void M_Scene::AddCamera()
 	object->SetName("Camera");
 
 	gameObjects.push_back(object);
+}
+
+
+void M_Scene::NotifyShaderWasUpdated(int updatedShader)
+{
+	std::stack<GameObject*> stack;
+	GameObject* node;
+
+	int childCount;
+
+	int gameObjCount = gameObjects.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		stack.push(gameObjects[i]);
+
+		while (stack.empty() == false)
+		{
+			node = stack.top();
+			stack.pop();
+
+			Component* component = node->GetComponent(COMPONENT_TYPE::MATERIAL);
+			if (component != nullptr)
+			{
+				C_Material* material = (C_Material*)component;
+				
+				if (material->GetShader() == updatedShader)
+					material->NotifyShaderUpdate();
+			}
+
+
+			if (node->childs.empty() == false)
+			{
+				childCount = node->childs.size();
+				for (int j = 0; j < childCount; j++)
+					stack.push(node->childs[j]);
+			}
+		}
+	}
 }
 
 

@@ -6,6 +6,7 @@
 #include "M_Editor.h"
 #include "M_Resources.h"
 #include "M_FileManager.h"
+#include "M_Scene.h"
 
 #include "ShaderImporter.h"
 
@@ -77,4 +78,5 @@ void W_ShaderEditor::OpenShaderCode(int resourceShader, const char* shaderName)
 void W_ShaderEditor::SaveShader()
 {
 	ShaderImporter::SaveAsAsset(currentShader, textEditor->GetText().c_str());
+	App->scene->NotifyShaderWasUpdated(currentShader);
 }

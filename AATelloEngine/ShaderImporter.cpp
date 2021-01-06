@@ -108,4 +108,5 @@ void ShaderImporter::SaveAsAsset(int shaderId, const char* code)
 	fileBuffer = nullptr;
 
 	App->resourceManager->UpdateAllAssets();
+
 }

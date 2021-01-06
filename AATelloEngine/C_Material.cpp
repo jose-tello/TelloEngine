@@ -404,6 +404,17 @@ void C_Material::SetUniformsToShader() const
 }
 
 
+void C_Material::NotifyShaderUpdate()
+{
+	Resource* shaderResource = App->resourceManager->RequestResource(shaderId);
+	if (shaderResource != nullptr)
+	{
+		R_Shader* shader = (R_Shader*)shaderResource;
+		UpdateUniformArray(shader);
+	}
+}
+
+
 bool C_Material::GetTextureEnabled() const
 {
 	return textureEnabled;
@@ -593,9 +604,24 @@ unsigned int C_Material::GetShaderProgram() const
 
 void C_Material::UpdateUniformArray(R_Shader* shader)
 {
-	shaderUniformsVector.clear();
+	std::vector<UniformHandle> uniformVector;
+	shader->GetProgramUniforms(uniformVector);
 
-	shader->GetProgramUniforms(shaderUniformsVector);
+	int uniformsCount = uniformVector.size();
+	for (int i = 0; i < uniformsCount; i++)
+	{
+		for (int j = 0; j < shaderUniformsVector.size(); j++)
+		{
+			if (strcmp(uniformVector[i].GetName(), shaderUniformsVector[j].GetName()) == 0)
+			{
+				float value[16];
+				shaderUniformsVector[j].GetMat4(value);
+				uniformVector[i].SetMat4(value);
+			}
+		}
+	}
+
+	shaderUniformsVector = uniformVector;
 }
 
 

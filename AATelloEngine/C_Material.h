@@ -33,6 +33,7 @@ public:
 	std::vector<UniformHandle> GetUniformVector() const;
 	void SetUniformVector(std::vector<UniformHandle>& vector);
 	void SetUniformsToShader() const;
+	void NotifyShaderUpdate();
 
 	bool GetTextureEnabled() const;
 	void SetTextureEnable(bool enable);
