@@ -296,7 +296,7 @@ void M_Resources::UpdateMetaFile(std::string& file, const char* folder)
 
 	float timeDiference = CheckMetaIsUpdated(metaNode);
 
-	if (timeDiference == -1)	//asset was deleted
+	if (App->fileManager->FileExists(metaNode.GetString("asset_path")) == false)	//asset was deleted
 		DeleteMetaAndLibFiles(metaNode);
 
 	else if (timeDiference > 0)
