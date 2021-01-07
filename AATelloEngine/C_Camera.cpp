@@ -4,7 +4,6 @@
 #include "M_Editor.h"
 #include "M_Renderer3D.h"
 
-
 #include "Config.h"
 
 C_Camera::C_Camera(bool isSceneCamera) : Component(COMPONENT_TYPE::CAMERA),

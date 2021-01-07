@@ -13,6 +13,7 @@ enum class COMPONENT_TYPE : int
 	MESH,
 	MATERIAL,
 	CAMERA,
+	LIGHT_SOURCE,
 	MAX
 
 };

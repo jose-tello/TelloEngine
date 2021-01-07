@@ -1,10 +1,13 @@
 #include "GameObject.h"
+
 #include "Component.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
+#include "C_LightSource.h"
 
 #include "Resource.h"
+
 
 #include "Config.h"
 
@@ -251,6 +254,7 @@ void GameObject::RemoveChild(int uid)
 }
 
 
+//TODO: news should be handled from outside
 void GameObject::Load(Config& node)
 {
 	ConfigArray componentsArray = node.GetArray("components");
@@ -289,6 +293,15 @@ void GameObject::Load(Config& node)
 			camera->Load(componentNode);
 			AddComponent(camera);
 		}
+			break;
+
+		case COMPONENT_TYPE::LIGHT_SOURCE:
+		{
+			C_LightSource* lightSource = new C_LightSource();
+			lightSource->Load(componentNode);
+			AddComponent(lightSource);
+		}
+			break;
 
 		default:
 			assert("Invalid component type");

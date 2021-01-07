@@ -411,6 +411,9 @@
     <ClInclude Include="UniformHandle.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="C_LightSource.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -685,6 +688,9 @@
     </ClCompile>
     <ClCompile Include="UniformHandle.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="C_LightSource.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
