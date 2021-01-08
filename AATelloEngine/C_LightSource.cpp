@@ -70,6 +70,8 @@ void C_LightSource::Load(Config& node)
 
 void C_LightSource::Save(Config& node) const
 {
+	node.AppendNum("type", (int)COMPONENT_TYPE::LIGHT_SOURCE);
+
 	ConfigArray lightCol = node.AppendArray("light_color");
 
 	for (int i = 0; i < 3; i++)
