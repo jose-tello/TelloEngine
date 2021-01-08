@@ -22,6 +22,7 @@ public:
 	void AddGameObject(GameObject*);
 	void AddEmpty();
 	void AddCamera();
+	GameObject* AddLight();
 	void NotifyShaderWasUpdated(int updatedShader);
 
 	GameObject* GetGameObject(int uid);

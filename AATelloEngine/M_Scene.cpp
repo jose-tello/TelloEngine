@@ -11,6 +11,7 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
+#include "C_LightSource.h"
 
 #include <stack>
 #include <map>
@@ -34,6 +35,9 @@ bool M_Scene::Start()
 
 	App->resourceManager->DragAndDropImport("/Assets/street/Street environment_V01.FBX", nullptr);
 	
+	GameObject* object = AddLight();
+	object->transform.SetPos(-150, 30, 0);
+
 	return true;
 }
 
@@ -85,6 +89,18 @@ void M_Scene::AddCamera()
 	object->SetName("Camera");
 
 	gameObjects.push_back(object);
+}
+
+
+GameObject* M_Scene::AddLight()
+{
+	GameObject* object = new GameObject(nullptr);
+	object->AddComponent(new C_LightSource());
+	object->SetName("Light");
+
+	gameObjects.push_back(object);
+
+	return object;
 }
 
 

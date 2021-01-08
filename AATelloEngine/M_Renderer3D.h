@@ -9,10 +9,15 @@
 
 #include <vector>
 
+#define LIGHT_LIMIT 1
+
+struct GameObject;
+
 class C_Camera;
 class C_Mesh;
 class C_Material;
-struct GameObject;
+class C_LightSource;
+
 
 class M_Renderer3D : public Module
 {
@@ -35,6 +40,7 @@ public:
 
 	C_Camera* GetCurrentCamera() const;
 
+	void PushLight(C_LightSource*);
 	void PushFrustum(C_Camera*);
 	
 	void SetCameraRay(float rayBegin[3], float rayEnd[3]);
@@ -78,6 +84,7 @@ private:
 	//WARNING: use pop / push fuctions
 	C_Camera* currentCamera = nullptr;
 
+	std::vector<C_LightSource*> lightVector;
 	std::vector<C_Camera*> frustumVector;
 
 	float cameraRay1[3];

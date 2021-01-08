@@ -147,6 +147,9 @@ void W_DockWindow::DrawAddMenu()
 
 		if (ImGui::Button("Camera"))
 			App->scene->AddCamera();
+
+		if (ImGui::Button("Light"))
+			App->scene->AddLight();
 		
 		DrawShapesMenu();
 		ImGui::EndMenu();

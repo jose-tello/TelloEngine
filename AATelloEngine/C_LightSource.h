@@ -14,6 +14,9 @@ public:
 	void Load(Config&) override;
 	void Save(Config&) const override;
 
+	void GetLightColor(float*) const;
+	void SetLightColor(float*);
+
 	void GetAmbientColor(float*) const;
 	void SetAmbientColor(float*);
 
@@ -23,15 +26,16 @@ public:
 	void GetSpecular(float*) const;
 	void SetSpecular(float*);
 
+	float GetLightPower() const;
+	void SetLightPower(float);
 
 private:
+	float lightColor[3];
 	float ambientColor[3];
 	float diffuse[3];
 	float specular[3];
 
-	float constant;
-	float linear;
-	float quadratic;
+	float lightPower;
 };
 
 #endif // !__C_LIGHT_SOURCE_H__

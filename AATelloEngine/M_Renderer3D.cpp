@@ -8,9 +8,10 @@
 
 #include "GameObject.h"
 
-#include "C_Camera.h"
 #include "C_Material.h"
 #include "C_Mesh.h"
+#include "C_Camera.h"
+#include "C_LightSource.h"
 
 #include "Grid.h"
 #include "UniformHandle.h"
@@ -112,6 +113,7 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 	App->editor->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
+	lightVector.clear();
 	frustumVector.clear();
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
@@ -121,6 +123,9 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 bool M_Renderer3D::CleanUp()
 {
 	App->editor->AddLog("Log: Destroying 3D Renderer");
+
+	lightVector.clear();
+	frustumVector.clear();
 
 	SDL_GL_DeleteContext(context);
 
@@ -249,6 +254,16 @@ C_Camera* M_Renderer3D::GetCurrentCamera() const
 }
 
 
+void M_Renderer3D::PushLight(C_LightSource* light)
+{
+	if (frustumVector.size() < 4)
+		lightVector.push_back(light);
+
+	else
+		App->editor->AddLog("[WARNING] Engine only supports up to 4 lights");
+}
+
+
 void M_Renderer3D::PushFrustum(C_Camera* frustum)
 {
 	frustumVector.push_back(frustum);
@@ -366,7 +381,7 @@ void M_Renderer3D::PushCamera(C_Camera* cam)
 		currentCamera = cam;
 
 	else
-		assert("Pushing camera without poping the precious one");
+		assert("Pushing camera without poping the previous one");
 }
 
 
@@ -511,7 +526,24 @@ void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float*
 
 		if (uniform != nullptr)
 			uniform->SetFloat(App->GetTimeManager()->GetTimeSinceStart());
-	
+
+		
+
+		if (lightVector.empty() == false)
+		{
+			uniform = material->GetUniform("light_position");
+			
+			
+			if (uniform != nullptr)
+			{
+				C_Transform* transform = (C_Transform*)lightVector[0]->GetOwner()->GetComponent(COMPONENT_TYPE::TRANSFORM);
+				
+				float position[3];
+				transform->GetGlobalPos(position[0], position[1], position[2]);
+				uniform->SetFloatVec3(position);
+			}
+				
+		}
 
 		material->SetUniformsToShader();
 	}
