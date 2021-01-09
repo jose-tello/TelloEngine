@@ -6,7 +6,13 @@ This project is made as a 3rd year assigment in Bachelor’s Degree in Video Gam
 
 
 
+
+
 Made by [Jose L. Redondo Tello](https://www.linkedin.com/in/jose-lu%C3%ADs-redondo-tello-44918b19b/).																			![Jose](https://raw.githubusercontent.com/x-mat-studio/HeartsOfGreed/Wiki/Welcome%20Page/Team%20Portraits/josePortrait.png) 
+
+
+
+
 
 
 
