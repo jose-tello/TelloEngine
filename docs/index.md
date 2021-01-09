@@ -18,9 +18,11 @@ This project is made as a 3rd year assigment in Bachelor’s Degree in Video Gam
 
 #### Components
 
-·Transform: Objects can be moved / scaled / rotated 
+<u>·Transform:</u> Objects can be moved / scaled / rotated using the inspector or using the pivot and the mouse.
 
-·Mesh: 
+
+
+<u>·Mesh:</u> 
 
 -Can be picked using the mouse to select a game object.
 
@@ -30,8 +32,21 @@ This project is made as a 3rd year assigment in Bachelor’s Degree in Video Gam
 
 
 
-·Material:
+<u>·Material:</u> 
 
-​		-Contains the color, texture and shader.
+-Contains the color, texture and shader.
 
-​		
+-The texture and the shader can be changed by dragging the texture to the engine window or using the load window.
+
+-The shader can be edited inside the engine using the text editor, that can be opened by pressing the edit shader button in the inspector.
+
+-Shader uniforms can be set from the inspector.
+
+
+
+<u>·Camera:</u> Creates a virtual camera, which is renders to another window.
+
+
+
+<u>·Light source:</u> Sends its position to the default shader, where the color that will be drawn to the screen is calculated.
+
