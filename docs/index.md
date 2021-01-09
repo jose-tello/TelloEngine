@@ -18,11 +18,11 @@ This project is made as a 3rd year assigment in Bachelor’s Degree in Video Gam
 
 #### Components
 
-<u>·Transform:</u> Objects can be moved / scaled / rotated using the inspector or using the pivot and the mouse.
+**·Transform:** Objects can be moved / scaled / rotated using the inspector or using the pivot and the mouse.
 
 
 
-<u>·Mesh:</u> 
+**·Mesh:** 
 
 -Can be picked using the mouse to select a game object.
 
@@ -32,7 +32,7 @@ This project is made as a 3rd year assigment in Bachelor’s Degree in Video Gam
 
 
 
-<u>·Material:</u> 
+**·Material:** 
 
 -Contains the color, texture and shader.
 
@@ -44,9 +44,29 @@ This project is made as a 3rd year assigment in Bachelor’s Degree in Video Gam
 
 
 
-<u>·Camera:</u> Creates a virtual camera, which is renders to another window.
+**·Camera:** 
+
+-Creates a virtual camera, which is renders to another window.
+
+-All cameras perform frustum culling.
 
 
 
-<u>·Light source:</u> Sends its position to the default shader, where the color that will be drawn to the screen is calculated.
+**·Light source:** Sends its position to the default shader, where the color that will be drawn to the screen is calculated.
+
+
+
+#### Resource manager
+
+All the resources of assets are loaded into the folder Library.
+
+All resources can be modified, added or deleted in runtime (must press the update state button in the load window to update the changes).
+
+All resources use reference counting, and are only charged once.
+
+Can drag and drop assets, and they will be loaded by the engine.
+
+
+
+#### Shader pipeline
 
