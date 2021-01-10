@@ -78,6 +78,8 @@ Shaders can be edited in runtime using the text editor, which is opened by press
 
 The default shader calculates its illumination using the light in the scene (for the time being, the engine only supports one light).
 
+<img align="center" src="https://raw.githubusercontent.com/jose-tello/TelloEngine/main/docs/lightGif.gif" alt="this slowpoke moves" />
+
 The demo also includes a water shader, that uses perlin noise to simulate waves, and fractal voronoi and fractal perlin noise to create its color.
 
 <img align="center" src="https://raw.githubusercontent.com/jose-tello/TelloEngine/main/docs/waterGif.gif" alt="this slowpoke moves" />
