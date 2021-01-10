@@ -80,7 +80,7 @@ The default shader calculates its illumination using the light in the scene (for
 
 The demo also includes a water shader, that uses perlin noise to simulate waves, and fractal voronoi and fractal perlin noise to create its color.
 
-![waterGif](C:\Users\Jose Luis\Desktop\waterGif.gif)
+<img align="center" src="https://raw.githubusercontent.com/jose-tello/TelloEngine/main/docs/waterGif.gif" alt="this slowpoke moves" />
 
 Build in uniforms that are set automatically every frame:
 
