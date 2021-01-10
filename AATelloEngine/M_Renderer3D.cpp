@@ -256,7 +256,7 @@ C_Camera* M_Renderer3D::GetCurrentCamera() const
 
 void M_Renderer3D::PushLight(C_LightSource* light)
 {
-	if (frustumVector.size() < 4)
+	if (lightVector.size() < 4)
 		lightVector.push_back(light);
 
 	else
@@ -267,6 +267,20 @@ void M_Renderer3D::PushLight(C_LightSource* light)
 void M_Renderer3D::PushFrustum(C_Camera* frustum)
 {
 	frustumVector.push_back(frustum);
+}
+
+
+void M_Renderer3D::DeleteLight(C_LightSource* light)
+{
+	int lightCount = lightVector.size();
+	for (int i = 0; i < lightCount; i++)
+	{
+		if (light == lightVector[i])
+		{
+			lightVector.erase(lightVector.begin() + i);
+			break;
+		}
+	}
 }
 
 

@@ -17,6 +17,7 @@ C_LightSource::C_LightSource() : Component(COMPONENT_TYPE::LIGHT_SOURCE),
 
 C_LightSource::~C_LightSource()
 {
+	App->renderer3D->DeleteLight(this);
 }
 
 

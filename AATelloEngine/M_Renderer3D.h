@@ -42,6 +42,8 @@ public:
 
 	void PushLight(C_LightSource*);
 	void PushFrustum(C_Camera*);
+
+	void DeleteLight(C_LightSource*);
 	
 	void SetCameraRay(float rayBegin[3], float rayEnd[3]);
 
