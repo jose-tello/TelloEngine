@@ -70,3 +70,21 @@ Can drag and drop assets, and they will be loaded by the engine.
 
 #### Shader pipeline
 
+All the elements (excluding the debug elements) are being rendered using shaders.
+
+The shader uniforms are displayed in the editor, and can be modified.
+
+Shaders can be edited in runtime using the text editor, which is opened by pressing the "edit shader" button in the inspector. To update the changes in the shader code, just press the save button in the text editor. In case there are any compile errors, they will be shown in the console.
+
+The default shader calculates its illumination using the light in the scene (for the time being, the engine only supports one light).
+
+The demo also includes a water shader, that uses perlin noise to simulate waves, and fractal voronoi and fractal perlin noise to create its color.
+
+Build in uniforms that are set automatically every frame:
+
+- model_matrix: 4x4 matrix, that defines the transform of the object.
+- projection: 4x4 matrix, that defines the projection matrix of the camera.
+- view: 4x4 matrix, that defines the view matrix of the camera.
+- material_color: float[3] array, that defines the color of the material.
+- light_position: float[3] array, that defines the position of the light source.
+- timer: float, that defines the time passed since the engine was started.
