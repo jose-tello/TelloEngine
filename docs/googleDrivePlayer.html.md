@@ -1,11 +1,3 @@
----
-driveId: 1U0nIJd1rc2Axcm5YpmvfWJlb2Me1OLRM/view
----
-
-
-
-
-
 TelloEngine is a vidiogame 3d engine, with a build in shader editor. Made by [Jose L. Redondo Tello](https://www.linkedin.com/in/jose-lu%C3%ADs-redondo-tello-44918b19b/).																			![Jose](https://raw.githubusercontent.com/x-mat-studio/HeartsOfGreed/Wiki/Welcome%20Page/Team%20Portraits/josePortrait.png) 
 
 This project is made as a 3rd year assigment in Bachelor’s Degree in Video Games by UPC at CITM, Terrassa, under the supervision of lecturer [Marc Garrigó](www.linkedin.com/in/mgarrigo/). 
@@ -98,8 +90,6 @@ Build in uniforms that are set automatically every frame:
 - timer: float, that defines the time passed since the engine was started.
 
 #### Scene serialization
-
-{% include googleDrivePlayer.html id=page.driveId %}
 
 <iframe src="https://drive.google.com/file/d/1U0nIJd1rc2Axcm5YpmvfWJlb2Me1OLRM/view"></iframe>
 
