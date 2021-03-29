@@ -2,7 +2,7 @@ TelloEngine is a vidiogame 3d engine, with a build in shader editor. Made by [Jo
 
 This project is made as a 3rd year assigment in Bachelor’s Degree in Video Games by UPC at CITM, Terrassa, under the supervision of lecturer [Marc Garrigó](www.linkedin.com/in/mgarrigo/). 
 
-
+<iframe width="510" height="322" src="https://www.youtube.com/embed/i57kImy2aYA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Core sub-systems
 
@@ -92,12 +92,6 @@ Build in uniforms that are set automatically every frame:
 - material_color: float[3] array, that defines the color of the material.
 - light_position: float[3] array, that defines the position of the light source.
 - timer: float, that defines the time passed since the engine was started.
-
-#### Scene serialization
-
-
-
-<iframe width="510" height="322" src="https://www.youtube.com/embed/i57kImy2aYA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 
