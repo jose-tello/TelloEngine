@@ -17,7 +17,7 @@
 #include "W_CameraView.h"
 #include "W_ObjectHierarchy.h"
 #include "W_Inspector.h"
-#include "W_LoadFile.h"
+#include "W_Assets.h"
 #include "W_Scene.h"
 #include "W_ShaderEditor.h"
 
@@ -41,7 +41,7 @@ M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 	win = new W_Inspector(true);
 	windowsVec.push_back(win);
 
-	win = new W_LoadFile(false);
+	win = new W_Assets(true);
 	windowsVec.push_back(win);
 
 	win = new W_ShaderEditor();

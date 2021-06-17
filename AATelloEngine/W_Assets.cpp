@@ -1,4 +1,4 @@
-#include "W_LoadFile.h"
+#include "W_Assets.h"
 
 #include "Application.h"
 #include "M_FileManager.h"
@@ -11,19 +11,19 @@
 #include <vector>
 #include <string>
 
-W_LoadFile::W_LoadFile(bool open) : E_Window(E_WINDOW_TYPE::LOAD_FILE, open)
+W_Assets::W_Assets(bool open) : E_Window(E_WINDOW_TYPE::LOAD_FILE, open)
 {
 }
 
 
-W_LoadFile::~W_LoadFile()
+W_Assets::~W_Assets()
 {
 }
 
 
-bool W_LoadFile::Draw()
+bool W_Assets::Draw()
 {
-	ImGui::Begin(("Load file"), &open);
+	ImGui::Begin(("Assets"), &open);
 	
 	if (ImGui::Button("Update state"))
 		App->resourceManager->UpdateAllAssets();
@@ -35,14 +35,13 @@ bool W_LoadFile::Draw()
 }
 
 
-void W_LoadFile::DrawLoadWindow()
+void W_Assets::DrawLoadWindow()
 {
 	ImGui::BeginChild("File bowser");
 
-	if (ImGui::CollapsingHeader("Assets"))
-		DrawDirectory("/Assets/", "");
+	DrawDirectory("/Assets/", "");
 
-	ImGui::Separator();
+	/*ImGui::Separator();
 
 	if (ImGui::CollapsingHeader("Materials"))
 		DrawDirectory(MATERIAL_LIBRARY, "", true);
@@ -55,13 +54,13 @@ void W_LoadFile::DrawLoadWindow()
 	ImGui::Separator();
 
 	if (ImGui::CollapsingHeader("Shaders"))
-		DrawDirectory(SHADER_LIBRARY, "", true);
+		DrawDirectory(SHADER_LIBRARY, "", true);*/
 
 	ImGui::EndChild();
 }
 
 
-void W_LoadFile::DrawDirectory(const char* directory, const char* filterExtension, bool fromResource)
+void W_Assets::DrawDirectory(const char* directory, const char* filterExtension, bool fromResource)
 {
 	std::vector<std::string> files;
 	std::vector<std::string> folderDirs;

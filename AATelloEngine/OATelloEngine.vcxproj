@@ -168,7 +168,7 @@
     <ClInclude Include="W_Console.h" />
     <ClInclude Include="W_DockWindow.h" />
     <ClInclude Include="W_Inspector.h" />
-    <ClInclude Include="W_LoadFile.h" />
+    <ClInclude Include="W_Assets.h" />
     <ClInclude Include="W_ObjectHierarchy.h" />
     <ClInclude Include="W_CameraView.h" />
     <ClInclude Include="E_Window.h" />
@@ -264,7 +264,7 @@
     <ClCompile Include="W_Console.cpp" />
     <ClCompile Include="W_DockWindow.cpp" />
     <ClCompile Include="W_Inspector.cpp" />
-    <ClCompile Include="W_LoadFile.cpp" />
+    <ClCompile Include="W_Assets.cpp" />
     <ClCompile Include="W_ObjectHierarchy.cpp" />
     <ClCompile Include="W_CameraView.cpp" />
     <ClCompile Include="E_Window.cpp" />

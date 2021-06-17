@@ -159,9 +159,6 @@
     <ClInclude Include="SceneImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="W_LoadFile.h">
-      <Filter>Sources\EditorWindows</Filter>
-    </ClInclude>
     <ClInclude Include="ModelImporter.h">
       <Filter>Sources\Importers</Filter>
     </ClInclude>
@@ -414,6 +411,9 @@
     <ClInclude Include="C_LightSource.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
+    <ClInclude Include="W_Assets.h">
+      <Filter>Sources\EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -520,9 +520,6 @@
     </ClCompile>
     <ClCompile Include="SceneImporter.cpp">
       <Filter>Sources\Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="W_LoadFile.cpp">
-      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="ModelImporter.cpp">
       <Filter>Sources\Importers</Filter>
@@ -691,6 +688,9 @@
     </ClCompile>
     <ClCompile Include="C_LightSource.cpp">
       <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="W_Assets.cpp">
+      <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

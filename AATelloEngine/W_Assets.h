@@ -5,11 +5,11 @@
 
 #define BACKSPACE 42
 
-class W_LoadFile : public E_Window
+class W_Assets : public E_Window
 {
 public:
-	W_LoadFile(bool open = true);
-	~W_LoadFile() override;
+	W_Assets(bool open = true);
+	~W_Assets() override;
 
 	bool Draw() override;
 
