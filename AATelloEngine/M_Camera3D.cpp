@@ -43,32 +43,35 @@ bool M_Camera3D::Start()
 // -----------------------------------------------------------------
 UPDATE_STATUS M_Camera3D::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
+	if (App->editor->IsSceneWindowHovered())
 	{
-		float3 pos;
-		if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
-			camera->LookAt(pos);
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
+		{
+			float3 pos;
+			if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
+				camera->LookAt(pos);
+		}
+
+		else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+		{
+			MoveCamera();
+			RotateCamera();
+		}
+
+		else if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+			MoveCameraSideways();
+
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
+		{
+			float3 pos;
+			if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
+				OrbitCamera(pos);
+		}
+
+		int weelMotion = App->input->GetMouseZ();
+		if (weelMotion != 0)
+			ZoomCamera(weelMotion);
 	}
-
-	else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
-	{
-		MoveCamera();
-		RotateCamera();
-	}
-
-	else if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
-		MoveCameraSideways();
-
-	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
-	{
-		float3 pos;
-		if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
-			OrbitCamera(pos);
-	}
-
-	int weelMotion = App->input->GetMouseZ();
-	if (weelMotion != 0)
-		ZoomCamera(weelMotion);
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }

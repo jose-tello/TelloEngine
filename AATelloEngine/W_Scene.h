@@ -12,12 +12,15 @@ public:
 
 	bool Draw() override;
 
+	bool IsWindowHovered() const;
+
 private:
 	void HandleInput();
 	void HandleGizmo();
 
 private:
 	int gizmoOperation;
+	bool hovered = false;
 };
 
 #endif // !__W_SCENE_H__

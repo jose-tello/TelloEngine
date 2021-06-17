@@ -57,9 +57,18 @@ bool W_Scene::Draw()
 }
 
 
+bool W_Scene::IsWindowHovered() const
+{
+	return hovered;
+}
+
+
+
 void W_Scene::HandleInput()
 {
-	if (ImGui::IsItemHovered() == true)
+	hovered = ImGui::IsItemHovered();
+
+	if (hovered)
 	{
 		//TODO: this should be done using event manager
 		if (ImGui::IsItemClicked(0))
@@ -73,7 +82,6 @@ void W_Scene::HandleInput()
 
 		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_DOWN)
 			gizmoOperation = ImGuizmo::OPERATION::SCALE;
-
 	}
 }
 

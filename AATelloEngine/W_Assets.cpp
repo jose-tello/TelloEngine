@@ -11,7 +11,7 @@
 #include <vector>
 #include <string>
 
-W_Assets::W_Assets(bool open) : E_Window(E_WINDOW_TYPE::LOAD_FILE, open)
+W_Assets::W_Assets(bool open) : E_Window(E_WINDOW_TYPE::ASSETS, open)
 {
 }
 

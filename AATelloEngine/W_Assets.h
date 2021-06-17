@@ -1,5 +1,5 @@
-#ifndef __W_LOAD_FILE_H__
-#define __W_LOAD_FILE_H__
+#ifndef __W_ASSETS_H__
+#define __W_ASSETS_H__
 
 #include "E_Window.h"
 
@@ -18,4 +18,4 @@ private:
 	void DrawDirectory(const char* directory, const char* filterExtension, bool fromResource = false);
 };
 
-#endif // !__W_LOAD_FILE_H__
+#endif // !__W_ASSETS_H__

@@ -41,6 +41,7 @@ public:
 	std::vector<E_Window*> GetWindowsVector();
 	E_Window* GetWindow(int win);
 	void GetSceneWindowSize(E_Window*, int& x, int& y, float& mouseX, float& mouseY);
+	bool IsSceneWindowHovered() const;
 
 	GameObject* GetFocusedGameObject() const;
 	void SetFocusedGameObject(GameObject*);
