@@ -49,11 +49,13 @@ public:
 	void Load(Config&) override;
 	void Save(Config&) const override;
 
+	unsigned int GetTextureId() const;
+
 private:
 	void InitCheckerTex();	
 
 	void GetDrawColor(Color&) const;
-	unsigned int GetTextureId() const;
+	
 	unsigned int GetShaderProgram() const;
 
 	void UpdateUniformArray(R_Shader* shader);

@@ -218,6 +218,7 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Text("Texture Path: %s", material->GetTexturePath().c_str());
+		ImGui::Image((ImTextureID)material->GetTextureId(), ImVec2(104, 104));
 		int width, height;
 		material->GetTextureSize(width, height);
 		ImGui::Text("Tex width: %i", width);
