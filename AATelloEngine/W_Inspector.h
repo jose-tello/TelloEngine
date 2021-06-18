@@ -14,6 +14,8 @@ class C_Camera;
 #define BACKSPACE 42
 #define ADD_HEIGHT 20
 
+#define MAX_GO_NAME_LENGTH 100
+
 class W_Inspector : public E_Window
 {
 public:

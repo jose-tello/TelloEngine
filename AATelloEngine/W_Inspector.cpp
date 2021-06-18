@@ -125,7 +125,11 @@ void W_Inspector::DrawGameObject(GameObject* obj)
 {
 	if (ImGui::CollapsingHeader("GameObject"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
-		ImGui::Text("Name: ");	ImGui::SameLine(); ImGui::Text(obj->GetName());
+		std::string name(obj->GetName());
+		name.resize(MAX_GO_NAME_LENGTH);
+
+		ImGui::InputText("Name: ", &name[0], name.length());
+		obj->SetName(name.c_str());
 	}
 
 	ImGui::NewLine();

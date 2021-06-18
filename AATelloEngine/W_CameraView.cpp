@@ -44,9 +44,15 @@ bool W_CameraView::Draw()
 	GameObject* cam = camera->GetOwner();
 
 	if (cam != nullptr)
+	{
 		name = cam->GetName();
+		name += "##";
+		name += (int)cam->GetUuid();
+
+	}
 	else
 		name = "No GO";
+
 
 	ImGui::Begin(name.c_str(), &open);
 	ImGui::BeginChild("Game render");
