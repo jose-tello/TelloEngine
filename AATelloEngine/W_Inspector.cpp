@@ -260,17 +260,19 @@ void W_Inspector::DrawShaderInfo(C_Material* material)
 		App->editor->OpenShaderEditor(material->GetShader(), material->GetShaderName().c_str());
 
 	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::Text("Shader uniforms");
+	ImGui::NewLine();
 
 	std::vector<UniformHandle> uniformVector = material->GetUniformVector();
 
 	int uniformCount = uniformVector.size();
 	for (int i = 0; i < uniformCount; i++)
 	{
-		DrawShaderUniform(uniformVector[i]);
-
-		ImGui::NewLine();
-		ImGui::Separator();
-		ImGui::NewLine();
+		if (IsDefaultUniform(uniformVector[i].GetName()) == false)
+			DrawShaderUniform(uniformVector[i]);
+		else
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), uniformVector[i].GetName());
 	}
 
 	material->SetUniformVector(uniformVector);
@@ -503,6 +505,17 @@ void W_Inspector::DrawCameraComp(C_Camera* camera)
 	ImGui::NewLine();
 }
 
+
+bool W_Inspector::IsDefaultUniform(const char* uniformName) const
+{
+	for (int i = 0; i < sizeof(defaultUniforms) / sizeof(defaultUniforms[0]); ++i)
+	{
+		if (std::strcmp(uniformName, defaultUniforms[i]) == 0)
+			return true;
+	}
+
+	return false;
+}
 
 //TODO: add components
 void W_Inspector::DrawAddMenu(GameObject* gameObject)

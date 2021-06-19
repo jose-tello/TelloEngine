@@ -32,24 +32,29 @@ public:
 
 private:
 	void DrawGameObject(GameObject* obj);
-	void DrawTransformComp(C_Transform*);
+	void DrawTransformComp(C_Transform* trans);
 
 	void DrawTransformPos(C_Transform* transform);
 	void DrawTransformRot(C_Transform* transform);
 	void DrawTransformScale(C_Transform* transform);
 
-	void DrawMeshComp(C_Mesh*);
-	void DrawMaterialComp(C_Material*);
-	void DrawShaderInfo(C_Material*);
-	void DrawShaderUniform(UniformHandle&);
-	void DrawCameraComp(C_Camera*);
+	void DrawMeshComp(C_Mesh* mesh);
+	void DrawMaterialComp(C_Material* mat);
+	void DrawShaderInfo(C_Material* mat);
+	void DrawShaderUniform(UniformHandle& uniform);
+	void DrawCameraComp(C_Camera* cam);
 
-	void DrawAddMenu(GameObject*);
+	bool IsDefaultUniform(const char* uniformName) const;
+
+	void DrawAddMenu(GameObject* go);
 
 private:
 	GameObject* focusedObject = nullptr;
 	bool drawAddMenu;
 };
+
+static const char* defaultUniforms[] = { "model_matrix", "projection", "view", "has_texture", "light_position",
+										"material_color", "timer" };
 
 
 #endif // !__E_INSPECTOR__
