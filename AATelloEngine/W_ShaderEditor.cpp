@@ -29,6 +29,9 @@ W_ShaderEditor::~W_ShaderEditor()
 bool W_ShaderEditor::Draw()
 {
 	ImGui::Begin("Shader editor", &open);
+
+	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
 	
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), currentShaderName.c_str());
 	ImGui::SameLine();

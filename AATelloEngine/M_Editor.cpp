@@ -242,9 +242,15 @@ void M_Editor::GetSceneWindowSize(E_Window* win, int& x, int& y, float& mouseX, 
 }
 
 
-bool M_Editor::IsSceneWindowHovered() const
+bool M_Editor::IsWindowHovered(E_WINDOW_TYPE win) const
 {
-	return static_cast<W_Scene*>(windowsVec[(int)E_WINDOW_TYPE::SCENE_CAMERA])->IsWindowHovered();
+	return windowsVec[(int)win]->IsHovered();
+}
+
+
+bool M_Editor::IsWindowFocused(E_WINDOW_TYPE win) const
+{
+	return windowsVec[(int)win]->IsFocused();
 }
 
 

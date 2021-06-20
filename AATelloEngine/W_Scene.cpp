@@ -57,16 +57,10 @@ bool W_Scene::Draw()
 }
 
 
-bool W_Scene::IsWindowHovered() const
-{
-	return hovered;
-}
-
-
-
 void W_Scene::HandleInput()
 {
-	hovered = ImGui::IsItemHovered();
+	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
 
 	if (hovered)
 	{

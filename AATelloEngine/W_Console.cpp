@@ -34,7 +34,10 @@ W_Console::~W_Console()
 bool W_Console::Draw()
 {
 	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-	ImGui::Begin("console", &open);
+	ImGui::Begin("Console", &open);
+
+	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
 	
 	if (ImGui::BeginPopupContextItem())
 	{

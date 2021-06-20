@@ -43,7 +43,7 @@ bool M_Camera3D::Start()
 // -----------------------------------------------------------------
 UPDATE_STATUS M_Camera3D::Update(float dt)
 {
-	if (App->editor->IsSceneWindowHovered())
+	if (App->editor->IsWindowHovered(E_WINDOW_TYPE::SCENE_CAMERA))
 	{
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
 		{

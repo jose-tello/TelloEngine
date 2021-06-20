@@ -24,6 +24,9 @@ W_Assets::~W_Assets()
 bool W_Assets::Draw()
 {
 	ImGui::Begin(("Assets"), &open);
+
+	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
 	
 	if (ImGui::Button("Update state"))
 		App->resourceManager->UpdateAllAssets();

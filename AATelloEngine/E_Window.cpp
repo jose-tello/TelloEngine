@@ -2,7 +2,9 @@
 
 E_Window::E_Window(E_WINDOW_TYPE type, bool open) : 
 	type(type),
-	open(open)
+	open(open),
+	hovered(false),
+	focused(false)
 {
 }
 
@@ -23,7 +25,19 @@ bool E_Window::Update()
 	return true;
 }
 
+
 bool E_Window::Draw()
 {
 	return true;
+}
+
+
+bool E_Window::IsHovered() const
+{
+	return hovered;
+}
+
+bool E_Window::IsFocused() const
+{
+	return focused;
 }

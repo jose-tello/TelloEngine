@@ -29,6 +29,10 @@ W_Inspector::~W_Inspector()
 bool W_Inspector::Draw()
 {
 	ImGui::Begin("Inspector", &open);
+
+	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
+
 	if (focusedObject != nullptr)
 	{
 		DrawGameObject(focusedObject);
