@@ -89,7 +89,7 @@ bool M_Renderer3D::Init()
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		glEnable(GL_LIGHTING);
+		//glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 	}
@@ -135,8 +135,6 @@ bool M_Renderer3D::CleanUp()
 
 void M_Renderer3D::OnResize(float width, float height, C_Camera* camera)
 {
-	glViewport(0, 0, width, height);
-
 	camera->SetAspectRatio(width / height);
 }
 
@@ -174,8 +172,10 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 }
 
 
-void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera, bool drawAABB)
+void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
 {
+
+	glViewport(0, 0, camWidth, camHeight);
 	if (pushCamera == true)
 	{
 		PopCamera();
@@ -212,12 +212,12 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pu
 }
 
 
-void M_Renderer3D::DrawCube(float* cube) const
+void M_Renderer3D::DrawCube(float* cube, float r, float g, float b) const
 {
 	glBegin(GL_LINES);
 
 	glLineWidth(3.0f);
-	glColor3f(0, 0.2f, 0.9f);
+	glColor3f(r, g, b);
 
 	glVertex3f(cube[0], cube[1], cube[2]);
 	glVertex3f(cube[12], cube[13], cube[14]);

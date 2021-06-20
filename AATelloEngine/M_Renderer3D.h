@@ -35,8 +35,8 @@ public:
 							 unsigned int& textureBuffer, unsigned int& depthBuffer);
 	void DeleteBuffers(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int depthBuffer);
 
-	void DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera = true, bool drawAABB = false);
-	void DrawCube(float*) const;
+	void DrawScene(unsigned int frameBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera = true, bool drawAABB = false);
+	void DrawCube(float* vertex, float r, float g, float b) const;
 
 	C_Camera* GetCurrentCamera() const;
 

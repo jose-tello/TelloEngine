@@ -34,7 +34,10 @@ protected:
 	unsigned int textureBuffer;
 	unsigned int depthBuffer;
 
-	C_Camera* camera;
+	C_Camera* camera = nullptr;
+
+private:
+	bool started = false;
 };
 
 #endif // !__E_CAMERA_VIEW_H__

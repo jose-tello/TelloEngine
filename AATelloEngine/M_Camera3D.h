@@ -39,6 +39,9 @@ public:
 
 	float GetAspectRatio() const;
 	void SetAspectRatio(float aspRatio);
+
+	int GetWidth() const;
+	int GetHeight() const;
 	
 private:
 
@@ -55,6 +58,9 @@ public:
 
 private:
 	C_Camera* camera = nullptr;
+
+	int camWidth = 0;
+	int camHeight = 0;
 };
 
 #endif // !__M_CAMERA3D_H__

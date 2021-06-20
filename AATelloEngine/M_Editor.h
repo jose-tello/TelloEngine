@@ -40,7 +40,7 @@ public:
 	
 	std::vector<E_Window*> GetWindowsVector();
 	E_Window* GetWindow(int win);
-	void GetSceneWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY);
+	void GetCameraWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY);
 
 	bool IsWindowHovered(E_WINDOW_TYPE win) const;
 	bool IsWindowFocused(E_WINDOW_TYPE win) const;

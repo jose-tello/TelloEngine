@@ -213,5 +213,5 @@ void C_Mesh::DrawAABB() const
 	float3 corners[8];
 	aabb.GetCornerPoints(corners);
 
-	App->renderer3D->DrawCube((float*)corners);
+	App->renderer3D->DrawCube((float*)corners, 0.1f, 1.0f, 0.2f);
 }

@@ -43,6 +43,9 @@ bool M_Camera3D::Start()
 // -----------------------------------------------------------------
 UPDATE_STATUS M_Camera3D::Update(float dt)
 {
+	float mouseX, mouseY;
+	App->editor->GetCameraWindowSize(camera->GetWindow(), camWidth, camHeight, mouseX, mouseY);
+
 	if (App->editor->IsWindowHovered(E_WINDOW_TYPE::SCENE_CAMERA))
 	{
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
@@ -109,7 +112,7 @@ void M_Camera3D::ClickSelect()
 	float mouseX /*= App->input->GetMouseX()*/;
 	float mouseY /*= App->input->GetMouseY()*/;
 
-	App->editor->GetSceneWindowSize(camera->GetWindow(), width, height, mouseX, mouseY);
+	App->editor->GetCameraWindowSize(camera->GetWindow(), width, height, mouseX, mouseY);
 
 	mouseX = mouseX / width;
 	mouseY = mouseY / height;
@@ -176,6 +179,18 @@ float M_Camera3D::GetAspectRatio() const
 void M_Camera3D::SetAspectRatio(float aspRatio)
 {
 	camera->SetAspectRatio(aspRatio);
+}
+
+
+int M_Camera3D::GetWidth() const
+{
+	return camWidth;
+}
+
+
+int M_Camera3D::GetHeight() const
+{
+	return camHeight;
 }
 
 

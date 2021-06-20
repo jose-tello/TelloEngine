@@ -228,7 +228,7 @@ E_Window* M_Editor::GetWindow(int win)
 }
 
 
-void M_Editor::GetSceneWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY)
+void M_Editor::GetCameraWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY)
 {
 	if (win->type == E_WINDOW_TYPE::SCENE_CAMERA)
 	{
