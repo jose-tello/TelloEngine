@@ -54,6 +54,7 @@ public:
 	void SetTexture2DEnabled(bool enable);
 	void SetFillMode(bool enable);
 	void SetWireframeMode(bool enable);
+	void SetVsync(bool enable);
 
 private:
 	void PushCamera(C_Camera*);
@@ -79,6 +80,7 @@ private:
 	bool texture2DEnabled;
 	bool fillModeEnabled;
 	bool wireframeModeEnabled;
+	bool vsync = true;
 
 	Light light;
 

@@ -38,6 +38,7 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	texture2DEnabled(true),
 	fillModeEnabled(true),
 	wireframeModeEnabled(false),
+	vsync(true),
 
 	currentCamera(nullptr),
 	cameraRay1{ 0, 0, 0 },
@@ -76,7 +77,7 @@ bool M_Renderer3D::Init()
 	if (ret == true)
 	{
 		//Use Vsync
-		if (VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if (SDL_GL_SetSwapInterval(static_cast<int>(vsync)) < 0)
 			App->editor->AddLog("[ERROR]: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Check for error
@@ -385,6 +386,16 @@ void M_Renderer3D::SetWireframeMode(bool enable)
 	if (wireframeModeEnabled != enable)
 	{
 		wireframeModeEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::SetVsync(bool enable)
+{
+	if (vsync != enable)
+	{
+		vsync = enable;
+		SDL_GL_SetSwapInterval(static_cast<int>(vsync));
 	}
 }
 

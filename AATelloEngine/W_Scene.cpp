@@ -65,7 +65,7 @@ void W_Scene::HandleInput()
 	if (hovered)
 	{
 		//TODO: this should be done using event manager
-		if (ImGui::IsItemClicked(0))
+		if (ImGui::IsItemClicked(0) && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_IDLE)
 			App->camera->ClickSelect();
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_DOWN)

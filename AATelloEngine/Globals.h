@@ -36,7 +36,6 @@ enum class UPDATE_STATUS : int
 #define WIN_RESIZABLE true
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
-#define VSYNC true
 #define TITLE "AO Tello engine"
 
 class Application;
