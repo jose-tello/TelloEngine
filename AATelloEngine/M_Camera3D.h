@@ -4,9 +4,9 @@
 #include "Module.h"
 #include "MathGeoLib/src/MathGeoLibFwd.h"
 
-#define CAMERA_SPEED 1.f
-#define MOUSE_SENSITIVITY 0.25f
-#define MOUSE_ORBIT_SENSITIVITY 0.02f
+#define CAMERA_SPEED 1.2f
+#define MOUSE_SENSITIVITY 0.3f
+#define MOUSE_ORBIT_SENSITIVITY 0.015f
 #define MOUSE_WEEL_SPEED 25.f
 
 class C_Camera;

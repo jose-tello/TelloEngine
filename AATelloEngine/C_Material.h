@@ -32,7 +32,7 @@ public:
 
 	std::vector<UniformHandle> GetUniformVector() const;
 	void SetUniformVector(std::vector<UniformHandle>& vector);
-	void SetUniformsToShader() const;
+	void SetUniformsToShader();
 	void NotifyShaderUpdate();
 
 	bool GetTextureEnabled() const;
@@ -44,7 +44,7 @@ public:
 	bool GetCheckerTextureEnabled() const;
 	void SetCheckerTextureEnable(bool enable);
 
-	void GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId) const;
+	void GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId);
 
 	void Load(Config&) override;
 	void Save(Config&) const override;
@@ -56,7 +56,7 @@ private:
 
 	void GetDrawColor(Color&) const;
 	
-	unsigned int GetShaderProgram() const;
+	unsigned int GetShaderProgram();
 
 	void UpdateUniformArray(R_Shader* shader);
 

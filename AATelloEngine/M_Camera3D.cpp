@@ -258,11 +258,16 @@ void M_Camera3D::ZoomCamera(int weelMotion)
 	float3 newPos(0, 0, 0);
 	float3 Z = camera->frustum.Front();
 
+	float speed = MOUSE_WEEL_SPEED;
+
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
+		speed *= 0.2f;
+
 	if (weelMotion > 0)
-		newPos += Z * MOUSE_WEEL_SPEED;
+		newPos += Z * speed;
 	
 	else
-		newPos -= Z * MOUSE_WEEL_SPEED;
+		newPos -= Z * speed;
 
 	float3 position = camera->frustum.Pos();
 	position += newPos;
@@ -279,8 +284,13 @@ void M_Camera3D::MoveCameraSideways()
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
 
-	newPos += dx * X * CAMERA_SPEED;
-	newPos -= dy * Y * CAMERA_SPEED;
+	float speed = CAMERA_SPEED;
+
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
+		speed *= 0.05f;
+
+	newPos += dx * X * speed;
+	newPos -= dy * Y * speed;
 	
 	float3 position = camera->frustum.Pos();
 	position += newPos;
