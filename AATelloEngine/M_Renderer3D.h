@@ -35,8 +35,8 @@ public:
 							 unsigned int& textureBuffer, unsigned int& depthBuffer);
 	void DeleteBuffers(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int depthBuffer);
 
-	void DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera = true, bool drawAABB = false);
-	void DrawCube(float*) const;
+	void DrawScene(unsigned int frameBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera = true, bool drawAABB = false);
+	void DrawCube(float* vertex, float r, float g, float b) const;
 
 	C_Camera* GetCurrentCamera() const;
 
@@ -54,6 +54,7 @@ public:
 	void SetTexture2DEnabled(bool enable);
 	void SetFillMode(bool enable);
 	void SetWireframeMode(bool enable);
+	void SetVsync(bool enable);
 
 private:
 	void PushCamera(C_Camera*);
@@ -79,6 +80,7 @@ private:
 	bool texture2DEnabled;
 	bool fillModeEnabled;
 	bool wireframeModeEnabled;
+	bool vsync = true;
 
 	Light light;
 

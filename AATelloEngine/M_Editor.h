@@ -40,10 +40,13 @@ public:
 	
 	std::vector<E_Window*> GetWindowsVector();
 	E_Window* GetWindow(int win);
-	void GetSceneWindowSize(E_Window*, int& x, int& y, float& mouseX, float& mouseY);
+	void GetCameraWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY);
+
+	bool IsWindowHovered(E_WINDOW_TYPE win) const;
+	bool IsWindowFocused(E_WINDOW_TYPE win) const;
 
 	GameObject* GetFocusedGameObject() const;
-	void SetFocusedGameObject(GameObject*);
+	void SetFocusedGameObject(GameObject* go);
 	bool GetFocusedGameObjectPos(float& x, float& y, float& z) const;
 	
 	void QuitFocusedGameObject();

@@ -32,6 +32,7 @@ W_AppState::W_AppState(bool open) :	E_Window(E_WINDOW_TYPE::APPLICATION_STATE, o
 	texture2DEnabled(true),
 	fillModeEnabled(true),
 	wireframeModeEnabled(false),
+	vsync(true),
 
 	//Cpu
 	cpuCores(0),
@@ -181,6 +182,7 @@ void W_AppState::DrawChRenderOptions()
 		ImGui::Checkbox("Texture 2D", &texture2DEnabled);
 		ImGui::Checkbox("Fill mode", &fillModeEnabled);
 		ImGui::Checkbox("Wireframe mode", &wireframeModeEnabled);
+		ImGui::Checkbox("Vsync", &vsync);
 
 
 		App->renderer3D->SetDepthTestEnabled(depthTestEnabled);
@@ -189,7 +191,7 @@ void W_AppState::DrawChRenderOptions()
 		App->renderer3D->SetColorMatEnabled(colorMatEnabled);
 		App->renderer3D->SetTexture2DEnabled(texture2DEnabled);
 		App->renderer3D->SetFillMode(fillModeEnabled);
-		App->renderer3D->SetWireframeMode(wireframeModeEnabled);
+		App->renderer3D->SetVsync(vsync);
 	}
 }
 

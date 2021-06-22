@@ -29,6 +29,10 @@ W_Inspector::~W_Inspector()
 bool W_Inspector::Draw()
 {
 	ImGui::Begin("Inspector", &open);
+
+	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
+
 	if (focusedObject != nullptr)
 	{
 		DrawGameObject(focusedObject);
@@ -125,7 +129,11 @@ void W_Inspector::DrawGameObject(GameObject* obj)
 {
 	if (ImGui::CollapsingHeader("GameObject"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
-		ImGui::Text("Name: ");	ImGui::SameLine(); ImGui::Text(obj->GetName());
+		std::string name(obj->GetName());
+		name.resize(MAX_GO_NAME_LENGTH);
+
+		ImGui::InputText("Name: ", &name[0], name.length());
+		obj->SetName(name.c_str());
 	}
 
 	ImGui::NewLine();
@@ -218,6 +226,7 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 	if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Text("Texture Path: %s", material->GetTexturePath().c_str());
+		ImGui::Image((ImTextureID)material->GetTextureId(), ImVec2(104, 104));
 		int width, height;
 		material->GetTextureSize(width, height);
 		ImGui::Text("Tex width: %i", width);
@@ -255,17 +264,19 @@ void W_Inspector::DrawShaderInfo(C_Material* material)
 		App->editor->OpenShaderEditor(material->GetShader(), material->GetShaderName().c_str());
 
 	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::Text("Shader uniforms");
+	ImGui::NewLine();
 
 	std::vector<UniformHandle> uniformVector = material->GetUniformVector();
 
 	int uniformCount = uniformVector.size();
 	for (int i = 0; i < uniformCount; i++)
 	{
-		DrawShaderUniform(uniformVector[i]);
-
-		ImGui::NewLine();
-		ImGui::Separator();
-		ImGui::NewLine();
+		if (IsDefaultUniform(uniformVector[i].GetName()) == false)
+			DrawShaderUniform(uniformVector[i]);
+		else
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), uniformVector[i].GetName());
 	}
 
 	material->SetUniformVector(uniformVector);
@@ -498,6 +509,17 @@ void W_Inspector::DrawCameraComp(C_Camera* camera)
 	ImGui::NewLine();
 }
 
+
+bool W_Inspector::IsDefaultUniform(const char* uniformName) const
+{
+	for (int i = 0; i < sizeof(defaultUniforms) / sizeof(defaultUniforms[0]); ++i)
+	{
+		if (std::strcmp(uniformName, defaultUniforms[i]) == 0)
+			return true;
+	}
+
+	return false;
+}
 
 //TODO: add components
 void W_Inspector::DrawAddMenu(GameObject* gameObject)

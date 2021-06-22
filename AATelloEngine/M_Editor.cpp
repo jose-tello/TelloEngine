@@ -17,7 +17,7 @@
 #include "W_CameraView.h"
 #include "W_ObjectHierarchy.h"
 #include "W_Inspector.h"
-#include "W_LoadFile.h"
+#include "W_Assets.h"
 #include "W_Scene.h"
 #include "W_ShaderEditor.h"
 
@@ -41,7 +41,7 @@ M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 	win = new W_Inspector(true);
 	windowsVec.push_back(win);
 
-	win = new W_LoadFile(false);
+	win = new W_Assets(true);
 	windowsVec.push_back(win);
 
 	win = new W_ShaderEditor();
@@ -228,7 +228,7 @@ E_Window* M_Editor::GetWindow(int win)
 }
 
 
-void M_Editor::GetSceneWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY)
+void M_Editor::GetCameraWindowSize(E_Window* win, int& x, int& y, float& mouseX, float& mouseY)
 {
 	if (win->type == E_WINDOW_TYPE::SCENE_CAMERA)
 	{
@@ -239,6 +239,18 @@ void M_Editor::GetSceneWindowSize(E_Window* win, int& x, int& y, float& mouseX, 
 	else
 		assert("Invalid window type");
 	
+}
+
+
+bool M_Editor::IsWindowHovered(E_WINDOW_TYPE win) const
+{
+	return windowsVec[(int)win]->IsHovered();
+}
+
+
+bool M_Editor::IsWindowFocused(E_WINDOW_TYPE win) const
+{
+	return windowsVec[(int)win]->IsFocused();
 }
 
 

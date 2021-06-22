@@ -31,7 +31,10 @@ bool W_ObjectHierarchy::Draw()
 	std::vector<GameObject*> gameObjects;
 	App->scene->GetGameObjectVector(gameObjects);
 
-	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed;
+	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
+
+	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
 	bool open = ImGui::TreeNodeEx("Scene", flags);
 		
@@ -49,10 +52,16 @@ bool W_ObjectHierarchy::Draw()
 
 void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 {
-	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+	int flags = 0;
 
 	for (int i = 0; i < vec.size(); i++)
 	{
+		if (vec[i]->childs.empty() == true)
+			flags = ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Leaf;
+
+		else
+			flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+
 		bool open = ImGui::TreeNodeEx(vec[i]->GetName(), flags);
 		
 		if (ImGui::IsItemClicked())
@@ -61,8 +70,12 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 			inspector->SetFocusedObject(vec[i]);
 		}
 
-		if (ImGui::IsWindowFocused() && App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
+		if ((hovered == true || App->editor->IsWindowHovered(E_WINDOW_TYPE::SCENE_CAMERA)) &&
+			(focused == true || App->editor->IsWindowFocused(E_WINDOW_TYPE::SCENE_CAMERA)) &&
+			App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
+		{
 			App->editor->DeleteFocusedObject();
+		}
 
 		HandleDragAndDrop(vec[i]);
 

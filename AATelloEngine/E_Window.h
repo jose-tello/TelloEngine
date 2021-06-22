@@ -9,7 +9,7 @@ enum class E_WINDOW_TYPE : int
 	CONSOLE,
 	GAME_OBJECTS,
 	INSPECTOR,
-	LOAD_FILE,
+	ASSETS,
 	EDIT_SHADER,
 	SCENE_CAMERA,
 	CAMERA_VIEW,
@@ -26,9 +26,16 @@ public:
 	virtual bool Update();
 	virtual bool Draw();
 
+	bool IsHovered() const;
+	bool IsFocused() const;
+
 public:
 	E_WINDOW_TYPE type;
 	bool open;
+
+protected:
+	bool hovered = false;
+	bool focused = false;
 };
 
 

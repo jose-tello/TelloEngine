@@ -4,9 +4,9 @@
 #include "Module.h"
 #include "MathGeoLib/src/MathGeoLibFwd.h"
 
-#define CAMERA_SPEED 1.f
-#define MOUSE_SENSITIVITY 0.25f
-#define MOUSE_ORBIT_SENSITIVITY 0.02f
+#define CAMERA_SPEED 1.2f
+#define MOUSE_SENSITIVITY 0.3f
+#define MOUSE_ORBIT_SENSITIVITY 0.015f
 #define MOUSE_WEEL_SPEED 25.f
 
 class C_Camera;
@@ -39,6 +39,9 @@ public:
 
 	float GetAspectRatio() const;
 	void SetAspectRatio(float aspRatio);
+
+	int GetWidth() const;
+	int GetHeight() const;
 	
 private:
 
@@ -55,6 +58,9 @@ public:
 
 private:
 	C_Camera* camera = nullptr;
+
+	int camWidth = 0;
+	int camHeight = 0;
 };
 
 #endif // !__M_CAMERA3D_H__

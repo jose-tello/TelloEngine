@@ -38,6 +38,7 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	texture2DEnabled(true),
 	fillModeEnabled(true),
 	wireframeModeEnabled(false),
+	vsync(true),
 
 	currentCamera(nullptr),
 	cameraRay1{ 0, 0, 0 },
@@ -76,7 +77,7 @@ bool M_Renderer3D::Init()
 	if (ret == true)
 	{
 		//Use Vsync
-		if (VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if (SDL_GL_SetSwapInterval(static_cast<int>(vsync)) < 0)
 			App->editor->AddLog("[ERROR]: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Check for error
@@ -89,7 +90,7 @@ bool M_Renderer3D::Init()
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		glEnable(GL_LIGHTING);
+		//glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 	}
@@ -135,8 +136,6 @@ bool M_Renderer3D::CleanUp()
 
 void M_Renderer3D::OnResize(float width, float height, C_Camera* camera)
 {
-	glViewport(0, 0, width, height);
-
 	camera->SetAspectRatio(width / height);
 }
 
@@ -174,8 +173,10 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 }
 
 
-void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pushCamera, bool drawAABB)
+void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
 {
+
+	glViewport(0, 0, camWidth, camHeight);
 	if (pushCamera == true)
 	{
 		PopCamera();
@@ -212,12 +213,12 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, bool pu
 }
 
 
-void M_Renderer3D::DrawCube(float* cube) const
+void M_Renderer3D::DrawCube(float* cube, float r, float g, float b) const
 {
 	glBegin(GL_LINES);
 
 	glLineWidth(3.0f);
-	glColor3f(0, 0.2f, 0.9f);
+	glColor3f(r, g, b);
 
 	glVertex3f(cube[0], cube[1], cube[2]);
 	glVertex3f(cube[12], cube[13], cube[14]);
@@ -385,6 +386,16 @@ void M_Renderer3D::SetWireframeMode(bool enable)
 	if (wireframeModeEnabled != enable)
 	{
 		wireframeModeEnabled = enable;
+	}
+}
+
+
+void M_Renderer3D::SetVsync(bool enable)
+{
+	if (vsync != enable)
+	{
+		vsync = enable;
+		SDL_GL_SetSwapInterval(static_cast<int>(vsync));
 	}
 }
 

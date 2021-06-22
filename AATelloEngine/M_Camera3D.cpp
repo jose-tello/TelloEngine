@@ -43,32 +43,38 @@ bool M_Camera3D::Start()
 // -----------------------------------------------------------------
 UPDATE_STATUS M_Camera3D::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
+	float mouseX, mouseY;
+	App->editor->GetCameraWindowSize(camera->GetWindow(), camWidth, camHeight, mouseX, mouseY);
+
+	if (App->editor->IsWindowHovered(E_WINDOW_TYPE::SCENE_CAMERA))
 	{
-		float3 pos;
-		if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
-			camera->LookAt(pos);
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
+		{
+			float3 pos;
+			if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
+				camera->LookAt(pos);
+		}
+
+		else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+		{
+			MoveCamera();
+			RotateCamera();
+		}
+
+		else if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+			MoveCameraSideways();
+
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
+		{
+			float3 pos;
+			if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
+				OrbitCamera(pos);
+		}
+
+		int weelMotion = App->input->GetMouseZ();
+		if (weelMotion != 0)
+			ZoomCamera(weelMotion);
 	}
-
-	else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
-	{
-		MoveCamera();
-		RotateCamera();
-	}
-
-	else if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
-		MoveCameraSideways();
-
-	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
-	{
-		float3 pos;
-		if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
-			OrbitCamera(pos);
-	}
-
-	int weelMotion = App->input->GetMouseZ();
-	if (weelMotion != 0)
-		ZoomCamera(weelMotion);
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -106,7 +112,7 @@ void M_Camera3D::ClickSelect()
 	float mouseX /*= App->input->GetMouseX()*/;
 	float mouseY /*= App->input->GetMouseY()*/;
 
-	App->editor->GetSceneWindowSize(camera->GetWindow(), width, height, mouseX, mouseY);
+	App->editor->GetCameraWindowSize(camera->GetWindow(), width, height, mouseX, mouseY);
 
 	mouseX = mouseX / width;
 	mouseY = mouseY / height;
@@ -176,6 +182,18 @@ void M_Camera3D::SetAspectRatio(float aspRatio)
 }
 
 
+int M_Camera3D::GetWidth() const
+{
+	return camWidth;
+}
+
+
+int M_Camera3D::GetHeight() const
+{
+	return camHeight;
+}
+
+
 void M_Camera3D::MoveCamera()
 {
 	float3 newPos(0, 0, 0);
@@ -240,11 +258,16 @@ void M_Camera3D::ZoomCamera(int weelMotion)
 	float3 newPos(0, 0, 0);
 	float3 Z = camera->frustum.Front();
 
+	float speed = MOUSE_WEEL_SPEED;
+
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
+		speed *= 0.2f;
+
 	if (weelMotion > 0)
-		newPos += Z * MOUSE_WEEL_SPEED;
+		newPos += Z * speed;
 	
 	else
-		newPos -= Z * MOUSE_WEEL_SPEED;
+		newPos -= Z * speed;
 
 	float3 position = camera->frustum.Pos();
 	position += newPos;
@@ -261,8 +284,13 @@ void M_Camera3D::MoveCameraSideways()
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
 
-	newPos += dx * X * CAMERA_SPEED;
-	newPos -= dy * Y * CAMERA_SPEED;
+	float speed = CAMERA_SPEED;
+
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
+		speed *= 0.05f;
+
+	newPos += dx * X * speed;
+	newPos -= dy * Y * speed;
 	
 	float3 position = camera->frustum.Pos();
 	position += newPos;

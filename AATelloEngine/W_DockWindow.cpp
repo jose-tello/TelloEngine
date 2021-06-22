@@ -131,7 +131,7 @@ void W_DockWindow::DrawFileMenu()
 		}
 
 		if (ImGui::MenuItem("Load"))
-			App->editor->OpenWindow((int)E_WINDOW_TYPE::LOAD_FILE);
+			App->editor->OpenWindow((int)E_WINDOW_TYPE::ASSETS);
 			
 			ImGui::EndMenu();
 	}

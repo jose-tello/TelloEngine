@@ -51,6 +51,7 @@ private:
 	bool texture2DEnabled;
 	bool fillModeEnabled;
 	bool wireframeModeEnabled;
+	bool vsync = true;
 
 	//Hardware
 	int cpuCores;

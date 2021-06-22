@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 #include "M_Window.h"
+#include "M_Camera3D.h"
 
 #include "GameObject.h"
 #include "C_Camera.h"
@@ -23,7 +24,9 @@ W_CameraView::W_CameraView(bool active, C_Camera* camera, E_WINDOW_TYPE type) : 
 	textureBuffer(0),
 	depthBuffer(0),
 
-	camera(camera)
+	camera(camera),
+
+	started(false)
 {
 }
 
@@ -44,11 +47,25 @@ bool W_CameraView::Draw()
 	GameObject* cam = camera->GetOwner();
 
 	if (cam != nullptr)
+	{
 		name = cam->GetName();
+		name += "##";
+		name += (int)cam->GetUuid();
+
+	}
 	else
 		name = "No GO";
 
+
 	ImGui::Begin(name.c_str(), &open);
+	if (started == false)
+	{
+		ImVec2 camSize;
+		camSize.x = App->camera->GetWidth();
+		camSize.y = App->camera->GetHeight();
+		ImGui::SetWindowSize(camSize);
+		started = true;
+	}
 	ImGui::BeginChild("Game render");
 
 	ImVec2 size = ImGui::GetWindowSize();
@@ -62,7 +79,7 @@ bool W_CameraView::Draw()
 	if (size.x != windowWidth || size.y != windowHeight)
 		OnResize(size.x, size.y);
 
-	App->renderer3D->DrawScene(frameBuffer, camera);
+	App->renderer3D->DrawScene(frameBuffer, camera, size.x, size.y);
 
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::EndChild();

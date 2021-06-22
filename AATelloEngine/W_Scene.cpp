@@ -42,7 +42,7 @@ bool W_Scene::Draw()
 	if (size.x != windowWidth || size.y != windowHeight)
 		OnResize(size.x, size.y);
 	
-	App->renderer3D->DrawScene(frameBuffer, camera, !App->camera->debugFrustumCull, App->camera->drawAABB);
+	App->renderer3D->DrawScene(frameBuffer, camera, size.x, size.y, !App->camera->debugFrustumCull, App->camera->drawAABB);
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	
 	HandleGizmo();
@@ -59,10 +59,13 @@ bool W_Scene::Draw()
 
 void W_Scene::HandleInput()
 {
-	if (ImGui::IsItemHovered() == true)
+	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
+
+	if (hovered)
 	{
 		//TODO: this should be done using event manager
-		if (ImGui::IsItemClicked(0))
+		if (ImGui::IsItemClicked(0) && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_IDLE)
 			App->camera->ClickSelect();
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_DOWN)
@@ -73,7 +76,6 @@ void W_Scene::HandleInput()
 
 		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_DOWN)
 			gizmoOperation = ImGuizmo::OPERATION::SCALE;
-
 	}
 }
 

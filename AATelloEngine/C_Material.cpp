@@ -248,7 +248,7 @@ void C_Material::SetUniformVector(std::vector<UniformHandle>& vector)
 }
 
 
-void C_Material::SetUniformsToShader() const
+void C_Material::SetUniformsToShader()
 {
 	unsigned int programId = GetShaderProgram();
 
@@ -454,7 +454,7 @@ void C_Material::SetCheckerTextureEnable(bool enable)
 }
 
 
-void C_Material::GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId) const
+void C_Material::GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId)
 {
 	GetDrawColor(col);
 	texId = GetTextureId();
@@ -582,7 +582,7 @@ unsigned int C_Material::GetTextureId() const
 }
 
 
-unsigned int C_Material::GetShaderProgram() const
+unsigned int C_Material::GetShaderProgram()
 {
 	if (shaderId != 0)
 	{
@@ -597,6 +597,7 @@ unsigned int C_Material::GetShaderProgram() const
 	else
 	{
 		R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
+		SetShader(shader->GetUid());
 		return shader->GetProgramId();
 	}
 }

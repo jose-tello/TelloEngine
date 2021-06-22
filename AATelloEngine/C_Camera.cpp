@@ -59,7 +59,7 @@ void C_Camera::DrawFrustum() const
 	float3 corners[8];
 	frustum.GetCornerPoints(corners);
 
-	App->renderer3D->DrawCube((float*)corners);
+	App->renderer3D->DrawCube((float*)corners, 0.2f, 0.3f, 1.0f);
 }
 
 
