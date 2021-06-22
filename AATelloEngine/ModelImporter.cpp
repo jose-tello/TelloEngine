@@ -22,6 +22,7 @@
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
+
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 #include <stack>
@@ -50,13 +51,14 @@ void ModelImporter::Import(const char* path, R_Model* model)
 		std::vector<int> meshesId;
 		for (int i = 0; i < scene->mNumMeshes; ++i)
 			meshesId.push_back(Private::ImportMesh(scene->mMeshes[i], filePath.c_str()));
-		
+
 		std::vector<int> materialsId;
 		for (int i = 0; i < scene->mNumMaterials; i++)
 			materialsId.push_back(Private::ImportMaterial(scene->mMaterials[i], filePath.c_str()));
 
 		Private::RewriteMeta(path, meshesId, materialsId);
-		Private::ImportNode(scene->mRootNode, scene, 0, modelNodes);
+		aiMatrix4x4 identityMat = aiMatrix4x4();
+		Private::ImportNode(scene->mRootNode, scene, 0, modelNodes, identityMat, true);
 		Private::LinkModelResources(modelNodes, meshesId, materialsId);
 
 		Save(modelNodes, model->GetUid());
@@ -66,7 +68,7 @@ void ModelImporter::Import(const char* path, R_Model* model)
 
 	else
 		App->editor->AddLog("[ERROR] loading scene");
-	
+
 
 	delete[] buffer;
 	buffer = nullptr;
@@ -264,29 +266,44 @@ GameObject* ModelImporter::Private::SearchGameObjParent(int parent, std::vector<
 }
 
 
-void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec)
+void ModelImporter::Private::ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec, aiMatrix4x4& dummyMat, bool first)
 {
-	ModelNode obj;
-	InitObject(obj, parentId, node);
+	aiMatrix4x4 dumMat = aiMatrix4x4();
 
-	for (int i = 0; i < node->mNumMeshes; i++)
+	if (node->mNumMeshes == 0 && first == false)
 	{
-		obj.meshId = node->mMeshes[i];
+		dumMat = dummyMat * node->mTransformation;
 
-		obj.materialId = scene->mMeshes[obj.meshId]->mMaterialIndex;
-
-		if (node->mNumMeshes > 1) // if there is more than one mesh, create a sibiling
+		for (int i = 0; i < node->mNumChildren; ++i)
 		{
-			nodeVec.push_back(obj);
-			InitObject(obj, parentId, node);
+			Private::ImportNode(node->mChildren[i], scene, parentId, nodeVec, dumMat);
 		}
 	}
 
-	nodeVec.push_back(obj);
-
-	for (int i = 0; i < node->mNumChildren; i++)
+	else
 	{
-		Private::ImportNode(node->mChildren[i], scene, obj.uid, nodeVec);
+		ModelNode obj;
+		InitObject(obj, parentId, node, dummyMat);
+
+		for (int i = 0; i < node->mNumMeshes; ++i)
+		{
+			obj.meshId = node->mMeshes[i];
+
+			obj.materialId = scene->mMeshes[obj.meshId]->mMaterialIndex;
+
+			if (node->mNumMeshes > 1) // if there is more than one mesh, create a sibiling
+			{
+				nodeVec.push_back(obj);
+				InitObject(obj, parentId, node, dummyMat);
+			}
+		}
+
+		nodeVec.push_back(obj);
+
+		for (int i = 0; i < node->mNumChildren; i++)
+		{
+			Private::ImportNode(node->mChildren[i], scene, obj.uid, nodeVec, dumMat);
+		}
 	}
 }
 
@@ -345,7 +362,7 @@ void ModelImporter::Private::SaveNode(ModelNode& modelNode, Config& node)
 }
 
 
-void ModelImporter::Private::InitObject(ModelNode& object, int parentId, aiNode* node)
+void ModelImporter::Private::InitObject(ModelNode& object, int parentId, aiNode* node, aiMatrix4x4& dumMat)
 {
 	LCG randomNumber;
 	object.uid = randomNumber.IntFast();
@@ -360,7 +377,8 @@ void ModelImporter::Private::InitObject(ModelNode& object, int parentId, aiNode*
 	aiQuaternion rotation;
 	aiVector3D scale;
 
-	node->mTransformation.Decompose(scale, rotation, position);
+	aiMatrix4x4  mat = dumMat * node->mTransformation;
+	mat.Decompose(scale, rotation, position);
 
 	object.position[0] = position.x;
 	object.position[1] = position.y;

@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "Assimp/include/matrix4x4.h"
+
 class R_Model;
 struct ModelNode;
 
@@ -36,11 +38,11 @@ namespace ModelImporter
 		void LinkModelResources(std::vector<ModelNode>& nodes, std::vector<int> meshes, std::vector<int> materials);
 		GameObject* SearchGameObjParent(int parent, std::vector<GameObject*> vec);
 
-		void ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec);
+		void ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec, aiMatrix4x4& dummyTransform, bool first = false);
 		void LoadNode(ModelNode& modelNode, Config& node);
 		void SaveNode(ModelNode& modelNode, Config& node);
 
-		void InitObject(ModelNode& object, int parentId, aiNode* node);
+		void InitObject(ModelNode& object, int parentId, aiNode* node, aiMatrix4x4& dummyMat);
 		int ImportMesh(aiMesh*, const char* assetPath);
 		int ImportMaterial(aiMaterial* material, const char* path);
 
