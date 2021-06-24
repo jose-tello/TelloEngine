@@ -82,6 +82,7 @@
     <ClInclude Include="C_LightSource.h" />
     <ClInclude Include="C_Material.h" />
     <ClInclude Include="C_Mesh.h" />
+    <ClInclude Include="C_ProceduralMesh.h" />
     <ClInclude Include="C_Transform.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="ImGuiColorTextEdit\TextEditor.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="C_LightSource.cpp" />
     <ClCompile Include="C_Material.cpp" />
     <ClCompile Include="C_Mesh.cpp" />
+    <ClCompile Include="C_ProceduralMesh.cpp" />
     <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="ImGuiColorTextEdit\TextEditor.cpp" />

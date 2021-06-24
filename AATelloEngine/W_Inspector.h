@@ -10,6 +10,7 @@ class C_Transform;
 class C_Mesh;
 class C_Material;
 class C_Camera;
+class C_ProceduralMesh;
 
 #define BACKSPACE 42
 #define ADD_HEIGHT 20
@@ -43,6 +44,8 @@ private:
 	void DrawShaderInfo(C_Material* mat);
 	void DrawShaderUniform(UniformHandle& uniform);
 	void DrawCameraComp(C_Camera* cam);
+	void DrawProceduralMeshComp(C_ProceduralMesh* pMesh);
+
 
 	bool IsDefaultUniform(const char* uniformName) const;
 

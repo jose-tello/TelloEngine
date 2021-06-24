@@ -4,6 +4,7 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
+#include "C_ProceduralMesh.h"
 
 #include "Application.h"
 #include "M_Input.h"
@@ -46,19 +47,23 @@ bool W_Inspector::Draw()
 			switch (componentsVec[i]->GetType())
 			{
 			case COMPONENT_TYPE::TRANSFORM:
-				DrawTransformComp((C_Transform*)componentsVec[i]);
+				DrawTransformComp(static_cast<C_Transform*>(componentsVec[i]));
 				break;
 
 			case COMPONENT_TYPE::MESH:
-				DrawMeshComp((C_Mesh*)componentsVec[i]);
+				DrawMeshComp(static_cast<C_Mesh*>(componentsVec[i]));
 				break;
 
 			case COMPONENT_TYPE::MATERIAL:
-				DrawMaterialComp((C_Material*)componentsVec[i]);
+				DrawMaterialComp(static_cast<C_Material*>(componentsVec[i]));
 				break;
 
 			case COMPONENT_TYPE::CAMERA:
-				DrawCameraComp((C_Camera*)componentsVec[i]);
+				DrawCameraComp(static_cast<C_Camera*>(componentsVec[i]));
+				break;
+
+			case COMPONENT_TYPE::PROCEDURAL_MESH:
+				DrawProceduralMeshComp(static_cast<C_ProceduralMesh*>(componentsVec[i]));
 				break;
 
 			default:
@@ -477,7 +482,8 @@ void W_Inspector::DrawShaderUniform(UniformHandle& uniform)
 		ImGui::InputFloat4(id.c_str(), &value[12], 2, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
 		uniform.SetMat4(value);
 	}
-	break;
+		break;
+
 	default:
 		break;
 	}
@@ -504,6 +510,35 @@ void W_Inspector::DrawCameraComp(C_Camera* camera)
 
 		if (ImGui::InputFloat("Near plane distance", &nearDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 			camera->SetNearPlaneDst(nearDst);
+	}
+
+	ImGui::NewLine();
+}
+
+
+void W_Inspector::DrawProceduralMeshComp(C_ProceduralMesh* pMesh)
+{
+	if (ImGui::CollapsingHeader("Procedural mesh", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::NewLine();
+
+		int rows = pMesh->GetRows();
+		int columns = pMesh->GetColumns();
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Rows: %i", rows);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Columns: %i", columns);
+
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::NewLine();
+
+		ImGui::DragInt("New rows", &pMesh->inspectorRows, 0.2f, 0, 600);
+		ImGui::DragInt("New columns", &pMesh->inspectorColumns, 0.2f, 0, 600);
+
+		ImGui::NewLine();
+
+		if (ImGui::Button("Generate mesh", ImVec2(280, 30)));
+			pMesh->RecalculateMesh();
 	}
 
 	ImGui::NewLine();

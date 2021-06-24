@@ -100,6 +100,7 @@ void W_DockWindow::DrawWindowsMenu()
 		ImGui::Checkbox("Inspector", &App->editor->GetWindow((int)E_WINDOW_TYPE::INSPECTOR)->open);
 		ImGui::Checkbox("Object hierarchy", &App->editor->GetWindow((int)E_WINDOW_TYPE::GAME_OBJECTS)->open);
 		ImGui::Checkbox("Scene", &App->editor->GetWindow((int)E_WINDOW_TYPE::SCENE_CAMERA)->open);
+		ImGui::Checkbox("Assets", &App->editor->GetWindow((int)E_WINDOW_TYPE::ASSETS)->open);
 		
 
 		std::vector<E_Window*> windows = App->editor->GetWindowsVector();
@@ -129,9 +130,6 @@ void W_DockWindow::DrawFileMenu()
 			App->scene->LoadScene();
 			App->editor->QuitFocusedGameObject();
 		}
-
-		if (ImGui::MenuItem("Load"))
-			App->editor->OpenWindow((int)E_WINDOW_TYPE::ASSETS);
 			
 			ImGui::EndMenu();
 	}
@@ -142,14 +140,17 @@ void W_DockWindow::DrawAddMenu()
 {
 	if (ImGui::BeginMenu("Add"))
 	{
-		if (ImGui::Button("Empty"))
+		if (ImGui::MenuItem("Empty"))
 			App->scene->AddEmpty();
 
-		if (ImGui::Button("Camera"))
+		if (ImGui::MenuItem("Camera"))
 			App->scene->AddCamera();
 
-		if (ImGui::Button("Light"))
+		if (ImGui::MenuItem("Light"))
 			App->scene->AddLight();
+
+		if (ImGui::MenuItem("Procedural mesh"))
+			App->scene->AddProceduralMesh();
 		
 		DrawShapesMenu();
 		ImGui::EndMenu();
@@ -161,16 +162,16 @@ void W_DockWindow::DrawShapesMenu()
 {
 	if (ImGui::BeginMenu("Add shape"))
 	{
-		if (ImGui::Button("Cube"))
+		if (ImGui::MenuItem("Cube"))
 			App->resourceManager->DragAndDropImport("/Assets/defaultAssets/primitives/cube.fbx", nullptr);
 
-		if (ImGui::Button("Piramid"))
+		if (ImGui::MenuItem("Piramid"))
 			App->resourceManager->DragAndDropImport("/Assets/defaultAssets/primitives/Pyramid.fbx", nullptr);
 
-		if (ImGui::Button("Sphere"))
+		if (ImGui::MenuItem("Sphere"))
 			App->resourceManager->DragAndDropImport("/Assets/defaultAssets/primitives/Sphere.fbx", nullptr);
 
-		if (ImGui::Button("Cilinder"))
+		if (ImGui::MenuItem("Cilinder"))
 			App->resourceManager->DragAndDropImport("/Assets/defaultAssets/primitives/Cylinder.fbx", nullptr);
 
 		ImGui::EndMenu();

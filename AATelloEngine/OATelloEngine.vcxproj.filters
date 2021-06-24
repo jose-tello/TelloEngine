@@ -414,6 +414,9 @@
     <ClInclude Include="W_Assets.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="C_ProceduralMesh.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="log.cpp">
@@ -691,6 +694,9 @@
     </ClCompile>
     <ClCompile Include="W_Assets.cpp">
       <Filter>Sources\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="C_ProceduralMesh.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

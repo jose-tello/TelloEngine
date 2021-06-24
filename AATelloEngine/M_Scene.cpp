@@ -12,6 +12,7 @@
 #include "C_Material.h"
 #include "C_Camera.h"
 #include "C_LightSource.h"
+#include "C_ProceduralMesh.h"
 
 #include <stack>
 #include <map>
@@ -101,6 +102,16 @@ GameObject* M_Scene::AddLight()
 	gameObjects.push_back(object);
 
 	return object;
+}
+
+
+void M_Scene::AddProceduralMesh()
+{
+	GameObject* object = new GameObject(nullptr);
+	object->AddComponent(new C_ProceduralMesh());
+	object->SetName("Procedural mesh");
+
+	gameObjects.push_back(object);
 }
 
 
