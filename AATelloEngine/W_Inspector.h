@@ -11,6 +11,7 @@ class C_Mesh;
 class C_Material;
 class C_Camera;
 class C_ProceduralMesh;
+class C_PointLight;
 
 #define BACKSPACE 42
 #define ADD_HEIGHT 20
@@ -44,6 +45,7 @@ private:
 	void DrawShaderInfo(C_Material* mat);
 	void DrawShaderUniform(UniformHandle& uniform);
 	void DrawCameraComp(C_Camera* cam);
+	void DrawPointLightComponent(C_PointLight* areaLight);
 	void DrawProceduralMeshComp(C_ProceduralMesh* pMesh);
 
 
@@ -57,7 +59,7 @@ private:
 };
 
 static const char* defaultUniforms[] = { "model_matrix", "projection", "view", "has_texture", "light_position",
-										"material_color", "timer" };
+										"material_color", "timer", "light_color", "ambient_color", "light_intensity" };
 
 
 #endif // !__E_INSPECTOR__

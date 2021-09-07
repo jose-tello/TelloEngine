@@ -11,7 +11,7 @@
 #include "C_Material.h"
 #include "C_Mesh.h"
 #include "C_Camera.h"
-#include "C_LightSource.h"
+#include "C_PointLight.h"
 
 #include "Grid.h"
 #include "UniformHandle.h"
@@ -99,18 +99,8 @@ bool M_Renderer3D::Init()
 }
 
 
-UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
-{
-	light.SetPos(0, 40, 0);
-	timer += 0.16;
-
-	return UPDATE_STATUS::UPDATE_CONTINUE;
-}
-
-
 UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 {
-	light.Render();
 	App->editor->Draw();
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -255,7 +245,7 @@ C_Camera* M_Renderer3D::GetCurrentCamera() const
 }
 
 
-void M_Renderer3D::PushLight(C_LightSource* light)
+void M_Renderer3D::PushLight(C_PointLight* light)
 {
 	if (lightVector.size() < 4)
 		lightVector.push_back(light);
@@ -271,7 +261,7 @@ void M_Renderer3D::PushFrustum(C_Camera* frustum)
 }
 
 
-void M_Renderer3D::DeleteLight(C_LightSource* light)
+void M_Renderer3D::DeleteLight(C_PointLight* light)
 {
 	int lightCount = lightVector.size();
 	for (int i = 0; i < lightCount; i++)
@@ -556,18 +546,13 @@ void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float*
 
 		if (lightVector.empty() == false)
 		{
-			uniform = material->GetUniform("light_position");
-			
-			
-			if (uniform != nullptr)
+			int lightSize = lightVector.size();
+			for (int i = 0; i < lightSize; ++i)
 			{
-				C_Transform* transform = (C_Transform*)lightVector[0]->GetOwner()->GetComponent(COMPONENT_TYPE::TRANSFORM);
-				
-				float position[3];
-				transform->GetGlobalPos(position[0], position[1], position[2]);
-				uniform->SetFloatVec3(position);
+				lightVector[i]->PushLightUniforms(material, i);
 			}
-				
+
+			//Push lightNumber
 		}
 
 		material->SetUniformsToShader();

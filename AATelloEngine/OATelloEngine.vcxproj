@@ -79,7 +79,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="C_Camera.h" />
-    <ClInclude Include="C_LightSource.h" />
+    <ClInclude Include="C_PointLight.h" />
     <ClInclude Include="C_Material.h" />
     <ClInclude Include="C_Mesh.h" />
     <ClInclude Include="C_ProceduralMesh.h" />
@@ -204,7 +204,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="C_Camera.cpp" />
-    <ClCompile Include="C_LightSource.cpp" />
+    <ClCompile Include="C_PointLight.cpp" />
     <ClCompile Include="C_Material.cpp" />
     <ClCompile Include="C_Mesh.cpp" />
     <ClCompile Include="C_ProceduralMesh.cpp" />

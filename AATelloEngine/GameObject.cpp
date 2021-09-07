@@ -4,7 +4,7 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
-#include "C_LightSource.h"
+#include "C_PointLight.h"
 
 #include "Resource.h"
 
@@ -295,9 +295,9 @@ void GameObject::Load(Config& node)
 		}
 			break;
 
-		case COMPONENT_TYPE::LIGHT_SOURCE:
+		case COMPONENT_TYPE::POINT_LIGHT:
 		{
-			C_LightSource* lightSource = new C_LightSource();
+			C_PointLight* lightSource = new C_PointLight();
 			lightSource->Load(componentNode);
 			AddComponent(lightSource);
 		}

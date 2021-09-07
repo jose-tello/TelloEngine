@@ -408,13 +408,13 @@
     <ClInclude Include="UniformHandle.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="C_LightSource.h">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClInclude>
     <ClInclude Include="W_Assets.h">
       <Filter>Sources\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="C_ProceduralMesh.h">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="C_PointLight.h">
       <Filter>Sources\GameObject\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -689,13 +689,13 @@
     <ClCompile Include="UniformHandle.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="C_LightSource.cpp">
-      <Filter>Sources\GameObject\Components</Filter>
-    </ClCompile>
     <ClCompile Include="W_Assets.cpp">
       <Filter>Sources\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="C_ProceduralMesh.cpp">
+      <Filter>Sources\GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="C_PointLight.cpp">
       <Filter>Sources\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>

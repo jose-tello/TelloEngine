@@ -1,16 +1,20 @@
-#ifndef __C_LIGHT_SOURCE_H__
-#define __C_LIGHT_SOURCE_H__
+#ifndef __C_POINT_LIGHT_H__
+#define __C_POINT_LIGHT_H__
 
 #include "Component.h"
 
-class C_LightSource : public Component
+class C_Material;
+
+class C_PointLight : public Component
 {
 public:
-	C_LightSource();
-	~C_LightSource() override;
+	C_PointLight();
+	~C_PointLight() override;
 
 	bool Update(float dt) override;
 
+	void PushLightUniforms(C_Material* material, int lightNumber);
+	
 	void Load(Config&) override;
 	void Save(Config&) const override;
 
@@ -26,8 +30,8 @@ public:
 	void GetSpecular(float*) const;
 	void SetSpecular(float*);
 
-	float GetLightPower() const;
-	void SetLightPower(float);
+	float GetLightIntensity() const;
+	void SetLightIntensity(float);
 
 private:
 	float lightColor[3];
@@ -35,7 +39,7 @@ private:
 	float diffuse[3];
 	float specular[3];
 
-	float lightPower;
+	float lightIntensity;
 };
 
-#endif // !__C_LIGHT_SOURCE_H__
+#endif // !__C_POINT_LIGHT_H__

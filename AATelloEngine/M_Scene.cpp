@@ -11,7 +11,7 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
-#include "C_LightSource.h"
+#include "C_PointLight.h"
 #include "C_ProceduralMesh.h"
 
 #include <stack>
@@ -96,7 +96,7 @@ void M_Scene::AddCamera()
 GameObject* M_Scene::AddLight()
 {
 	GameObject* object = new GameObject(nullptr);
-	object->AddComponent(new C_LightSource());
+	object->AddComponent(new C_PointLight());
 	object->SetName("Light");
 
 	gameObjects.push_back(object);

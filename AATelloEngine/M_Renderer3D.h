@@ -16,7 +16,7 @@ struct GameObject;
 class C_Camera;
 class C_Mesh;
 class C_Material;
-class C_LightSource;
+class C_PointLight;
 
 
 class M_Renderer3D : public Module
@@ -26,7 +26,6 @@ public:
 	~M_Renderer3D() override;
 
 	bool Init() override;
-	UPDATE_STATUS PreUpdate(float dt) override;
 	UPDATE_STATUS PostUpdate(float dt) override;
 	bool CleanUp() override;
 
@@ -40,10 +39,10 @@ public:
 
 	C_Camera* GetCurrentCamera() const;
 
-	void PushLight(C_LightSource*);
+	void PushLight(C_PointLight*);
 	void PushFrustum(C_Camera*);
 
-	void DeleteLight(C_LightSource*);
+	void DeleteLight(C_PointLight*);
 	
 	void SetCameraRay(float rayBegin[3], float rayEnd[3]);
 
@@ -82,19 +81,15 @@ private:
 	bool wireframeModeEnabled;
 	bool vsync = true;
 
-	Light light;
-
 	//Camera we are rendering to, used to frustum cull
 	//WARNING: use pop / push fuctions
 	C_Camera* currentCamera = nullptr;
 
-	std::vector<C_LightSource*> lightVector;
+	std::vector<C_PointLight*> lightVector;
 	std::vector<C_Camera*> frustumVector;
 
 	float cameraRay1[3];
 	float cameraRay2[3];
-
-	float timer = 0;
 };
 
 #endif // !__M_RENDERER3D_H__

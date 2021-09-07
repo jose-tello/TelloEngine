@@ -4,6 +4,7 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
+#include "C_PointLight.h"
 #include "C_ProceduralMesh.h"
 
 #include "Application.h"
@@ -64,6 +65,10 @@ bool W_Inspector::Draw()
 
 			case COMPONENT_TYPE::PROCEDURAL_MESH:
 				DrawProceduralMeshComp(static_cast<C_ProceduralMesh*>(componentsVec[i]));
+				break;
+
+			case COMPONENT_TYPE::POINT_LIGHT:
+				DrawPointLightComponent(static_cast<C_PointLight*>(componentsVec[i]));
 				break;
 
 			default:
@@ -510,6 +515,35 @@ void W_Inspector::DrawCameraComp(C_Camera* camera)
 
 		if (ImGui::InputFloat("Near plane distance", &nearDst, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 			camera->SetNearPlaneDst(nearDst);
+	}
+
+	ImGui::NewLine();
+}
+
+
+void W_Inspector::DrawPointLightComponent(C_PointLight* pointLight)
+{
+	if (ImGui::CollapsingHeader("Point light", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::NewLine();
+
+		float lightColor[3];
+		pointLight->GetLightColor(lightColor);
+		
+		ImGui::ColorPicker3("Light color", lightColor, 3);
+		pointLight->SetLightColor(lightColor);
+
+		float ambientColor[3];
+		pointLight->GetAmbientColor(ambientColor);
+
+		ImGui::ColorPicker3("Ambient color", ambientColor, 3);
+		pointLight->SetAmbientColor(ambientColor);
+		
+		float lightIntensity = pointLight->GetLightIntensity();
+
+		ImGui::DragFloat("Light intensity", &lightIntensity);
+		pointLight->SetLightIntensity(lightIntensity);
+
 	}
 
 	ImGui::NewLine();
