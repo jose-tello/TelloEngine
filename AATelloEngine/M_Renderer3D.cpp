@@ -546,13 +546,27 @@ void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float*
 
 		if (lightVector.empty() == false)
 		{
-			int lightSize = lightVector.size();
-			for (int i = 0; i < lightSize; ++i)
+			int lightVecSize = lightVector.size();
+			for (int i = 0; i < lightVecSize; ++i)
 			{
 				lightVector[i]->PushLightUniforms(material, i);
 			}
 
-			//Push lightNumber
+			uniform = material->GetUniform("light_number");
+
+			if (uniform != nullptr)
+			{
+				uniform->SetInt(lightVecSize);
+			}
+		}
+		else
+		{
+			uniform = material->GetUniform("light_number");
+
+			if (uniform != nullptr)
+			{
+				uniform->SetInt(0);
+			}
 		}
 
 		material->SetUniformsToShader();

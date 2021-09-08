@@ -38,8 +38,10 @@ bool C_PointLight::Update(float dt)
 void C_PointLight::PushLightUniforms(C_Material* material, int lightNumber)
 {
 	UniformHandle* uniform = nullptr;
+	char buffer[64];
 
-	uniform = material->GetUniform("light_position");
+	sprintf(buffer, "lightInfo[%i].light_position", lightNumber);
+	uniform = material->GetUniform(buffer);
 
 	if (uniform != nullptr)
 	{
@@ -50,21 +52,23 @@ void C_PointLight::PushLightUniforms(C_Material* material, int lightNumber)
 		uniform->SetFloatVec3(position);
 	}
 
-	uniform = material->GetUniform("light_color");
+	sprintf(buffer, "lightInfo[%i].light_color", lightNumber);
+	uniform = material->GetUniform(buffer);
 
 	if (uniform != nullptr)
 	{
 		uniform->SetFloatVec3(lightColor);
 	}
 
-	uniform = material->GetUniform("ambient_color");
-
+	sprintf(buffer, "lightInfo[%i].ambient_color", lightNumber);
+	uniform = material->GetUniform(buffer);
 	if (uniform != nullptr)
 	{
 		uniform->SetFloatVec3(ambientColor);
 	}
 
-	uniform = material->GetUniform("light_intensity");
+	sprintf(buffer, "lightInfo[%i].light_intensity", lightNumber);
+	uniform = material->GetUniform(buffer);
 
 	if (uniform != nullptr)
 	{
