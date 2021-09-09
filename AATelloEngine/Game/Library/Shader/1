@@ -39,12 +39,15 @@ out vec4 color;
 uniform sampler2D ourTexture;
 uniform bool has_texture;
 
+uniform vec3 view_position;
+
 struct LightInfo
 {
 	vec3 light_position;
 	vec3 light_color;
 	vec3 ambient_color;
 	float light_intensity;
+	float specular;
 };
 
 uniform int light_number;
@@ -60,7 +63,7 @@ void main()
  else
     material_color = vec4(diffuse_color, 1.0);
   
-  vec3 lightColor = vec3(0.0, 0.0, 0.0);
+  vec3 diffuseLight = vec3(0.0, 0.0, 0.0);
   
   for (int i = 0; i < light_number; ++i)
   {
@@ -68,10 +71,20 @@ void main()
   
     //diffuse light
     float light_falloff = max(0, dot(light_direction, fNormals));
-    lightColor += lightInfo[i].light_color * light_falloff * lightInfo[i].light_intensity + lightInfo[i].ambient_color;
+    
+    vec3 diffuse = lightInfo[i].light_color * light_falloff;
+    
+    //specular light
+    vec3 eye = normalize(view_position - fPosition);
+    vec3 reflection = normalize(light_direction + eye);
+    
+    float specularIntensity = dot(reflection, -fNormals);
+    float specular = pow(max(dot(fNormals, reflection), 0.0), lightInfo[i].specular);
+    
+    diffuseLight += (diffuse + specular * lightInfo[i].light_color + lightInfo[i].ambient_color) * lightInfo[i].light_intensity;
   
   }
   
-  color = vec4(lightColor, 1.0) * material_color;
+  color = vec4(diffuseLight, 1.0) * material_color;
   //color = vec4 (light_direction, 1.);
 }

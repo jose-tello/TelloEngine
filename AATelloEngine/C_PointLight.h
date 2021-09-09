@@ -27,8 +27,8 @@ public:
 	void GetDiffuse(float*) const;
 	void SetDiffuse(float*);
 
-	void GetSpecular(float*) const;
-	void SetSpecular(float*);
+	float GetSpecular() const;
+	void SetSpecular(float);
 
 	float GetLightIntensity() const;
 	void SetLightIntensity(float);
@@ -37,7 +37,7 @@ private:
 	float lightColor[3];
 	float ambientColor[3];
 	float diffuse[3];
-	float specular[3];
+	float specular;
 
 	float lightIntensity;
 };

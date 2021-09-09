@@ -29,20 +29,20 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
-	context(),
+context(),
 
-	depthTestEnabled(true),
-	cullFaceEnabled(true),
-	lightingEnabled(true),
-	colorMatEnabled(true),
-	texture2DEnabled(true),
-	fillModeEnabled(true),
-	wireframeModeEnabled(false),
-	vsync(true),
+depthTestEnabled(true),
+cullFaceEnabled(true),
+lightingEnabled(true),
+colorMatEnabled(true),
+texture2DEnabled(true),
+fillModeEnabled(true),
+wireframeModeEnabled(false),
+vsync(true),
 
-	currentCamera(nullptr),
-	cameraRay1{ 0, 0, 0 },
-	cameraRay2{ 0, 0, 0 }
+currentCamera(nullptr),
+cameraRay1{ 0, 0, 0 },
+cameraRay2{ 0, 0, 0 }
 {
 }
 
@@ -489,7 +489,7 @@ void M_Renderer3D::DrawMesh(GameObject* object, C_Camera* camera, bool wireframe
 
 
 C_Material* M_Renderer3D::GetDrawVariables(GameObject* object, C_Mesh** meshPointer, unsigned int& textureId,
-									Color& color, unsigned int& programId) const
+	Color& color, unsigned int& programId) const
 {
 	*meshPointer = (C_Mesh*)object->GetComponent(COMPONENT_TYPE::MESH);
 
@@ -511,12 +511,12 @@ void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float*
 	if (material != nullptr)
 	{
 		UniformHandle* uniform = nullptr;
-		
+
 		uniform = material->GetUniform("material_color");
 
 		if (uniform != nullptr)
 			uniform->SetFloatVec3(color);
-		
+
 		uniform = material->GetUniform("model_matrix");
 
 		if (uniform != nullptr)
@@ -531,7 +531,7 @@ void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float*
 
 		if (uniform != nullptr)
 			uniform->SetMat4(camera->GetViewMat().ptr());
-			
+
 		uniform = material->GetUniform("has_texture");
 
 		if (uniform != nullptr)
@@ -542,36 +542,43 @@ void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float*
 		if (uniform != nullptr)
 			uniform->SetFloat(App->GetTimeManager()->GetTimeSinceStart());
 
-		
-
-		if (lightVector.empty() == false)
+		int lightVecSize = lightVector.size();
+		for (int i = 0; i < lightVecSize; ++i)
 		{
-			int lightVecSize = lightVector.size();
-			for (int i = 0; i < lightVecSize; ++i)
-			{
-				lightVector[i]->PushLightUniforms(material, i);
-			}
-
-			uniform = material->GetUniform("light_number");
-
-			if (uniform != nullptr)
-			{
-				uniform->SetInt(lightVecSize);
-			}
+			lightVector[i]->PushLightUniforms(material, i);
 		}
-		else
-		{
-			uniform = material->GetUniform("light_number");
 
-			if (uniform != nullptr)
+		uniform = material->GetUniform("light_number");
+
+		if (uniform != nullptr)
+		{
+			uniform->SetInt(lightVecSize);
+		}
+
+		uniform = material->GetUniform("view_position");
+
+		if (uniform != nullptr)
+		{
+			float camPos[3];
+			
+			GameObject* cam = camera->GetOwner();
+
+			if (cam != nullptr)
+				cam->transform.GetPos(camPos[0], camPos[1], camPos[2]);
+			else
 			{
-				uniform->SetInt(0);
+				float3 cameraPosition = App->camera->GetPosition();
+				camPos[0] = cameraPosition.x;
+				camPos[1] = cameraPosition.y;
+				camPos[2] = cameraPosition.z;
 			}
+
+			uniform->SetFloatVec3(camPos);
 		}
 
 		material->SetUniformsToShader();
 	}
-	
+
 }
 
 

@@ -544,6 +544,10 @@ void W_Inspector::DrawPointLightComponent(C_PointLight* pointLight)
 		ImGui::DragFloat("Light intensity", &lightIntensity);
 		pointLight->SetLightIntensity(lightIntensity);
 
+		float specular = pointLight->GetSpecular();
+
+		ImGui::DragFloat("Specular", &specular);
+		pointLight->SetSpecular(specular);
 	}
 
 	ImGui::NewLine();

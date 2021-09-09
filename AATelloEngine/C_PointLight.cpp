@@ -12,12 +12,12 @@
 #include "Config.h"
 
 C_PointLight::C_PointLight() : Component(COMPONENT_TYPE::POINT_LIGHT),
-	lightIntensity(0.f)
+	lightIntensity(0.f),
+	specular(0.f)
 {
 	memset(lightColor, 0, sizeof(lightColor));
 	memset(ambientColor, 0, sizeof(ambientColor));
 	memset(diffuse, 0, sizeof(diffuse));
-	memset(specular, 0, sizeof(specular));
 }
 
 
@@ -74,6 +74,14 @@ void C_PointLight::PushLightUniforms(C_Material* material, int lightNumber)
 	{
 		uniform->SetFloat(lightIntensity);
 	}
+
+	sprintf(buffer, "lightInfo[%i].specular", lightNumber);
+	uniform = material->GetUniform(buffer);
+
+	if (uniform != nullptr)
+	{
+		uniform->SetFloat(specular);
+	}
 }
 
 
@@ -105,13 +113,7 @@ void C_PointLight::Load(Config& node)
 	}
 
 
-	ConfigArray spec = node.GetArray("specular");
-
-	for (int i = 0; i < 3; i++)
-	{
-		Config aux = diff.GetNode(i);
-		specular[i] = aux.GetNum("value");
-	}
+	specular = node.GetNum("specular");
 
 	lightIntensity = node.GetNum("light_power");
 }
@@ -129,7 +131,6 @@ void C_PointLight::Save(Config& node) const
 		aux.AppendNum("value", lightColor[i]);
 	}
 
-
 	ConfigArray ambColor = node.AppendArray("ambient_color");
 
 	for (int i = 0; i < 3; i++)
@@ -146,14 +147,7 @@ void C_PointLight::Save(Config& node) const
 		aux.AppendNum("value", diffuse[i]);
 	}
 
-
-	ConfigArray spec = node.AppendArray("specular");
-
-	for (int i = 0; i < 3; i++)
-	{
-		Config aux = spec.AppendNode();
-		aux.AppendNum("value", specular[i]);
-	}
+	node.AppendNum("specular", specular);
 
 	node.AppendNum("light_power", lightIntensity);
 }
@@ -208,19 +202,15 @@ void C_PointLight::SetDiffuse(float* aux)
 }
 
 
-void C_PointLight::GetSpecular(float* aux) const
+float C_PointLight::GetSpecular() const
 {
-	aux[0] = specular[0];
-	aux[1] = specular[1];
-	aux[2] = specular[2];
+	return specular;
 }
 
 
-void C_PointLight::SetSpecular(float* aux)
+void C_PointLight::SetSpecular(float spec)
 {
-	specular[0] = aux[0];
-	specular[1] = aux[1];
-	specular[2] = aux[2];
+	specular = spec;
 }
 
 
