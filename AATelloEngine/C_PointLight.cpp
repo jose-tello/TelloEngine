@@ -12,11 +12,17 @@
 #include "Config.h"
 
 C_PointLight::C_PointLight() : Component(COMPONENT_TYPE::POINT_LIGHT),
-	lightIntensity(0.f),
-	specular(0.f)
+	lightIntensity(1.6f),
+	specular(30.f)
 {
-	memset(lightColor, 0, sizeof(lightColor));
-	memset(ambientColor, 0, sizeof(ambientColor));
+	lightColor[0] = 0.7f;
+	lightColor[1] = 0.7f;
+	lightColor[2] = 0.7f;
+
+	ambientColor[0] = 0.22f;
+	ambientColor[1] = 0.22f;
+	ambientColor[2] = 0.22f;
+
 	memset(diffuse, 0, sizeof(diffuse));
 }
 

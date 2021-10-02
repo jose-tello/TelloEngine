@@ -13,6 +13,7 @@
 #include "C_Camera.h"
 #include "C_PointLight.h"
 #include "C_ProceduralMesh.h"
+#include "C_PointLight.h"
 
 #include <stack>
 #include <map>
@@ -38,7 +39,6 @@ bool M_Scene::Start()
 	
 	GameObject* object = AddLight();
 	object->transform.SetPos(-150, 30, 0);
-
 	return true;
 }
 
