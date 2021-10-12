@@ -13,6 +13,8 @@
 #include "C_Camera.h"
 #include "C_PointLight.h"
 
+#include "R_Shader.h"
+
 #include "Grid.h"
 #include "UniformHandle.h"
 
@@ -155,7 +157,7 @@ void M_Renderer3D::GenerateFrameBuffer(float width, float height, unsigned int& 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
 	glBindImageTexture(0, textureBuffer, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 
 	glGenRenderbuffers(1, &depthBuffer);
@@ -425,7 +427,22 @@ void M_Renderer3D::RasterizationDraw(unsigned int frameBuffer, C_Camera* camera,
 
 void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB)
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
+	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RAY_TRACING_SHADER));
+
+	shader->UseShaderProgram();
+	
+	glDispatchCompute(840, 840, 1);
+
+	// make sure writing to image has finished before read
+	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+	//DrawObjects(camera, drawAABB);
+	
+	
 }
 
 

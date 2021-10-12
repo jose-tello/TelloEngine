@@ -27,7 +27,7 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 	checkerTexId(0),
 	useCheckerTex(false)
 {
-	SetShader(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER)->GetUid());
+	SetShader(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RASTER_SHADER)->GetUid());
 	
 	InitCheckerTex();
 }
@@ -596,7 +596,7 @@ unsigned int C_Material::GetShaderProgram()
 
 	else
 	{
-		R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
+		R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RASTER_SHADER);
 		SetShader(shader->GetUid());
 		return shader->GetProgramId();
 	}

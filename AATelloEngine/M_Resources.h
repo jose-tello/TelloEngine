@@ -13,7 +13,8 @@ struct Config;
 enum class DEFAULT_RESOURCE : int
 {
 	NONE = 0,
-	SHADER = 1,
+	RASTER_SHADER = 1,
+	RAY_TRACING_SHADER = 2
 };
 
 class M_Resources : public Module

@@ -1,7 +1,0 @@
-__COMPUTE_SHADER__
-#version 430 core
-
-void main()
-{
- 
-}

@@ -1,0 +1,16 @@
+__COMPUTE_SHADER__
+#version 430
+
+layout(localSizeX = 1, localSizeY = 1) in;
+layout(rgba32f, binding = 0) uniform image2D imgOutput
+
+void main()
+{
+  vec4 pixelColor = vec4(1.0, 0.0, 0.0, 1.0);
+  
+  ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+  
+  //collision tests
+  
+  imageStore(imgOutput, pixelCoords, pixelColor);
+}
