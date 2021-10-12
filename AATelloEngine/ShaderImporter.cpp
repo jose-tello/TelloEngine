@@ -18,19 +18,36 @@ void ShaderImporter::Import(const char* path, R_Shader* shader)
 	programCode = programCode.substr(0, programCode.find_last_of("}") + 1);
 	const size_t vertexIterator = programCode.find(VERTEX_SHADER_KEY);
 	const size_t fragmentIterator = programCode.find(FRAGMENT_SHADER_KEY);
+	const size_t computeIterator = programCode.find(COMPUTE_SHADER_KEY);
 
-	if (vertexIterator != std::string::npos && fragmentIterator != std::string::npos)
+	if (vertexIterator != std::string::npos || fragmentIterator != std::string::npos || computeIterator != std::string::npos)
 	{
-		std::string vertexCode = programCode.substr(vertexIterator + VERTEX_KEY_LENGHT, fragmentIterator - FRAGMENT_KEY_LENGHT);
-		std::string fragmentCode = programCode.substr(fragmentIterator + FRAGMENT_KEY_LENGHT);
+		std::string vertexCode = "";
+		std::string fragmentCode = "";
+		std::string computeCode = "";
 
-		shader->InitShader(vertexCode.c_str(), fragmentCode.c_str());
+		if (vertexIterator != std::string::npos)
+		{
+			vertexCode = programCode.substr(vertexIterator + VERTEX_KEY_LENGHT, fragmentIterator - FRAGMENT_KEY_LENGHT);
+		}
+
+		if (fragmentIterator != std::string::npos)
+		{
+			fragmentCode = programCode.substr(fragmentIterator + FRAGMENT_KEY_LENGHT, computeIterator - COMPUTE_KEY_LENGHT);
+		}
+
+		if (computeIterator != std::string::npos)
+		{
+			computeCode = programCode.substr(computeIterator + COMPUTE_KEY_LENGHT);
+		}
+
+		shader->InitShaderProgram(vertexCode, fragmentCode, computeCode);
 		Save(programCode, shader->GetUid());
 
 		App->editor->AddLog("Log: Imported shader from: %s", path);
 	}
 	else
-		App->editor->AddLog("[ERROR] Could not find vertex/fragment key words of shader from: %s", path);
+		App->editor->AddLog("[ERROR] Could not find vertex & fragment or compute key words of shader from: %s", path);
 	
 
 	delete[] buffer;
@@ -55,11 +72,28 @@ void ShaderImporter::Load(R_Shader* shader)
 
 		const size_t vertexIterator = code.find(VERTEX_SHADER_KEY);
 		const size_t fragmentIterator = code.find(FRAGMENT_SHADER_KEY);
+		const size_t computeIterator = code.find(COMPUTE_SHADER_KEY);
 
-		std::string vertexCode = code.substr(vertexIterator + VERTEX_KEY_LENGHT, fragmentIterator - FRAGMENT_KEY_LENGHT);
-		std::string fragmentCode = code.substr(fragmentIterator + FRAGMENT_KEY_LENGHT);
+		std::string vertexCode = "";
+		std::string fragmentCode = "";
+		std::string computeCode = "";
 
-		shader->InitShader(vertexCode.c_str(), fragmentCode.c_str());
+		if (vertexIterator != std::string::npos)
+		{
+			vertexCode = code.substr(vertexIterator + VERTEX_KEY_LENGHT, fragmentIterator - FRAGMENT_KEY_LENGHT);
+		}
+
+		if (fragmentIterator != std::string::npos)
+		{
+			fragmentCode = code.substr(fragmentIterator + FRAGMENT_KEY_LENGHT, computeIterator - COMPUTE_KEY_LENGHT);
+		}
+
+		if (computeIterator != std::string::npos)
+		{
+			computeCode = code.substr(computeIterator + COMPUTE_KEY_LENGHT);
+		}
+
+		shader->InitShaderProgram(vertexCode, fragmentCode, computeCode);
 	}
 	else
 		App->editor->AddLog("[WARNING], shader not loaded correctlly from: %s", path.c_str());
@@ -78,8 +112,7 @@ void ShaderImporter::Save(std::string& shaderCode, int uid)
 	
 	char* fileBuffer = new char[size];
 
-	unsigned int bytes = shaderCode.length() * sizeof(char);
-	memcpy(fileBuffer, shaderCode.c_str(), bytes);
+	memcpy(fileBuffer, shaderCode.c_str(), size);
 	
 	App->fileManager->Save(filePath.c_str(), fileBuffer, size);
 

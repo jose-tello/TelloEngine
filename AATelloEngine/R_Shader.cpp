@@ -88,33 +88,66 @@ void R_Shader::SetShaderName(const char* shaderName)
 }
 
 
-void R_Shader::InitShader(const char* vertCode, const char* fragCode)
+void R_Shader::InitShaderProgram(std::string& vertCode, std::string& fragCode, std::string& computeCode)
 {
 	unsigned int vertexShader = 0;
 	unsigned int fragmentShader = 0;
+	unsigned int computeShader = 0;
 
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertCode, NULL);
-	glCompileShader(vertexShader);
+	vertexShader = CreateShader(vertCode, SHADER_TYPE::VERTEX);
+	fragmentShader = CreateShader(fragCode, SHADER_TYPE::FRAGMENT);
+	computeShader = CreateShader(computeCode, SHADER_TYPE::COMPUTE);
 
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragCode, NULL);
-	glCompileShader(fragmentShader);
-
-	if (CheckShadersCompile(vertexShader, fragmentShader) == true)
-		CreateShaderProgram(vertexShader, fragmentShader);
-
-	else
-		disabled = true;
+	CreateShaderProgram(vertexShader, fragmentShader, computeShader);
 
 	if (disabled == false) //If shader program compiled properlly
 	{
 		glDetachShader(programId, vertexShader);
 		glDetachShader(programId, fragmentShader);
+		glDetachShader(programId, computeShader);
 	}
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+	glDeleteShader(computeShader);
+}
+
+
+unsigned int R_Shader::CreateShader(std::string& code, SHADER_TYPE type)
+{
+	unsigned int shader = 0;
+
+	if (code.empty() == false)
+	{
+		const char* str = code.c_str();
+
+		switch (type)
+		{
+		case SHADER_TYPE::ERROR_TYPE:
+			App->editor->AddLog("[ERROR] shader error type");
+			break;
+
+		case SHADER_TYPE::VERTEX:
+			shader = glCreateShader(GL_VERTEX_SHADER);
+			break;
+
+		case SHADER_TYPE::FRAGMENT:
+			shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+			break;
+		case SHADER_TYPE::COMPUTE:
+			shader = glCreateShader(GL_COMPUTE_SHADER);
+			break;
+		}
+
+		glShaderSource(shader, 1, &str, NULL);
+		glCompileShader(shader);
+
+		if (CheckShaderCompile(shader) == false)
+			disabled = true;
+	}
+
+	return shader;
 }
 
 
@@ -158,11 +191,19 @@ void R_Shader::SetFloatUniform(const char* uniformName, float floatVar)
 }
 
 
-void R_Shader::CreateShaderProgram(unsigned int vertexShader, unsigned int fragmentShader)
+void R_Shader::CreateShaderProgram(unsigned int vertexShader, unsigned int fragmentShader, unsigned int computeShader)
 {
 	programId = glCreateProgram();
-	glAttachShader(programId, vertexShader);
-	glAttachShader(programId, fragmentShader);
+
+	if (vertexShader != 0)
+		glAttachShader(programId, vertexShader);
+
+	if (fragmentShader != 0)
+		glAttachShader(programId, fragmentShader);
+
+	if (computeShader != 0)
+		glAttachShader(programId, computeShader);
+
 	glLinkProgram(programId);
 
 	if (CheckProgramCompiles() == true)
@@ -173,25 +214,17 @@ void R_Shader::CreateShaderProgram(unsigned int vertexShader, unsigned int fragm
 }
 
 
-bool R_Shader::CheckShadersCompile(unsigned int vertexShader, unsigned int fragmentShader) const
+bool R_Shader::CheckShaderCompile(unsigned int shader) const
 {
 	bool ret = true;
 	int success = 0;
 	char log[512];
 
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (success == false)
 	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, log);
-		App->editor->AddLog("[ERROR] vertex shader error: %s", log);
-		ret = false;
-	}
-
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (success == false)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, log);
-		App->editor->AddLog("[ERROR] fragment shader error: %s", log);
+		glGetShaderInfoLog(shader, 512, NULL, log);
+		App->editor->AddLog("[ERROR] shader error: %s", log);
 		ret = false;
 	}
 
@@ -286,7 +319,7 @@ int R_Shader::GetUniformType(unsigned int type) const
 		break;
 
 	default:
-		assert("Unsuported uniform type");
+		//assert("Unsuported uniform type");
 		App->editor->AddLog("[WARNING] unsing non supported uniform, will not be displayed nor updated every frame");
 		return -1;
 		break;

@@ -54,8 +54,12 @@ public:
 	void SetFillMode(bool enable);
 	void SetWireframeMode(bool enable);
 	void SetVsync(bool enable);
+	void SetRasterization(bool enable);
 
 private:
+	void RasterizationDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB);
+	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB);
+
 	void PushCamera(C_Camera*);
 	void PopCamera();
 
@@ -80,6 +84,7 @@ private:
 	bool fillModeEnabled;
 	bool wireframeModeEnabled;
 	bool vsync = true;
+	bool rasterizationRender = false;
 
 	//Camera we are rendering to, used to frustum cull
 	//WARNING: use pop / push fuctions

@@ -39,6 +39,7 @@ texture2DEnabled(true),
 fillModeEnabled(true),
 wireframeModeEnabled(false),
 vsync(true),
+rasterizationRender(false),
 
 currentCamera(nullptr),
 cameraRay1{ 0, 0, 0 },
@@ -95,6 +96,18 @@ bool M_Renderer3D::Init()
 		glEnable(GL_TEXTURE_2D);
 	}
 
+	int workGroupSize[3];
+
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workGroupSize[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workGroupSize[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workGroupSize[2]);
+
+	App->editor->AddLog("WORK GROUP SIZE \n x: %i	y: %i	z: %i", workGroupSize[0], workGroupSize[1], workGroupSize[2]);
+
+	int maxGroupInvocations;
+	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &maxGroupInvocations);
+	App->editor->AddLog("MAX GROUP INVOCATIONS: %i", maxGroupInvocations);
+
 	return ret;
 }
 
@@ -138,10 +151,12 @@ void M_Renderer3D::GenerateFrameBuffer(float width, float height, unsigned int& 
 	glGenTextures(1, &textureBuffer);
 	glBindTexture(GL_TEXTURE_2D, textureBuffer);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindImageTexture(0, textureBuffer, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 
 	glGenRenderbuffers(1, &depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
@@ -173,32 +188,14 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, int cam
 		PushCamera(camera);
 	}
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glLoadMatrixf(camera->GetProjectionMat().ptr());
+	if (rasterizationRender == true)
+	{
+		RasterizationDraw(frameBuffer, camera, drawAABB);
+	}
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glLoadMatrixf(camera->GetViewMat().ptr());
-
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	if (wireframeModeEnabled == true)
-		glLineWidth(3.0f);
-
-	DrawObjects(camera, drawAABB);
-
-	if (drawAABB == true)
-		DrawFrustums();
-
-	Grid grid;
-	grid.Draw();
-
-	if (App->camera->drawClickRay == true)
-		DrawClickRay();
-
+	else
+		RayTracingDraw(frameBuffer, camera, drawAABB);
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -387,6 +384,48 @@ void M_Renderer3D::SetVsync(bool enable)
 		vsync = enable;
 		SDL_GL_SetSwapInterval(static_cast<int>(vsync));
 	}
+}
+
+
+void M_Renderer3D::SetRasterization(bool enable)
+{
+	rasterizationRender = enable;
+}
+
+
+void M_Renderer3D::RasterizationDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB)
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glLoadMatrixf(camera->GetProjectionMat().ptr());
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glLoadMatrixf(camera->GetViewMat().ptr());
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	if (wireframeModeEnabled == true)
+		glLineWidth(3.0f);
+
+	DrawObjects(camera, drawAABB);
+
+	if (drawAABB == true)
+		DrawFrustums();
+
+	Grid grid;
+	grid.Draw();
+
+	if (App->camera->drawClickRay == true)
+		DrawClickRay();
+}
+
+
+void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB)
+{
+
 }
 
 

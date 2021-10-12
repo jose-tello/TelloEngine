@@ -52,6 +52,7 @@ private:
 	bool fillModeEnabled;
 	bool wireframeModeEnabled;
 	bool vsync = true;
+	bool rasterizationRender;
 
 	//Hardware
 	int cpuCores;
