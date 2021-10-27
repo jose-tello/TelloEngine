@@ -121,6 +121,7 @@ float C_Camera::GetAspectRatio() const
 void C_Camera::SetAspectRatio(float aspRatio)
 {
 	frustum.SetVerticalFovAndAspectRatio(frustum.VerticalFov(), aspRatio);
+	frustum.SetPerspective(frustum.HorizontalFov(), frustum.VerticalFov());
 }
 
 

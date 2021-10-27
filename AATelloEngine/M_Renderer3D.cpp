@@ -196,8 +196,8 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, int cam
 	}
 
 	else
-		RayTracingDraw(frameBuffer, camera, drawAABB);
-	
+		RayTracingDraw(frameBuffer, camera, camWidth, camHeight);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -425,7 +425,7 @@ void M_Renderer3D::RasterizationDraw(unsigned int frameBuffer, C_Camera* camera,
 }
 
 
-void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB)
+void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -434,15 +434,19 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, bo
 	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RAY_TRACING_SHADER));
 
 	shader->UseShaderProgram();
-	
-	glDispatchCompute(840, 840, 1);
+
+	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
+	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
+
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
+	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
+
+	glDispatchCompute(winWidth, winHeight, 1);
 
 	// make sure writing to image has finished before read
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-	//DrawObjects(camera, drawAABB);
-	
-	
+	//DrawObjects(camera, drawAABB);	
 }
 
 
@@ -616,7 +620,7 @@ void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float*
 		if (uniform != nullptr)
 		{
 			float camPos[3];
-			
+
 			GameObject* cam = camera->GetOwner();
 
 			if (cam != nullptr)

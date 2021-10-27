@@ -58,7 +58,7 @@ public:
 
 private:
 	void RasterizationDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB);
-	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB);
+	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight);
 
 	void PushCamera(C_Camera*);
 	void PopCamera();
