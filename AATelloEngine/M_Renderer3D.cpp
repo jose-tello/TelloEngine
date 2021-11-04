@@ -175,8 +175,8 @@ void M_Renderer3D::GenerateFrameBuffer(float width, float height, unsigned int& 
 void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int depthBuffer)
 {
 	glDeleteFramebuffers(1, &frameBuffer);
-	glDeleteFramebuffers(1, &textureBuffer);
-	glDeleteFramebuffers(1, &depthBuffer);
+	glDeleteTextures(1, &textureBuffer);
+	glDeleteRenderbuffers(1, &depthBuffer);
 }
 
 
