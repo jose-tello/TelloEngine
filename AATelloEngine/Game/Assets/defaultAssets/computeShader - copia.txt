@@ -1,0 +1,49 @@
+__COMPUTE_SHADER__
+#version 430
+
+layout(local_size_x = 1, local_size_y = 1) in;
+layout(rgba32f, binding = 0) uniform image2D imgOutput;
+
+uniform mat4 projection;
+uniform mat4 view;
+
+vec3 spherePosition = vec3(0.0, 0.0, 0.0);
+float sphereRadius = 0.3;
+vec4 sphereColor = vec4(0.2, 0.9, 0.3, 1.0);
+
+void main()
+{
+  vec4 pixelColor = vec4(0.8, 0.2, 0.4, 1.0);
+  
+  vec2 pixelCoords = vec2(gl_GlobalInvocationID.xy);
+  vec2 texSize = imageSize(imgOutput); // fetch image dimensions
+  
+  //collision tests
+  float xPos = 2.0 * (float(pixelCoords.x + 0.5)) / float((texSize.x)) - 1.0;
+  float yPos = 2.0 * (float(pixelCoords.y + 0.5)) / float((texSize.y)) - 1.0;
+  
+  vec3 rayOrigin = (inverse(view) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+  
+  vec3 direction = (inverse(projection) * vec4(xPos, yPos, 0.0, 1.0)).xyz;
+  direction = (inverse(view) * vec4(direction, 0.0)).xyz;
+  direction = normalize(direction);
+  
+  vec3 omc = spherePosition - rayOrigin;
+  omc = normalize(omc);
+  float b = dot(direction, omc);
+  
+  //if the colision is in the direction of the ray
+  if (b >= 0.0)
+  {
+    float c = dot(omc, omc) - sphereRadius * sphereRadius;
+    float bsqmc = b * b - c;
+
+    // if hit one or both sides
+    if (bsqmc >= 0.0) 
+    {
+       pixelColor = vec4(0.4, 0.4, 1.0, 1.0);
+    }
+  }
+  
+  imageStore(imgOutput, ivec2(pixelCoords.xy), pixelColor);
+}
