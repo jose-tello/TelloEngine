@@ -2896,7 +2896,7 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::GLSL()
 			"abort", "abs", "acos", "asin", "atan", "atexit", "atof", "atoi", "atol", "ceil", "clock", "cosh", "ctime", "div", "exit", "fabs", "floor", "fmod", "getchar", "getenv", "isalnum", "isalpha", "isdigit", "isgraph",
 			"ispunct", "isspace", "isupper", "kbhit", "log10", "log2", "log", "memcmp", "modf", "pow", "putchar", "putenv", "puts", "rand", "remove", "rename", "sinh", "sqrt", "srand", "strcat", "strcmp", "strerror", "time", "tolower", "toupper",
 			"uniform", "layout", "dot", "max", "min", "in", "out", "mix", "normalize", "texture", "clamp", "distance", "length", "isnan", "cross", "transpose", "gl_Position", "gl_FragDepth", "gl_Layer", "EmitVertex", "EndPrimitive", "gl_in",
-			"samplerCube", "sin", "cos", "fract", "gl_GlobalInvocationID", "imageStore"
+			"samplerCube", "sin", "cos", "fract", "gl_GlobalInvocationID", "imageStore", "inverse"
 		};
 		for (auto& k : identifiers)
 		{
