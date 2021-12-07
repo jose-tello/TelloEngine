@@ -88,6 +88,38 @@ void C_Mesh::SetMesh(int newMesh)
 }
 
 
+std::vector<float>& C_Mesh::GetVertices()
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetVertices();
+		}
+	}
+	else
+		assert("Dont have mesh!");
+}
+
+
+std::vector<unsigned int>& C_Mesh::GetIndices()
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetIndices();
+		}
+	}
+	else
+		assert("Dont have mesh!");
+}
+
+
 void C_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const
 {
 	if (meshId != 0)

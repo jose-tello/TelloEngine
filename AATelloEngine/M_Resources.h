@@ -7,6 +7,7 @@
 #include <vector>
 
 class Resource;
+class R_Mesh;
 struct GameObject;
 struct Config;
 
@@ -40,6 +41,8 @@ public:
 
 	void GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, 
 						 std::vector<Resource*>& models, std::vector<Resource*>& shaders);
+
+	std::vector<R_Mesh*> GetAllLoadedMeshes();
 
 	Resource* GetDefaultResource(DEFAULT_RESOURCE resourceId);
 

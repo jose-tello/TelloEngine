@@ -109,6 +109,18 @@ unsigned int R_Mesh::GetIndicesSize() const
 }
 
 
+std::vector<float>& R_Mesh::GetVertices()
+{
+	return vertices;
+}
+
+
+std::vector<unsigned int>& R_Mesh::GetIndices()
+{
+	return indices;
+}
+
+
 void R_Mesh::GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const
 {
 	vertexArray = vertices;
@@ -176,6 +188,12 @@ void R_Mesh::DrawFaceNormals() const
 	}
 
 	glEnd();
+}
+
+
+void R_Mesh::SetIndicesOffset(int offset)
+{
+
 }
 
 

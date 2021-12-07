@@ -16,6 +16,9 @@ public:
 
 	void SetMesh(int meshId);
 
+	std::vector<float>& GetVertices();
+	std::vector<unsigned int>& GetIndices();
+
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
 	unsigned int GetVAO() const;
 	unsigned int GetIndicesSize() const;

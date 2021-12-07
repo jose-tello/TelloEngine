@@ -26,11 +26,16 @@ public:
 	unsigned int GetVAO() const;
 	unsigned int GetIndicesSize() const;
 
+	std::vector<float>& GetVertices();
+	std::vector<unsigned int>& GetIndices();
+
 	void GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const;
 	void GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const;
 
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
+
+	void SetIndicesOffset(int offset);
 
 private:
 	void InitAABB();
@@ -40,6 +45,7 @@ private:
 
 private:
 	unsigned int VAO = 0;
+	int indicesOffset = 0;
 
 	std::vector<float> vertices;
 	std::vector<float> normals;

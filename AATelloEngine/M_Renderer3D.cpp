@@ -14,6 +14,7 @@
 #include "C_PointLight.h"
 
 #include "R_Shader.h"
+#include "R_Mesh.h"
 
 #include "Grid.h"
 #include "UniformHandle.h"
@@ -157,8 +158,8 @@ void M_Renderer3D::GenerateFrameBuffer(float width, float height, unsigned int& 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-	glBindImageTexture(0, textureBuffer, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_FLOAT, 0);
+	glBindImageTexture(0, textureBuffer, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
 
 	glGenRenderbuffers(1, &depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
@@ -395,51 +396,28 @@ void M_Renderer3D::SetRasterization(bool enable)
 }
 
 
-void M_Renderer3D::RasterizationDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB)
-{
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glLoadMatrixf(camera->GetProjectionMat().ptr());
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glLoadMatrixf(camera->GetViewMat().ptr());
-
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	if (wireframeModeEnabled == true)
-		glLineWidth(3.0f);
-
-	DrawObjects(camera, drawAABB);
-
-	if (drawAABB == true)
-		DrawFrustums();
-
-	Grid grid;
-	grid.Draw();
-
-	if (App->camera->drawClickRay == true)
-		DrawClickRay();
-}
-
-
 void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight)
 {
+	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RAY_TRACING_SHADER));
+
+	std::vector<GameObject*> objToDraw;
+	App->scene->CullGameObjects(objToDraw);
+
+
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RAY_TRACING_SHADER));
-
 	shader->UseShaderProgram();
-
+	
+	
 	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
+	
+	GenerateArrayBuffers(shader->GetProgramId());
 
 	glDispatchCompute(winWidth, winHeight, 1);
 
@@ -447,6 +425,53 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 	//DrawObjects(camera, drawAABB);	
+}
+
+
+void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
+{
+	std::vector<R_Mesh*> meshes = App->resourceManager->GetAllLoadedMeshes();
+
+	std::vector<float> vertices;
+	std::vector<unsigned int> indices;
+
+	int indicesOffset = 0;
+
+	int meshCount = meshes.size();
+
+	for (int i = 0; i < meshCount; ++i)
+	{
+		std::vector<float> meshVertices = meshes[i]->GetVertices();
+		std::vector<unsigned int> meshIndices = meshes[i]->GetIndices();
+		
+		vertices.insert(vertices.end(), meshVertices.begin(), meshVertices.end());
+		indices.insert(indices.end(), meshIndices.begin(), meshIndices.end());
+
+		meshes[i]->SetIndicesOffset(indicesOffset);
+	}
+
+	//TODO: TESTING
+	vertices.clear();
+	vertices.push_back(1.0f);
+	vertices.push_back(1.0f);
+	vertices.push_back(0.0f);
+	//vertices.push_back(1.0f);
+
+
+	//do it uniform based
+	unsigned int vertexTexture = 0;
+	glGenTextures(1, &vertexTexture);
+	glBindTexture(GL_TEXTURE_1D, vertexTexture);
+
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, vertices.size()/3, 0, GL_RGB, GL_FLOAT, 0);
+	glTexSubImage1D(GL_TEXTURE_1D, 0, 0, vertices.size() / 3, GL_RGB, GL_FLOAT, &vertices[0]);
+
+	unsigned int texLocation = glGetUniformLocation(shaderId, "vertexTexture");
+	glUniform1i(texLocation, 1);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_1D, vertexTexture);
+
 }
 
 
@@ -489,6 +514,34 @@ void M_Renderer3D::DrawClickRay() const
 	glEnd();
 }
 
+void M_Renderer3D::RasterizationDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB)
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glLoadMatrixf(camera->GetProjectionMat().ptr());
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glLoadMatrixf(camera->GetViewMat().ptr());
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	if (wireframeModeEnabled == true)
+		glLineWidth(3.0f);
+
+	DrawObjects(camera, drawAABB);
+
+	if (drawAABB == true)
+		DrawFrustums();
+
+	Grid grid;
+	grid.Draw();
+
+	if (App->camera->drawClickRay == true)
+		DrawClickRay();
+}
 
 void M_Renderer3D::DrawObjects(C_Camera* camera, bool drawAABB) const
 {

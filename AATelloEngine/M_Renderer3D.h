@@ -57,12 +57,15 @@ public:
 	void SetRasterization(bool enable);
 
 private:
-	void RasterizationDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB);
+	
 	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight);
+	void GenerateArrayBuffers(unsigned int shaderId);
 
 	void PushCamera(C_Camera*);
 	void PopCamera();
 
+	//Raster Draw
+	void RasterizationDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB);
 	void DrawFrustums() const;
 	void DrawClickRay() const;
 	void DrawObjects(C_Camera* camera, bool drawAABB) const;
