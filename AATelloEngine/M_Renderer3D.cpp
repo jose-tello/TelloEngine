@@ -450,21 +450,17 @@ void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 		meshes[i]->SetIndicesOffset(indicesOffset);
 	}
 
-	//TODO: TESTING
-	vertices.clear();
-	vertices.push_back(1.0f);
-	vertices.push_back(1.0f);
-	vertices.push_back(0.0f);
-	//vertices.push_back(1.0f);
-
-
 	//do it uniform based
 	unsigned int vertexTexture = 0;
 	glGenTextures(1, &vertexTexture);
 	glBindTexture(GL_TEXTURE_1D, vertexTexture);
 
-	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, vertices.size()/3, 0, GL_RGB, GL_FLOAT, 0);
-	glTexSubImage1D(GL_TEXTURE_1D, 0, 0, vertices.size() / 3, GL_RGB, GL_FLOAT, &vertices[0]);
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, 3, 0, GL_RGB, GL_FLOAT, &vertices[0]);	//Width is indices size
+
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	unsigned int texLocation = glGetUniformLocation(shaderId, "vertexTexture");
 	glUniform1i(texLocation, 1);

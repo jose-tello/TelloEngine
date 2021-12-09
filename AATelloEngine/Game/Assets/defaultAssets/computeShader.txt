@@ -11,15 +11,15 @@ uniform mat4 view;
 
 vec4 triangleColor = vec4(0.2, 0.9, 0.3, 1.0);
 
-vec3 v0 = vec3(0.0, 0.0, 0.0);
+/*vec3 v0 = vec3(0.0, 0.0, 0.0);
 vec3 v1 = vec3(10.0, 0.0, 0.0);
-vec3 v2 = vec3(5.0, 10.0, 0.0);
+vec3 v2 = vec3(5.0, 10.0, 0.0);*/
 
 bool RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
 {
-  //vec3 v0 = (texture(vertexTexture, 0)).xyz;
-  //vec3 v1 = (texture(vertexTexture, 1)).xyz;
-  //vec3 v2 = (texture(vertexTexture, 2)).xyz;
+  vec3 v0 = (texture(vertexTexture, 0)).xyz;
+  vec3 v1 = (texture(vertexTexture, 0.5)).xyz;
+  vec3 v2 = (texture(vertexTexture, 0.9)).xyz;
   
   vec3 v0v1 = v1 - v0;
   vec3 v1v2 = v2 - v1;
@@ -74,5 +74,5 @@ void main()
      imageStore(imgOutput, ivec2(pixelCoords.xy), triangleColor);
   
   else
-     imageStore(imgOutput, ivec2(pixelCoords.xy), vec4(texture(vertexTexture, 0).xyz, 1.0));
+     imageStore(imgOutput, ivec2(pixelCoords.xy), pixelColor);
 }
