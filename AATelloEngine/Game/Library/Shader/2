@@ -4,6 +4,7 @@ __COMPUTE_SHADER__
 layout(local_size_x = 1, local_size_y = 1) in;
 layout(rgba32f, binding = 0) uniform image2D imgOutput;
 layout(binding = 1) uniform sampler1D vertexTexture;
+layout(binding = 2) uniform sampler1D indexTexture;
 //uniform sampler1D vertexTexture;
 
 uniform mat4 projection;
@@ -74,5 +75,5 @@ void main()
      imageStore(imgOutput, ivec2(pixelCoords.xy), triangleColor);
   
   else
-     imageStore(imgOutput, ivec2(pixelCoords.xy), pixelColor);
+     imageStore(imgOutput, ivec2(pixelCoords.xy), texture(indexTexture, 0.4));
 }

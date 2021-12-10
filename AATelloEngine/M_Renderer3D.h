@@ -59,7 +59,10 @@ public:
 private:
 	
 	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight);
-	void GenerateArrayBuffers(unsigned int shaderId);
+	int GenerateArrayBuffers(unsigned int shaderId); //Returns vertex count
+
+	void BindVertexTextureBuffer(std::vector<float>& vertexArray);
+	void BindIndexTextureBuffer(std::vector<float>& indexArray);
 
 	void PushCamera(C_Camera*);
 	void PopCamera();
@@ -88,6 +91,9 @@ private:
 	bool wireframeModeEnabled;
 	bool vsync = true;
 	bool rasterizationRender = false;
+
+	unsigned int vertexTextureBuffer = 0;
+	unsigned int indexTextureBuffer = 0;
 
 	//Camera we are rendering to, used to frustum cull
 	//WARNING: use pop / push fuctions

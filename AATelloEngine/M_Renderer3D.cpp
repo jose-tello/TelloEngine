@@ -32,21 +32,24 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
-context(),
+	context(),
 
-depthTestEnabled(true),
-cullFaceEnabled(true),
-lightingEnabled(true),
-colorMatEnabled(true),
-texture2DEnabled(true),
-fillModeEnabled(true),
-wireframeModeEnabled(false),
-vsync(true),
-rasterizationRender(false),
+	depthTestEnabled(true),
+	cullFaceEnabled(true),
+	lightingEnabled(true),
+	colorMatEnabled(true),
+	texture2DEnabled(true),
+	fillModeEnabled(true),
+	wireframeModeEnabled(false),
+	vsync(true),
+	rasterizationRender(false),
 
-currentCamera(nullptr),
-cameraRay1{ 0, 0, 0 },
-cameraRay2{ 0, 0, 0 }
+	vertexTextureBuffer(0),
+	indexTextureBuffer(0),
+
+	currentCamera(nullptr),
+	cameraRay1{ 0, 0, 0 },
+	cameraRay2{ 0, 0, 0 }
 {
 }
 
@@ -94,9 +97,6 @@ bool M_Renderer3D::Init()
 
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		//glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glEnable(GL_TEXTURE_2D);
 	}
 
 	int workGroupSize[3];
@@ -409,65 +409,85 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	shader->UseShaderProgram();
-	
+
+	int vertexCount = GenerateArrayBuffers(shader->GetProgramId());
 	
 	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
-	
-	GenerateArrayBuffers(shader->GetProgramId());
 
 	glDispatchCompute(winWidth, winHeight, 1);
 
 	// make sure writing to image has finished before read
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-
-	//DrawObjects(camera, drawAABB);	
 }
 
 
-void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
+//Returns vertex count
+int M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 {
 	std::vector<R_Mesh*> meshes = App->resourceManager->GetAllLoadedMeshes();
 
 	std::vector<float> vertices;
-	std::vector<unsigned int> indices;
-
-	int indicesOffset = 0;
+	std::vector<float> indices;
 
 	int meshCount = meshes.size();
 
+	//TODO: this can go faster with memcpy
 	for (int i = 0; i < meshCount; ++i)
 	{
+		meshes[i]->SetIndicesOffset(indices.size());
+
 		std::vector<float> meshVertices = meshes[i]->GetVertices();
 		std::vector<unsigned int> meshIndices = meshes[i]->GetIndices();
-		
+
 		vertices.insert(vertices.end(), meshVertices.begin(), meshVertices.end());
 		indices.insert(indices.end(), meshIndices.begin(), meshIndices.end());
-
-		meshes[i]->SetIndicesOffset(indicesOffset);
 	}
 
-	//do it uniform based
-	unsigned int vertexTexture = 0;
-	glGenTextures(1, &vertexTexture);
-	glBindTexture(GL_TEXTURE_1D, vertexTexture);
+	BindVertexTextureBuffer(vertices);
+	BindIndexTextureBuffer(indices);
 
-	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, 3, 0, GL_RGB, GL_FLOAT, &vertices[0]);	//Width is indices size
+	return indices.size();
+}
+
+
+void M_Renderer3D::BindVertexTextureBuffer(std::vector<float>& vertexArray)
+{
+	glDeleteTextures(1, &vertexTextureBuffer);
+	vertexTextureBuffer = 0;
+
+	glGenTextures(1, &vertexTextureBuffer);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_1D, vertexTextureBuffer);
+
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, vertexArray.size() / 3, 0, GL_RGB, GL_FLOAT, &vertexArray[0]);
 
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
 
-	unsigned int texLocation = glGetUniformLocation(shaderId, "vertexTexture");
-	glUniform1i(texLocation, 1);
 
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_1D, vertexTexture);
+//This does not work, yayyyy
+void M_Renderer3D::BindIndexTextureBuffer(std::vector<float>& indexArray)
+{
+	glDeleteTextures(1, &indexTextureBuffer);
+	indexTextureBuffer = 0;
 
+	glGenTextures(1, &indexTextureBuffer);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_1D, indexTextureBuffer);
+
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, indexArray.size() / 3, 0, GL_RGB, GL_FLOAT, &indexArray[0]);
+
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 
