@@ -410,13 +410,16 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 
 	shader->UseShaderProgram();
 
-	int vertexCount = GenerateArrayBuffers(shader->GetProgramId());
+	int triangleCount = GenerateArrayBuffers(shader->GetProgramId());
 	
 	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
+
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "triangleCount");
+	glUniform1i(uniformLocation, triangleCount);
 
 	glDispatchCompute(winWidth, winHeight, 1);
 
@@ -425,7 +428,7 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 }
 
 
-//Returns vertex count
+//Returns triangle count
 int M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 {
 	std::vector<R_Mesh*> meshes = App->resourceManager->GetAllLoadedMeshes();
@@ -450,7 +453,7 @@ int M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 	BindVertexTextureBuffer(vertices);
 	BindIndexTextureBuffer(indices);
 
-	return indices.size();
+	return indices.size() / 3;
 }
 
 
@@ -463,12 +466,12 @@ void M_Renderer3D::BindVertexTextureBuffer(std::vector<float>& vertexArray)
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_1D, vertexTextureBuffer);
 
-	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, vertexArray.size() / 3, 0, GL_RGB, GL_FLOAT, &vertexArray[0]);
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB16F, vertexArray.size() / 3, 0, GL_RGB, GL_FLOAT, &vertexArray[0]);
 
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	/*glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
 }
 
 
@@ -482,12 +485,12 @@ void M_Renderer3D::BindIndexTextureBuffer(std::vector<float>& indexArray)
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_1D, indexTextureBuffer);
 
-	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, indexArray.size() / 3, 0, GL_RGB, GL_FLOAT, &indexArray[0]);
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB16F, indexArray.size() / 3, 0, GL_RGB, GL_FLOAT, &indexArray[0]);
 
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	/*glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
 }
 
 

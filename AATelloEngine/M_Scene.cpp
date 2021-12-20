@@ -30,7 +30,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Start()
 {
-	App->resourceManager->DragAndDropImport("/Assets/water_plane.fbx", nullptr);
+	/*App->resourceManager->DragAndDropImport("/Assets/water_plane.fbx", nullptr);
 	gameObjects[0]->transform.SetEscale(0.1, 0.1, 0.1);
 	gameObjects[0]->transform.SetPos(0, 4, 100);
 	App->resourceManager->DragAndDropImport("/Assets/waterShader.txt", gameObjects[0]->childs[0]);
@@ -38,7 +38,8 @@ bool M_Scene::Start()
 	App->resourceManager->DragAndDropImport("/Assets/street/Street environment_V01.FBX", nullptr);
 	
 	GameObject* object = AddLight();
-	object->transform.SetPos(-150, 30, 0);
+	object->transform.SetPos(-150, 30, 0);*/
+
 	return true;
 }
 

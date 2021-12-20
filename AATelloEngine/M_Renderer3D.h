@@ -59,7 +59,7 @@ public:
 private:
 	
 	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight);
-	int GenerateArrayBuffers(unsigned int shaderId); //Returns vertex count
+	int GenerateArrayBuffers(unsigned int shaderId); //Returns triangle count
 
 	void BindVertexTextureBuffer(std::vector<float>& vertexArray);
 	void BindIndexTextureBuffer(std::vector<float>& indexArray);
