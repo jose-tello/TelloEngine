@@ -11,6 +11,10 @@ uniform int triangleCount;
 uniform mat4 projection;
 uniform mat4 view;
 
+uniform float aspectRatio;
+uniform float verticalFov;
+uniform float horizontalFov;
+
 vec4 triangleColor = vec4(0.2, 0.9, 0.3, 1.0);
 
 bool RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
@@ -27,17 +31,21 @@ bool RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
     vec3 v1 = (texelFetch(vertexTexture, vertex2, 0)).xyz;
     vec3 v2 = (texelFetch(vertexTexture, vertex3, 0)).xyz;
   
+    v0 += vec3(0.0, 0.0, 0.0);
+    v1 += vec3(0.0, 0.0, 0.0);
+    v2 += vec3(0.0, 0.0, 0.0);
+  
     vec3 v0v1 = v1 - v0;
     vec3 v1v2 = v2 - v1;
     vec3 v2v0 = v0 - v2;
   
-    vec3 triangleNormal = cross(v0v1, v2 - v0);
+    vec3 triangleNormal = normalize(cross(v1 - v0, v2 - v0));
   
     float dtNDirection = dot(triangleNormal, rayDirection);
     if (dtNDirection <= 0)  //Check ray paralel to the triangle
       continue;
 
-    float D = dot(triangleNormal, v0);
+    float D = -dot(triangleNormal, v0);
   
     float distToRay = -(dot(triangleNormal, rayOrigin) + D) / dtNDirection;
 
@@ -70,14 +78,21 @@ void main()
   vec2 texSize = imageSize(imgOutput); // fetch image dimensions
   
   //collision tests
-  float xPos = 2.0 * (float(pixelCoords.x + 0.5)) / float((texSize.x)) - 1.0;
-  float yPos = 2.0 * (float(pixelCoords.y + 0.5)) / float((texSize.y)) - 1.0;
+  float pixCoordX = float(pixelCoords.x);
+  float pixCoordY = float(pixelCoords.y);
+  float xPos = 2 * ((pixCoordX + 0.5) / float(texSize.x)) - 1;
+  float yPos = 2 * ((pixCoordY + 0.5) / float(texSize.y)) - 1;
   
-  vec3 rayOrigin = (inverse(view) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+  xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
+  yPos = yPos * tan(horizontalFov * 0.5);
   
-  vec3 rayDirection = (inverse(projection) * vec4(xPos, yPos, 0.0, 1.0)).xyz;
-  rayDirection = (inverse(view) * vec4(rayDirection, 0.0)).xyz;
-  rayDirection = normalize(rayDirection);
+  mat4 cameraToWorld = inverse(view);
+  
+  vec3 rayOrigin = (cameraToWorld * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+  vec3 p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
+  
+  //vec3 rayDirection = (inverse(projection) * vec4(xPos, yPos, 0.0, 1.0)).xyz;
+  vec3 rayDirection = normalize(p - rayOrigin);
   
   if (RayTriangleIntersection(rayDirection, rayOrigin))
      imageStore(imgOutput, ivec2(pixelCoords.xy), triangleColor);

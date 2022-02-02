@@ -32,24 +32,24 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
-	context(),
+context(),
 
-	depthTestEnabled(true),
-	cullFaceEnabled(true),
-	lightingEnabled(true),
-	colorMatEnabled(true),
-	texture2DEnabled(true),
-	fillModeEnabled(true),
-	wireframeModeEnabled(false),
-	vsync(true),
-	rasterizationRender(false),
+depthTestEnabled(true),
+cullFaceEnabled(true),
+lightingEnabled(true),
+colorMatEnabled(true),
+texture2DEnabled(true),
+fillModeEnabled(true),
+wireframeModeEnabled(false),
+vsync(true),
+rasterizationRender(false),
 
-	vertexTextureBuffer(0),
-	indexTextureBuffer(0),
+vertexTextureBuffer(0),
+indexTextureBuffer(0),
 
-	currentCamera(nullptr),
-	cameraRay1{ 0, 0, 0 },
-	cameraRay2{ 0, 0, 0 }
+currentCamera(nullptr),
+cameraRay1{ 0, 0, 0 },
+cameraRay2{ 0, 0, 0 }
 {
 }
 
@@ -411,7 +411,7 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 	shader->UseShaderProgram();
 
 	int triangleCount = GenerateArrayBuffers(shader->GetProgramId());
-	
+
 	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
 
@@ -420,6 +420,15 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "triangleCount");
 	glUniform1i(uniformLocation, triangleCount);
+
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "aspectRatio");
+	glUniform1f(uniformLocation, camera->GetAspectRatio());
+
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "verticalFov");
+	glUniform1f(uniformLocation, camera->GetVerticalFov());
+
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "horizontalFov");
+	glUniform1f(uniformLocation, camera->GetHorizontalFov());
 
 	glDispatchCompute(winWidth, winHeight, 1);
 
@@ -450,8 +459,100 @@ int M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 		indices.insert(indices.end(), meshIndices.begin(), meshIndices.end());
 	}
 
-	BindVertexTextureBuffer(vertices);
-	BindIndexTextureBuffer(indices);
+	/*vertices.clear();
+	indices.clear();
+	vertices.push_back(-1);
+	vertices.push_back(-1);
+	vertices.push_back(-1);
+
+	vertices.push_back(1);
+	vertices.push_back(-1);
+	vertices.push_back(-1);
+
+	vertices.push_back(1);
+	vertices.push_back(1);
+	vertices.push_back(-1);
+
+
+	vertices.push_back(-1);
+	vertices.push_back(1);
+	vertices.push_back(-1);
+
+
+	vertices.push_back(-1);
+	vertices.push_back(-1);
+	vertices.push_back(1);
+
+	//5
+	vertices.push_back(1);
+	vertices.push_back(-1);
+	vertices.push_back(1);
+
+	//6
+	vertices.push_back(1);
+	vertices.push_back(1);
+	vertices.push_back(1);
+
+
+	vertices.push_back(-1);
+	vertices.push_back(1);
+	vertices.push_back(1);
+
+	//indices
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(3);
+
+	indices.push_back(3);
+	indices.push_back(1);
+	indices.push_back(2);
+
+	indices.push_back(1);
+	indices.push_back(5);
+	indices.push_back(2);
+
+	indices.push_back(2);
+	indices.push_back(5);
+	indices.push_back(6);
+
+	//4
+	indices.push_back(5);
+	indices.push_back(4);
+	indices.push_back(6);
+
+	indices.push_back(6);
+	indices.push_back(4);
+	indices.push_back(7);
+
+	indices.push_back(4);
+	indices.push_back(0);
+	indices.push_back(7);
+
+	indices.push_back(7);
+	indices.push_back(0);
+	indices.push_back(3);
+
+	indices.push_back(3);
+	indices.push_back(2);
+	indices.push_back(7);
+
+	indices.push_back(7);
+	indices.push_back(2);
+	indices.push_back(6);
+
+	indices.push_back(4);
+	indices.push_back(5);
+	indices.push_back(0);
+
+	indices.push_back(0);
+	indices.push_back(5);
+	indices.push_back(1);*/
+
+	if (vertices.size() != 0 && indices.size() != 0)
+	{
+		BindVertexTextureBuffer(vertices);
+		BindIndexTextureBuffer(indices);
+	}
 
 	return indices.size() / 3;
 }

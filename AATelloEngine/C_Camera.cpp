@@ -105,6 +105,11 @@ float C_Camera::GetVerticalFov() const
 	return frustum.VerticalFov();
 }
 
+float C_Camera::GetHorizontalFov() const
+{
+	return frustum.HorizontalFov();
+}
+
 
 void C_Camera::SetVerticalFov(float fov)
 {

@@ -31,6 +31,8 @@ public:
 	float GetVerticalFov() const;
 	void SetVerticalFov(float fov);
 
+	float GetHorizontalFov() const;
+
 	float GetAspectRatio() const;
 	void SetAspectRatio(float aspRatio);
 
