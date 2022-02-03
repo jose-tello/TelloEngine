@@ -263,6 +263,36 @@ void M_Scene::OnGameEnd()
 }
 
 
+void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector) const
+{
+	std::stack<GameObject*> stack;
+	GameObject* node;
+
+	int childCount;
+
+	int gameObjCount = gameObjects.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		stack.push(gameObjects[i]);
+
+		while (stack.empty() == false)
+		{
+			node = stack.top();
+			stack.pop();
+
+			vector.push_back(node);
+
+			if (node->childs.empty() == false)
+			{
+				childCount = node->childs.size();
+				for (int j = 0; j < childCount; j++)
+					stack.push(node->childs[j]);
+			}
+		}
+	}
+}
+
+
 void M_Scene::UpdateGameObjects(float dt)
 {
 	std::stack<GameObject*> stack;
@@ -393,36 +423,6 @@ void M_Scene::TestRayCollision(LineSegment& ray)
 			}
 		}
 		App->editor->SetFocusedGameObject(selected.second);
-	}
-}
-
-
-void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector) const
-{
-	std::stack<GameObject*> stack;
-	GameObject* node;
-
-	int childCount;
-
-	int gameObjCount = gameObjects.size();
-	for (int i = 0; i < gameObjCount; i++)
-	{
-		stack.push(gameObjects[i]);
-
-		while (stack.empty() == false)
-		{
-			node = stack.top();
-			stack.pop();
-
-			vector.push_back(node);
-
-			if (node->childs.empty() == false)
-			{
-				childCount = node->childs.size();
-				for (int j = 0; j < childCount; j++)
-					stack.push(node->childs[j]);
-			}
-		}
 	}
 }
 

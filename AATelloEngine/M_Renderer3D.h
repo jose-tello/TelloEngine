@@ -10,6 +10,7 @@
 #include <vector>
 
 #define LIGHT_LIMIT 1
+#define RAYTRACED_MESH_LIMIT 10
 
 struct GameObject;
 
@@ -56,10 +57,15 @@ public:
 	void SetVsync(bool enable);
 	void SetRasterization(bool enable);
 
+	void NotifyUpdateBuffers();
+
 private:
 	
+	//Ray tracing draw
 	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight);
-	int GenerateArrayBuffers(unsigned int shaderId); //Returns triangle count
+
+	void GenerateArrayBuffers(unsigned int shaderId); //Returns triangle count
+	int BindMeshArray(unsigned int programId);
 
 	void BindVertexTextureBuffer(std::vector<float>& vertexArray);
 	void BindIndexTextureBuffer(std::vector<float>& indexArray);
@@ -92,6 +98,7 @@ private:
 	bool vsync = true;
 	bool rasterizationRender = false;
 
+	bool buffersToUpdate = false;
 	unsigned int vertexTextureBuffer = 0;
 	unsigned int indexTextureBuffer = 0;
 

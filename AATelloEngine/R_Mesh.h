@@ -35,6 +35,7 @@ public:
 	void DrawVertexNormals() const;
 	void DrawFaceNormals() const;
 
+	unsigned int GetIndicesOffset() const;
 	void SetIndicesOffset(int offset);
 
 private:

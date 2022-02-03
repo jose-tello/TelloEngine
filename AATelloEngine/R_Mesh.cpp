@@ -3,6 +3,7 @@
 
 #include "Application.h"
 #include "M_Resources.h"
+#include "M_Renderer3D.h"
 
 #include "MathGeoLib/src/MathGeoLib.h"
 
@@ -26,6 +27,7 @@ R_Mesh::~R_Mesh()
 
 void R_Mesh::Load()
 {
+	App->renderer3D->NotifyUpdateBuffers();
 	MeshImporter::Load(this);
 
 	isLoaded = true;
@@ -34,6 +36,8 @@ void R_Mesh::Load()
 
 void R_Mesh::UnLoad()
 {
+	App->renderer3D->NotifyUpdateBuffers();
+
 	glDeleteBuffers(1, &VAO);
 
 	VAO = 0;
@@ -191,9 +195,14 @@ void R_Mesh::DrawFaceNormals() const
 }
 
 
+unsigned int R_Mesh::GetIndicesOffset() const
+{
+	return indicesOffset;
+}
+
 void R_Mesh::SetIndicesOffset(int offset)
 {
-
+	indicesOffset = offset;
 }
 
 

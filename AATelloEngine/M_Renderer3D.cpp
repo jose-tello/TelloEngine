@@ -44,6 +44,7 @@ wireframeModeEnabled(false),
 vsync(true),
 rasterizationRender(false),
 
+buffersToUpdate(false),
 vertexTextureBuffer(0),
 indexTextureBuffer(0),
 
@@ -396,6 +397,12 @@ void M_Renderer3D::SetRasterization(bool enable)
 }
 
 
+void M_Renderer3D::NotifyUpdateBuffers()
+{
+	buffersToUpdate = true;
+}
+
+
 void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight)
 {
 	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RAY_TRACING_SHADER));
@@ -410,7 +417,13 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 
 	shader->UseShaderProgram();
 
-	int triangleCount = GenerateArrayBuffers(shader->GetProgramId());
+	if (buffersToUpdate == true)
+	{
+		GenerateArrayBuffers(shader->GetProgramId());
+		buffersToUpdate = false;
+	}
+
+	int meshCount = BindMeshArray(shader->GetProgramId());
 
 	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
@@ -418,8 +431,8 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
 
-	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "triangleCount");
-	glUniform1i(uniformLocation, triangleCount);
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "meshCount");
+	glUniform1i(uniformLocation, meshCount);
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "aspectRatio");
 	glUniform1f(uniformLocation, camera->GetAspectRatio());
@@ -438,7 +451,7 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, in
 
 
 //Returns triangle count
-int M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
+void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 {
 	std::vector<R_Mesh*> meshes = App->resourceManager->GetAllLoadedMeshes();
 
@@ -447,114 +460,65 @@ int M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 
 	int meshCount = meshes.size();
 
+	int indexOffset = 0;
+
 	//TODO: this can go faster with memcpy
 	for (int i = 0; i < meshCount; ++i)
 	{
-		meshes[i]->SetIndicesOffset(indices.size());
+		meshes[i]->SetIndicesOffset(indexOffset);
 
 		std::vector<float> meshVertices = meshes[i]->GetVertices();
 		std::vector<unsigned int> meshIndices = meshes[i]->GetIndices();
 
 		vertices.insert(vertices.end(), meshVertices.begin(), meshVertices.end());
 		indices.insert(indices.end(), meshIndices.begin(), meshIndices.end());
+
+		indexOffset += vertices.size();
 	}
-
-	/*vertices.clear();
-	indices.clear();
-	vertices.push_back(-1);
-	vertices.push_back(-1);
-	vertices.push_back(-1);
-
-	vertices.push_back(1);
-	vertices.push_back(-1);
-	vertices.push_back(-1);
-
-	vertices.push_back(1);
-	vertices.push_back(1);
-	vertices.push_back(-1);
-
-
-	vertices.push_back(-1);
-	vertices.push_back(1);
-	vertices.push_back(-1);
-
-
-	vertices.push_back(-1);
-	vertices.push_back(-1);
-	vertices.push_back(1);
-
-	//5
-	vertices.push_back(1);
-	vertices.push_back(-1);
-	vertices.push_back(1);
-
-	//6
-	vertices.push_back(1);
-	vertices.push_back(1);
-	vertices.push_back(1);
-
-
-	vertices.push_back(-1);
-	vertices.push_back(1);
-	vertices.push_back(1);
-
-	//indices
-	indices.push_back(0);
-	indices.push_back(1);
-	indices.push_back(3);
-
-	indices.push_back(3);
-	indices.push_back(1);
-	indices.push_back(2);
-
-	indices.push_back(1);
-	indices.push_back(5);
-	indices.push_back(2);
-
-	indices.push_back(2);
-	indices.push_back(5);
-	indices.push_back(6);
-
-	//4
-	indices.push_back(5);
-	indices.push_back(4);
-	indices.push_back(6);
-
-	indices.push_back(6);
-	indices.push_back(4);
-	indices.push_back(7);
-
-	indices.push_back(4);
-	indices.push_back(0);
-	indices.push_back(7);
-
-	indices.push_back(7);
-	indices.push_back(0);
-	indices.push_back(3);
-
-	indices.push_back(3);
-	indices.push_back(2);
-	indices.push_back(7);
-
-	indices.push_back(7);
-	indices.push_back(2);
-	indices.push_back(6);
-
-	indices.push_back(4);
-	indices.push_back(5);
-	indices.push_back(0);
-
-	indices.push_back(0);
-	indices.push_back(5);
-	indices.push_back(1);*/
 
 	if (vertices.size() != 0 && indices.size() != 0)
 	{
 		BindVertexTextureBuffer(vertices);
 		BindIndexTextureBuffer(indices);
 	}
+}
 
-	return indices.size() / 3;
+
+int M_Renderer3D::BindMeshArray(unsigned int programId)
+{
+	std::vector<GameObject*> objects;
+	App->scene->GetAllGameObjects(objects);
+
+	int meshCount = 0;
+
+	int objectsCount = objects.size();
+	for (int i = 0; i < objectsCount; ++i)
+	{
+		C_Mesh* mesh = static_cast<C_Mesh*>(objects[i]->GetComponent(COMPONENT_TYPE::MESH));
+		if (mesh != nullptr && meshCount < RAYTRACED_MESH_LIMIT)
+		{
+			char buffer[64];
+
+			sprintf(buffer, "meshArray[%i].transform", meshCount);
+
+			unsigned int uniformLocation = glGetUniformLocation(programId, buffer);
+			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, objects[i]->transform.GetMatTransformT().ptr());
+
+			sprintf(buffer, "meshArray[%i].indexOffset", meshCount);
+
+			uniformLocation = glGetUniformLocation(programId, buffer);
+			glUniform1i(uniformLocation, mesh->GetIndexOffset() / 3);
+
+			sprintf(buffer, "meshArray[%i].indexCount", meshCount);
+
+			uniformLocation = glGetUniformLocation(programId, buffer);
+			glUniform1i(uniformLocation, mesh->GetIndicesSize() / 3);
+
+			meshCount++;
+		}
+	}
+
+	return meshCount;
 }
 
 
@@ -571,8 +535,6 @@ void M_Renderer3D::BindVertexTextureBuffer(std::vector<float>& vertexArray)
 
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	/*glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
 }
 
 
@@ -590,8 +552,6 @@ void M_Renderer3D::BindIndexTextureBuffer(std::vector<float>& indexArray)
 
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	/*glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
 }
 
 
@@ -669,7 +629,7 @@ void M_Renderer3D::DrawObjects(C_Camera* camera, bool drawAABB) const
 	App->scene->CullGameObjects(objToDraw);
 
 	int objectsCount = objToDraw.size();
-	for (int i = 0; i < objectsCount; i++)
+	for (int i = 0; i < objectsCount; ++i)
 	{
 		if (fillModeEnabled == true)
 		{

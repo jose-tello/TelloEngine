@@ -22,6 +22,7 @@ public:
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
 	unsigned int GetVAO() const;
 	unsigned int GetIndicesSize() const;
+	unsigned int GetIndexOffset() const;
 
 	AABB GetAABB() const;
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
