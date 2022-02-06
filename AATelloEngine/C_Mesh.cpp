@@ -182,6 +182,21 @@ unsigned int C_Mesh::GetIndexOffset() const
 }
 
 
+unsigned int C_Mesh::GetVertexOffset() const
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetVertexOffset();
+		}
+	}
+
+	return 0;
+}
+
 
 AABB C_Mesh::GetAABB() const
 {

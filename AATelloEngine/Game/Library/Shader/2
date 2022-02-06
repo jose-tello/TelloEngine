@@ -18,6 +18,7 @@ struct Mesh
 {
    mat4 transform;
    int indexOffset;
+   int vertexOffset;
    int indexCount;
 };
 
@@ -29,18 +30,13 @@ bool RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
 {
   for(int i = 0; i < meshCount; ++i)
   {
-     int indexPos = meshArray[i].indexOffset;
-     int iterations = meshArray[i].indexOffset + meshArray[i].indexCount;
-  
-     for (int j = indexPos; j < iterations; j++)
+     for (int j = 0; j < meshArray[i].indexCount / 3; ++j)  //index count / 3 = triangle count
       {
-      if (indexPos == 8)
-      return false;
       
-       vec3 vertexPos = texelFetch(indexTexture, j, 0).xyz;
-       int vertex1 = int(vertexPos.x);
-       int vertex2 = int(vertexPos.y);
-       int vertex3 = int(vertexPos.z);
+       vec3 vertexPos = texelFetch(indexTexture, j + meshArray[i].indexOffset, 0).xyz;
+       int vertex1 = int(vertexPos.x) + meshArray[i].vertexOffset;
+       int vertex2 = int(vertexPos.y) + meshArray[i].vertexOffset;
+       int vertex3 = int(vertexPos.z) + meshArray[i].vertexOffset;
     
        vec3 v0 = (texelFetch(vertexTexture, vertex1, 0)).xyz;
        vec3 v1 = (texelFetch(vertexTexture, vertex2, 0)).xyz;

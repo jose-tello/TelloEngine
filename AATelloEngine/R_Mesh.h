@@ -38,6 +38,9 @@ public:
 	unsigned int GetIndicesOffset() const;
 	void SetIndicesOffset(int offset);
 
+	unsigned int GetVertexOffset() const;
+	void SetVertexOffset(int offset);
+
 private:
 	void InitAABB();
 
@@ -47,6 +50,7 @@ private:
 private:
 	unsigned int VAO = 0;
 	int indicesOffset = 0;
+	int vertexOffset = 0;
 
 	std::vector<float> vertices;
 	std::vector<float> normals;

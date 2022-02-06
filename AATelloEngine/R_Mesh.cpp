@@ -14,6 +14,8 @@
 
 R_Mesh::R_Mesh(int uid, const char* path, RESOURCE_TYPE type) : Resource(uid, path, type),
 	VAO(0),
+	indicesOffset(0),
+	vertexOffset(0),
 	aabb()
 {
 }
@@ -205,6 +207,17 @@ void R_Mesh::SetIndicesOffset(int offset)
 	indicesOffset = offset;
 }
 
+
+unsigned int R_Mesh::GetVertexOffset() const
+{
+	return vertexOffset;
+}
+
+
+void R_Mesh::SetVertexOffset(int offset)
+{
+	vertexOffset = offset;
+}
 
 void R_Mesh::InitAABB()
 {

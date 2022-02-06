@@ -23,6 +23,7 @@ public:
 	unsigned int GetVAO() const;
 	unsigned int GetIndicesSize() const;
 	unsigned int GetIndexOffset() const;
+	unsigned int GetVertexOffset() const;
 
 	AABB GetAABB() const;
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;

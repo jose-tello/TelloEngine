@@ -461,11 +461,13 @@ void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 	int meshCount = meshes.size();
 
 	int indexOffset = 0;
+	int vertexOffset = 0;
 
 	//TODO: this can go faster with memcpy
 	for (int i = 0; i < meshCount; ++i)
 	{
 		meshes[i]->SetIndicesOffset(indexOffset);
+		meshes[i]->SetVertexOffset(vertexOffset);
 
 		std::vector<float> meshVertices = meshes[i]->GetVertices();
 		std::vector<unsigned int> meshIndices = meshes[i]->GetIndices();
@@ -473,7 +475,8 @@ void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 		vertices.insert(vertices.end(), meshVertices.begin(), meshVertices.end());
 		indices.insert(indices.end(), meshIndices.begin(), meshIndices.end());
 
-		indexOffset += vertices.size();
+		indexOffset += meshIndices.size() / 3;
+		vertexOffset += meshVertices.size() / 3;
 	}
 
 	if (vertices.size() != 0 && indices.size() != 0)
@@ -507,12 +510,17 @@ int M_Renderer3D::BindMeshArray(unsigned int programId)
 			sprintf(buffer, "meshArray[%i].indexOffset", meshCount);
 
 			uniformLocation = glGetUniformLocation(programId, buffer);
-			glUniform1i(uniformLocation, mesh->GetIndexOffset() / 3);
+			glUniform1i(uniformLocation, mesh->GetIndexOffset());
+
+			sprintf(buffer, "meshArray[%i].vertexOffset", meshCount);
+
+			uniformLocation = glGetUniformLocation(programId, buffer);
+			glUniform1i(uniformLocation, mesh->GetVertexOffset());
 
 			sprintf(buffer, "meshArray[%i].indexCount", meshCount);
 
 			uniformLocation = glGetUniformLocation(programId, buffer);
-			glUniform1i(uniformLocation, mesh->GetIndicesSize() / 3);
+			glUniform1i(uniformLocation, mesh->GetIndicesSize());
 
 			meshCount++;
 		}
