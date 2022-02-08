@@ -204,6 +204,18 @@ AABB C_Mesh::GetAABB() const
 }
 
 
+const float* C_Mesh::GetAABBMinPoint() const
+{
+	return aabb.minPoint.ptr();
+}
+
+
+const float* C_Mesh::GetAABBMaxPoint() const
+{
+	return aabb.maxPoint.ptr();
+}
+
+
 bool C_Mesh::TestAABBRayCollision(LineSegment& ray, float& distance) const
 {
 	float farDst;

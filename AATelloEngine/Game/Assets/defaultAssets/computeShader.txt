@@ -17,6 +17,8 @@ uniform float verticalFov;
 struct Mesh
 {
    mat4 transform;
+   vec3 maxPoint;
+   vec3 minPoint;
    int indexOffset;
    int vertexOffset;
    int indexCount;
@@ -26,10 +28,73 @@ uniform Mesh[10] meshArray;
 
 vec4 triangleColor = vec4(0.2, 0.9, 0.3, 1.0);
 
+bool RayBoxIntersection(vec3 rayDirection, vec3 rayOrigin, vec3 minP, vec3 maxP)
+{
+   float tMin;
+   float tMax;
+   
+   float yMin;
+   float yMax;
+   
+   float zMin;
+   float zMax;
+   
+   if (rayDirection.x >= 0)
+   {
+      tMin = (minP.x - rayOrigin.x) / rayDirection.x;
+      tMax = (maxP.x - rayOrigin.x) / rayDirection.x;
+   }
+   else
+   {
+      tMin = (maxP.x - rayOrigin.x) / rayDirection.x;
+      tMax = (minP.x - rayOrigin.x) / rayDirection.x;
+   }
+   
+   if (rayDirection.y >= 0)
+   {
+      yMin = (minP.y - rayOrigin.y) / rayDirection.y;
+      yMax = (maxP.y - rayOrigin.y) / rayDirection.y;
+   }
+   else
+   {
+      yMin = (maxP.y - rayOrigin.y) / rayDirection.y;
+      yMax = (minP.y - rayOrigin.y) / rayDirection.y;
+   }
+   
+   if ((tMin > yMax) || (yMin > tMax))
+      return false;
+      
+   if (yMin > tMin)
+      tMin = yMin;
+      
+   if (yMax < tMax)
+      tMax = yMax;
+      
+      
+   if (rayDirection.z >= 0)
+   {
+      zMin = (minP.z - rayOrigin.z) / rayDirection.z;
+      zMax = (maxP.z - rayOrigin.z) / rayDirection.z;
+   }
+   else
+   {
+      zMin = (maxP.z - rayOrigin.z) / rayDirection.z;
+      zMax = (minP.z - rayOrigin.z) / rayDirection.z;
+   }
+   
+   if ((tMin > zMax) || (zMin > tMax))
+      return false;
+
+   return true;
+}
+
 bool RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
 {
   for(int i = 0; i < meshCount; ++i)
   {
+     if (RayBoxIntersection(rayDirection, rayOrigin, meshArray[i].minPoint, meshArray[i].maxPoint) == false)
+        continue;
+  
      for (int j = 0; j < meshArray[i].indexCount / 3; ++j)  //index count / 3 = triangle count
       {
       

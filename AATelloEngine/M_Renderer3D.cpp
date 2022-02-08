@@ -109,8 +109,14 @@ bool M_Renderer3D::Init()
 	App->editor->AddLog("WORK GROUP SIZE \n x: %i	y: %i	z: %i", workGroupSize[0], workGroupSize[1], workGroupSize[2]);
 
 	int maxGroupInvocations;
+
 	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &maxGroupInvocations);
 	App->editor->AddLog("MAX GROUP INVOCATIONS: %i", maxGroupInvocations);
+
+	int maxTexSize;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
+	App->editor->AddLog("MAX TEXTURE SIZE: %i", maxTexSize);
+
 
 	return ret;
 }
@@ -506,6 +512,18 @@ int M_Renderer3D::BindMeshArray(unsigned int programId)
 
 			unsigned int uniformLocation = glGetUniformLocation(programId, buffer);
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, objects[i]->transform.GetMatTransformT().ptr());
+
+			sprintf(buffer, "meshArray[%i].minPoint", meshCount);
+
+			uniformLocation = glGetUniformLocation(programId, buffer);
+			const float* minPoint = mesh->GetAABBMinPoint();
+			glUniform3f(uniformLocation, minPoint[0], minPoint[1], minPoint[2]);
+
+			sprintf(buffer, "meshArray[%i].maxPoint", meshCount);
+
+			uniformLocation = glGetUniformLocation(programId, buffer);
+			const float* maxPoint = mesh->GetAABBMaxPoint();
+			glUniform3f(uniformLocation, maxPoint[0], maxPoint[1], maxPoint[2]);
 
 			sprintf(buffer, "meshArray[%i].indexOffset", meshCount);
 
