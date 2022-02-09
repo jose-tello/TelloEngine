@@ -591,6 +591,14 @@ bool W_Inspector::IsDefaultUniform(const char* uniformName) const
 			return true;
 	}
 
+	for (int i = 0; i < sizeof(defaultStructUniforms) / sizeof(defaultStructUniforms[0]); ++i)
+	{
+		std::string uName = uniformName;
+
+		if (uName.find(defaultStructUniforms[i]) != std::string::npos)
+			return true;
+	}
+
 	return false;
 }
 
