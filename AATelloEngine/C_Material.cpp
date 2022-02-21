@@ -510,6 +510,12 @@ void C_Material::Load(Config& node)
 		if (shader != nullptr)
 			shader->AddReference();
 	}
+
+	color.r = node.GetNum("ColR");
+	color.g = node.GetNum("ColG");
+	color.b = node.GetNum("ColB");
+	color.a = node.GetNum("ColA");
+
 }
 
 
@@ -520,6 +526,11 @@ void C_Material::Save(Config& node) const
 	node.AppendNum("material", materialId);
 	node.AppendNum("texture", textureId);
 	node.AppendNum("shader", shaderId);
+
+	node.AppendNum("ColR", color.r);
+	node.AppendNum("ColG", color.g);
+	node.AppendNum("ColB", color.b);
+	node.AppendNum("ColA", color.a);
 
 	
 	SaveUniformArray(node);
