@@ -46,6 +46,10 @@ public:
 
 	void GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId);
 
+	Color& GetColor();
+	void SetColor(float r, float g, float b, float a);
+
+
 	void Load(Config&) override;
 	void Save(Config&) const override;
 
@@ -54,7 +58,6 @@ public:
 private:
 	void InitCheckerTex();	
 
-	void GetDrawColor(Color&) const;
 	
 	unsigned int GetShaderProgram();
 
@@ -67,6 +70,8 @@ private:
 	int materialId = 0;
 	int textureId = 0;
 	int shaderId = 0;
+
+	Color color;
 
 	bool textureEnabled;
 	bool colorEnabled;

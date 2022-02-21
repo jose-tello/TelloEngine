@@ -249,8 +249,12 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 		bool colEnabled = material->GetColorEnabled();
 		bool checkEnabled = material->GetCheckerTextureEnabled();
 
+		Color col = material->GetColor();
+		ImGui::ColorPicker4("Color", &col.r);
+		material->SetColor(col.r, col.g, col.b, col.a);
+
 		ImGui::Checkbox("Texture", &texEnabled);
-		ImGui::Checkbox("Color", &colEnabled);
+		ImGui::Checkbox("Color enabled", &colEnabled);
 		ImGui::Checkbox("Checker tex", &checkEnabled);
 
 		material->SetTextureEnable(texEnabled);

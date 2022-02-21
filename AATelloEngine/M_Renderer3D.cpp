@@ -540,6 +540,21 @@ int M_Renderer3D::BindMeshArray(unsigned int programId)
 			uniformLocation = glGetUniformLocation(programId, buffer);
 			glUniform1i(uniformLocation, mesh->GetIndicesSize());
 
+			sprintf(buffer, "meshArray[%i].color", meshCount);
+
+			uniformLocation = glGetUniformLocation(programId, buffer);
+
+			C_Material* mat = static_cast<C_Material*>(objects[i]->GetComponent(COMPONENT_TYPE::MATERIAL));
+			if (mat != nullptr)
+			{
+				Color col = mat->GetColor();
+				glUniform3f(uniformLocation, col.r, col.g, col.b);
+			}
+			else
+			{
+				glUniform3f(uniformLocation, 1.0, 1.0, 1.0);
+			}
+
 			meshCount++;
 		}
 	}

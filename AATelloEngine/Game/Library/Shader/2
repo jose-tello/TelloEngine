@@ -22,72 +22,46 @@ struct Mesh
    int indexOffset;
    int vertexOffset;
    int indexCount;
+   
+   vec3 color;
 };
 
 uniform Mesh[10] meshArray;
 
 vec4 triangleColor = vec4(0.2, 0.9, 0.3, 1.0);
+vec4 pixelColor = vec4(0.8, 0.2, 0.4, 1.0);
 
 bool RayBoxIntersection(vec3 rayDirection, vec3 rayOrigin, vec3 minP, vec3 maxP)
 {
-
    float dstMinToRay = dot(rayDirection, rayOrigin - minP);
    float dstMaxToRay = dot(rayDirection, rayOrigin - maxP);
    
    if (dstMinToRay >= 0 && dstMaxToRay >= 0)
       return false;
+      
+   float auxMin = (minP.x - rayOrigin.x) / rayDirection.x;
+   float auxMax = (maxP.x - rayOrigin.x) / rayDirection.x;
 
-   float tMin;
-   float tMax;
+   float tMin = min(auxMin, auxMax);
+   float tMax = max(auxMin, auxMax);
    
-   float yMin;
-   float yMax;
+   auxMin = (minP.y - rayOrigin.y) / rayDirection.y;
+   auxMax = (maxP.y - rayOrigin.y) / rayDirection.y;
    
-   float zMin;
-   float zMax;
-   
-   if (rayDirection.x >= 0)
-   {
-      tMin = (minP.x - rayOrigin.x) / rayDirection.x;
-      tMax = (maxP.x - rayOrigin.x) / rayDirection.x;
-   }
-   else
-   {
-      tMin = (maxP.x - rayOrigin.x) / rayDirection.x;
-      tMax = (minP.x - rayOrigin.x) / rayDirection.x;
-   }
-   
-   if (rayDirection.y >= 0)
-   {
-      yMin = (minP.y - rayOrigin.y) / rayDirection.y;
-      yMax = (maxP.y - rayOrigin.y) / rayDirection.y;
-   }
-   else
-   {
-      yMin = (maxP.y - rayOrigin.y) / rayDirection.y;
-      yMax = (minP.y - rayOrigin.y) / rayDirection.y;
-   }
+   float yMin = min(auxMin, auxMax);
+   float yMax = max(auxMin, auxMax);
    
    if ((tMin > yMax) || (yMin > tMax))
       return false;
       
-   if (yMin > tMin)
-      tMin = yMin;
+   tMin = max(tMin, yMin);
+   yMax = min(tMax, yMax);      
       
-   if (yMax < tMax)
-      tMax = yMax;
+   auxMin = (minP.z - rayOrigin.z) / rayDirection.z;
+   auxMax = (maxP.z - rayOrigin.z) / rayDirection.z;
       
-      
-   if (rayDirection.z >= 0)
-   {
-      zMin = (minP.z - rayOrigin.z) / rayDirection.z;
-      zMax = (maxP.z - rayOrigin.z) / rayDirection.z;
-   }
-   else
-   {
-      zMin = (maxP.z - rayOrigin.z) / rayDirection.z;
-      zMax = (minP.z - rayOrigin.z) / rayDirection.z;
-   }
+   float zMin = min(auxMin, auxMax);
+   float zMax = max(auxMin, auxMax);
    
    if ((tMin > zMax) || (zMin > tMax))
       return false;
@@ -95,8 +69,11 @@ bool RayBoxIntersection(vec3 rayDirection, vec3 rayOrigin, vec3 minP, vec3 maxP)
    return true;
 }
 
-bool RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
+vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
 {
+  float dst = 999999.0;
+  vec4 ret = pixelColor;
+  
   for(int i = 0; i < meshCount; ++i)
   {
      if (RayBoxIntersection(rayDirection, rayOrigin, meshArray[i].minPoint, meshArray[i].maxPoint) == false)
@@ -144,21 +121,20 @@ bool RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
   
        float distanceToOrigin = dot(v0v2, qVec) * invDet; 
        
-       if (distanceToOrigin < 0)
+       if (distanceToOrigin <= 0)
           continue;
           
-       return true;
+       ret = vec4(meshArray[i].color, 1.0) * step(distanceToOrigin, dst) + ret * step(dst, distanceToOrigin);
+       dst = min(dst, distanceToOrigin);
        }
     }
   
-  return false;
+  return ret;
      
 }
 
 void main()
-{
-  vec4 pixelColor = vec4(0.8, 0.2, 0.4, 1.0);
-  
+{  
   vec2 pixelCoords = vec2(gl_GlobalInvocationID.xy);
   vec2 texSize = imageSize(imgOutput); // fetch image dimensions
   
@@ -179,9 +155,8 @@ void main()
   //vec3 rayDirection = (inverse(projection) * vec4(xPos, yPos, 0.0, 1.0)).xyz;
   vec3 rayDirection = normalize(p - rayOrigin);
   
-  if (RayTriangleIntersection(rayDirection, rayOrigin))
-     imageStore(imgOutput, ivec2(pixelCoords.xy), triangleColor);
-  
-  else
-     imageStore(imgOutput, ivec2(pixelCoords.xy), pixelColor);
+  vec4 color = RayTriangleIntersection(rayDirection, rayOrigin);
+
+  imageStore(imgOutput, ivec2(pixelCoords.xy), color);
+ 
 }

@@ -21,6 +21,8 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 	textureId(0),
 	shaderId(0),
 
+	color(1.0, 1.0, 1.0, 1.0),
+
 	textureEnabled(true),
 	colorEnabled(true),
 
@@ -456,9 +458,24 @@ void C_Material::SetCheckerTextureEnable(bool enable)
 
 void C_Material::GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId)
 {
-	GetDrawColor(col);
+	col = color;
 	texId = GetTextureId();
 	shaderProgramId = GetShaderProgram();
+}
+
+
+Color& C_Material::GetColor()
+{
+	return color;
+}
+
+
+void C_Material::SetColor(float r, float g, float b, float a)
+{
+	color.r = r;
+	color.g = g;
+	color.b = b;
+	color.a = a;
 }
 
 
@@ -534,26 +551,6 @@ void C_Material::InitCheckerTex()
 				 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-
-void C_Material::GetDrawColor(Color& col) const
-{
-	if (colorEnabled == true)
-	{
-		if (materialId != 0)
-		{
-			Resource* mat = App->resourceManager->RequestResource(materialId);
-			if (mat != nullptr)
-			{
-				R_Material* material = (R_Material*)mat;
-				material->GetColor(col.r, col.g, col.b, col.a);
-				return;
-			}
-		}
-	}
-
-	col = { 1.f, 1.f, 1.f, 1.f };
 }
 
 
