@@ -69,6 +69,7 @@ private:
 
 	void BindVertexTextureBuffer(std::vector<float>& vertexArray);
 	void BindIndexTextureBuffer(std::vector<float>& indexArray);
+	void BindUvTextureBuffer(std::vector<float>& uvArray);
 
 	void PushCamera(C_Camera*);
 	void PopCamera();
@@ -101,6 +102,7 @@ private:
 	bool buffersToUpdate = false;
 	unsigned int vertexTextureBuffer = 0;
 	unsigned int indexTextureBuffer = 0;
+	unsigned int uvTextureBuffer = 0;
 
 	//Camera we are rendering to, used to frustum cull
 	//WARNING: use pop / push fuctions

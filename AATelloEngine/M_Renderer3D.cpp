@@ -32,25 +32,26 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
-context(),
+	context(),
 
-depthTestEnabled(true),
-cullFaceEnabled(true),
-lightingEnabled(true),
-colorMatEnabled(true),
-texture2DEnabled(true),
-fillModeEnabled(true),
-wireframeModeEnabled(false),
-vsync(true),
-rasterizationRender(false),
+	depthTestEnabled(true),
+	cullFaceEnabled(true),
+	lightingEnabled(true),
+	colorMatEnabled(true),
+	texture2DEnabled(true),
+	fillModeEnabled(true),
+	wireframeModeEnabled(false),
+	vsync(true),
+	rasterizationRender(false),
 
-buffersToUpdate(false),
-vertexTextureBuffer(0),
-indexTextureBuffer(0),
+	buffersToUpdate(false),
+	vertexTextureBuffer(0),
+	indexTextureBuffer(0),
+	uvTextureBuffer(0),
 
-currentCamera(nullptr),
-cameraRay1{ 0, 0, 0 },
-cameraRay2{ 0, 0, 0 }
+	currentCamera(nullptr),
+	cameraRay1{ 0, 0, 0 },
+	cameraRay2{ 0, 0, 0 }
 {
 }
 
@@ -137,6 +138,15 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 bool M_Renderer3D::CleanUp()
 {
 	App->editor->AddLog("Log: Destroying 3D Renderer");
+
+	glDeleteTextures(1, &vertexTextureBuffer);
+	vertexTextureBuffer = 0;
+
+	glDeleteTextures(1, &indexTextureBuffer);
+	indexTextureBuffer = 0;
+
+	glDeleteTextures(1, &uvTextureBuffer);
+	uvTextureBuffer = 0;
 
 	lightVector.clear();
 	frustumVector.clear();
@@ -463,6 +473,7 @@ void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 
 	std::vector<float> vertices;
 	std::vector<float> indices;
+	std::vector<float> uv;
 
 	int meshCount = meshes.size();
 
@@ -477,9 +488,11 @@ void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 
 		std::vector<float> meshVertices = meshes[i]->GetVertices();
 		std::vector<unsigned int> meshIndices = meshes[i]->GetIndices();
+		std::vector<float> meshUv = meshes[i]->GetUv();
 
 		vertices.insert(vertices.end(), meshVertices.begin(), meshVertices.end());
 		indices.insert(indices.end(), meshIndices.begin(), meshIndices.end());
+		uv.insert(uv.end(), meshUv.begin(), meshUv.end());
 
 		indexOffset += meshIndices.size() / 3;
 		vertexOffset += meshVertices.size() / 3;
@@ -489,6 +502,7 @@ void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 	{
 		BindVertexTextureBuffer(vertices);
 		BindIndexTextureBuffer(indices);
+		BindUvTextureBuffer(uv);
 	}
 }
 
@@ -549,6 +563,13 @@ int M_Renderer3D::BindMeshArray(unsigned int programId)
 			{
 				Color col = mat->GetColor();
 				glUniform3f(uniformLocation, col.r, col.g, col.b);
+
+				mat->BindCheckerTexture();
+
+				sprintf(buffer, "meshArray[%i].diffuseTexture", meshCount);
+
+				uniformLocation = glGetUniformLocation(programId, buffer);
+				glUniform1i(uniformLocation, 4);
 			}
 			else
 			{
@@ -590,6 +611,22 @@ void M_Renderer3D::BindIndexTextureBuffer(std::vector<float>& indexArray)
 	glBindTexture(GL_TEXTURE_1D, indexTextureBuffer);
 
 	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB16F, indexArray.size() / 3, 0, GL_RGB, GL_FLOAT, &indexArray[0]);
+
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
+
+void M_Renderer3D::BindUvTextureBuffer(std::vector<float>& uvArray)
+{
+	glDeleteTextures(1, &uvTextureBuffer);
+	uvTextureBuffer = 0;
+
+	glGenTextures(1, &uvTextureBuffer);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_1D, uvTextureBuffer);
+
+	glTexImage1D(GL_TEXTURE_1D, 0, GL_RG16F, uvArray.size() / 2, 0, GL_RG, GL_FLOAT, &uvArray[0]);
 
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

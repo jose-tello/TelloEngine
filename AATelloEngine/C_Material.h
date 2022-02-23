@@ -49,11 +49,12 @@ public:
 	Color& GetColor();
 	void SetColor(float r, float g, float b, float a);
 
-
 	void Load(Config&) override;
 	void Save(Config&) const override;
 
 	unsigned int GetTextureId() const;
+
+	void BindCheckerTexture();
 
 private:
 	void InitCheckerTex();	

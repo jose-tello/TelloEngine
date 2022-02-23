@@ -5,6 +5,7 @@ layout(local_size_x = 1, local_size_y = 1) in;
 layout(rgba32f, binding = 0) uniform image2D imgOutput;
 layout(binding = 1) uniform sampler1D vertexTexture;
 layout(binding = 2) uniform sampler1D indexTexture;
+layout(binding = 3) uniform sampler1D uvTexture;
 
 uniform int meshCount;
 
@@ -23,13 +24,14 @@ struct Mesh
    int vertexOffset;
    int indexCount;
    
+   sampler2D diffuseTexture;
+   
    vec3 color;
 };
 
 uniform Mesh[10] meshArray;
 
-vec4 triangleColor = vec4(0.2, 0.9, 0.3, 1.0);
-vec4 pixelColor = vec4(0.8, 0.2, 0.4, 1.0);
+vec4 pixelColor = vec4(0.5, 0.5, 0.5, 1.0);
 
 bool RayBoxIntersection(vec3 rayDirection, vec3 rayOrigin, vec3 minP, vec3 maxP)
 {
@@ -123,8 +125,17 @@ vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
        
        if (distanceToOrigin <= 0)
           continue;
-          
-       ret = vec4(meshArray[i].color, 1.0) * step(distanceToOrigin, dst) + ret * step(dst, distanceToOrigin);
+       
+       vec2 uv1 = (texelFetch(uvTexture, vertex1, 0)).xy;
+       vec2 uv2 = (texelFetch(uvTexture, vertex2, 0)).xy;
+       vec2 uv3 = (texelFetch(uvTexture, vertex3, 0)).xy;
+       
+       vec2 uv = u * uv2 + v * uv3 + (1.0 - u - v) * uv1;
+       
+       vec4 col = texture(meshArray[i].diffuseTexture, uv);
+       //vec4 col = vec4(u, v, (1 - u - v), 1.0);
+       
+       ret = col * step(distanceToOrigin, dst) + ret * step(dst, distanceToOrigin);
        dst = min(dst, distanceToOrigin);
        }
     }
@@ -158,5 +169,4 @@ void main()
   vec4 color = RayTriangleIntersection(rayDirection, rayOrigin);
 
   imageStore(imgOutput, ivec2(pixelCoords.xy), color);
- 
 }

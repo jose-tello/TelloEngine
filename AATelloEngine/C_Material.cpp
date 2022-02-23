@@ -590,6 +590,13 @@ unsigned int C_Material::GetTextureId() const
 }
 
 
+void C_Material::BindCheckerTexture()
+{
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, checkerTexId);
+}
+
+
 unsigned int C_Material::GetShaderProgram()
 {
 	if (shaderId != 0)

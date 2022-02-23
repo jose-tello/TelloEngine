@@ -127,6 +127,12 @@ std::vector<unsigned int>& R_Mesh::GetIndices()
 }
 
 
+std::vector<float>& R_Mesh::GetUv()
+{
+	return texCoords;
+}
+
+
 void R_Mesh::GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const
 {
 	vertexArray = vertices;

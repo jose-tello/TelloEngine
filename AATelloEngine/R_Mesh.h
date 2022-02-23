@@ -28,6 +28,7 @@ public:
 
 	std::vector<float>& GetVertices();
 	std::vector<unsigned int>& GetIndices();
+	std::vector<float>& GetUv();
 
 	void GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const;
 	void GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const;
