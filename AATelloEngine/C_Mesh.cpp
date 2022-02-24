@@ -88,6 +88,38 @@ void C_Mesh::SetMesh(int newMesh)
 }
 
 
+std::vector<float>& C_Mesh::GetVertices()
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetVertices();
+		}
+	}
+	else
+		assert("Dont have mesh!");
+}
+
+
+std::vector<unsigned int>& C_Mesh::GetIndices()
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetIndices();
+		}
+	}
+	else
+		assert("Dont have mesh!");
+}
+
+
 void C_Mesh::GetAllVectorsSize(unsigned int& vert, unsigned int& norm, unsigned int& ind) const
 {
 	if (meshId != 0)
@@ -134,9 +166,53 @@ unsigned int C_Mesh::GetIndicesSize() const
 }
 
 
+unsigned int C_Mesh::GetIndexOffset() const
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetIndicesOffset();
+		}
+	}
+
+	return 0;
+}
+
+
+unsigned int C_Mesh::GetVertexOffset() const
+{
+	if (meshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(meshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetVertexOffset();
+		}
+	}
+
+	return 0;
+}
+
+
 AABB C_Mesh::GetAABB() const
 {
 	return aabb;
+}
+
+
+const float* C_Mesh::GetAABBMinPoint() const
+{
+	return aabb.minPoint.ptr();
+}
+
+
+const float* C_Mesh::GetAABBMaxPoint() const
+{
+	return aabb.maxPoint.ptr();
 }
 
 

@@ -10,6 +10,7 @@
 #include <vector>
 
 #define LIGHT_LIMIT 1
+#define RAYTRACED_MESH_LIMIT 10
 
 struct GameObject;
 
@@ -54,11 +55,27 @@ public:
 	void SetFillMode(bool enable);
 	void SetWireframeMode(bool enable);
 	void SetVsync(bool enable);
+	void SetRasterization(bool enable);
+
+	void NotifyUpdateBuffers();
 
 private:
+	
+	//Ray tracing draw
+	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight);
+
+	void GenerateArrayBuffers(unsigned int shaderId); //Returns triangle count
+	int BindMeshArray(unsigned int programId);
+
+	void BindVertexTextureBuffer(std::vector<float>& vertexArray);
+	void BindIndexTextureBuffer(std::vector<float>& indexArray);
+	void BindUvTextureBuffer(std::vector<float>& uvArray);
+
 	void PushCamera(C_Camera*);
 	void PopCamera();
 
+	//Raster Draw
+	void RasterizationDraw(unsigned int frameBuffer, C_Camera* camera, bool drawAABB);
 	void DrawFrustums() const;
 	void DrawClickRay() const;
 	void DrawObjects(C_Camera* camera, bool drawAABB) const;
@@ -80,6 +97,12 @@ private:
 	bool fillModeEnabled;
 	bool wireframeModeEnabled;
 	bool vsync = true;
+	bool rasterizationRender = false;
+
+	bool buffersToUpdate = false;
+	unsigned int vertexTextureBuffer = 0;
+	unsigned int indexTextureBuffer = 0;
+	unsigned int uvTextureBuffer = 0;
 
 	//Camera we are rendering to, used to frustum cull
 	//WARNING: use pop / push fuctions

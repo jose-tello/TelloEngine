@@ -16,11 +16,18 @@ public:
 
 	void SetMesh(int meshId);
 
+	std::vector<float>& GetVertices();
+	std::vector<unsigned int>& GetIndices();
+
 	void GetAllVectorsSize(unsigned int&, unsigned int&, unsigned int&) const;
 	unsigned int GetVAO() const;
 	unsigned int GetIndicesSize() const;
+	unsigned int GetIndexOffset() const;
+	unsigned int GetVertexOffset() const;
 
 	AABB GetAABB() const;
+	const float* GetAABBMinPoint() const;
+	const float* GetAABBMaxPoint() const;
 	bool TestAABBRayCollision(LineSegment& ray, float& distance) const;
 	float TestTriangleCollision(LineSegment&, float4x4& transform) const;
 

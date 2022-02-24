@@ -248,6 +248,24 @@ void M_Resources::GetAllResources(std::vector<Resource*>& meshes, std::vector<Re
 }
 
 
+std::vector<R_Mesh*> M_Resources::GetAllLoadedMeshes()
+{
+	std::vector<R_Mesh*> meshes;
+
+	std::map<int, Resource*>::iterator it = resources.begin();
+	for (it; it != resources.end(); it++)
+	{
+		if (it->second->GetType() == RESOURCE_TYPE::MESH)
+		{
+			if (it->second->IsLoaded() == true)
+				meshes.push_back(static_cast<R_Mesh*>(it->second));
+		}
+	}
+
+	return meshes;
+}
+
+
 Resource* M_Resources::GetDefaultResource(DEFAULT_RESOURCE resourceId)
 {
 	return RequestResource((int)resourceId);

@@ -4,8 +4,17 @@
 #include "Resource.h"
 
 #include <vector>
+#include <string>
 
 struct UniformHandle;
+
+enum class SHADER_TYPE : int
+{
+	ERROR_TYPE = -1,
+	VERTEX,
+	FRAGMENT,
+	COMPUTE
+};
 
 class R_Shader : public Resource
 {
@@ -22,7 +31,8 @@ public:
 	const char* GetShaderName() const;
 	void SetShaderName(const char* name);
 
-	void InitShader(const char* vertCode, const char* fragCode);
+	void InitShaderProgram(std::string& vertCode, std::string& fragCode, std::string& computeCode);
+	unsigned int CreateShader(std::string& code, SHADER_TYPE type);
 
 	void UseShaderProgram() const;
 	void UnuseShaderProgram() const;
@@ -33,9 +43,9 @@ public:
 	void SetFloatUniform(const char* uniformName, float floatVar);
 
 private:
-	void CreateShaderProgram(unsigned int vertexShader, unsigned int fragmentShader);
+	void CreateShaderProgram(unsigned int vertexShader, unsigned int fragmentShader, unsigned int computeShader);
 
-	bool CheckShadersCompile(unsigned int vertShader, unsigned int fragShader) const;
+	bool CheckShaderCompile(unsigned int shader) const;
 	bool CheckProgramCompiles() const;
 
 	int GetUniformType(unsigned int) const;

@@ -6,6 +6,7 @@
 #include "M_Scene.h"
 #include "M_Editor.h"
 #include "M_Input.h"
+#include "M_Renderer3D.h"
 
 #include "GameObject.h"
 
@@ -75,14 +76,17 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 			App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
 		{
 			App->editor->DeleteFocusedObject();
+			App->renderer3D->NotifyUpdateBuffers();
 		}
-
-		HandleDragAndDrop(vec[i]);
-
-		if (open == true)
+		else
 		{
-			DrawChildren(vec[i]->childs);
-			ImGui::TreePop();
+			HandleDragAndDrop(vec[i]);
+
+			if (open == true)
+			{
+				DrawChildren(vec[i]->childs);
+				ImGui::TreePop();
+			}
 		}
 	}
 }

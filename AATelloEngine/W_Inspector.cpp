@@ -249,8 +249,12 @@ void W_Inspector::DrawMaterialComp(C_Material* material)
 		bool colEnabled = material->GetColorEnabled();
 		bool checkEnabled = material->GetCheckerTextureEnabled();
 
+		Color col = material->GetColor();
+		ImGui::ColorPicker4("Color", &col.r);
+		material->SetColor(col.r, col.g, col.b, col.a);
+
 		ImGui::Checkbox("Texture", &texEnabled);
-		ImGui::Checkbox("Color", &colEnabled);
+		ImGui::Checkbox("Color enabled", &colEnabled);
 		ImGui::Checkbox("Checker tex", &checkEnabled);
 
 		material->SetTextureEnable(texEnabled);
@@ -588,6 +592,14 @@ bool W_Inspector::IsDefaultUniform(const char* uniformName) const
 	for (int i = 0; i < sizeof(defaultUniforms) / sizeof(defaultUniforms[0]); ++i)
 	{
 		if (std::strcmp(uniformName, defaultUniforms[i]) == 0)
+			return true;
+	}
+
+	for (int i = 0; i < sizeof(defaultStructUniforms) / sizeof(defaultStructUniforms[0]); ++i)
+	{
+		std::string uName = uniformName;
+
+		if (uName.find(defaultStructUniforms[i]) != std::string::npos)
 			return true;
 	}
 

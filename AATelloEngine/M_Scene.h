@@ -40,12 +40,13 @@ public:
 	void OnGameStart();
 	void OnGameEnd();
 
+	void GetAllGameObjects(std::vector<GameObject*>& vector) const;
+
 private:
 	void UpdateGameObjects(float dt);
 
 	void CheckObjectsToDelete();
 
-	void GetAllGameObjects(std::vector<GameObject*>& vector) const;
 	void DeleteAllGameObjects();
 
 private:

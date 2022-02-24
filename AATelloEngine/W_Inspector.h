@@ -60,7 +60,9 @@ private:
 
 static const char* defaultUniforms[] = { "model_matrix", "projection", "view", "has_texture", "light_position",
 										 "material_color", "timer", "light_color", "ambient_color", "light_intensity",
-										 "light_number"};
+										 "light_number", "meshCount", "verticalFov", "aspectRatio"};
+
+static const char* defaultStructUniforms[] = { "meshArray", "lightInfo" };
 
 
 #endif // !__E_INSPECTOR__

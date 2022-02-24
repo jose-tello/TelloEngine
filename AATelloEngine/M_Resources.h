@@ -7,13 +7,15 @@
 #include <vector>
 
 class Resource;
+class R_Mesh;
 struct GameObject;
 struct Config;
 
 enum class DEFAULT_RESOURCE : int
 {
 	NONE = 0,
-	SHADER = 1,
+	RASTER_SHADER = 1,
+	RAY_TRACING_SHADER = 2
 };
 
 class M_Resources : public Module
@@ -39,6 +41,8 @@ public:
 
 	void GetAllResources(std::vector<Resource*>& meshes, std::vector<Resource*>& materials, std::vector<Resource*>& textures, 
 						 std::vector<Resource*>& models, std::vector<Resource*>& shaders);
+
+	std::vector<R_Mesh*> GetAllLoadedMeshes();
 
 	Resource* GetDefaultResource(DEFAULT_RESOURCE resourceId);
 

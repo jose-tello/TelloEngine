@@ -1,0 +1,172 @@
+__COMPUTE_SHADER__
+#version 460
+
+layout(local_size_x = 1, local_size_y = 1) in;
+layout(rgba32f, binding = 0) uniform image2D imgOutput;
+layout(binding = 1) uniform sampler1D vertexTexture;
+layout(binding = 2) uniform sampler1D indexTexture;
+layout(binding = 3) uniform sampler1D uvTexture;
+
+uniform int meshCount;
+
+uniform mat4 projection;
+uniform mat4 view;
+
+uniform float aspectRatio;
+uniform float verticalFov;
+
+struct Mesh
+{
+   mat4 transform;
+   vec3 maxPoint;
+   vec3 minPoint;
+   int indexOffset;
+   int vertexOffset;
+   int indexCount;
+   
+   sampler2D diffuseTexture;
+   
+   vec3 color;
+};
+
+uniform Mesh[10] meshArray;
+
+vec4 pixelColor = vec4(0.5, 0.5, 0.5, 1.0);
+
+bool RayBoxIntersection(vec3 rayDirection, vec3 rayOrigin, vec3 minP, vec3 maxP)
+{
+   float dstMinToRay = dot(rayDirection, rayOrigin - minP);
+   float dstMaxToRay = dot(rayDirection, rayOrigin - maxP);
+   
+   if (dstMinToRay >= 0 && dstMaxToRay >= 0)
+      return false;
+      
+   float auxMin = (minP.x - rayOrigin.x) / rayDirection.x;
+   float auxMax = (maxP.x - rayOrigin.x) / rayDirection.x;
+
+   float tMin = min(auxMin, auxMax);
+   float tMax = max(auxMin, auxMax);
+   
+   auxMin = (minP.y - rayOrigin.y) / rayDirection.y;
+   auxMax = (maxP.y - rayOrigin.y) / rayDirection.y;
+   
+   float yMin = min(auxMin, auxMax);
+   float yMax = max(auxMin, auxMax);
+   
+   if ((tMin > yMax) || (yMin > tMax))
+      return false;
+      
+   tMin = max(tMin, yMin);
+   yMax = min(tMax, yMax);      
+      
+   auxMin = (minP.z - rayOrigin.z) / rayDirection.z;
+   auxMax = (maxP.z - rayOrigin.z) / rayDirection.z;
+      
+   float zMin = min(auxMin, auxMax);
+   float zMax = max(auxMin, auxMax);
+   
+   if ((tMin > zMax) || (zMin > tMax))
+      return false;
+
+   return true;
+}
+
+vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
+{
+  float dst = 999999.0;
+  vec4 ret = pixelColor;
+  
+  for(int i = 0; i < meshCount; ++i)
+  {
+     if (RayBoxIntersection(rayDirection, rayOrigin, meshArray[i].minPoint, meshArray[i].maxPoint) == false)
+        continue;
+  
+     for (int j = 0; j < meshArray[i].indexCount / 3; ++j)  //index count / 3 = triangle count
+      {
+      
+       vec3 vertexPos = texelFetch(indexTexture, j + meshArray[i].indexOffset, 0).xyz;
+       int vertex1 = int(vertexPos.x) + meshArray[i].vertexOffset;
+       int vertex2 = int(vertexPos.y) + meshArray[i].vertexOffset;
+       int vertex3 = int(vertexPos.z) + meshArray[i].vertexOffset;
+    
+       vec3 v0 = (texelFetch(vertexTexture, vertex1, 0)).xyz;
+       vec3 v1 = (texelFetch(vertexTexture, vertex2, 0)).xyz;
+       vec3 v2 = (texelFetch(vertexTexture, vertex3, 0)).xyz;
+       
+       v0 = (meshArray[i].transform * vec4(v0, 1.0)).xyz;
+       v1 = (meshArray[i].transform * vec4(v1, 1.0)).xyz;
+       v2 = (meshArray[i].transform * vec4(v2, 1.0)).xyz;
+  
+       //calculate baricentric coords
+       vec3 v0v1 = v1 - v0;
+       vec3 v0v2 = v2 - v0;
+       vec3 pVec = cross(rayDirection, v0v2);
+       
+       float det = dot(v0v1, pVec);
+       
+       if (det <= 0)
+          continue;
+          
+       float invDet = 1 / det;
+       
+       vec3 tVec = rayOrigin - v0;
+       float u = dot(tVec, pVec) * invDet;
+       
+       if (u < 0 || u > 1)
+          continue;
+          
+       vec3 qVec = cross(tVec, v0v1);
+       float v = dot(rayDirection, qVec) * invDet;
+       
+       if (v < 0 || u + v > 1)
+          continue;
+  
+       float distanceToOrigin = dot(v0v2, qVec) * invDet; 
+       
+       if (distanceToOrigin <= 0)
+          continue;
+       
+       vec2 uv1 = (texelFetch(uvTexture, vertex1, 0)).xy;
+       vec2 uv2 = (texelFetch(uvTexture, vertex2, 0)).xy;
+       vec2 uv3 = (texelFetch(uvTexture, vertex3, 0)).xy;
+       
+       vec2 uv = u * uv2 + v * uv3 + (1.0 - u - v) * uv1;
+       
+       vec4 col = texture(meshArray[i].diffuseTexture, uv);
+       //vec4 col = vec4(u, v, (1 - u - v), 1.0);
+       
+       ret = col * step(distanceToOrigin, dst) + ret * step(dst, distanceToOrigin);
+       ret = vec4(mix(ret.xyz, meshArray[i].color, 0.6), 1.0);
+       dst = min(dst, distanceToOrigin);
+       }
+    }
+  return ret;
+     
+}
+
+void main()
+{  
+  vec2 pixelCoords = vec2(gl_GlobalInvocationID.xy);
+  vec2 texSize = imageSize(imgOutput); // fetch image dimensions
+  
+  //collision tests
+  float pixCoordX = float(pixelCoords.x);
+  float pixCoordY = float(pixelCoords.y);
+  float xPos = 2 * ((pixCoordX + 0.5) / float(texSize.x)) - 1;
+  float yPos = 2 * ((pixCoordY + 0.5) / float(texSize.y)) - 1;
+  
+  xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
+  yPos = yPos * tan(verticalFov * 0.5);
+  
+  mat4 cameraToWorld = inverse(view);
+  
+  vec3 rayOrigin = (cameraToWorld * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+  vec3 p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
+  
+  //vec3 rayDirection = (inverse(projection) * vec4(xPos, yPos, 0.0, 1.0)).xyz;
+  vec3 rayDirection = normalize(p - rayOrigin);
+  
+  vec4 color = RayTriangleIntersection(rayDirection, rayOrigin);
+
+  imageStore(imgOutput, ivec2(pixelCoords.xy), color);
+}

@@ -21,13 +21,15 @@ C_Material::C_Material() : Component(COMPONENT_TYPE::MATERIAL),
 	textureId(0),
 	shaderId(0),
 
+	color(1.0, 1.0, 1.0, 1.0),
+
 	textureEnabled(true),
 	colorEnabled(true),
 
 	checkerTexId(0),
 	useCheckerTex(false)
 {
-	SetShader(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER)->GetUid());
+	SetShader(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RASTER_SHADER)->GetUid());
 	
 	InitCheckerTex();
 }
@@ -456,9 +458,24 @@ void C_Material::SetCheckerTextureEnable(bool enable)
 
 void C_Material::GetDrawVariables(Color& col, unsigned int& texId, unsigned int& shaderProgramId)
 {
-	GetDrawColor(col);
+	col = color;
 	texId = GetTextureId();
 	shaderProgramId = GetShaderProgram();
+}
+
+
+Color& C_Material::GetColor()
+{
+	return color;
+}
+
+
+void C_Material::SetColor(float r, float g, float b, float a)
+{
+	color.r = r;
+	color.g = g;
+	color.b = b;
+	color.a = a;
 }
 
 
@@ -493,6 +510,12 @@ void C_Material::Load(Config& node)
 		if (shader != nullptr)
 			shader->AddReference();
 	}
+
+	color.r = node.GetNum("ColR");
+	color.g = node.GetNum("ColG");
+	color.b = node.GetNum("ColB");
+	color.a = node.GetNum("ColA");
+
 }
 
 
@@ -503,6 +526,11 @@ void C_Material::Save(Config& node) const
 	node.AppendNum("material", materialId);
 	node.AppendNum("texture", textureId);
 	node.AppendNum("shader", shaderId);
+
+	node.AppendNum("ColR", color.r);
+	node.AppendNum("ColG", color.g);
+	node.AppendNum("ColB", color.b);
+	node.AppendNum("ColA", color.a);
 
 	
 	SaveUniformArray(node);
@@ -530,30 +558,10 @@ void C_Material::InitCheckerTex()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, CHECKERS_WIDTH, CHECKERS_HEIGHT,
 				 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-
-void C_Material::GetDrawColor(Color& col) const
-{
-	if (colorEnabled == true)
-	{
-		if (materialId != 0)
-		{
-			Resource* mat = App->resourceManager->RequestResource(materialId);
-			if (mat != nullptr)
-			{
-				R_Material* material = (R_Material*)mat;
-				material->GetColor(col.r, col.g, col.b, col.a);
-				return;
-			}
-		}
-	}
-
-	col = { 1.f, 1.f, 1.f, 1.f };
 }
 
 
@@ -582,6 +590,13 @@ unsigned int C_Material::GetTextureId() const
 }
 
 
+void C_Material::BindCheckerTexture()
+{
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, checkerTexId);
+}
+
+
 unsigned int C_Material::GetShaderProgram()
 {
 	if (shaderId != 0)
@@ -596,7 +611,7 @@ unsigned int C_Material::GetShaderProgram()
 
 	else
 	{
-		R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::SHADER);
+		R_Shader* shader = (R_Shader*)App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RASTER_SHADER);
 		SetShader(shader->GetUid());
 		return shader->GetProgramId();
 	}

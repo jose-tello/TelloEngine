@@ -8,9 +8,11 @@ class R_Shader;
 #define DEFAULT_SHADER_PATH "/Assets/defaultAssets/defaultShader.txt"
 #define VERTEX_SHADER_KEY "__VERTEX_SHADER__"
 #define FRAGMENT_SHADER_KEY "__FRAGMENT_SHADER__"
+#define COMPUTE_SHADER_KEY "__COMPUTE_SHADER__"
 
 #define VERTEX_KEY_LENGHT 18
 #define FRAGMENT_KEY_LENGHT 20
+#define COMPUTE_KEY_LENGHT 19
 
 namespace ShaderImporter
 {

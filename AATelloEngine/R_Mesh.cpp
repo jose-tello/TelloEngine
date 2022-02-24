@@ -3,6 +3,7 @@
 
 #include "Application.h"
 #include "M_Resources.h"
+#include "M_Renderer3D.h"
 
 #include "MathGeoLib/src/MathGeoLib.h"
 
@@ -13,6 +14,8 @@
 
 R_Mesh::R_Mesh(int uid, const char* path, RESOURCE_TYPE type) : Resource(uid, path, type),
 	VAO(0),
+	indicesOffset(0),
+	vertexOffset(0),
 	aabb()
 {
 }
@@ -26,6 +29,7 @@ R_Mesh::~R_Mesh()
 
 void R_Mesh::Load()
 {
+	App->renderer3D->NotifyUpdateBuffers();
 	MeshImporter::Load(this);
 
 	isLoaded = true;
@@ -34,6 +38,8 @@ void R_Mesh::Load()
 
 void R_Mesh::UnLoad()
 {
+	App->renderer3D->NotifyUpdateBuffers();
+
 	glDeleteBuffers(1, &VAO);
 
 	VAO = 0;
@@ -109,6 +115,24 @@ unsigned int R_Mesh::GetIndicesSize() const
 }
 
 
+std::vector<float>& R_Mesh::GetVertices()
+{
+	return vertices;
+}
+
+
+std::vector<unsigned int>& R_Mesh::GetIndices()
+{
+	return indices;
+}
+
+
+std::vector<float>& R_Mesh::GetUv()
+{
+	return texCoords;
+}
+
+
 void R_Mesh::GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const
 {
 	vertexArray = vertices;
@@ -178,6 +202,28 @@ void R_Mesh::DrawFaceNormals() const
 	glEnd();
 }
 
+
+unsigned int R_Mesh::GetIndicesOffset() const
+{
+	return indicesOffset;
+}
+
+void R_Mesh::SetIndicesOffset(int offset)
+{
+	indicesOffset = offset;
+}
+
+
+unsigned int R_Mesh::GetVertexOffset() const
+{
+	return vertexOffset;
+}
+
+
+void R_Mesh::SetVertexOffset(int offset)
+{
+	vertexOffset = offset;
+}
 
 void R_Mesh::InitAABB()
 {
