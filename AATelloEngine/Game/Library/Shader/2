@@ -136,10 +136,10 @@ vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
        //vec4 col = vec4(u, v, (1 - u - v), 1.0);
        
        ret = col * step(distanceToOrigin, dst) + ret * step(dst, distanceToOrigin);
+       ret = vec4(mix(ret.xyz, meshArray[i].color, 0.6), 1.0);
        dst = min(dst, distanceToOrigin);
        }
     }
-  
   return ret;
      
 }
