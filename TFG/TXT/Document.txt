@@ -1,0 +1,38 @@
+Introduction:
+	-Abstract: Summary of the paper
+	-Acknowledgements
+Preface:
+	-Motivation	*
+	-Problem	*
+	-Goals		*
+	-Scope		*
+
+Table of contents: All headers	*
+
+List of figures: All images in the paper	*
+
+Glossary: Dictionary	*
+	-Vocabulary	*
+	-Abbreviations	*
+	-Acronyms	*
+-----------------------------------------------------------------
+
+Project management:
+	-Planning			*
+	-Organization tools		*
+	-SWOT analysis			*
+	-Risks and contingency plans
+
+Methodology
+	- Document structure
+
+-------------------------------------------------------------------
+Theoretical framework:
+
+State of the art: Who else tried to solve the problem and what was their approach?	*
+
+Project development: How did the process go? ENPHASIS ON PROBLEMS YOU FACED
+
+Conclusions
+
+Vita: Gmail and linkedin

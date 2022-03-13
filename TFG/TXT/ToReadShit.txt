@@ -1,0 +1,3 @@
+https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays
+
+https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle

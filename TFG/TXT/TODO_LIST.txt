@@ -1,0 +1,31 @@
+1. esfera raytracing *
+2. camera perspectiva *
+3. dibujar triangulo *
+4. dibujart mesh *
+	-Multiple meshes
+	-AABB
+	-Texturas
+5. space partitioning shader
+6. refractions
+?. optimizations
+
+non euclidian things
+1. Aberrations
+2. Portals
+3. Scene showcase
+
+---- bare minimum
+
+
+raytracing extras:
+7. phong ilumination model
+8. shadows
+9. reflections
+10. specular light
+
+
+4. hyperbolic space
+5. spherical geometry
+
+extras extras
+Playable demo

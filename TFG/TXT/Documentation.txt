@@ -1,0 +1,20 @@
+RAYTRACING
+https://antongerdelan.net/opengl/compute.html
+http://three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+https://www.youtube.com/watch?v=9RHGLZLUuwc
+
+BARICENTRIC COORDS
+https://observablehq.com/@jobleonard/linear-interpolation-along-a-triangle-with-barycentric-co
+https://www.cs.cornell.edu/courses/cs4620/2017sp/slides/06rt-textures.pdf
+
+PAPERS
+file:///F:/Descargas/tr-09-20191.pdf
+
+OTHERS
+https://iquilezles.org/index.html
+The kronos group
+
+NON-Euclidian theory
+http://www.cut-the-knot.org/triangle/pythpar/Fifth.shtml
+http://pi.math.cornell.edu/~mec/mircea.html
+https://www.encyclopedia.com/science-and-technology/mathematics/mathematics/non-euclidean-geometry
