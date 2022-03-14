@@ -38,13 +38,13 @@ bool W_ObjectHierarchy::Draw()
 	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
 	bool open = ImGui::TreeNodeEx("Scene", flags);
-		
+
 	if (open == true)
 	{
 		DrawChildren(gameObjects);
 		ImGui::TreePop();
-	}		
-	
+	}
+
 	ImGui::End();
 
 	return true;
@@ -54,6 +54,7 @@ bool W_ObjectHierarchy::Draw()
 void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 {
 	int flags = 0;
+	bool deleteObject = false;
 
 	for (int i = 0; i < vec.size(); i++)
 	{
@@ -64,7 +65,7 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 			flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
 
 		bool open = ImGui::TreeNodeEx(vec[i]->GetName(), flags);
-		
+
 		if (ImGui::IsItemClicked())
 		{
 			W_Inspector* inspector = (W_Inspector*)App->editor->GetWindow((int)E_WINDOW_TYPE::INSPECTOR);
@@ -75,19 +76,23 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 			(focused == true || App->editor->IsWindowFocused(E_WINDOW_TYPE::SCENE_CAMERA)) &&
 			App->input->GetKey(BACKSPACE) == KEY_STATE::KEY_DOWN)
 		{
-			App->editor->DeleteFocusedObject();
-			App->renderer3D->NotifyUpdateBuffers();
+			deleteObject = true;
 		}
-		else
-		{
-			HandleDragAndDrop(vec[i]);
 
-			if (open == true)
-			{
-				DrawChildren(vec[i]->childs);
-				ImGui::TreePop();
-			}
+		HandleDragAndDrop(vec[i]);
+
+		if (open == true)
+		{
+			DrawChildren(vec[i]->childs);
+			ImGui::TreePop();
 		}
+
+	}
+
+	if (deleteObject == true)
+	{
+		App->editor->DeleteFocusedObject();
+		App->renderer3D->NotifyUpdateBuffers();
 	}
 }
 
@@ -126,14 +131,14 @@ void W_ObjectHierarchy::ReparentGameObjects(GameObject* parent, GameObject* chil
 	GameObject* sceneChild = App->scene->GetGameObject(child->GetUuid());
 	if (sceneChild->parent == parent || sceneChild == nullptr)
 		return;
-	
+
 
 	sceneChild->parent->RemoveChild(child->GetUuid());
 	sceneChild->parent = parent;
 
 	if (parent == nullptr)
 		App->scene->AddGameObject(sceneChild);
-	
+
 	else
 		parent->childs.push_back(sceneChild);
 
