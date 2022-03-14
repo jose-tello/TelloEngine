@@ -34,6 +34,8 @@ in vec2 TexCoord;
 in vec3 fNormals;
 in vec3 diffuse_color;
 
+uniform float alpha;
+
 out vec4 color;
 
 uniform sampler2D ourTexture;
@@ -86,5 +88,6 @@ void main()
   }
   
   color = vec4(diffuseLight, 1.0) * material_color;
+  color.a = alpha;
   //color = vec4 (light_direction, 1.);
 }

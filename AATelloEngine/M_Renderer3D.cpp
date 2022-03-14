@@ -41,6 +41,7 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	texture2DEnabled(true),
 	fillModeEnabled(true),
 	wireframeModeEnabled(false),
+	blendEnabled(false),
 	vsync(true),
 	rasterizationRender(false),
 
@@ -117,7 +118,6 @@ bool M_Renderer3D::Init()
 	int maxTexSize;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
 	App->editor->AddLog("MAX TEXTURE SIZE: %i", maxTexSize);
-
 
 	return ret;
 }
@@ -200,7 +200,6 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 
 void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
 {
-
 	glViewport(0, 0, camWidth, camHeight);
 	if (pushCamera == true)
 	{
@@ -394,6 +393,24 @@ void M_Renderer3D::SetWireframeMode(bool enable)
 	{
 		wireframeModeEnabled = enable;
 	}
+}
+
+
+void M_Renderer3D::SetBlend(bool enable)
+{
+	if (blendEnabled != enable)
+	{
+		if (enable == true)
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
+
+		else
+			glDisable(GL_BLEND);
+	}
+
+	blendEnabled = enable;
 }
 
 
@@ -787,6 +804,11 @@ void M_Renderer3D::SetShaderUniforms(C_Material* material, int programId, float*
 
 		if (uniform != nullptr)
 			uniform->SetFloatVec3(color);
+
+		uniform = material->GetUniform("alpha");
+
+		if (uniform != nullptr)
+			uniform->SetFloat(color[3]);
 
 		uniform = material->GetUniform("model_matrix");
 

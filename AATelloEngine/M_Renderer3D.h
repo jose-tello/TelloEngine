@@ -54,6 +54,7 @@ public:
 	void SetTexture2DEnabled(bool enable);
 	void SetFillMode(bool enable);
 	void SetWireframeMode(bool enable);
+	void SetBlend(bool enable);
 	void SetVsync(bool enable);
 	void SetRasterization(bool enable);
 
@@ -96,6 +97,7 @@ private:
 	bool texture2DEnabled;
 	bool fillModeEnabled;
 	bool wireframeModeEnabled;
+	bool blendEnabled;
 	bool vsync = true;
 	bool rasterizationRender = false;
 

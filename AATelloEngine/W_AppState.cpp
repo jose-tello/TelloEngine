@@ -31,6 +31,7 @@ W_AppState::W_AppState(bool open) :	E_Window(E_WINDOW_TYPE::APPLICATION_STATE, o
 	colorMatEnabled(true),
 	texture2DEnabled(true),
 	fillModeEnabled(true),
+	blendEnabled(false),
 	wireframeModeEnabled(false),
 	vsync(true),
 	rasterizationRender(false),
@@ -183,6 +184,7 @@ void W_AppState::DrawChRenderOptions()
 		ImGui::Checkbox("Texture 2D", &texture2DEnabled);
 		ImGui::Checkbox("Fill mode", &fillModeEnabled);
 		ImGui::Checkbox("Wireframe mode", &wireframeModeEnabled);
+		ImGui::Checkbox("Blending", &blendEnabled);
 		ImGui::Checkbox("Vsync", &vsync);
 		ImGui::Checkbox("Rasterization render", &rasterizationRender);
 
@@ -193,6 +195,8 @@ void W_AppState::DrawChRenderOptions()
 		App->renderer3D->SetColorMatEnabled(colorMatEnabled);
 		App->renderer3D->SetTexture2DEnabled(texture2DEnabled);
 		App->renderer3D->SetFillMode(fillModeEnabled);
+		App->renderer3D->SetWireframeMode(wireframeModeEnabled);
+		App->renderer3D->SetBlend(blendEnabled);
 		App->renderer3D->SetVsync(vsync);
 		App->renderer3D->SetRasterization(rasterizationRender);
 	}
