@@ -24,6 +24,7 @@ public:
 	void AddCamera();
 	GameObject* AddLight();
 	void AddProceduralMesh();
+	void AddAberration();
 
 	void NotifyShaderWasUpdated(int updatedShader);
 

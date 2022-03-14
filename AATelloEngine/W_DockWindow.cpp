@@ -151,6 +151,9 @@ void W_DockWindow::DrawAddMenu()
 
 		if (ImGui::MenuItem("Procedural mesh"))
 			App->scene->AddProceduralMesh();
+
+		if (ImGui::MenuItem("Aberration"))
+			App->scene->AddAberration();
 		
 		DrawShapesMenu();
 		ImGui::EndMenu();

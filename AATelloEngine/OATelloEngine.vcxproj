@@ -78,6 +78,7 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="C_Aberration.h" />
     <ClInclude Include="C_Camera.h" />
     <ClInclude Include="C_PointLight.h" />
     <ClInclude Include="C_Material.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="C_Aberration.cpp" />
     <ClCompile Include="C_Camera.cpp" />
     <ClCompile Include="C_PointLight.cpp" />
     <ClCompile Include="C_Material.cpp" />

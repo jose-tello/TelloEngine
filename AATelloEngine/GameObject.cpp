@@ -5,6 +5,7 @@
 #include "C_Material.h"
 #include "C_Camera.h"
 #include "C_PointLight.h"
+#include "C_Aberration.h"
 
 #include "Resource.h"
 
@@ -302,6 +303,13 @@ void GameObject::Load(Config& node)
 			AddComponent(lightSource);
 		}
 			break;
+
+		case COMPONENT_TYPE::ABERRATION:
+		{
+			C_Aberration* aberration = new C_Aberration();
+			aberration->Load(componentNode);
+			AddComponent(aberration);
+		}
 
 		default:
 			assert("Invalid component type");

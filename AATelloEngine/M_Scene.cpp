@@ -14,6 +14,7 @@
 #include "C_PointLight.h"
 #include "C_ProceduralMesh.h"
 #include "C_PointLight.h"
+#include "C_Aberration.h"
 
 #include <stack>
 #include <map>
@@ -111,6 +112,16 @@ void M_Scene::AddProceduralMesh()
 	GameObject* object = new GameObject(nullptr);
 	object->AddComponent(new C_ProceduralMesh());
 	object->SetName("Procedural mesh");
+
+	gameObjects.push_back(object);
+}
+
+
+void M_Scene::AddAberration()
+{
+	GameObject* object = new GameObject(nullptr);
+	object->AddComponent(new C_Aberration());
+	object->SetName("Aberration");
 
 	gameObjects.push_back(object);
 }

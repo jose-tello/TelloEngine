@@ -6,6 +6,7 @@
 #include "C_Camera.h"
 #include "C_PointLight.h"
 #include "C_ProceduralMesh.h"
+#include "C_Aberration.h"
 
 #include "Application.h"
 #include "M_Input.h"
@@ -69,6 +70,10 @@ bool W_Inspector::Draw()
 
 			case COMPONENT_TYPE::POINT_LIGHT:
 				DrawPointLightComponent(static_cast<C_PointLight*>(componentsVec[i]));
+				break;
+
+			case COMPONENT_TYPE::ABERRATION:
+				DrawAberrationComp(static_cast<C_Aberration*>(componentsVec[i]));
 				break;
 
 			default:
@@ -581,6 +586,37 @@ void W_Inspector::DrawProceduralMeshComp(C_ProceduralMesh* pMesh)
 
 		if (ImGui::Button("Generate mesh", ImVec2(280, 30)));
 			pMesh->RecalculateMesh();
+	}
+
+	ImGui::NewLine();
+}
+
+
+void W_Inspector::DrawAberrationComp(C_Aberration* aberration)
+{
+	if (ImGui::CollapsingHeader("Aberration", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::NewLine();
+		bool debugDraw = aberration->GetDebugDraw();
+		ImGui::Checkbox("Debug draw", &debugDraw);
+
+		aberration->SetDebugDraw(debugDraw);
+
+		ImGui::NewLine();
+		float defX = aberration->GetDeformationX();
+		float defY = aberration->GetDeformationY();
+		float defZ = aberration->GetDeformationZ();
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Deformation");
+
+		if (ImGui::InputFloat("X", &defX, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			aberration->SetDeformationX(defX);
+
+		if (ImGui::InputFloat("Y", &defY, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			aberration->SetDeformationY(defY);
+
+		if (ImGui::InputFloat("Z", &defZ, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+			aberration->SetDeformationZ(defZ);
 	}
 
 	ImGui::NewLine();
