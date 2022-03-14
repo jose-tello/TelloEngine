@@ -25,6 +25,7 @@ public:
 	bool GetDebugDraw() const;
 	void SetDebugDraw(bool draw);
 
+	unsigned int GetVAO() const;
 	void GetAllVectorsSize(unsigned int& vertexCount, unsigned int& normalsCount, unsigned int& indexCount) const;
 
 	unsigned int GetIndicesSize() const;

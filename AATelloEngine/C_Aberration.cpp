@@ -2,9 +2,12 @@
 
 #include "Config.h"
 
+#include "GameObject.h"
+
 #include "Application.h"
 #include "M_Resources.h"
 #include "R_Mesh.h"
+#include "R_Model.h"
 
 C_Aberration::C_Aberration() : Component(COMPONENT_TYPE::ABERRATION),
 	aabb(),
@@ -17,6 +20,28 @@ C_Aberration::C_Aberration() : Component(COMPONENT_TYPE::ABERRATION),
 	debugDraw(true)
 {
 	//Request cube resource
+	Resource* res = App->resourceManager->GetResourceByPath("/Assets/defaultAssets/primitives/cube.fbx");
+	if (res != nullptr) //Add reference to new resource
+	{
+		R_Model* model = static_cast<R_Model*>(res);
+
+		cubeMeshId = model->GetFirstMesh();
+
+		R_Mesh* mesh = static_cast<R_Mesh*>(App->resourceManager->RequestResource(cubeMeshId));
+
+		if (mesh != nullptr)
+		{
+			mesh->AddReference();
+
+			if (owner != nullptr)
+				owner->transform.NotifyNeedUpdate();
+		}
+		else
+			cubeMeshId = 0;
+	}
+	else
+		cubeMeshId = 0;
+
 }
 
 
@@ -98,6 +123,22 @@ bool C_Aberration::GetDebugDraw() const
 void C_Aberration::SetDebugDraw(bool draw)
 {
 	debugDraw = draw;
+}
+
+
+unsigned int C_Aberration::GetVAO() const
+{
+	if (cubeMeshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(cubeMeshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->GetVAO();
+		}
+	}
+
+	return 0;
 }
 
 
@@ -205,6 +246,6 @@ void C_Aberration::Save(Config& node) const
 	node.AppendNum("deformationX", deformationX);
 	node.AppendNum("deformationY", deformationY);
 	node.AppendNum("deformationZ", deformationZ);
-	
+
 	node.AppendBool("debugDraw", debugDraw);
 }

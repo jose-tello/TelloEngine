@@ -46,3 +46,17 @@ void R_Model::SetModelNodes(std::vector<ModelNode>& modelNodes)
 {
 	this->modelNodes = modelNodes;
 }
+
+
+int R_Model::GetFirstMesh() const
+{
+	int nodeCount = modelNodes.size();
+
+	for (int i = 0; i < nodeCount; ++i)
+	{
+		if (modelNodes[i].meshId != 0)
+			return modelNodes[i].meshId;
+	}
+
+	return 0;
+}

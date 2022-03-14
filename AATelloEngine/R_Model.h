@@ -37,6 +37,8 @@ public:
 
 	void GetModelNodes(std::vector<ModelNode>& modelNodes) const;
 	void SetModelNodes(std::vector<ModelNode>& modelNodes);
+
+	int GetFirstMesh() const;
 private:
 	std::vector<ModelNode> modelNodes;
 };

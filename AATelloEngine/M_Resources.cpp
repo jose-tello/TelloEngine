@@ -272,6 +272,16 @@ Resource* M_Resources::GetDefaultResource(DEFAULT_RESOURCE resourceId)
 }
 
 
+Resource* M_Resources::GetResourceByPath(const char* path)
+{
+	std::string filePath(path);
+
+	int id = SearchMetaFile(filePath.c_str());
+
+	return RequestResource(id);
+}
+
+
 void M_Resources::UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder)
 {
 	if (previousFile != nullptr)

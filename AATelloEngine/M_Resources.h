@@ -45,6 +45,7 @@ public:
 	std::vector<R_Mesh*> GetAllLoadedMeshes();
 
 	Resource* GetDefaultResource(DEFAULT_RESOURCE resourceId);
+	Resource* GetResourceByPath(const char* name);
 
 private:
 	void UpdateFile(std::string& file, std::string* previousFile, std::string* nextFile, const char* folder);
