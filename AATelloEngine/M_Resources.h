@@ -6,6 +6,9 @@
 #include <map>
 #include <vector>
 
+#define RASTER_SHADER_NAME "defaultShader"
+#define RAY_TRACING_SHADER_NAME "computeShader"
+
 class Resource;
 class R_Mesh;
 struct GameObject;

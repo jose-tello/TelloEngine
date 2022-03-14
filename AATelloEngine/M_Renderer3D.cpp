@@ -58,7 +58,8 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 
 // Destructor
 M_Renderer3D::~M_Renderer3D()
-{}
+{
+}
 
 
 // Called before render is available

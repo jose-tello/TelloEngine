@@ -262,6 +262,20 @@ void M_FileManager::SplitPath(const char* fullPath, std::string* path, std::stri
 }
 
 
+std::string M_FileManager::GetFileName(const char* path)
+{
+	std::string full(path);
+	size_t posSeparator = full.find_last_of("\\/");
+	size_t posDot = full.find_last_of(".");
+
+	if (posSeparator < full.length())
+		return full.substr(posSeparator + 1, posDot - posSeparator - 1);
+
+	else
+		return full.substr(0, posDot);
+}
+
+
 std::string M_FileManager::RemoveExtension(const char* path)
 {
 	std::string ret(path);

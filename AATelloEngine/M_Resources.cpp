@@ -361,8 +361,19 @@ int M_Resources::CreateMeta(const char* assetPath, int uid)
 {
 	if (uid == 0)
 	{
-		LCG randomNumber;
-		uid = randomNumber.IntFast();
+		std::string assetName = App->fileManager->GetFileName(assetPath);
+
+		if (assetName == RASTER_SHADER_NAME)
+			uid = (int)DEFAULT_RESOURCE::RASTER_SHADER;
+
+		else if (assetName == RAY_TRACING_SHADER_NAME)
+			uid = (int)DEFAULT_RESOURCE::RAY_TRACING_SHADER;
+
+		else
+		{
+			LCG randomNumber;
+			uid = randomNumber.IntFast();
+		}
 	}
 
 	Config node;
