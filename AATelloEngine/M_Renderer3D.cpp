@@ -188,6 +188,7 @@ void M_Renderer3D::GenerateFrameBuffer(float width, float height, unsigned int& 
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureBuffer, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 
@@ -199,7 +200,7 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 }
 
 
-void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
+void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
 {
 	glViewport(0, 0, camWidth, camHeight);
 	if (pushCamera == true)
@@ -214,7 +215,7 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, C_Camera* camera, int cam
 	}
 
 	else
-		RayTracingDraw(frameBuffer, camera, camWidth, camHeight);
+		RayTracingDraw(frameBuffer, textureBuffer, camera, camWidth, camHeight);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -437,17 +438,20 @@ void M_Renderer3D::NotifyUpdateBuffers()
 }
 
 
-void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight)
+void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int textureBuffer, C_Camera* camera, int winWidth, int winHeight)
 {
 	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::RAY_TRACING_SHADER));
 
 	std::vector<GameObject*> objToDraw;
 	App->scene->CullGameObjects(objToDraw);
 
-
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glActiveTexture(GL_TEXTURE0);
+	glBindImageTexture(0, textureBuffer, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
+
 
 	shader->UseShaderProgram();
 
@@ -712,8 +716,8 @@ void M_Renderer3D::RasterizationDraw(unsigned int frameBuffer, C_Camera* camera,
 	if (drawAABB == true)
 		DrawFrustums();
 
-	Grid grid;
-	grid.Draw();
+	//Grid grid;
+	//grid.Draw();
 
 	if (App->camera->drawClickRay == true)
 		DrawClickRay();

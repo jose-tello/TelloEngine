@@ -35,7 +35,7 @@ public:
 							 unsigned int& textureBuffer, unsigned int& depthBuffer);
 	void DeleteBuffers(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int depthBuffer);
 
-	void DrawScene(unsigned int frameBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera = true, bool drawAABB = false);
+	void DrawScene(unsigned int frameBuffer, unsigned int textureBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera = true, bool drawAABB = false);
 	void DrawCube(float* vertex, float r, float g, float b) const;
 
 	C_Camera* GetCurrentCamera() const;
@@ -63,7 +63,7 @@ public:
 private:
 	
 	//Ray tracing draw
-	void RayTracingDraw(unsigned int frameBuffer, C_Camera* camera, int winWidth, int winHeight);
+	void RayTracingDraw(unsigned int frameBuffer, unsigned int textureBuffer, C_Camera* camera, int winWidth, int winHeight);
 
 	void GenerateArrayBuffers(unsigned int shaderId); //Returns triangle count
 	int BindMeshArray(unsigned int programId);
