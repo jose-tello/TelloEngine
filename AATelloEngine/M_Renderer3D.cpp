@@ -220,7 +220,9 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffe
 	else
 	{
 		RayTracingDraw(frameBuffer, textureBuffer, camera, camWidth, camHeight);
-		AberrationPreviewDraw(frameBuffer, textureBuffer, camera);
+
+		if (aberrationVector.size() > 0)
+			AberrationPreviewDraw(frameBuffer, textureBuffer, camera);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -508,6 +510,10 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 
 	// make sure writing to image has finished before read
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
 }
 
 
@@ -533,7 +539,8 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int 
 
 	SetBlend(true);
 
-	for (int i = 0; i < objToDraw.size(); ++i)
+	int objCount = objToDraw.size();
+	for (int i = 0; i < objCount; ++i)
 	{
 		C_Mesh* mesh = static_cast<C_Mesh*>(objToDraw[i]->GetComponent(COMPONENT_TYPE::MESH));
 
@@ -565,7 +572,8 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glLineWidth(3.0f);
 
-	for (int i = 0; i < aberrationVector.size(); ++i)
+	objCount = aberrationVector.size();
+	for (int i = 0; i < objCount; ++i)
 	{
 		unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
 		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
