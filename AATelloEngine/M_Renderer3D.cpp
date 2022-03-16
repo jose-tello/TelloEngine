@@ -203,7 +203,7 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 }
 
 
-void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int previewFramebuffer, unsigned int previewTexture, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
+void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
 {
 	glViewport(0, 0, camWidth, camHeight);
 	if (pushCamera == true)
@@ -220,7 +220,7 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffe
 	else
 	{
 		RayTracingDraw(frameBuffer, textureBuffer, camera, camWidth, camHeight);
-		AberrationPreviewDraw(previewFramebuffer, previewTexture, textureBuffer, camera);
+		AberrationPreviewDraw(frameBuffer, textureBuffer, camera);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -511,22 +511,21 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 }
 
 
-void M_Renderer3D::AberrationPreviewDraw(unsigned int previewFramebuffer, unsigned int previewTexture, unsigned int texture, C_Camera* camera)
+void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int texture, C_Camera* camera)
 {
 	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::ABERRATION_PREVIEW_SHADER));
 	if (shader == nullptr)
-		//TODO_ LOG AN ERROR
+	{
+		App->editor->AddLog("[ERROR]: Could not fin ABERRATION PREVIEW shader\n");
 		return;
+	}
 
 	std::vector<GameObject*> objToDraw;
 	App->scene->CullGameObjects(objToDraw);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, previewFramebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glActiveTexture(GL_TEXTURE0);
-	glBindImageTexture(0, previewTexture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
-
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -556,12 +555,15 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int previewFramebuffer, unsign
 
 	shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::ABERRATION_DRAW_SHADER));
 	if (shader == nullptr)
-		//TODO_ LOG AN ERROR
+	{
+		App->editor->AddLog("[ERROR]: Could not fin ABERRATION DRAW shader\n");
 		return;
+	}
 
 	shader->UseShaderProgram();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(3.0f);
 
 	for (int i = 0; i < aberrationVector.size(); ++i)
 	{
@@ -582,13 +584,12 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int previewFramebuffer, unsign
 		glBindVertexArray(0);
 	}
 
-	SetBlend(false);
-
-
+	SetBlend(blendEnabled);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 

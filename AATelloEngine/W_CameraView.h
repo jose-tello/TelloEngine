@@ -34,10 +34,6 @@ protected:
 	unsigned int textureBuffer = 0;
 	unsigned int depthBuffer = 0;
 
-	unsigned int previewFrameBuffer = 0;
-	unsigned int previewTextureBuffer = 0;
-	unsigned int previewDepthBuffer = 0;
-
 	C_Camera* camera = nullptr;
 
 private:
