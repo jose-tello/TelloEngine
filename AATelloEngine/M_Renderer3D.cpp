@@ -570,6 +570,7 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int 
 	shader->UseShaderProgram();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	SetCullFaceEnabled(false);
 	glLineWidth(3.0f);
 
 	objCount = aberrationVector.size();
@@ -593,6 +594,7 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int 
 	}
 
 	SetBlend(blendEnabled);
+	SetCullFaceEnabled(cullFaceEnabled);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBindTexture(GL_TEXTURE_2D, 0);
