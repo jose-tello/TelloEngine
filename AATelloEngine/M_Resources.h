@@ -8,6 +8,9 @@
 
 #define RASTER_SHADER_NAME "defaultShader"
 #define RAY_TRACING_SHADER_NAME "computeShader"
+#define PREVIEW_SHADER_NAME "aberrationPreview"
+#define ABERRATION_DRAW_SHADER_NAME "aberrationPreviewDraw"
+
 
 class Resource;
 class R_Mesh;
@@ -18,7 +21,9 @@ enum class DEFAULT_RESOURCE : int
 {
 	NONE = 0,
 	RASTER_SHADER = 1,
-	RAY_TRACING_SHADER = 2
+	RAY_TRACING_SHADER = 2,
+	ABERRATION_PREVIEW_SHADER = 3,
+	ABERRATION_DRAW_SHADER = 4
 };
 
 class M_Resources : public Module

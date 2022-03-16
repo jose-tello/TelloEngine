@@ -24,6 +24,10 @@ W_CameraView::W_CameraView(bool active, C_Camera* camera, E_WINDOW_TYPE type) : 
 	textureBuffer(0),
 	depthBuffer(0),
 
+	previewFrameBuffer(0),
+	previewTextureBuffer(0),
+	previewDepthBuffer(0),
+
 	camera(camera),
 
 	started(false)
@@ -34,10 +38,15 @@ W_CameraView::W_CameraView(bool active, C_Camera* camera, E_WINDOW_TYPE type) : 
 W_CameraView::~W_CameraView()
 {
 	App->renderer3D->DeleteBuffers(frameBuffer, textureBuffer, depthBuffer);
+	App->renderer3D->DeleteBuffers(previewFrameBuffer, previewTextureBuffer, previewDepthBuffer);
 	
 	frameBuffer = 0;
 	textureBuffer = 0;
 	depthBuffer = 0;
+
+	previewFrameBuffer = 0;
+	previewTextureBuffer = 0;
+	previewDepthBuffer = 0;
 }
 
 
@@ -79,7 +88,7 @@ bool W_CameraView::Draw()
 	if (size.x != windowWidth || size.y != windowHeight)
 		OnResize(size.x, size.y);
 
-	App->renderer3D->DrawScene(frameBuffer, textureBuffer, camera, size.x, size.y);
+	App->renderer3D->DrawScene(frameBuffer, textureBuffer, previewFrameBuffer, previewTextureBuffer, camera, size.x, size.y);
 
 	ImGui::Image((ImTextureID)textureBuffer, ImVec2(windowWidth, windowHeight), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::EndChild();
@@ -116,6 +125,10 @@ void W_CameraView::OnResize(int x, int y)
 	windowHeight = y;
 
 	App->renderer3D->OnResize(windowWidth, windowHeight, camera);
+
 	App->renderer3D->DeleteBuffers(frameBuffer, textureBuffer, depthBuffer);
+	App->renderer3D->DeleteBuffers(previewFrameBuffer, previewTextureBuffer, previewDepthBuffer);
+
 	App->renderer3D->GenerateFrameBuffer(windowWidth, windowHeight, frameBuffer, textureBuffer, depthBuffer);
+	App->renderer3D->GenerateFrameBuffer(windowWidth, windowHeight, previewFrameBuffer, previewTextureBuffer, previewDepthBuffer);
 }

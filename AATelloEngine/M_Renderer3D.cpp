@@ -12,6 +12,7 @@
 #include "C_Mesh.h"
 #include "C_Camera.h"
 #include "C_PointLight.h"
+#include "C_Aberration.h"
 
 #include "R_Shader.h"
 #include "R_Mesh.h"
@@ -131,6 +132,7 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 
 	lightVector.clear();
 	frustumVector.clear();
+	aberrationVector.clear();
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -151,6 +153,7 @@ bool M_Renderer3D::CleanUp()
 
 	lightVector.clear();
 	frustumVector.clear();
+	aberrationVector.clear();
 
 	SDL_GL_DeleteContext(context);
 
@@ -200,7 +203,7 @@ void M_Renderer3D::DeleteBuffers(unsigned int frameBuffer, unsigned int textureB
 }
 
 
-void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffer, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
+void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffer, unsigned int previewFramebuffer, unsigned int previewTexture, C_Camera* camera, int camWidth, int camHeight, bool pushCamera, bool drawAABB)
 {
 	glViewport(0, 0, camWidth, camHeight);
 	if (pushCamera == true)
@@ -215,7 +218,10 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffe
 	}
 
 	else
+	{
 		RayTracingDraw(frameBuffer, textureBuffer, camera, camWidth, camHeight);
+		AberrationPreviewDraw(previewFramebuffer, previewTexture, textureBuffer, camera);
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -276,6 +282,12 @@ void M_Renderer3D::PushLight(C_PointLight* light)
 void M_Renderer3D::PushFrustum(C_Camera* frustum)
 {
 	frustumVector.push_back(frustum);
+}
+
+
+void M_Renderer3D::PushAberration(C_Aberration* aberration)
+{
+	aberrationVector.push_back(aberration);
 }
 
 
@@ -460,6 +472,17 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 		GenerateArrayBuffers(shader->GetProgramId());
 		buffersToUpdate = false;
 	}
+	else
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_1D, vertexTextureBuffer);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_1D, indexTextureBuffer);
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_1D, uvTextureBuffer);
+	}
 
 	int meshCount = BindMeshArray(shader->GetProgramId());
 
@@ -486,6 +509,88 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 	// make sure writing to image has finished before read
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 }
+
+
+void M_Renderer3D::AberrationPreviewDraw(unsigned int previewFramebuffer, unsigned int previewTexture, unsigned int texture, C_Camera* camera)
+{
+	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::ABERRATION_PREVIEW_SHADER));
+	if (shader == nullptr)
+		//TODO_ LOG AN ERROR
+		return;
+
+	std::vector<GameObject*> objToDraw;
+	App->scene->CullGameObjects(objToDraw);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, previewFramebuffer);
+	glActiveTexture(GL_TEXTURE0);
+	glBindImageTexture(0, previewTexture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	shader->UseShaderProgram();
+
+	SetBlend(true);
+
+	for (int i = 0; i < objToDraw.size(); ++i)
+	{
+		C_Mesh* mesh = static_cast<C_Mesh*>(objToDraw[i]->GetComponent(COMPONENT_TYPE::MESH));
+
+		unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
+
+		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
+
+		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "model_matrix");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, objToDraw[i]->transform.GetMatTransformT().ptr());
+
+		glBindVertexArray(mesh->GetVAO());
+
+		glDrawElements(GL_TRIANGLES, mesh->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
+
+		glBindVertexArray(0);
+	}
+
+	shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::ABERRATION_DRAW_SHADER));
+	if (shader == nullptr)
+		//TODO_ LOG AN ERROR
+		return;
+
+	shader->UseShaderProgram();
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	for (int i = 0; i < aberrationVector.size(); ++i)
+	{
+		unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
+
+		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
+
+		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "model_matrix");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, aberrationVector[i]->GetOwner()->transform.GetMatTransformT().ptr());
+
+		glBindVertexArray(aberrationVector[i]->GetVAO());
+
+		glDrawElements(GL_TRIANGLES, aberrationVector[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
+
+
+		glBindVertexArray(0);
+	}
+
+	SetBlend(false);
+
+
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
+}
+
 
 
 //Returns triangle count
@@ -622,7 +727,6 @@ void M_Renderer3D::BindVertexTextureBuffer(std::vector<float>& vertexArray)
 }
 
 
-//This does not work, yayyyy
 void M_Renderer3D::BindIndexTextureBuffer(std::vector<float>& indexArray)
 {
 	glDeleteTextures(1, &indexTextureBuffer);
@@ -716,8 +820,8 @@ void M_Renderer3D::RasterizationDraw(unsigned int frameBuffer, C_Camera* camera,
 	if (drawAABB == true)
 		DrawFrustums();
 
-	//Grid grid;
-	//grid.Draw();
+	Grid grid;
+	grid.Draw();
 
 	if (App->camera->drawClickRay == true)
 		DrawClickRay();

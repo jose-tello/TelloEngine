@@ -132,11 +132,9 @@ vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
        
        vec2 uv = u * uv2 + v * uv3 + (1.0 - u - v) * uv1;
        
-       vec4 col = texture(meshArray[i].diffuseTexture, uv);
-       //vec4 col = vec4(u, v, (1 - u - v), 1.0);
+       vec4 col = mix(texture(meshArray[i].diffuseTexture, uv), vec4(meshArray[i].color, 1.0), 0.6);
        
        ret = col * step(distanceToOrigin, dst) + ret * step(dst, distanceToOrigin);
-       ret = vec4(mix(ret.xyz, meshArray[i].color, 0.6), 1.0);
        dst = min(dst, distanceToOrigin);
        }
     }
@@ -168,5 +166,5 @@ void main()
   
   vec4 color = RayTriangleIntersection(rayDirection, rayOrigin);
 
-  imageStore(imgOutput, ivec2(pixelCoords.xy), color);
+  imageStore(imgOutput, ivec2(pixelCoords.xy), vec4(color.rgb, 255.0));
 }

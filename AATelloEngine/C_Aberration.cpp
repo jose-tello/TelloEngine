@@ -6,6 +6,8 @@
 
 #include "Application.h"
 #include "M_Resources.h"
+#include "M_Renderer3D.h"
+
 #include "R_Mesh.h"
 #include "R_Model.h"
 
@@ -58,6 +60,14 @@ C_Aberration::~C_Aberration()
 	}
 	cubeMeshId = 0;
 }
+
+
+bool C_Aberration::Update(float dt)
+{
+	App->renderer3D->PushAberration(this);
+	return true;
+}
+
 
 void C_Aberration::OnUpdateTransform(float4x4& transform)
 {

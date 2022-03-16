@@ -369,6 +369,12 @@ int M_Resources::CreateMeta(const char* assetPath, int uid)
 		else if (assetName == RAY_TRACING_SHADER_NAME)
 			uid = (int)DEFAULT_RESOURCE::RAY_TRACING_SHADER;
 
+		else if (assetName == PREVIEW_SHADER_NAME)
+			uid = (int)DEFAULT_RESOURCE::ABERRATION_PREVIEW_SHADER;
+
+		else if (assetName == ABERRATION_DRAW_SHADER_NAME)
+			uid = (int)DEFAULT_RESOURCE::ABERRATION_DRAW_SHADER;
+
 		else
 		{
 			LCG randomNumber;

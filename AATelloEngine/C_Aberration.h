@@ -12,6 +12,8 @@ public:
 	C_Aberration();
 	~C_Aberration() override;
 
+	bool Update(float dt) override;
+
 	void OnUpdateTransform(float4x4& transform) override;
 
 	float GetDeformationX() const;

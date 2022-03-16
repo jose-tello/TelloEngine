@@ -1,0 +1,27 @@
+__VERTEX_SHADER__ 
+#version 330 core
+layout (location = 0) in vec3 position;
+
+out vec3 fPosition;
+
+uniform mat4 model_matrix;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main()
+{
+ gl_Position = projection * view * model_matrix * vec4(position, 1.0f);
+ 
+ fPosition = (model_matrix * vec4(position, 1.0f)).xyz;
+}
+
+
+__FRAGMENT_SHADER__
+#version 330 core
+in vec3 fPosition;
+out vec4 color;
+
+void main()
+{
+  color = vec4(0.0, 0.0, 1.0, 1.0);
+}
