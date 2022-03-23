@@ -1,0 +1,4 @@
+Moller triangle algorithm explain
+state of the art: more about ray tracing
+more about non euclidean shit
+metodology
