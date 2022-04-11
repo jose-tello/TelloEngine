@@ -64,7 +64,9 @@ C_Aberration::~C_Aberration()
 
 bool C_Aberration::Update(float dt)
 {
+
 	App->renderer3D->PushAberration(this);
+
 	return true;
 }
 
@@ -149,6 +151,20 @@ unsigned int C_Aberration::GetVAO() const
 	}
 
 	return 0;
+}
+
+
+void C_Aberration::GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const
+{
+	if (cubeMeshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(cubeMeshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			mesh->GetAllVertexData(vertexArray, normalsArray, texCoordArray, indicesArray);
+		}
+	}
 }
 
 
@@ -243,7 +259,7 @@ void C_Aberration::Load(Config& node)
 	deformationY = node.GetNum("deformationY");
 	deformationZ = node.GetNum("deformationZ");
 
-	debugDraw = node.GetNum("debugDraw");
+	debugDraw = node.GetBool("debugDraw");
 }
 
 

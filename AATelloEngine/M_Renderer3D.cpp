@@ -486,7 +486,10 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 		glBindTexture(GL_TEXTURE_1D, uvTextureBuffer);
 	}
 
-	int meshCount = BindMeshArray(shader->GetProgramId());
+	int meshCount = 0;
+	int aberrationCount = 0;
+
+	BindObjectArray(shader->GetProgramId(), meshCount, aberrationCount);
 
 	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
@@ -496,6 +499,9 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "meshCount");
 	glUniform1i(uniformLocation, meshCount);
+
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "aberrationCount");
+	glUniform1i(uniformLocation, aberrationCount);
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "aspectRatio");
 	glUniform1f(uniformLocation, camera->GetAspectRatio());
@@ -576,6 +582,9 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int 
 	objCount = aberrationVector.size();
 	for (int i = 0; i < objCount; ++i)
 	{
+		if (aberrationVector[i]->GetDebugDraw() == false)
+			continue;
+
 		unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
 		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
 
@@ -588,7 +597,6 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int 
 		glBindVertexArray(aberrationVector[i]->GetVAO());
 
 		glDrawElements(GL_TRIANGLES, aberrationVector[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
-
 
 		glBindVertexArray(0);
 	}
@@ -645,12 +653,13 @@ void M_Renderer3D::GenerateArrayBuffers(unsigned int shaderId)
 }
 
 
-int M_Renderer3D::BindMeshArray(unsigned int programId)
+void M_Renderer3D::BindObjectArray(unsigned int programId, int& meshCount, int& aberrationCount)
 {
 	std::vector<GameObject*> objects;
 	App->scene->GetAllGameObjects(objects);
 
-	int meshCount = 0;
+	meshCount = 0;
+	aberrationCount = 0;
 
 	int objectsCount = objects.size();
 	for (int i = 0; i < objectsCount; ++i)
@@ -658,67 +667,143 @@ int M_Renderer3D::BindMeshArray(unsigned int programId)
 		C_Mesh* mesh = static_cast<C_Mesh*>(objects[i]->GetComponent(COMPONENT_TYPE::MESH));
 		if (mesh != nullptr && meshCount < RAYTRACED_MESH_LIMIT)
 		{
-			char buffer[64];
-
-			sprintf(buffer, "meshArray[%i].transform", meshCount);
-
-			unsigned int uniformLocation = glGetUniformLocation(programId, buffer);
-			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, objects[i]->transform.GetMatTransformT().ptr());
-
-			sprintf(buffer, "meshArray[%i].minPoint", meshCount);
-
-			uniformLocation = glGetUniformLocation(programId, buffer);
-			const float* minPoint = mesh->GetAABBMinPoint();
-			glUniform3f(uniformLocation, minPoint[0], minPoint[1], minPoint[2]);
-
-			sprintf(buffer, "meshArray[%i].maxPoint", meshCount);
-
-			uniformLocation = glGetUniformLocation(programId, buffer);
-			const float* maxPoint = mesh->GetAABBMaxPoint();
-			glUniform3f(uniformLocation, maxPoint[0], maxPoint[1], maxPoint[2]);
-
-			sprintf(buffer, "meshArray[%i].indexOffset", meshCount);
-
-			uniformLocation = glGetUniformLocation(programId, buffer);
-			glUniform1i(uniformLocation, mesh->GetIndexOffset());
-
-			sprintf(buffer, "meshArray[%i].vertexOffset", meshCount);
-
-			uniformLocation = glGetUniformLocation(programId, buffer);
-			glUniform1i(uniformLocation, mesh->GetVertexOffset());
-
-			sprintf(buffer, "meshArray[%i].indexCount", meshCount);
-
-			uniformLocation = glGetUniformLocation(programId, buffer);
-			glUniform1i(uniformLocation, mesh->GetIndicesSize());
-
-			sprintf(buffer, "meshArray[%i].color", meshCount);
-
-			uniformLocation = glGetUniformLocation(programId, buffer);
-
-			C_Material* mat = static_cast<C_Material*>(objects[i]->GetComponent(COMPONENT_TYPE::MATERIAL));
-			if (mat != nullptr)
-			{
-				Color col = mat->GetColor();
-				glUniform3f(uniformLocation, col.r, col.g, col.b);
-
-				mat->BindCheckerTexture();
-
-				sprintf(buffer, "meshArray[%i].diffuseTexture", meshCount);
-
-				uniformLocation = glGetUniformLocation(programId, buffer);
-				glUniform1i(uniformLocation, 4);
-			}
-			else
-			{
-				glUniform3f(uniformLocation, 1.0, 1.0, 1.0);
-			}
+			BindMesh(mesh, objects[i], meshCount, programId);
 
 			meshCount++;
 		}
-	}
 
-	return meshCount;
+		C_Aberration* aberration = static_cast<C_Aberration*>(objects[i]->GetComponent(COMPONENT_TYPE::ABERRATION));
+		if (aberration != nullptr && aberrationCount < MAX_ABERRATION_LIMIT)
+		{
+			BindAberration(aberration, objects[i], aberrationCount, programId);
+
+			aberrationCount++;
+		}
+
+	}
+}
+
+
+void M_Renderer3D::BindMesh(C_Mesh* mesh, GameObject* gameObject, int meshCount, unsigned int programId)
+{
+	char buffer[64];
+	sprintf(buffer, "meshArray[%i].transform", meshCount);
+
+	unsigned int uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, gameObject->transform.GetMatTransformT().ptr());
+
+	sprintf(buffer, "meshArray[%i].minPoint", meshCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	const float* minPoint = mesh->GetAABBMinPoint();
+	glUniform3f(uniformLocation, minPoint[0], minPoint[1], minPoint[2]);
+
+	sprintf(buffer, "meshArray[%i].maxPoint", meshCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	const float* maxPoint = mesh->GetAABBMaxPoint();
+	glUniform3f(uniformLocation, maxPoint[0], maxPoint[1], maxPoint[2]);
+
+	sprintf(buffer, "meshArray[%i].indexOffset", meshCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1i(uniformLocation, mesh->GetIndexOffset());
+
+	sprintf(buffer, "meshArray[%i].vertexOffset", meshCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1i(uniformLocation, mesh->GetVertexOffset());
+
+	sprintf(buffer, "meshArray[%i].indexCount", meshCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1i(uniformLocation, mesh->GetIndicesSize());
+
+	C_Material* mat = static_cast<C_Material*>(gameObject->GetComponent(COMPONENT_TYPE::MATERIAL));
+
+	if (mat != nullptr)
+	{
+		BindMaterial(mat, meshCount, programId);
+	}
+	else
+	{
+		sprintf(buffer, "meshArray[%i].color", meshCount);
+
+		uniformLocation = glGetUniformLocation(programId, buffer);
+
+		glUniform3f(uniformLocation, 1.0, 1.0, 1.0);
+	}
+}
+
+
+void M_Renderer3D::BindMaterial(C_Material* material, int meshCount, unsigned int programId)
+{
+	char buffer[64];
+	sprintf(buffer, "meshArray[%i].color", meshCount);
+
+	unsigned int uniformLocation = glGetUniformLocation(programId, buffer);
+
+	Color col = material->GetColor();
+	glUniform3f(uniformLocation, col.r, col.g, col.b);
+
+	material->BindCheckerTexture();
+
+	sprintf(buffer, "meshArray[%i].diffuseTexture", meshCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1i(uniformLocation, 4);
+}
+
+
+void M_Renderer3D::BindAberration(C_Aberration* aberration, GameObject* gameObject, int aberrationCount, unsigned int programId)
+{
+	char buffer[64];
+	sprintf(buffer, "aberrationArray[%i].transform", aberrationCount);
+
+	unsigned int uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, gameObject->transform.GetMatTransformT().ptr());
+
+	sprintf(buffer, "aberrationArray[%i].minPoint", aberrationCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	const float* minPoint = aberration->GetAABBMinPoint();
+	glUniform3f(uniformLocation, minPoint[0], minPoint[1], minPoint[2]);
+
+	sprintf(buffer, "aberrationArray[%i].maxPoint", aberrationCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	const float* maxPoint = aberration->GetAABBMaxPoint();
+	glUniform3f(uniformLocation, maxPoint[0], maxPoint[1], maxPoint[2]);
+
+	sprintf(buffer, "aberrationArray[%i].indexOffset", aberrationCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1i(uniformLocation, aberration->GetIndexOffset());
+
+	sprintf(buffer, "aberrationArray[%i].vertexOffset", aberrationCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1i(uniformLocation, aberration->GetVertexOffset());
+
+	sprintf(buffer, "aberrationArray[%i].indexCount", aberrationCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1i(uniformLocation, aberration->GetIndicesSize());
+
+	sprintf(buffer, "aberrationArray[%i].xDeformation", aberrationCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1f(uniformLocation, aberration->GetDeformationX());
+
+	sprintf(buffer, "aberrationArray[%i].yDeformation", aberrationCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1f(uniformLocation, aberration->GetDeformationY());
+
+	sprintf(buffer, "aberrationArray[%i].zDeformation", aberrationCount);
+
+	uniformLocation = glGetUniformLocation(programId, buffer);
+	glUniform1f(uniformLocation, aberration->GetDeformationZ());
 }
 
 

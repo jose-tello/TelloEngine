@@ -28,6 +28,7 @@ public:
 	void SetDebugDraw(bool draw);
 
 	unsigned int GetVAO() const;
+	void GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const;
 	void GetAllVectorsSize(unsigned int& vertexCount, unsigned int& normalsCount, unsigned int& indexCount) const;
 
 	unsigned int GetIndicesSize() const;

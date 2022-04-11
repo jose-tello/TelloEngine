@@ -10,7 +10,8 @@
 #include <vector>
 
 #define LIGHT_LIMIT 1
-#define RAYTRACED_MESH_LIMIT 10
+#define RAYTRACED_MESH_LIMIT 20
+#define MAX_ABERRATION_LIMIT 5
 
 struct GameObject;
 
@@ -68,8 +69,12 @@ private:
 	void RayTracingDraw(unsigned int frameBuffer, unsigned int textureBuffer, C_Camera* camera, int winWidth, int winHeight);
 	void AberrationPreviewDraw(unsigned int framebuffer, unsigned int texture, C_Camera* camera);
 
-	void GenerateArrayBuffers(unsigned int shaderId); //Returns triangle count
-	int BindMeshArray(unsigned int programId);
+	void GenerateArrayBuffers(unsigned int shaderId);
+
+	void BindObjectArray(unsigned int programId, int& meshCount, int& aberrationCount);
+	void BindMesh(C_Mesh* mesh, GameObject* gameObject, int meshCount, unsigned int programId);
+	void BindMaterial(C_Material* material, int meshCount, unsigned int programId);
+	void BindAberration(C_Aberration* aberration, GameObject* gameObject, int aberrationCount, unsigned int programId);
 
 	void BindVertexTextureBuffer(std::vector<float>& vertexArray);
 	void BindIndexTextureBuffer(std::vector<float>& indexArray);
