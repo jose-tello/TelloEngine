@@ -10,6 +10,8 @@ layout(binding = 3) uniform sampler1D uvTexture;
 uniform int meshCount;
 uniform int aberrationCount;
 
+int maxRayDepth = 1;
+
 uniform mat4 projection;
 uniform mat4 view;
 
@@ -119,7 +121,7 @@ vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
        vec3 v0v2 = v2 - v0;
        vec3 pVec = cross(rayDirection, v0v2);
        
-       float det = dot(v0v1, pVec);
+       float det = dot(v0v1, pVec);    
        
        if (det <= 0)
           continue;
@@ -159,10 +161,10 @@ vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
 }
 
 
-vec4 RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
+int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
 {
+  int aberrationIterator = 0;
   dst = 999999.9;
-  vec4 ret = pixelColor;
   
   for(int i = 0; i < aberrationCount; ++i)
   {
@@ -192,7 +194,7 @@ vec4 RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
        
        float det = dot(v0v1, pVec);
        
-       if (det <= 0)
+       if (det <= 0)        //Use absolute value to check if it hits front or back
           continue;
           
        float invDet = 1 / det;
@@ -213,13 +215,49 @@ vec4 RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
        
        if (distanceToOrigin <= 0)
           continue;
+       
+       if (distanceToOrigin < dst)
+       {
+          aberrationIterator = i;
+          dst = distanceToOrigin;
+       }
 
-       ret = vec4(0.0, 0.0, 0.0, 1.0);
-       dst = min(dst, distanceToOrigin);
        }
     }
-  return ret;
+    
+    return aberrationIterator;
 }
+
+
+vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
+{
+  for (int i = 0; i < maxRayDepth; ++i)
+  {
+     float meshDst = 0.0;
+     float aberrationDst = 0.0;
+  
+     vec4 meshColor = RayTriangleIntersection(rayDirection, rayOrigin, meshDst);
+     int abIt = RayAberrationIntersection(rayDirection, rayOrigin, aberrationDst);  //Aberration iterator
+  
+     if (meshDst < aberrationDst)
+       return meshColor;
+    
+     else
+     {
+       rayOrigin = rayOrigin + aberrationDst * rayDirection;
+       
+       rayDirection.x += aberrationArray[abIt].xDeformation;
+       rayDirection.y += aberrationArray[abIt].yDeformation;
+       rayDirection.z += aberrationArray[abIt].zDeformation;
+       
+       rayDirection = normalize(rayDirection); 
+     }
+  }
+  
+  float dst;
+  return RayTriangleIntersection(rayDirection, rayOrigin, dst);
+}
+
 
 void main()
 {  
@@ -243,13 +281,7 @@ void main()
   //vec3 rayDirection = (inverse(projection) * vec4(xPos, yPos, 0.0, 1.0)).xyz;
   vec3 rayDirection = normalize(p - rayOrigin);
   
-  float meshDst = 0.0;
-  float aberrationDst = 0.0;
-  
-  vec4 meshColor = RayTriangleIntersection(rayDirection, rayOrigin, meshDst);
-  vec4 aberrationColor = RayAberrationIntersection(rayDirection, rayOrigin, aberrationDst);
-  
-  vec4 color = meshColor * step(meshDst, aberrationDst) + aberrationColor * step(aberrationDst, meshDst);
+  vec4 color = CalculateColor(rayDirection, rayOrigin);
 
   imageStore(imgOutput, ivec2(pixelCoords.xy), vec4(color.rgb, 255.0));
 }
