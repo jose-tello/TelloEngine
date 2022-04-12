@@ -56,9 +56,6 @@ bool RayBoxIntersection(vec3 rayDirection, vec3 rayOrigin, vec3 minP, vec3 maxP)
 {
    float dstMinToRay = dot(rayDirection, rayOrigin - minP);
    float dstMaxToRay = dot(rayDirection, rayOrigin - maxP);
-   
-   if (dstMinToRay >= 0 && dstMaxToRay >= 0)
-      return false;
       
    float auxMin = (minP.x - rayOrigin.x) / rayDirection.x;
    float auxMax = (maxP.x - rayOrigin.x) / rayDirection.x;
@@ -123,26 +120,26 @@ vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
        
        float det = dot(v0v1, pVec);    
        
-       if (det <= 0)
+       if (det <= 0.0)
           continue;
           
-       float invDet = 1 / det;
+       float invDet = 1.0 / det;
        
        vec3 tVec = rayOrigin - v0;
        float u = dot(tVec, pVec) * invDet;
        
-       if (u < 0 || u > 1)
+       if (u < 0.0 || u > 1.0)
           continue;
           
        vec3 qVec = cross(tVec, v0v1);
        float v = dot(rayDirection, qVec) * invDet;
        
-       if (v < 0 || u + v > 1)
+       if ((v < 0.0) || (u + v > 1.0))
           continue;
   
        float distanceToOrigin = dot(v0v2, qVec) * invDet; 
        
-       if (distanceToOrigin <= 0)
+       if (distanceToOrigin <= 0.0)
           continue;
        
        vec2 uv1 = (texelFetch(uvTexture, vertex1, 0)).xy;
@@ -161,7 +158,7 @@ vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
 }
 
 
-int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
+int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, out int aberrationSign)
 {
   int aberrationIterator = 0;
   dst = 999999.9;
@@ -194,7 +191,7 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
        
        float det = dot(v0v1, pVec);
        
-       if (det <= 0)        //Use absolute value to check if it hits front or back
+       if (abs(det) <= 0.0)        //Use absolute value to check if it hits front or back
           continue;
           
        float invDet = 1 / det;
@@ -219,6 +216,7 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
        if (distanceToOrigin < dst)
        {
           aberrationIterator = i;
+          aberrationSign = int(sign(det));
           dst = distanceToOrigin;
        }
 
@@ -231,13 +229,14 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
 
 vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
 {
-  for (int i = 0; i < maxRayDepth; ++i)
+  /*for (int i = 0; i < maxRayDepth; ++i)
   {
      float meshDst = 0.0;
      float aberrationDst = 0.0;
+     int aberrationSign = 0;
   
      vec4 meshColor = RayTriangleIntersection(rayDirection, rayOrigin, meshDst);
-     int abIt = RayAberrationIntersection(rayDirection, rayOrigin, aberrationDst);  //Aberration iterator
+     int abIt = RayAberrationIntersection(rayDirection, rayOrigin, aberrationDst, aberrationSign);  //Aberration iterator
   
      if (meshDst < aberrationDst)
        return meshColor;
@@ -247,12 +246,12 @@ vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
        rayOrigin = rayOrigin + aberrationDst * rayDirection;
        
        rayDirection.x += aberrationArray[abIt].xDeformation;
-       rayDirection.y += aberrationArray[abIt].yDeformation;
-       rayDirection.z += aberrationArray[abIt].zDeformation;
+       rayDirection.y += aberrationArray[abIt].yDeformation ;
+       rayDirection.z += aberrationArray[abIt].zDeformation ;
        
        rayDirection = normalize(rayDirection); 
      }
-  }
+  }*/
   
   float dst;
   return RayTriangleIntersection(rayDirection, rayOrigin, dst);
