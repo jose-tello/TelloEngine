@@ -1,0 +1,2 @@
+Good first step, Maintains perspective when enters the aberration, looks beliabable and makes a cool effect
+Maiby will be included as functionality further on, not the desired effect but a nice addition

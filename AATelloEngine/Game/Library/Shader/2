@@ -194,7 +194,7 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
        if (abs(det) <= 0.0)        //Use absolute value to check if it hits front or back
           continue;
           
-       float invDet = 1 / det;
+       float invDet = 1 / (det);
        
        vec3 tVec = rayOrigin - v0;
        float u = dot(tVec, pVec) * invDet;
@@ -229,7 +229,7 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
 
 vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
 {
-  /*for (int i = 0; i < maxRayDepth; ++i)
+  for (int i = 0; i < maxRayDepth; ++i)
   {
      float meshDst = 0.0;
      float aberrationDst = 0.0;
@@ -246,12 +246,12 @@ vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
        rayOrigin = rayOrigin + aberrationDst * rayDirection;
        
        rayDirection.x += aberrationArray[abIt].xDeformation;
-       rayDirection.y += aberrationArray[abIt].yDeformation ;
-       rayDirection.z += aberrationArray[abIt].zDeformation ;
+       rayDirection.y += aberrationArray[abIt].yDeformation;
+       rayDirection.z += aberrationArray[abIt].zDeformation;
        
        rayDirection = normalize(rayDirection); 
      }
-  }*/
+  }
   
   float dst;
   return RayTriangleIntersection(rayDirection, rayOrigin, dst);
