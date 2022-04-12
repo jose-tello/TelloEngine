@@ -46,6 +46,8 @@ public:
 	void PushFrustum(C_Camera* camera);
 	void PushAberration(C_Aberration* aberration);
 
+	void PopAberrations();
+
 	void DeleteLight(C_PointLight*);
 	
 	void SetCameraRay(float rayBegin[3], float rayEnd[3]);

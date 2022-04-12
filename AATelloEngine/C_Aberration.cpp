@@ -49,6 +49,8 @@ C_Aberration::C_Aberration() : Component(COMPONENT_TYPE::ABERRATION),
 
 C_Aberration::~C_Aberration()
 {
+	App->renderer3D->PopAberrations();
+
 	if (cubeMeshId != 0)
 	{
 		Resource* res = App->resourceManager->RequestResource(cubeMeshId);

@@ -293,6 +293,12 @@ void M_Renderer3D::PushAberration(C_Aberration* aberration)
 }
 
 
+void M_Renderer3D::PopAberrations()
+{
+	aberrationVector.clear();
+}
+
+
 void M_Renderer3D::DeleteLight(C_PointLight* light)
 {
 	int lightCount = lightVector.size();

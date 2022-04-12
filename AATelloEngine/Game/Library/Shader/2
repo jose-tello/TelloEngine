@@ -12,7 +12,15 @@ uniform int aberrationCount;
 
 int maxRayDepth = 1;
 
-uniform mat4 projection;
+float maxDirX = 0.0;
+float minDirX = 0.0;
+
+float maxDirY = 0.0;
+float minDirY = 0.0;
+
+float maxDirZ = 0.0;
+float minDirZ = 0.0;
+
 uniform mat4 view;
 
 uniform float aspectRatio;
@@ -245,9 +253,9 @@ vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
      {
        rayOrigin = rayOrigin + aberrationDst * rayDirection;
        
-       rayDirection.x += aberrationArray[abIt].xDeformation;
-       rayDirection.y += aberrationArray[abIt].yDeformation;
-       rayDirection.z += aberrationArray[abIt].zDeformation;
+       rayDirection.x += aberrationArray[abIt].xDeformation * (2.0 * smoothstep(minDirX, maxDirX, rayDirection.x) - 1.0);
+       rayDirection.y += aberrationArray[abIt].yDeformation * (2.0 * smoothstep(minDirY, maxDirY, rayDirection.y) - 1.0);
+       rayDirection.z += aberrationArray[abIt].zDeformation * (2.0 * smoothstep(minDirZ, maxDirZ, rayDirection.z) - 1.0);
        
        rayDirection = normalize(rayDirection); 
      }
@@ -257,6 +265,41 @@ vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
   return RayTriangleIntersection(rayDirection, rayOrigin, dst);
 }
 
+
+void CalculateMinMaxPoints()
+{  
+  mat4 cameraToWorld = inverse(view);
+  
+  vec3 rayOrigin = (cameraToWorld * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+  
+  float xPos = -1.0;
+  float yPos = -1.0;
+  
+  xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
+  yPos = yPos * tan(verticalFov * 0.5);
+    
+  vec3 p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
+  
+  vec3 rayD1 = normalize(p - rayOrigin);
+  
+  xPos = 1.0;
+  yPos = 1.0;
+  
+  xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
+  yPos = yPos * tan(verticalFov * 0.5);
+  
+  p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
+  
+  vec3 rayD2 = normalize(p - rayOrigin);
+  
+  minDirX = min(rayD1.x, rayD2.x);
+  minDirY = min(rayD1.y, rayD2.y);
+  minDirZ = min(rayD1.z, rayD2.z);
+  
+  maxDirX = max(rayD1.x, rayD2.x);
+  maxDirY = max(rayD1.y, rayD2.y);
+  maxDirZ = max(rayD1.z, rayD2.z);
+}
 
 void main()
 {  
@@ -277,9 +320,9 @@ void main()
   vec3 rayOrigin = (cameraToWorld * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
   vec3 p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
   
-  //vec3 rayDirection = (inverse(projection) * vec4(xPos, yPos, 0.0, 1.0)).xyz;
   vec3 rayDirection = normalize(p - rayOrigin);
   
+  CalculateMinMaxPoints();
   vec4 color = CalculateColor(rayDirection, rayOrigin);
 
   imageStore(imgOutput, ivec2(pixelCoords.xy), vec4(color.rgb, 255.0));
