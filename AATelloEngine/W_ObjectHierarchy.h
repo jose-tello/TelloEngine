@@ -18,7 +18,12 @@ public:
 private:
 	void DrawChildren(std::vector<GameObject*>&);
 	void HandleDragAndDrop(GameObject* currGameObject);
-	void ReparentGameObjects(GameObject* father, GameObject* child);
+	void ReparentGameObjects();
+
+private:
+	bool needReparent = false;
+	GameObject* parent = nullptr;
+	GameObject* child = nullptr;
 
 };
 #endif // !__E_GAME_OBJECTS__

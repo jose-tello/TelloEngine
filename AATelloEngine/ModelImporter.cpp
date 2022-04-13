@@ -187,6 +187,7 @@ void ModelImporter::LoadToScene(R_Model* model)
 		addedGameObjects.push_back(gameObject);
 	}
 
+	Private::InitObjUid(addedGameObjects[0]);
 	App->scene->AddGameObject(addedGameObjects[0]);
 	addedGameObjects.clear();
 }
@@ -263,6 +264,19 @@ GameObject* ModelImporter::Private::SearchGameObjParent(int parent, std::vector<
 	}
 
 	return nullptr;
+}
+
+
+void ModelImporter::Private::InitObjUid(GameObject* parent)
+{
+	LCG randomNumber;
+	parent->SetUuid(randomNumber.IntFast());
+
+	int childCount = parent->childs.size();
+	for (int i = 0; i < childCount; i++)
+	{
+		InitObjUid(parent->childs[i]);
+	}
 }
 
 

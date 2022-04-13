@@ -241,6 +241,12 @@ int GameObject::GetUuid() const
 }
 
 
+void GameObject::SetUuid(int uid)
+{
+	uuid = uid;
+}
+
+
 //Does not delete the child
 void GameObject::RemoveChild(int uid)
 {

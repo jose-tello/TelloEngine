@@ -15,7 +15,10 @@
 #include <vector>
 
 
-W_ObjectHierarchy::W_ObjectHierarchy(bool open) : E_Window(E_WINDOW_TYPE::GAME_OBJECTS, open)
+W_ObjectHierarchy::W_ObjectHierarchy(bool open) : E_Window(E_WINDOW_TYPE::GAME_OBJECTS, open),
+	needReparent(false),
+	parent(nullptr),
+	child(nullptr)
 {
 }
 
@@ -89,6 +92,15 @@ void W_ObjectHierarchy::DrawChildren(std::vector<GameObject*>& vec)
 
 	}
 
+	if (needReparent == true)
+	{
+		ReparentGameObjects();
+		needReparent = false;
+
+		parent = nullptr;
+		child = nullptr;
+	}
+
 	if (deleteObject == true)
 	{
 		App->editor->DeleteFocusedObject();
@@ -108,7 +120,9 @@ void W_ObjectHierarchy::HandleDragAndDrop(GameObject* currGameObject)
 
 			if (targetGo != nullptr)
 			{
-				ReparentGameObjects(currGameObject, targetGo);
+				needReparent = true;
+				parent = currGameObject;
+				child = targetGo;
 			}
 		}
 		ImGui::EndDragDropTarget();
@@ -126,12 +140,11 @@ void W_ObjectHierarchy::HandleDragAndDrop(GameObject* currGameObject)
 }
 
 
-void W_ObjectHierarchy::ReparentGameObjects(GameObject* parent, GameObject* child)
+void W_ObjectHierarchy::ReparentGameObjects()
 {
 	GameObject* sceneChild = App->scene->GetGameObject(child->GetUuid());
-	if (sceneChild->parent == parent || sceneChild == nullptr)
+	if (sceneChild->parent->GetUuid() == parent->GetUuid() || sceneChild == nullptr)
 		return;
-
 
 	sceneChild->parent->RemoveChild(child->GetUuid());
 	sceneChild->parent = parent;

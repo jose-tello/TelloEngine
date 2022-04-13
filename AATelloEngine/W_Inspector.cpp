@@ -142,13 +142,15 @@ bool W_Inspector::DeleteFocusedObject()
 
 void W_Inspector::DrawGameObject(GameObject* obj)
 {
-	if (ImGui::CollapsingHeader("GameObject"), ImGuiTreeNodeFlags_DefaultOpen)
+	if (ImGui::CollapsingHeader("GameObject", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		std::string name(obj->GetName());
 		name.resize(MAX_GO_NAME_LENGTH);
 
 		ImGui::InputText("Name: ", &name[0], name.length());
 		obj->SetName(name.c_str());
+
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), std::to_string(obj->GetUuid()).c_str());
 	}
 
 	ImGui::NewLine();

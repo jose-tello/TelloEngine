@@ -30,6 +30,7 @@ public:
 	void SetName(const char*);
 
 	int GetUuid() const;
+	void SetUuid(int uuid);
 
 	void RemoveChild(int uid);
 

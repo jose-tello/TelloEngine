@@ -38,6 +38,8 @@ namespace ModelImporter
 		void LinkModelResources(std::vector<ModelNode>& nodes, std::vector<int> meshes, std::vector<int> materials);
 		GameObject* SearchGameObjParent(int parent, std::vector<GameObject*> vec);
 
+		void InitObjUid(GameObject* parent);
+
 		void ImportNode(aiNode* node, const aiScene* scene, int parentId, std::vector<ModelNode>& nodeVec, aiMatrix4x4& dummyTransform, bool first = false);
 		void LoadNode(ModelNode& modelNode, Config& node);
 		void SaveNode(ModelNode& modelNode, Config& node);
