@@ -49,8 +49,6 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 	float mouseX, mouseY;
 	App->editor->GetCameraWindowSize(camera->GetWindow(), camWidth, camHeight, mouseX, mouseY);
 
-	CheckCameraInsideAberration();
-
 	if (App->editor->IsWindowHovered(E_WINDOW_TYPE::SCENE_CAMERA))
 	{
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
@@ -81,6 +79,7 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 			ZoomCamera(weelMotion);
 	}
 
+	CheckCameraInsideAberration();
 	PopAberrations();
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -235,7 +234,7 @@ void M_Camera3D::CheckCameraInsideAberration()
 
 		if (aabb.Contains(transFormedPoin))
 		{
-			App->editor->AddLog("Camera Inside aberration");
+			App->renderer3D->PushCameraInsideAberration(i);
 		}
 	}
 }

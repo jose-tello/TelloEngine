@@ -10,7 +10,7 @@ layout(binding = 3) uniform sampler1D uvTexture;
 uniform int meshCount;
 uniform int aberrationCount;
 
-int maxRayDepth = 1;
+uniform int cameraInsideAberration;
 
 float maxDirX = 0.0;
 float minDirX = 0.0;
@@ -20,6 +20,8 @@ float minDirY = 0.0;
 
 float maxDirZ = 0.0;
 float minDirZ = 0.0;
+
+vec3 originalRayDir;
 
 uniform mat4 view;
 
@@ -237,8 +239,7 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
 
 vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
 {
-  for (int i = 0; i < maxRayDepth; ++i)
-  {
+
      float meshDst = 0.0;
      float aberrationDst = 0.0;
      int aberrationSign = 0;
@@ -253,13 +254,22 @@ vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
      {
        rayOrigin = rayOrigin + aberrationDst * rayDirection;
        
-       rayDirection.x += aberrationArray[abIt].xDeformation * (2.0 * smoothstep(minDirX, maxDirX, rayDirection.x) - 1.0);
-       rayDirection.y += aberrationArray[abIt].yDeformation * (2.0 * smoothstep(minDirY, maxDirY, rayDirection.y) - 1.0);
-       rayDirection.z += aberrationArray[abIt].zDeformation * (2.0 * smoothstep(minDirZ, maxDirZ, rayDirection.z) - 1.0);
        
-       rayDirection = normalize(rayDirection); 
+       if (aberrationSign < 0)
+       {
+          rayDirection = originalRayDir;
+       }
+       
+       else
+       {
+          rayDirection.x += aberrationArray[abIt].xDeformation * (2.0 * smoothstep(minDirX, maxDirX, rayDirection.x) - 1.0);
+          rayDirection.y += aberrationArray[abIt].yDeformation * (2.0 * smoothstep(minDirY, maxDirY, rayDirection.y) - 1.0);
+          rayDirection.z += aberrationArray[abIt].zDeformation * (2.0 * smoothstep(minDirZ, maxDirZ, rayDirection.z) - 1.0);
+       
+          rayDirection = normalize(rayDirection);
+       }
      }
-  }
+  
   
   float dst;
   return RayTriangleIntersection(rayDirection, rayOrigin, dst);
@@ -321,8 +331,20 @@ void main()
   vec3 p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
   
   vec3 rayDirection = normalize(p - rayOrigin);
+  originalRayDir = rayDirection;
   
   CalculateMinMaxPoints();
+  
+  if (cameraInsideAberration != -1)
+  {
+     rayDirection.x += aberrationArray[cameraInsideAberration].xDeformation * (2.0 * smoothstep(minDirX, maxDirX, rayDirection.x) - 1.0);
+     rayDirection.y += aberrationArray[cameraInsideAberration].yDeformation * (2.0 * smoothstep(minDirY, maxDirY, rayDirection.y) - 1.0);
+     rayDirection.z += aberrationArray[cameraInsideAberration].zDeformation * (2.0 * smoothstep(minDirZ, maxDirZ, rayDirection.z) - 1.0);
+       
+     rayDirection = normalize(rayDirection); 
+  
+  }
+  
   vec4 color = CalculateColor(rayDirection, rayOrigin);
 
   imageStore(imgOutput, ivec2(pixelCoords.xy), vec4(color.rgb, 255.0));

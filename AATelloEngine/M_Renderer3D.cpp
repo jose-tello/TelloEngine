@@ -51,6 +51,8 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	indexTextureBuffer(0),
 	uvTextureBuffer(0),
 
+	cameraInsideAberration(-1),
+
 	currentCamera(nullptr),
 	cameraRay1{ 0, 0, 0 },
 	cameraRay2{ 0, 0, 0 }
@@ -225,6 +227,7 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffe
 			AberrationPreviewDraw(frameBuffer, textureBuffer, camera);
 	}
 
+	cameraInsideAberration = -1;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -296,6 +299,12 @@ void M_Renderer3D::PushAberration(C_Aberration* aberration)
 void M_Renderer3D::PopAberrations()
 {
 	aberrationVector.clear();
+}
+
+
+void M_Renderer3D::PushCameraInsideAberration(int aberrationIt)
+{
+	cameraInsideAberration = aberrationIt;
 }
 
 
@@ -497,10 +506,7 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 
 	BindObjectArray(shader->GetProgramId(), meshCount, aberrationCount);
 
-	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
-	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
-
-	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
+	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
 	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "meshCount");
@@ -508,6 +514,9 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "aberrationCount");
 	glUniform1i(uniformLocation, aberrationCount);
+
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "cameraInsideAberration");
+	glUniform1i(uniformLocation, cameraInsideAberration);
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "aspectRatio");
 	glUniform1f(uniformLocation, camera->GetAspectRatio());

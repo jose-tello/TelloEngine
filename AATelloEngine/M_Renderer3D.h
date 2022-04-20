@@ -44,9 +44,11 @@ public:
 
 	void PushLight(C_PointLight* pointLight);
 	void PushFrustum(C_Camera* camera);
+	
 	void PushAberration(C_Aberration* aberration);
-
 	void PopAberrations();
+
+	void PushCameraInsideAberration(int aberrationIt);
 
 	void DeleteLight(C_PointLight*);
 	
@@ -123,6 +125,8 @@ private:
 	std::vector<C_PointLight*> lightVector;
 	std::vector<C_Camera*> frustumVector;
 	std::vector<C_Aberration*> aberrationVector;
+
+	int cameraInsideAberration = -1;	//-1 = camera is not inside aberration, 0 onwards is the iterator on the aberrationVector
 
 	float cameraRay1[3];
 	float cameraRay2[3];
