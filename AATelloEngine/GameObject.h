@@ -23,6 +23,7 @@ public:
 
 	void AddResource(int resourceUid, int resourceType);
 
+	void PreUpdate(float dt);
 	void Update(float dt);
 	void OnUpdateTransform(float4x4& globalTransform);
 

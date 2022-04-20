@@ -45,6 +45,14 @@ bool M_Scene::Start()
 }
 
 
+UPDATE_STATUS M_Scene::PreUpdate(float dt)
+{
+	PreUpdateGameObjects(dt);
+
+	return UPDATE_STATUS::UPDATE_CONTINUE;
+}
+
+
 UPDATE_STATUS M_Scene::Update(float dt)
 {
 	UpdateGameObjects(dt);
@@ -292,6 +300,36 @@ void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector) const
 			stack.pop();
 
 			vector.push_back(node);
+
+			if (node->childs.empty() == false)
+			{
+				childCount = node->childs.size();
+				for (int j = 0; j < childCount; j++)
+					stack.push(node->childs[j]);
+			}
+		}
+	}
+}
+
+
+void M_Scene::PreUpdateGameObjects(float dt)
+{
+	std::stack<GameObject*> stack;
+	GameObject* node;
+
+	int childCount;
+
+	int gameObjCount = gameObjects.size();
+	for (int i = 0; i < gameObjCount; i++)
+	{
+		stack.push(gameObjects[i]);
+
+		while (stack.empty() == false)
+		{
+			node = stack.top();
+			stack.pop();
+
+			node->PreUpdate(dt);
 
 			if (node->childs.empty() == false)
 			{

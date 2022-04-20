@@ -12,7 +12,7 @@ public:
 	C_Aberration();
 	~C_Aberration() override;
 
-	bool Update(float dt) override;
+	bool PreUpdate(float dt) override;
 
 	void OnUpdateTransform(float4x4& transform) override;
 
@@ -28,6 +28,7 @@ public:
 	void SetDebugDraw(bool draw);
 
 	unsigned int GetVAO() const;
+	void GetVertexArray(std::vector<float>& vertexArray) const;
 	void GetAllVertexData(std::vector<float>& vertexArray, std::vector<float>& normalsArray, std::vector<float>& texCoordArray, std::vector<unsigned int>& indicesArray) const;
 	void GetAllVectorsSize(unsigned int& vertexCount, unsigned int& normalsCount, unsigned int& indexCount) const;
 

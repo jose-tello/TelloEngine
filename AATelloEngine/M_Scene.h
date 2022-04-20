@@ -14,6 +14,7 @@ public:
 	~M_Scene() override;
 
 	bool Start() override;
+	UPDATE_STATUS PreUpdate(float dt) override;
 	UPDATE_STATUS Update(float dt) override;
 	UPDATE_STATUS PostUpdate(float dt) override;
 
@@ -43,7 +44,8 @@ public:
 
 	void GetAllGameObjects(std::vector<GameObject*>& vector) const;
 
-private:
+private: 
+	void PreUpdateGameObjects(float dt);
 	void UpdateGameObjects(float dt);
 
 	void CheckObjectsToDelete();

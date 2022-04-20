@@ -202,6 +202,16 @@ void GameObject::AddResource(int resourceUid, int resourceType)
 }
 
 
+void GameObject::PreUpdate(float dt)
+{
+	int componentsCount = components.size();
+	for (int i = 0; i < componentsCount; i++)
+	{
+		components[i]->PreUpdate(dt);
+	}
+}
+
+
 void GameObject::Update(float dt)
 {
 	int componentsCount = components.size();
@@ -212,7 +222,6 @@ void GameObject::Update(float dt)
 }
 
 
-//TODO: this should be called by the event system
 void GameObject::OnUpdateTransform(float4x4& globalTransform)
 {
 	int componentsCount = components.size();

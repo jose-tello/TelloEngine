@@ -27,6 +27,7 @@ public:
 	Component(COMPONENT_TYPE type);
 	virtual ~Component();
 
+	virtual bool PreUpdate(float dt);
 	virtual bool Update(float dt);
 	virtual void OnUpdateTransform(float4x4 &);
 

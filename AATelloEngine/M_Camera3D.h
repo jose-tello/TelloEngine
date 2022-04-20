@@ -4,12 +4,15 @@
 #include "Module.h"
 #include "MathGeoLib/src/MathGeoLibFwd.h"
 
+#include <vector>
+
 #define CAMERA_SPEED 1.2f
 #define MOUSE_SENSITIVITY 0.3f
 #define MOUSE_ORBIT_SENSITIVITY 0.015f
 #define MOUSE_WEEL_SPEED 25.f
 
 class C_Camera;
+class C_Aberration;
 
 class M_Camera3D : public Module
 {
@@ -26,6 +29,9 @@ public:
 
 	void Resize(float width, float height);
 	void ClickSelect();
+
+	void PushAberration(C_Aberration* aberration);
+	void PopAberrations();
 
 	//Getters Setters
 	float GetNearPlaneDst() const;
@@ -45,6 +51,8 @@ public:
 	
 private:
 
+	void CheckCameraInsideAberration();
+
 	void MoveCamera();
 	void RotateCamera();
 	void ZoomCamera(int weelMotion);
@@ -58,6 +66,8 @@ public:
 
 private:
 	C_Camera* camera = nullptr;
+
+	std::vector<C_Aberration*> aberrationVector;
 
 	int camWidth = 0;
 	int camHeight = 0;

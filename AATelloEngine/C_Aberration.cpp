@@ -7,6 +7,7 @@
 #include "Application.h"
 #include "M_Resources.h"
 #include "M_Renderer3D.h"
+#include "M_Camera3D.h"
 
 #include "R_Mesh.h"
 #include "R_Model.h"
@@ -50,6 +51,7 @@ C_Aberration::C_Aberration() : Component(COMPONENT_TYPE::ABERRATION),
 C_Aberration::~C_Aberration()
 {
 	App->renderer3D->PopAberrations();
+	App->camera->PopAberrations();
 
 	if (cubeMeshId != 0)
 	{
@@ -64,10 +66,10 @@ C_Aberration::~C_Aberration()
 }
 
 
-bool C_Aberration::Update(float dt)
+bool C_Aberration::PreUpdate(float dt)
 {
-
 	App->renderer3D->PushAberration(this);
+	App->camera->PushAberration(this);
 
 	return true;
 }
@@ -153,6 +155,20 @@ unsigned int C_Aberration::GetVAO() const
 	}
 
 	return 0;
+}
+
+
+void C_Aberration::GetVertexArray(std::vector<float>& vertexArray) const
+{
+	if (cubeMeshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(cubeMeshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			vertexArray = mesh->GetVertices();
+		}
+	}
 }
 
 

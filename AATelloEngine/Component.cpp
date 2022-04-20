@@ -14,6 +14,12 @@ Component::~Component()
 }
 
 
+bool Component::PreUpdate(float dt)
+{
+	return true;
+}
+
+
 bool Component::Update(float dt)
 {
 	return true;

@@ -111,6 +111,12 @@ void C_Transform::SetEscale(float x, float y, float z)
 }
 
 
+float4x4 C_Transform::GetMatTransform() const
+{
+	return worldTransform;
+}
+
+
 float4x4 C_Transform::GetMatTransformT() const
 {
 	return worldTransform.Transposed();

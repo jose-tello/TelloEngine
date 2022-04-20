@@ -9,7 +9,9 @@
 #include "M_Editor.h"
 #include "W_CameraView.h"
 
+#include "GameObject.h"
 #include "C_Camera.h"
+#include "C_Aberration.h"
 
 #include "SDL\include\SDL_scancode.h"
 #include "SDL\include\SDL_mouse.h"
@@ -28,6 +30,7 @@ M_Camera3D::M_Camera3D(bool start_enabled) : Module(start_enabled),
 
 M_Camera3D::~M_Camera3D()
 {
+	PopAberrations();
 }
 
 
@@ -45,6 +48,8 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 {
 	float mouseX, mouseY;
 	App->editor->GetCameraWindowSize(camera->GetWindow(), camWidth, camHeight, mouseX, mouseY);
+
+	CheckCameraInsideAberration();
 
 	if (App->editor->IsWindowHovered(E_WINDOW_TYPE::SCENE_CAMERA))
 	{
@@ -76,6 +81,7 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 			ZoomCamera(weelMotion);
 	}
 
+	PopAberrations();
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
@@ -131,6 +137,18 @@ void M_Camera3D::ClickSelect()
 	float nearP[3] = { nearPoint.x, nearPoint.y, nearPoint.z };
 	float farP[3] = { farPoint.x, farPoint.y, farPoint.z };
 	App->renderer3D->SetCameraRay(nearP, farP);
+}
+
+
+void M_Camera3D::PushAberration(C_Aberration* aberration)
+{
+	aberrationVector.push_back(aberration);
+}
+
+
+void M_Camera3D::PopAberrations()
+{
+	aberrationVector.clear();
 }
 
 
@@ -191,6 +209,35 @@ int M_Camera3D::GetWidth() const
 int M_Camera3D::GetHeight() const
 {
 	return camHeight;
+}
+
+
+void M_Camera3D::CheckCameraInsideAberration()
+{
+	int aberrationCount = aberrationVector.size();
+
+	for (int i = 0; i < aberrationCount; ++i)
+	{
+		std::vector<float> vertexArray;
+		aberrationVector[i]->GetVertexArray(vertexArray);
+
+		AABB aabb;
+		aabb.SetNegativeInfinity();
+		aabb.Enclose((float3*)&vertexArray[0], vertexArray.size() / 3);
+
+		float4x4 iTrans = aberrationVector[i]->GetOwner()->transform.GetMatTransform();
+		iTrans.Inverse();
+
+		float4 point = float4(GetPosition(), 1.0);
+
+		point = iTrans * point;
+		float3 transFormedPoin = float3(point.x, point.y, point.z);
+
+		if (aabb.Contains(transFormedPoin))
+		{
+			App->editor->AddLog("Camera Inside aberration");
+		}
+	}
 }
 
 
