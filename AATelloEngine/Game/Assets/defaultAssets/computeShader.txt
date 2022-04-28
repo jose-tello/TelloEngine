@@ -204,23 +204,23 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
        if (abs(det) <= 0.0)        //Use absolute value to check if it hits front or back
           continue;
           
-       float invDet = 1 / (det);
+       float invDet = 1.0 / (det);
        
        vec3 tVec = rayOrigin - v0;
        float u = dot(tVec, pVec) * invDet;
        
-       if (u < 0 || u > 1)
+       if (u < 0.0 || u > 1.0)
           continue;
           
        vec3 qVec = cross(tVec, v0v1);
        float v = dot(rayDirection, qVec) * invDet;
        
-       if (v < 0 || u + v > 1)
+       if (v < 0.0 || u + v > 1.0)
           continue;
   
        float distanceToOrigin = dot(v0v2, qVec) * invDet; 
        
-       if (distanceToOrigin <= 0)
+       if (distanceToOrigin <= 0.0)
           continue;
        
        if (distanceToOrigin < dst)
@@ -229,6 +229,15 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
           aberrationSign = int(sign(det));
           dst = distanceToOrigin;
        }
+       
+       /*aberrationIterator = int(step(0.0, distanceToOrigin) * step(distanceToOrigin, dst) * i 
+                            + step(dst, distanceToOrigin) * aberrationIterator);
+                            
+       aberrationSign = int(step(0.0, distanceToOrigin) * step(distanceToOrigin, dst) * sign(det) 
+                            + step(dst, distanceToOrigin) * aberrationSign);
+                            
+       dst = step(0.0, distanceToOrigin) * step(distanceToOrigin, dst) * distanceToOrigin
+                            + step(dst, distanceToOrigin) * dst;*/
 
        }
     }
@@ -240,35 +249,27 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
 vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
 {
 
-     float meshDst = 0.0;
-     float aberrationDst = 0.0;
-     int aberrationSign = 0;
+  float meshDst = 0.0;
+  float aberrationDst = 0.0;
+  int aberrationSign = 0;
   
-     vec4 meshColor = RayTriangleIntersection(rayDirection, rayOrigin, meshDst);
-     int abIt = RayAberrationIntersection(rayDirection, rayOrigin, aberrationDst, aberrationSign);  //Aberration iterator
+  vec4 meshColor = RayTriangleIntersection(rayDirection, rayOrigin, meshDst);
+  int abIt = RayAberrationIntersection(rayDirection, rayOrigin, aberrationDst, aberrationSign);  //Aberration iterator
   
-     if (meshDst < aberrationDst)
-       return meshColor;
+  if (meshDst < aberrationDst)
+    return meshColor;
     
-     else
-     {
-       rayOrigin = rayOrigin + aberrationDst * rayDirection;
+
+  rayOrigin = rayOrigin + aberrationDst * rayDirection;
        
-       
-       if (aberrationSign < 0)
-       {
-          rayDirection = originalRayDir;
-       }
-       
-       else
-       {
-          rayDirection.x += aberrationArray[abIt].xDeformation * (2.0 * smoothstep(minDirX, maxDirX, rayDirection.x) - 1.0);
-          rayDirection.y += aberrationArray[abIt].yDeformation * (2.0 * smoothstep(minDirY, maxDirY, rayDirection.y) - 1.0);
-          rayDirection.z += aberrationArray[abIt].zDeformation * (2.0 * smoothstep(minDirZ, maxDirZ, rayDirection.z) - 1.0);
-       
-          rayDirection = normalize(rayDirection);
-       }
-     }
+  rayDirection =  step(aberrationSign, 0) * originalRayDir + step(0, aberrationSign) * vec3(
+  rayDirection.x + aberrationArray[abIt].xDeformation * (2.0 * smoothstep(minDirX, maxDirX, rayDirection.x) - 1.0),
+  rayDirection.y + aberrationArray[abIt].yDeformation * (2.0 * smoothstep(minDirY, maxDirY, rayDirection.y) - 1.0),
+  rayDirection.z + aberrationArray[abIt].zDeformation * (2.0 * smoothstep(minDirZ, maxDirZ, rayDirection.z) - 1.0)
+  );
+
+  rayDirection = normalize(rayDirection);      
+     
   
   
   float dst;
@@ -292,13 +293,13 @@ void CalculateMinMaxPoints()
   
   vec3 rayD1 = normalize(p - rayOrigin);
   
-  xPos = 1.0;
-  yPos = 1.0;
+  xPos = 1;
+  yPos = 1;
   
   xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
   yPos = yPos * tan(verticalFov * 0.5);
   
-  p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
+  p = (cameraToWorld * vec4(xPos, yPos, -1, 1)).xyz;
   
   vec3 rayD2 = normalize(p - rayOrigin);
   
@@ -327,8 +328,8 @@ void main()
   
   mat4 cameraToWorld = inverse(view);
   
-  vec3 rayOrigin = (cameraToWorld * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-  vec3 p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
+  vec3 rayOrigin = (cameraToWorld * vec4(0, 0, 0, 1)).xyz;
+  vec3 p = (cameraToWorld * vec4(xPos, yPos, -1, 1)).xyz;
   
   vec3 rayDirection = normalize(p - rayOrigin);
   originalRayDir = rayDirection;
