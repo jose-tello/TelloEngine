@@ -524,7 +524,7 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "verticalFov");
 	glUniform1f(uniformLocation, camera->GetVerticalFov());
 
-	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "horizontalFov");
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "horizontalFov");		//Todo check delete
 	glUniform1f(uniformLocation, camera->GetHorizontalFov());
 
 	glDispatchCompute(winWidth, winHeight, 1);
