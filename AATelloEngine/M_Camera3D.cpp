@@ -22,6 +22,9 @@ M_Camera3D::M_Camera3D(bool start_enabled) : Module(start_enabled),
 	drawClickRay(false),
 	debugFrustumCull(false),
 	drawAABB(true),
+	deformedX(0.0f),
+	deformedY(0.0f),
+	deformedZ(0.0f),
 
 	camera(nullptr)
 {
@@ -60,23 +63,23 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 
 		else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
 		{
-			MoveCamera();
+			MoveCamera(dt);
 			RotateCamera();
 		}
 
 		else if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
-			MoveCameraSideways();
+			MoveCameraSideways(dt);
 
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
 		{
 			float3 pos;
 			if (App->editor->GetFocusedGameObjectPos(pos.x, pos.y, pos.z) == true)
-				OrbitCamera(pos);
+				OrbitCamera(pos, dt);
 		}
 
 		int weelMotion = App->input->GetMouseZ();
 		if (weelMotion != 0)
-			ZoomCamera(weelMotion);
+			ZoomCamera(weelMotion, dt);
 	}
 
 	CheckCameraInsideAberration();
@@ -235,32 +238,51 @@ void M_Camera3D::CheckCameraInsideAberration()
 		if (aabb.Contains(transFormedPoin))
 		{
 			App->renderer3D->PushCameraInsideAberration(i);
+			deformedX = aberrationVector[i]->GetDeformationX();
+			deformedY = aberrationVector[i]->GetDeformationY();
+			deformedZ = aberrationVector[i]->GetDeformationZ();
+
+			return;
 		}
 	}
+
+	deformedX = 0.0f;
+	deformedY = 0.0f;
+	deformedZ = 0.0f;
 }
 
 
-void M_Camera3D::MoveCamera()
+void M_Camera3D::MoveCamera(float dt)
 {
-	float3 newPos(0, 0, 0);
+	float3 direction(0, 0, 0);
 
-	float speed = CAMERA_SPEED;
+	float speed = CAMERA_SPEED * dt;
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
 		speed *= 2;
 
 	float3 Z = camera->frustum.Front();
 
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT) newPos += Z * speed;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT) newPos -= Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT) direction += Z;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT) direction -= Z;
 
 	float3 X = camera->frustum.WorldRight();
 
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT) newPos -= X * speed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT) newPos += X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT) direction -= X;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT) direction += X;
 
-	float3 pos = camera->frustum.Pos();
-	newPos += pos;
-	camera->frustum.SetPos(newPos);	
+	if (direction.IsZero() == false)
+	{
+		direction.Normalize();
+		direction.x *= 1.0 + deformedX;
+		direction.y *= 1.0 + deformedY;
+		direction.z *= 1.0 + deformedZ;
+
+		direction *= speed;
+
+		float3 pos = camera->frustum.Pos();
+		camera->frustum.SetPos(pos + direction);
+	}
+	
 }
 
 
@@ -299,12 +321,12 @@ void M_Camera3D::RotateCamera()
 }
 
 
-void M_Camera3D::ZoomCamera(int weelMotion)
+void M_Camera3D::ZoomCamera(int weelMotion, float dt)
 {
 	float3 newPos(0, 0, 0);
 	float3 Z = camera->frustum.Front();
 
-	float speed = MOUSE_WEEL_SPEED;
+	float speed = MOUSE_WEEL_SPEED * dt;
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
 		speed *= 0.2f;
@@ -321,7 +343,7 @@ void M_Camera3D::ZoomCamera(int weelMotion)
 }
 
 
-void M_Camera3D::MoveCameraSideways()
+void M_Camera3D::MoveCameraSideways(float dt)
 {
 	float3 newPos(0, 0, 0);
 	float3 X = camera->frustum.WorldRight();
@@ -330,7 +352,7 @@ void M_Camera3D::MoveCameraSideways()
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
 
-	float speed = CAMERA_SPEED;
+	float speed = CAMERA_SPEED * dt;
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)
 		speed *= 0.05f;
@@ -344,13 +366,13 @@ void M_Camera3D::MoveCameraSideways()
 }
 
 
-void M_Camera3D::OrbitCamera(float3& reference)
+void M_Camera3D::OrbitCamera(float3& reference, float dt)
 {
 	int dx = -App->input->GetMouseXMotion();
 	int dy = -App->input->GetMouseYMotion();
 
-	float deltaX = (float)dx * MOUSE_ORBIT_SENSITIVITY;
-	float deltaY = (float)dy * MOUSE_ORBIT_SENSITIVITY;
+	float deltaX = (float)dx * MOUSE_ORBIT_SENSITIVITY * dt;
+	float deltaY = (float)dy * MOUSE_ORBIT_SENSITIVITY * dt;
 
 	float3 vector = camera->frustum.Pos() - reference;
 

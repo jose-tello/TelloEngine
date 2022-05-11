@@ -6,10 +6,10 @@
 
 #include <vector>
 
-#define CAMERA_SPEED 1.2f
+#define CAMERA_SPEED 40.f
 #define MOUSE_SENSITIVITY 0.3f
-#define MOUSE_ORBIT_SENSITIVITY 0.015f
-#define MOUSE_WEEL_SPEED 25.f
+#define MOUSE_ORBIT_SENSITIVITY 0.9f
+#define MOUSE_WEEL_SPEED 80.f
 
 class C_Camera;
 class C_Aberration;
@@ -53,11 +53,11 @@ private:
 
 	void CheckCameraInsideAberration();
 
-	void MoveCamera();
+	void MoveCamera(float dt);
 	void RotateCamera();
-	void ZoomCamera(int weelMotion);
-	void MoveCameraSideways();
-	void OrbitCamera(float3& reference);
+	void ZoomCamera(int weelMotion, float dt);
+	void MoveCameraSideways(float dt);
+	void OrbitCamera(float3& reference, float dt);
 
 public:
 	bool drawClickRay;
@@ -68,6 +68,10 @@ private:
 	C_Camera* camera = nullptr;
 
 	std::vector<C_Aberration*> aberrationVector;
+
+	float deformedX = 0.0f;
+	float deformedY = 0.0f;
+	float deformedZ = 0.0f;
 
 	int camWidth = 0;
 	int camHeight = 0;

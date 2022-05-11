@@ -75,6 +75,8 @@ bool Application::Init()
 		ret = modulesVec[i]->Start();
 	}
 
+	timeManager.StartPlayTimer();
+
 	return ret;
 }
 
