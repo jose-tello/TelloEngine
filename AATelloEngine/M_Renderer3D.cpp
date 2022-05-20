@@ -478,9 +478,7 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 	glActiveTexture(GL_TEXTURE0);
 	glBindImageTexture(0, textureBuffer, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
 
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	shader->UseShaderProgram();
 
@@ -505,9 +503,12 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 	int aberrationCount = 0;
 
 	BindObjectArray(shader->GetProgramId(), meshCount, aberrationCount);
+	
+	float4x4 view = camera->GetViewMat();
+	view.Inverse();
 
 	unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
-	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
+	glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, view.ptr());
 
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "meshCount");
 	glUniform1i(uniformLocation, meshCount);

@@ -2,7 +2,7 @@ __COMPUTE_SHADER__
 #version 460
 
 layout(local_size_x = 1, local_size_y = 1) in;
-layout(rgba32f, binding = 0) uniform image2D imgOutput;
+layout(rgba8, binding = 0) uniform image2D imgOutput;
 layout(binding = 1) uniform sampler1D vertexTexture;
 layout(binding = 2) uniform sampler1D indexTexture;
 layout(binding = 3) uniform sampler1D uvTexture;
@@ -106,8 +106,9 @@ vec4 RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
   {
      if (RayBoxIntersection(rayDirection, rayOrigin, meshArray[i].minPoint, meshArray[i].maxPoint) == false)
         continue;
-  
-     for (int j = 0; j < meshArray[i].indexCount / 3; ++j)  //index count / 3 = triangle count
+      
+     int triangleCount = meshArray[i].indexCount / 3;
+     for (int j = 0; j < triangleCount; ++j)  //index count / 3 = triangle count
       {
       
        vec3 vertexPos = texelFetch(indexTexture, j + meshArray[i].indexOffset, 0).xyz;
@@ -177,8 +178,9 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
   {
      if (RayBoxIntersection(rayDirection, rayOrigin, aberrationArray[i].minPoint, aberrationArray[i].maxPoint) == false)
         continue;
-  
-     for (int j = 0; j < aberrationArray[i].indexCount / 3; ++j)  //index count / 3 = triangle count
+     
+     int triangleCount = aberrationArray[i].indexCount / 3;
+     for (int j = 0; j < triangleCount; ++j)  //index count / 3 = triangle count
       {
       
        vec3 vertexPos = texelFetch(indexTexture, j + aberrationArray[i].indexOffset, 0).xyz;
@@ -229,15 +231,6 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
           aberrationSign = int(sign(det));
           dst = distanceToOrigin;
        }
-       
-       /*aberrationIterator = int(step(0.0, distanceToOrigin) * step(distanceToOrigin, dst) * i 
-                            + step(dst, distanceToOrigin) * aberrationIterator);
-                            
-       aberrationSign = int(step(0.0, distanceToOrigin) * step(distanceToOrigin, dst) * sign(det) 
-                            + step(dst, distanceToOrigin) * aberrationSign);
-                            
-       dst = step(0.0, distanceToOrigin) * step(distanceToOrigin, dst) * distanceToOrigin
-                            + step(dst, distanceToOrigin) * dst;*/
 
        }
     }
@@ -270,36 +263,31 @@ vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
 
   rayDirection = normalize(rayDirection);      
      
-  
-  
-  float dst;
-  return RayTriangleIntersection(rayDirection, rayOrigin, dst);
+  return RayTriangleIntersection(rayDirection, rayOrigin, meshDst);
 }
 
 
-void CalculateMinMaxPoints()
-{  
-  mat4 cameraToWorld = inverse(view);
-  
-  vec3 rayOrigin = (cameraToWorld * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+void CalculateMinMaxPoints(float tanVfovD2)
+{    
+  vec3 rayOrigin = (view * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
   
   float xPos = -1.0;
   float yPos = -1.0;
   
-  xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
-  yPos = yPos * tan(verticalFov * 0.5);
+  xPos = xPos * aspectRatio * tanVfovD2;
+  yPos = yPos * tanVfovD2;
     
-  vec3 p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
+  vec3 p = (view * vec4(xPos, yPos, -1.0, 1.0)).xyz;
   
   vec3 rayD1 = normalize(p - rayOrigin);
   
-  xPos = 1;
-  yPos = 1;
+  xPos = 1.0;
+  yPos = 1.0;
   
-  xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
-  yPos = yPos * tan(verticalFov * 0.5);
+  xPos = xPos * aspectRatio * tanVfovD2;
+  yPos = yPos * tanVfovD2;
   
-  p = (cameraToWorld * vec4(xPos, yPos, -1, 1)).xyz;
+  p = (view * vec4(xPos, yPos, -1.0, 1.0)).xyz;
   
   vec3 rayD2 = normalize(p - rayOrigin);
   
@@ -320,21 +308,21 @@ void main()
   //collision tests
   float pixCoordX = float(pixelCoords.x);
   float pixCoordY = float(pixelCoords.y);
-  float xPos = 2 * ((pixCoordX + 0.5) / float(texSize.x)) - 1;
-  float yPos = 2 * ((pixCoordY + 0.5) / float(texSize.y)) - 1;
+  float xPos = 2.0 * ((pixCoordX + 0.5) / float(texSize.x)) - 1.0;
+  float yPos = 2.0 * ((pixCoordY + 0.5) / float(texSize.y)) - 1.0;
   
-  xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
-  yPos = yPos * tan(verticalFov * 0.5);
+  float tanVfovD2 = tan(verticalFov * 0.5);
   
-  mat4 cameraToWorld = inverse(view);
+  xPos = xPos * aspectRatio * tanVfovD2;
+  yPos = yPos * tanVfovD2;
   
-  vec3 rayOrigin = (cameraToWorld * vec4(0, 0, 0, 1)).xyz;
-  vec3 p = (cameraToWorld * vec4(xPos, yPos, -1, 1)).xyz;
+  vec3 rayOrigin = (view * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+  vec3 p = (view * vec4(xPos, yPos, -1.0, 1.0)).xyz;
   
   vec3 rayDirection = normalize(p - rayOrigin);
   originalRayDir = rayDirection;
   
-  CalculateMinMaxPoints();
+  CalculateMinMaxPoints(tanVfovD2);
   
   if (cameraInsideAberration != -1)
   {
