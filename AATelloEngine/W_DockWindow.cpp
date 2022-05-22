@@ -154,6 +154,9 @@ void W_DockWindow::DrawAddMenu()
 
 		if (ImGui::MenuItem("Aberration"))
 			App->scene->AddAberration();
+
+		if (ImGui::MenuItem("Portal"))
+			App->scene->AddPortal();
 		
 		DrawShapesMenu();
 		ImGui::EndMenu();

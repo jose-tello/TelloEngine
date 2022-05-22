@@ -13,6 +13,7 @@ class C_Camera;
 class C_ProceduralMesh;
 class C_PointLight;
 class C_Aberration;
+class C_Portal;
 
 #define BACKSPACE 42
 #define ADD_HEIGHT 20
@@ -49,6 +50,7 @@ private:
 	void DrawPointLightComponent(C_PointLight* areaLight);
 	void DrawProceduralMeshComp(C_ProceduralMesh* pMesh);
 	void DrawAberrationComp(C_Aberration* aberration);
+	void DrawPortalComp(C_Portal* portal);
 
 
 	bool IsDefaultUniform(const char* uniformName) const;

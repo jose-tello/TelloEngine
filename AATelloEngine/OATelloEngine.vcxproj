@@ -83,6 +83,7 @@
     <ClInclude Include="C_PointLight.h" />
     <ClInclude Include="C_Material.h" />
     <ClInclude Include="C_Mesh.h" />
+    <ClInclude Include="C_Portal.h" />
     <ClInclude Include="C_ProceduralMesh.h" />
     <ClInclude Include="C_Transform.h" />
     <ClInclude Include="Grid.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="C_PointLight.cpp" />
     <ClCompile Include="C_Material.cpp" />
     <ClCompile Include="C_Mesh.cpp" />
+    <ClCompile Include="C_Portal.cpp" />
     <ClCompile Include="C_ProceduralMesh.cpp" />
     <ClCompile Include="C_Transform.cpp" />
     <ClCompile Include="Grid.cpp" />

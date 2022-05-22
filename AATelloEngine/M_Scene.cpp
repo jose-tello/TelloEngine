@@ -15,6 +15,7 @@
 #include "C_ProceduralMesh.h"
 #include "C_PointLight.h"
 #include "C_Aberration.h"
+#include "C_Portal.h"
 
 #include <stack>
 #include <map>
@@ -130,6 +131,16 @@ void M_Scene::AddAberration()
 	GameObject* object = new GameObject(nullptr);
 	object->AddComponent(new C_Aberration());
 	object->SetName("Aberration");
+
+	gameObjects.push_back(object);
+}
+
+
+void M_Scene::AddPortal()
+{
+	GameObject* object = new GameObject(nullptr);
+	object->AddComponent(new C_Portal());
+	object->SetName("Portal");
 
 	gameObjects.push_back(object);
 }

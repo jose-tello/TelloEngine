@@ -20,6 +20,7 @@ class C_Mesh;
 class C_Material;
 class C_PointLight;
 class C_Aberration;
+class C_Portal;
 
 
 class M_Renderer3D : public Module
@@ -48,6 +49,9 @@ public:
 	void PushAberration(C_Aberration* aberration);
 	void PopAberrations();
 
+	void PushPortal(C_Portal* portal);
+	void PopPortals();
+
 	void PushCameraInsideAberration(int aberrationIt);
 
 	void DeleteLight(C_PointLight*);
@@ -71,7 +75,7 @@ private:
 	
 	//Ray tracing draw
 	void RayTracingDraw(unsigned int frameBuffer, unsigned int textureBuffer, C_Camera* camera, int winWidth, int winHeight);
-	void AberrationPreviewDraw(unsigned int framebuffer, unsigned int texture, C_Camera* camera);
+	void AberrationPortalPreviewDraw(unsigned int framebuffer, unsigned int texture, C_Camera* camera);
 
 	void GenerateArrayBuffers(unsigned int shaderId);
 
@@ -125,6 +129,7 @@ private:
 	std::vector<C_PointLight*> lightVector;
 	std::vector<C_Camera*> frustumVector;
 	std::vector<C_Aberration*> aberrationVector;
+	std::vector<C_Portal*> portalVector;
 
 	int cameraInsideAberration = -1;	//-1 = camera is not inside aberration, 0 onwards is the iterator on the aberrationVector
 

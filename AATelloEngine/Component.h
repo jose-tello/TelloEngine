@@ -16,8 +16,8 @@ enum class COMPONENT_TYPE : int
 	POINT_LIGHT,
 	PROCEDURAL_MESH,
 	ABERRATION,
+	PORTAL,
 	MAX
-
 };
 
 

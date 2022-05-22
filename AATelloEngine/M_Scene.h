@@ -26,6 +26,7 @@ public:
 	GameObject* AddLight();
 	void AddProceduralMesh();
 	void AddAberration();
+	void AddPortal();
 
 	void NotifyShaderWasUpdated(int updatedShader);
 

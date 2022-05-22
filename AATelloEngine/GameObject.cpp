@@ -6,6 +6,7 @@
 #include "C_Camera.h"
 #include "C_PointLight.h"
 #include "C_Aberration.h"
+#include "C_Portal.h"
 
 #include "Resource.h"
 
@@ -324,6 +325,13 @@ void GameObject::Load(Config& node)
 			C_Aberration* aberration = new C_Aberration();
 			aberration->Load(componentNode);
 			AddComponent(aberration);
+		}
+
+		case COMPONENT_TYPE::PORTAL:
+		{
+			C_Portal* portal = new C_Portal();
+			portal->Load(componentNode);
+			AddComponent(portal);
 		}
 
 		default:

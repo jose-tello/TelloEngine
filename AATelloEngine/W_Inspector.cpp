@@ -7,10 +7,12 @@
 #include "C_PointLight.h"
 #include "C_ProceduralMesh.h"
 #include "C_Aberration.h"
+#include "C_Portal.h"
 
 #include "Application.h"
 #include "M_Input.h"
 #include "M_Editor.h"
+#include "M_Scene.h"
 
 #include "UniformHandle.h"
 
@@ -74,6 +76,10 @@ bool W_Inspector::Draw()
 
 			case COMPONENT_TYPE::ABERRATION:
 				DrawAberrationComp(static_cast<C_Aberration*>(componentsVec[i]));
+				break;
+
+			case COMPONENT_TYPE::PORTAL:
+				DrawPortalComp(static_cast<C_Portal*>(componentsVec[i]));
 				break;
 
 			default:
@@ -619,6 +625,65 @@ void W_Inspector::DrawAberrationComp(C_Aberration* aberration)
 
 		if (ImGui::InputFloat("Z", &defZ, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 			aberration->SetDeformationZ(defZ);
+	}
+
+	ImGui::NewLine();
+}
+
+
+void W_Inspector::DrawPortalComp(C_Portal* portal)
+{
+	if (ImGui::CollapsingHeader("Portal", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::NewLine();
+		bool debugDraw = portal->GetDebugDraw();
+		ImGui::Checkbox("Debug draw", &debugDraw);
+
+		portal->SetDebugDraw(debugDraw);
+
+		ImGui::ColorPicker3("Debug draw color", portal->GetDebugDrawColor());
+
+		ImGui::NewLine();
+
+		ImGui::Text("Connected to: ");
+		ImGui::SameLine();
+
+		int connectedUid = portal->GetConnection();
+
+		if (connectedUid == 0)
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "No connection");
+		
+		else
+		{
+			GameObject* connectedGO = App->scene->GetGameObject(connectedUid);
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), connectedGO->GetName());
+		}
+
+
+		if (ImGui::BeginMenu("Connect portal"))
+		{
+			std::vector<GameObject*> gameObjects;
+			App->scene->GetAllGameObjects(gameObjects);
+
+			int goCount = gameObjects.size();
+
+			for (size_t i = 0; i < goCount; ++i)
+			{
+				ImGui::PushID(gameObjects[i]->GetUuid());
+
+				if (ImGui::MenuItem(gameObjects[i]->GetName()))
+				{
+					if (portal->Connect(gameObjects[i]->GetUuid()) == false)
+					{
+						App->editor->AddLog("[WARNING] Portal cannot connect to that Game object");
+					}
+				}
+
+				ImGui::PopID();
+			}
+
+			ImGui::EndMenu();
+		}
 	}
 
 	ImGui::NewLine();

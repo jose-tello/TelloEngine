@@ -13,6 +13,7 @@
 #include "C_Camera.h"
 #include "C_PointLight.h"
 #include "C_Aberration.h"
+#include "C_Portal.h"
 
 #include "R_Shader.h"
 #include "R_Mesh.h"
@@ -135,6 +136,7 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 	lightVector.clear();
 	frustumVector.clear();
 	aberrationVector.clear();
+	portalVector.clear();
 
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
@@ -223,8 +225,8 @@ void M_Renderer3D::DrawScene(unsigned int frameBuffer, unsigned int textureBuffe
 	{
 		RayTracingDraw(frameBuffer, textureBuffer, camera, camWidth, camHeight);
 
-		if (aberrationVector.size() > 0)
-			AberrationPreviewDraw(frameBuffer, textureBuffer, camera);
+		if (aberrationVector.size() > 0 || portalVector.size() > 0)
+			AberrationPortalPreviewDraw(frameBuffer, textureBuffer, camera);
 	}
 
 	cameraInsideAberration = -1;
@@ -299,6 +301,18 @@ void M_Renderer3D::PushAberration(C_Aberration* aberration)
 void M_Renderer3D::PopAberrations()
 {
 	aberrationVector.clear();
+}
+
+
+void M_Renderer3D::PushPortal(C_Portal* portal)
+{
+	portalVector.push_back(portal);
+}
+
+
+void M_Renderer3D::PopPortals()
+{
+	portalVector.clear();
 }
 
 
@@ -539,7 +553,7 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 }
 
 
-void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int texture, C_Camera* camera)
+void M_Renderer3D::AberrationPortalPreviewDraw(unsigned int framebuffer, unsigned int texture, C_Camera* camera)
 {
 	R_Shader* shader = static_cast<R_Shader*>(App->resourceManager->GetDefaultResource(DEFAULT_RESOURCE::ABERRATION_PREVIEW_SHADER));
 	if (shader == nullptr)
@@ -610,9 +624,38 @@ void M_Renderer3D::AberrationPreviewDraw(unsigned int framebuffer, unsigned int 
 		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "model_matrix");
 		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, aberrationVector[i]->GetOwner()->transform.GetMatTransformT().ptr());
 
+		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "lineColor");
+		glUniform3f(uniformLocation, 0.f, 1.f, 0.f);
+
 		glBindVertexArray(aberrationVector[i]->GetVAO());
 
 		glDrawElements(GL_TRIANGLES, aberrationVector[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
+
+		glBindVertexArray(0);
+	}
+
+	objCount = portalVector.size();
+	for (int i = 0; i < objCount; ++i)
+	{
+		if (portalVector[i]->GetDebugDraw() == false)
+			continue;
+
+		unsigned int uniformLocation = glGetUniformLocation(shader->GetProgramId(), "projection");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetProjectionMat().ptr());
+
+		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "view");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, camera->GetViewMat().ptr());
+
+		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "model_matrix");
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, portalVector[i]->GetOwner()->transform.GetMatTransformT().ptr());
+
+		float* color = portalVector[i]->GetDebugDrawColor();
+		uniformLocation = glGetUniformLocation(shader->GetProgramId(), "lineColor");
+		glUniform3f(uniformLocation, color[0], color[1], color[2]);
+
+		glBindVertexArray(portalVector[i]->GetVAO());
+
+		glDrawElements(GL_TRIANGLES, portalVector[i]->GetIndicesSize(), GL_UNSIGNED_INT, NULL);
 
 		glBindVertexArray(0);
 	}

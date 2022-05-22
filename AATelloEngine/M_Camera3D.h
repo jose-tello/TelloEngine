@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#define CAMERA_SPEED 40.f
+#define CAMERA_SPEED 30.f
 #define MOUSE_SENSITIVITY 0.3f
 #define MOUSE_ORBIT_SENSITIVITY 0.9f
 #define MOUSE_WEEL_SPEED 80.f
