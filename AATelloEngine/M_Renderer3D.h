@@ -12,6 +12,7 @@
 #define LIGHT_LIMIT 1
 #define RAYTRACED_MESH_LIMIT 20
 #define MAX_ABERRATION_LIMIT 5
+#define MAX_PORTAL_LIMIT 8
 
 struct GameObject;
 
@@ -79,10 +80,11 @@ private:
 
 	void GenerateArrayBuffers(unsigned int shaderId);
 
-	void BindObjectArray(unsigned int programId, int& meshCount, int& aberrationCount);
+	void BindObjectArray(unsigned int programId, int& meshCount, int& aberrationCount, int& portalCount);
 	void BindMesh(C_Mesh* mesh, GameObject* gameObject, int meshCount, unsigned int programId);
 	void BindMaterial(C_Material* material, int meshCount, unsigned int programId);
 	void BindAberration(C_Aberration* aberration, GameObject* gameObject, int aberrationCount, unsigned int programId);
+	void BindPortal(C_Portal* portal, GameObject* gameObject, int portalCount, unsigned int programId);
 
 	void BindVertexTextureBuffer(std::vector<float>& vertexArray);
 	void BindIndexTextureBuffer(std::vector<float>& indexArray);
