@@ -308,7 +308,7 @@ void C_Portal::Load(Config& node)
 
 void C_Portal::Save(Config& node) const
 {
-	node.AppendNum("type", (int)COMPONENT_TYPE::ABERRATION);
+	node.AppendNum("type", (int)COMPONENT_TYPE::PORTAL);
 
 	node.AppendNum("connectedGO", connectedGO);
 

@@ -9,6 +9,7 @@ layout(binding = 3) uniform sampler1D uvTexture;
 
 uniform int meshCount;
 uniform int aberrationCount;
+uniform int portalCount;
 
 uniform int cameraInsideAberration;
 
@@ -57,8 +58,21 @@ struct Aberration
 
 };
 
+struct Portal
+{
+   mat4 transform;
+   vec3 maxPoint;
+   vec3 minPoint;
+   int indexOffset;
+   int vertexOffset;
+   int indexCount;
+
+   mat4 connectedTransform;
+};
+
 uniform Mesh[20] meshArray;
 uniform Aberration[5] aberrationArray;
+uniform Portal[8] portalArray;
 
 vec4 pixelColor = vec4(0.5, 0.5, 0.5, 1.0);
 
@@ -239,27 +253,120 @@ int RayAberrationIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst, 
 }
 
 
+int RayPortalIntersection(vec3 rayDirection, vec3 rayOrigin, out float dst)
+{
+  int portalIterator = 0;
+  dst = 999999.9;
+  
+  for(int i = 0; i < portalCount; ++i)
+  {
+     if (RayBoxIntersection(rayDirection, rayOrigin, portalArray[i].minPoint, portalArray[i].maxPoint) == false)
+        continue;
+     
+     int triangleCount = portalArray[i].indexCount / 3;
+     for (int j = 0; j < triangleCount; ++j)  //index count / 3 = triangle count
+      {
+      
+       vec3 vertexPos = texelFetch(indexTexture, j + portalArray[i].indexOffset, 0).xyz;
+       int vertex1 = int(vertexPos.x) + portalArray[i].vertexOffset;
+       int vertex2 = int(vertexPos.y) + portalArray[i].vertexOffset;
+       int vertex3 = int(vertexPos.z) + portalArray[i].vertexOffset;
+    
+       vec3 v0 = (texelFetch(vertexTexture, vertex1, 0)).xyz;
+       vec3 v1 = (texelFetch(vertexTexture, vertex2, 0)).xyz;
+       vec3 v2 = (texelFetch(vertexTexture, vertex3, 0)).xyz;
+       
+       v0 = (portalArray[i].transform * vec4(v0, 1.0)).xyz;
+       v1 = (portalArray[i].transform * vec4(v1, 1.0)).xyz;
+       v2 = (portalArray[i].transform * vec4(v2, 1.0)).xyz;
+  
+       //calculate baricentric coords
+       vec3 v0v1 = v1 - v0;
+       vec3 v0v2 = v2 - v0;
+       vec3 pVec = cross(rayDirection, v0v2);
+       
+       float det = dot(v0v1, pVec);
+       
+       if (abs(det) <= 0.0)        //Use absolute value to check if it hits front or back
+          continue;
+          
+       float invDet = 1.0 / (det);
+       
+       vec3 tVec = rayOrigin - v0;
+       float u = dot(tVec, pVec) * invDet;
+       
+       if (u < 0.0 || u > 1.0)
+          continue;
+          
+       vec3 qVec = cross(tVec, v0v1);
+       float v = dot(rayDirection, qVec) * invDet;
+       
+       if (v < 0.0 || u + v > 1.0)
+          continue;
+  
+       float distanceToOrigin = dot(v0v2, qVec) * invDet; 
+       
+       if (distanceToOrigin <= 0.0)
+          continue;
+       
+       if (distanceToOrigin < dst)
+       {
+          portalIterator = i;
+          dst = distanceToOrigin;
+       }
+
+       }
+    }
+    
+    return portalIterator;
+}
+
+
 vec4 CalculateColor(vec3 rayDirection, vec3 rayOrigin)
 {
 
   float meshDst = 0.0;
   float aberrationDst = 0.0;
+  float portalDst = 0.0;
   int aberrationSign = 0;
   
   vec4 meshColor = RayTriangleIntersection(rayDirection, rayOrigin, meshDst);
   int abIt = RayAberrationIntersection(rayDirection, rayOrigin, aberrationDst, aberrationSign);  //Aberration iterator
+  int portalIt = RayPortalIntersection(rayDirection, rayOrigin, portalDst);                      //Portal iterator
   
-  if (meshDst < aberrationDst)
+  if (meshDst < aberrationDst && meshDst < portalDst)
     return meshColor;
     
-
-  rayOrigin = rayOrigin + aberrationDst * rayDirection;
+  else if (aberrationDst < portalDst)
+  {
+     rayOrigin = rayOrigin + aberrationDst * rayDirection;
        
-  rayDirection =  step(aberrationSign, 0) * originalRayDir + step(0, aberrationSign) * vec3(
-  rayDirection.x + aberrationArray[abIt].xDeformation * (2.0 * smoothstep(minDirX, maxDirX, rayDirection.x) - 1.0),
-  rayDirection.y + aberrationArray[abIt].yDeformation * (2.0 * smoothstep(minDirY, maxDirY, rayDirection.y) - 1.0),
-  rayDirection.z + aberrationArray[abIt].zDeformation * (2.0 * smoothstep(minDirZ, maxDirZ, rayDirection.z) - 1.0)
-  );
+     rayDirection =  step(aberrationSign, 0) * originalRayDir + step(0, aberrationSign) * vec3(
+     rayDirection.x + aberrationArray[abIt].xDeformation * (2.0 * smoothstep(minDirX, maxDirX, rayDirection.x) - 1.0),
+     rayDirection.y + aberrationArray[abIt].yDeformation * (2.0 * smoothstep(minDirY, maxDirY, rayDirection.y) - 1.0),
+     rayDirection.z + aberrationArray[abIt].zDeformation * (2.0 * smoothstep(minDirZ, maxDirZ, rayDirection.z) - 1.0)
+     );
+  }
+  
+  else
+  {
+     mat4 invTransform = inverse(portalArray[portalIt].transform);
+     vec3 meshPos = (invTransform * vec4(rayOrigin + portalDst * rayDirection, 1.0)).xyz;
+     
+     rayOrigin = (portalArray[portalIt].connectedTransform * vec4(meshPos, 1.0)).xyz;
+     
+     mat3 rotInv = mat3(invTransform[0].xy, invTransform[0].z,
+                        invTransform[1].xy, invTransform[1].z,
+                        invTransform[2].xy, invTransform[2].z);
+     
+     mat3 rot = mat3(portalArray[portalIt].connectedTransform[0].xy, portalArray[portalIt].connectedTransform[0].z,
+                        portalArray[portalIt].connectedTransform[1].xy, portalArray[portalIt].connectedTransform[1].z,
+                        portalArray[portalIt].connectedTransform[2].xy, portalArray[portalIt].connectedTransform[2].z);
+                        
+    rayDirection = rotInv * rayDirection;
+    rayDirection = rot * rayDirection;  
+    // rayDirection = (portalArray[portalIt].connectedTransform * vec4(rayDirection, 1.0)).xyz;
+  } 
 
   rayDirection = normalize(rayDirection);      
      

@@ -531,6 +531,9 @@ void M_Renderer3D::RayTracingDraw(unsigned int frameBuffer, unsigned int texture
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "aberrationCount");
 	glUniform1i(uniformLocation, aberrationCount);
 
+	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "portalCount");
+	glUniform1i(uniformLocation, portalCount);
+
 	uniformLocation = glGetUniformLocation(shader->GetProgramId(), "cameraInsideAberration");
 	glUniform1i(uniformLocation, cameraInsideAberration);
 
@@ -743,7 +746,7 @@ void M_Renderer3D::BindObjectArray(unsigned int programId, int& meshCount, int& 
 		C_Portal* portal = static_cast<C_Portal*>(objects[i]->GetComponent(COMPONENT_TYPE::PORTAL));
 		if (portal != nullptr && portalCount < MAX_PORTAL_LIMIT)
 		{
-			BindAberration(aberration, objects[i], portalCount, programId);
+			BindPortal(portal, objects[i], portalCount, programId);
 
 			portalCount++;
 		}
@@ -877,7 +880,7 @@ void M_Renderer3D::BindAberration(C_Aberration* aberration, GameObject* gameObje
 
 void M_Renderer3D::BindPortal(C_Portal* portal, GameObject* gameObject, int portalCount, unsigned int programId)
 {
-	/*char buffer[64];
+	char buffer[64];
 	sprintf(buffer, "portalArray[%i].transform", portalCount);
 
 	unsigned int uniformLocation = glGetUniformLocation(programId, buffer);
@@ -886,36 +889,38 @@ void M_Renderer3D::BindPortal(C_Portal* portal, GameObject* gameObject, int port
 	sprintf(buffer, "portalArray[%i].minPoint", portalCount);
 
 	uniformLocation = glGetUniformLocation(programId, buffer);
-	const float* minPoint = aberration->GetAABBMinPoint();
+	const float* minPoint = portal->GetAABBMinPoint();
 	glUniform3f(uniformLocation, minPoint[0], minPoint[1], minPoint[2]);
 
 	sprintf(buffer, "portalArray[%i].maxPoint", portalCount);
 
 	uniformLocation = glGetUniformLocation(programId, buffer);
-	const float* maxPoint = aberration->GetAABBMaxPoint();
+	const float* maxPoint = portal->GetAABBMaxPoint();
 	glUniform3f(uniformLocation, maxPoint[0], maxPoint[1], maxPoint[2]);
 
 	sprintf(buffer, "portalArray[%i].indexOffset", portalCount);
 
 	uniformLocation = glGetUniformLocation(programId, buffer);
-	glUniform1i(uniformLocation, aberration->GetIndexOffset());
+	glUniform1i(uniformLocation, portal->GetIndexOffset());
 
 	sprintf(buffer, "portalArray[%i].vertexOffset", portalCount);
 
 	uniformLocation = glGetUniformLocation(programId, buffer);
-	glUniform1i(uniformLocation, aberration->GetVertexOffset());
+	glUniform1i(uniformLocation, portal->GetVertexOffset());
 
 	sprintf(buffer, "portalArray[%i].indexCount", portalCount);
 
 	uniformLocation = glGetUniformLocation(programId, buffer);
-	glUniform1i(uniformLocation, aberration->GetIndicesSize());
+	glUniform1i(uniformLocation, portal->GetIndicesSize());
 
-	sprintf(buffer, "portalArray[%i].xDeformation", aberrationCount);
+	sprintf(buffer, "portalArray[%i].connectedTransform", portalCount);
+	GameObject* go = App->scene->GetGameObject(portal->GetConnection());
 
-	uniformLocation = glGetUniformLocation(programId, buffer);
-	glUniform1f(uniformLocation, aberration->GetDeformationX());*/
-
-	
+	if (go != nullptr)
+	{
+		uniformLocation = glGetUniformLocation(programId, buffer);
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, go->transform.GetMatTransformT().ptr());
+	}
 }
 
 

@@ -489,11 +489,13 @@ void M_Scene::TestRayCollision(LineSegment& ray)
 
 void M_Scene::DeleteAllGameObjects()
 {
-	int gameObjCount = gameObjects.size();
-	for (int i = 0; i < gameObjCount; i++)
+	for (int i = 0; i < gameObjects.size(); i++)
 	{
 		delete gameObjects[i];
 		gameObjects[i] = nullptr;
+
+		gameObjects.erase(gameObjects.begin() + i);
+		i--;
 	}
 
 	gameObjects.clear();
