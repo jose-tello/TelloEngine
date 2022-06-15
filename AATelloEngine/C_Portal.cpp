@@ -49,7 +49,7 @@ C_Portal::C_Portal() : Component(COMPONENT_TYPE::PORTAL),
 C_Portal::~C_Portal()
 {
 	App->renderer3D->PopPortals();
-	//App->camera->PopAberrations();
+	App->camera->PopPortals();
 
 	if (connectedGO != 0)
 	{
@@ -79,7 +79,7 @@ C_Portal::~C_Portal()
 bool C_Portal::PreUpdate(float dt)
 {
 	App->renderer3D->PushPortal(this);
-	//App->camera->PushAberration(this);
+	App->camera->PushPortal(this);
 
 	return true;
 }
@@ -145,6 +145,26 @@ void C_Portal::Disconnect()
 int C_Portal::GetConnection() const
 {
 	return connectedGO;
+}
+
+
+bool C_Portal::CheckRayIntersection(LineSegment& ray)
+{
+	LineSegment auxRay = ray;
+	float4x4 transform = GetOwner()->transform.GetMatTransform().Transposed().Inverted();
+	auxRay.Transform(transform);
+
+	if (planeMeshId != 0)
+	{
+		Resource* res = App->resourceManager->RequestResource(planeMeshId);
+		if (res != nullptr)
+		{
+			R_Mesh* mesh = (R_Mesh*)res;
+			return mesh->TestTriangleRayCollision(auxRay);
+		}
+	}
+
+	return false;
 }
 
 

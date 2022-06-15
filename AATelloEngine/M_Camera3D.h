@@ -13,6 +13,7 @@
 
 class C_Camera;
 class C_Aberration;
+class C_Portal;
 
 class M_Camera3D : public Module
 {
@@ -33,6 +34,9 @@ public:
 	void PushAberration(C_Aberration* aberration);
 	void PopAberrations();
 
+	void PushPortal(C_Portal* portal);
+	void PopPortals();
+
 	//Getters Setters
 	float GetNearPlaneDst() const;
 	void SetNearPlaneDst(float);
@@ -52,6 +56,7 @@ public:
 private:
 
 	void CheckCameraInsideAberration();
+	void CheckCameraInsidePortal(float3& previousPos);
 
 	void MoveCamera(float dt);
 	void RotateCamera();
@@ -61,13 +66,14 @@ private:
 
 public:
 	bool drawClickRay;
-	bool debugFrustumCull = false; //Must ALLWAYS be initialized as false
+	bool debugFrustumCull = false; //Must be initialized as false
 	bool drawAABB;
 
 private:
 	C_Camera* camera = nullptr;
 
 	std::vector<C_Aberration*> aberrationVector;
+	std::vector<C_Portal*> portalVector;
 
 	float deformedX = 0.0f;
 	float deformedY = 0.0f;

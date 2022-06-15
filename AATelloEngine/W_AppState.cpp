@@ -160,15 +160,15 @@ void W_AppState::DrawChWindow()
 		ImGui::Checkbox("Borderless", &winBorderless);
 
 
-		ImGui::SliderInt("Brightness", &brightness, 1, 100);
+		//ImGui::SliderInt("Brightness", &brightness, 1, 100);
 
 		App->window->SetWindowFullScreen(winFullScreen);
 		App->window->SetWindowFullScreenDesktop(winFullScreenDesktop);
 		App->window->SetWindowResizable(winResizable);
 		App->window->SetWindowBorderless(winBorderless);
 
-		float bright = brightness * 0.01;
-		App->window->SetWindowBrightness(bright);
+		/*float bright = brightness * 0.01;
+		App->window->SetWindowBrightness(bright);*/
 	}
 }
 

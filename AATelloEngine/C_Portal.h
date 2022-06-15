@@ -20,6 +20,8 @@ public:
 	void Disconnect();
 	int GetConnection() const;
 
+	bool CheckRayIntersection(LineSegment& line);
+
 	bool GetDebugDraw() const;
 	void SetDebugDraw(bool draw);
 

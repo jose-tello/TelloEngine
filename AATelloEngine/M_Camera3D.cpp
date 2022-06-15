@@ -12,6 +12,8 @@
 #include "GameObject.h"
 #include "C_Camera.h"
 #include "C_Aberration.h"
+#include "C_Portal.h"
+
 
 #include "SDL\include\SDL_scancode.h"
 #include "SDL\include\SDL_mouse.h"
@@ -51,6 +53,8 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 {
 	float mouseX, mouseY;
 	App->editor->GetCameraWindowSize(camera->GetWindow(), camWidth, camHeight, mouseX, mouseY);
+	
+	float3 previousPos = camera->frustum.Pos();
 
 	if (App->editor->IsWindowHovered(E_WINDOW_TYPE::SCENE_CAMERA))
 	{
@@ -83,7 +87,11 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 	}
 
 	CheckCameraInsideAberration();
+	CheckCameraInsidePortal(previousPos);
+	
 	PopAberrations();
+	PopPortals();
+	
 	return UPDATE_STATUS::UPDATE_CONTINUE;
 }
 
@@ -151,6 +159,18 @@ void M_Camera3D::PushAberration(C_Aberration* aberration)
 void M_Camera3D::PopAberrations()
 {
 	aberrationVector.clear();
+}
+
+
+void M_Camera3D::PushPortal(C_Portal* portal)
+{
+	portalVector.push_back(portal);
+}
+
+
+void M_Camera3D::PopPortals()
+{
+	portalVector.clear();
 }
 
 
@@ -249,6 +269,22 @@ void M_Camera3D::CheckCameraInsideAberration()
 	deformedX = 0.0f;
 	deformedY = 0.0f;
 	deformedZ = 0.0f;
+}
+
+
+void M_Camera3D::CheckCameraInsidePortal(float3& previousPos)
+{
+	int portalCount = portalVector.size();
+
+	LineSegment ray = LineSegment(previousPos, camera->frustum.Pos());
+
+	for (int i = 0; i < portalCount; ++i)
+	{
+		if (portalVector[i]->CheckRayIntersection(ray) == true)
+		{
+			App->editor->AddLog("[ERROR]: COLLIDED WITH PORTAL", SDL_GetError());
+		}
+	}
 }
 
 
