@@ -146,6 +146,15 @@ void C_Camera::LookAt(float3& pos)
 }
 
 
+void C_Camera::LookAtDirection(float3& direction)
+{
+	float3x3 look = float3x3::LookAt(frustum.Front(), direction.Normalized(), frustum.Up(), float3::unitY);
+
+	frustum.SetFront(look.MulDir(frustum.Front().Normalized()));
+	frustum.SetUp(look.MulDir(frustum.Up().Normalized()));
+}
+
+
 E_Window* C_Camera::GetWindow() const
 {
 	return window;

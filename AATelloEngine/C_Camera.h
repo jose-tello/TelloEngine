@@ -39,6 +39,7 @@ public:
 	void SetProjectionMat(float fov, float aspect);
 
 	void LookAt(float3& pos);
+	void LookAtDirection(float3& direction);
 
 	E_Window* GetWindow() const;
 

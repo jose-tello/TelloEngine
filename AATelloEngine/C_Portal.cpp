@@ -151,7 +151,7 @@ int C_Portal::GetConnection() const
 bool C_Portal::CheckRayIntersection(LineSegment& ray)
 {
 	LineSegment auxRay = ray;
-	float4x4 transform = GetOwner()->transform.GetMatTransform().Transposed().Inverted();
+	float4x4 transform = GetOwner()->transform.GetMatTransform().Inverted();
 	auxRay.Transform(transform);
 
 	if (planeMeshId != 0)

@@ -276,13 +276,39 @@ void M_Camera3D::CheckCameraInsidePortal(float3& previousPos)
 {
 	int portalCount = portalVector.size();
 
-	LineSegment ray = LineSegment(previousPos, camera->frustum.Pos());
+	float3 cameraPos = camera->frustum.Pos();
+	float3 forward(0.f, 0.f, -1.f);
+	
+
+	LineSegment ray = LineSegment(previousPos, cameraPos);
 
 	for (int i = 0; i < portalCount; ++i)
 	{
 		if (portalVector[i]->CheckRayIntersection(ray) == true)
 		{
-			App->editor->AddLog("[ERROR]: COLLIDED WITH PORTAL", SDL_GetError());
+			int connectionId = portalVector[i]->GetConnection();
+			
+			if (connectionId != 0)
+			{
+				GameObject* obj = App->scene->GetGameObject(connectionId);
+
+				if (obj != nullptr)
+				{
+					forward = (camera->GetViewMat() * float4(forward, 1.f)).xyz();
+
+					float4x4 transform = portalVector[i]->GetOwner()->transform.GetMatTransform().Inverted();
+					cameraPos = (transform * float4(cameraPos, 1.0)).xyz();
+					forward = transform.RotatePart() * forward;
+
+					transform = obj->transform.GetMatTransform();
+					cameraPos = (transform * float4(cameraPos, 1.0)).xyz();
+					forward = transform.RotatePart() * forward;
+
+					camera->frustum.SetPos(cameraPos);
+					camera->LookAtDirection(forward);
+				}
+
+			}
 		}
 	}
 }
