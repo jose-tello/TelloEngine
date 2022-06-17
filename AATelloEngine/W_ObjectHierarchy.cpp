@@ -40,7 +40,12 @@ bool W_ObjectHierarchy::Draw()
 
 	int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-	bool open = ImGui::TreeNodeEx("Scene", flags);
+	bool open = ImGui::TreeNodeEx(App->scene->GetSceneName(), flags);
+
+	if (ImGui::IsItemClicked())
+	{
+		App->editor->OpenWindow((int)E_WINDOW_TYPE::SCENE_MANAGER);
+	}
 
 	if (open == true)
 	{

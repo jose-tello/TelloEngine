@@ -75,6 +75,59 @@ void ModelImporter::Import(const char* path, R_Model* model)
 }
 
 
+void ModelImporter::ImportFromMeta(const char* path, R_Model* model, Config& rootNode)
+{
+	std::string filePath(path);
+
+	char* buffer = nullptr;
+	unsigned int bytes = App->fileManager->ReadBytes(filePath.c_str(), &buffer);
+
+	std::vector<ModelNode> modelNodes;
+
+	const aiScene* scene = aiImportFileFromMemory(buffer, bytes, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
+
+	ConfigArray meshArray = rootNode.GetArray("meshes");
+	ConfigArray materialArray = rootNode.GetArray("materials");
+
+	if (scene != nullptr && scene->HasMeshes())
+	{
+		std::vector<int> meshesId;
+		for (int i = 0; i < scene->mNumMeshes; ++i)
+		{
+			Config node = meshArray.GetNode(i);
+			int id = node.GetNum("id");
+
+			meshesId.push_back(Private::ImportMesh(scene->mMeshes[i], filePath.c_str(), id));
+		}
+
+		std::vector<int> materialsId;
+		for (int i = 0; i < scene->mNumMaterials; i++)
+		{
+			Config node = materialArray.GetNode(i);
+			int id = node.GetNum("id");
+
+			materialsId.push_back(Private::ImportMaterial(scene->mMaterials[i], filePath.c_str(), id));
+		}
+
+		Private::RewriteMeta(path, meshesId, materialsId);
+		aiMatrix4x4 identityMat = aiMatrix4x4();
+		Private::ImportNode(scene->mRootNode, scene, 0, modelNodes, identityMat, true);
+		Private::LinkModelResources(modelNodes, meshesId, materialsId);
+
+		Save(modelNodes, model->GetUid());
+
+		aiReleaseImport(scene);
+	}
+
+	else
+		App->editor->AddLog("[ERROR] loading scene");
+
+
+	delete[] buffer;
+	buffer = nullptr;
+}
+
+
 void ModelImporter::Load(R_Model* model)
 {
 	std::string filePath(MODEL_LIBRARY);
@@ -409,13 +462,13 @@ void ModelImporter::Private::InitObject(ModelNode& object, int parentId, aiNode*
 }
 
 
-int ModelImporter::Private::ImportMesh(aiMesh* mesh, const char* assetPath)
+int ModelImporter::Private::ImportMesh(aiMesh* mesh, const char* assetPath, int uid)
 {
-	return MeshImporter::Import(mesh, assetPath);
+	return MeshImporter::Import(mesh, assetPath, uid);
 }
 
 
-int ModelImporter::Private::ImportMaterial(aiMaterial* mat, const char* path)
+int ModelImporter::Private::ImportMaterial(aiMaterial* mat, const char* path, int uid)
 {
 	aiColor4D color;
 

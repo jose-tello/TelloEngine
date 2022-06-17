@@ -20,7 +20,8 @@
 #include <stack>
 #include <map>
 
-M_Scene::M_Scene(bool start_enabled) : Module(start_enabled)
+M_Scene::M_Scene(bool start_enabled) : Module(start_enabled),
+	sceneName("Scene")
 {
 }
 
@@ -264,15 +265,17 @@ void M_Scene::SaveScene()
 	std::vector<GameObject*> vec;
 	GetAllGameObjects(vec);
 
-	SceneImporter::Save("test", vec);
+	SceneImporter::Save(sceneName.c_str(), vec);
 }
 
 
-void M_Scene::LoadScene()
+void M_Scene::LoadScene(const char* sceneLoad)
 {
+	App->editor->QuitFocusedGameObject();
 	DeleteAllGameObjects();
-
-	SceneImporter::Load("test", gameObjects);
+	
+	sceneName = sceneLoad;
+	SceneImporter::Load(sceneLoad, gameObjects);
 }
 
 
@@ -320,6 +323,18 @@ void M_Scene::GetAllGameObjects(std::vector<GameObject*>& vector) const
 			}
 		}
 	}
+}
+
+
+const char* M_Scene::GetSceneName() const
+{
+	return sceneName.c_str();
+}
+
+
+void M_Scene::SetSceneName(const char* name)
+{
+	sceneName = name;
 }
 
 

@@ -20,6 +20,7 @@
 #include "W_Assets.h"
 #include "W_Scene.h"
 #include "W_ShaderEditor.h"
+#include "W_SceneManager.h"
 
 
 M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
@@ -45,6 +46,9 @@ M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 	windowsVec.push_back(win);
 
 	win = new W_ShaderEditor();
+	windowsVec.push_back(win);
+
+	win = new W_SceneManager(false);
 	windowsVec.push_back(win);
 }
 
@@ -179,7 +183,16 @@ void M_Editor::OpenShaderEditor(int shaderId, const char* shaderName) const
 
 void M_Editor::OpenWindow(int open)
 {
-	windowsVec[open]->open = true;
+	int winCount = windowsVec.size();
+
+	for (int i = 0; i < winCount; ++i)
+	{
+		if ((int)windowsVec[i]->type == open)
+		{
+			windowsVec[i]->open = true;
+			return;
+		}
+	}
 }
 
 
@@ -244,13 +257,30 @@ void M_Editor::GetCameraWindowSize(E_Window* win, int& x, int& y, float& mouseX,
 
 bool M_Editor::IsWindowHovered(E_WINDOW_TYPE win) const
 {
-	return windowsVec[(int)win]->IsHovered();
+	int windowCount = windowsVec.size();
+	for (int i = 0; i < windowCount; ++i)
+	{
+		if (windowsVec[i]->type == win)
+		{
+			return windowsVec[i]->IsHovered();
+		}
+	}
+
+	return false;
 }
 
 
 bool M_Editor::IsWindowFocused(E_WINDOW_TYPE win) const
 {
-	return windowsVec[(int)win]->IsFocused();
+	int windowCount = windowsVec.size();
+	for (int i = 0; i < windowCount; ++i)
+	{
+		if (windowsVec[i]->type == win)
+		{
+			return windowsVec[i]->IsFocused();
+		}
+	}
+	return false;
 }
 
 

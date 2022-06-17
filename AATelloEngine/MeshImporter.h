@@ -10,7 +10,7 @@ class R_Mesh;
 
 namespace MeshImporter
 {
-	int Import(aiMesh* gameObject, const char* assetPath);
+	int Import(aiMesh* gameObject, const char* assetPath, int uid = 0);
 
 	void Load(R_Mesh*);
 	void Save(std::vector<float>&, std::vector<float>&, std::vector<float>&, std::vector<unsigned int>&, int uid);

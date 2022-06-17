@@ -7,7 +7,7 @@ class R_Material;
 
 namespace MaterialImporter
 {
-	int Import(aiMaterial* material, Color& col, bool hasTexture, bool hasColor, const char* assetPath);
+	int Import(aiMaterial* material, Color& col, bool hasTexture, bool hasColor, const char* assetPath, int uid = 0);
 	
 	void Load(R_Material*);
 	

@@ -10,12 +10,22 @@
 #include "Assimp/include/material.h"
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
-int MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture, bool hasColor, const char* assetPath)
+int MaterialImporter::Import(aiMaterial* material, Color& color, bool hasTexture, bool hasColor, const char* assetPath, int uid)
 {
-	LCG random;
 	int textureId = 0;
 
-	R_Material* materialResource = new R_Material(random.IntFast(), assetPath, RESOURCE_TYPE::MATERIAL);
+	R_Material* materialResource = nullptr;
+	
+	if (uid == 0)
+	{
+		LCG random;
+		materialResource = new R_Material(random.IntFast(), assetPath, RESOURCE_TYPE::MATERIAL);
+	}
+	else
+	{
+		materialResource = new R_Material(uid, assetPath, RESOURCE_TYPE::MATERIAL);
+	}
+	
 	if (hasTexture)
 	{
 		aiString texPath;

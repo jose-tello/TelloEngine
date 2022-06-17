@@ -24,6 +24,8 @@ namespace ModelImporter
 
 	void Import(const char* path, R_Model*);
 
+	void ImportFromMeta(const char* path, R_Model* model, Config& rootNode);
+
 	void Load(R_Model*);
 	//The string returned is the path to the mesh
 	void Save(std::vector<ModelNode>& modelVec, int uid);
@@ -45,8 +47,8 @@ namespace ModelImporter
 		void SaveNode(ModelNode& modelNode, Config& node);
 
 		void InitObject(ModelNode& object, int parentId, aiNode* node, aiMatrix4x4& dummyMat);
-		int ImportMesh(aiMesh*, const char* assetPath);
-		int ImportMaterial(aiMaterial* material, const char* path);
+		int ImportMesh(aiMesh*, const char* assetPath, int uid = 0);
+		int ImportMaterial(aiMaterial* material, const char* path, int uid = 0);
 
 	}
 }

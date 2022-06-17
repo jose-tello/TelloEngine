@@ -3,7 +3,9 @@
 
 #include "Module.h"
 #include "MathGeoLib/src/MathGeoLibFwd.h"
+
 #include <vector>
+#include <string>
 
 struct GameObject;
 
@@ -36,7 +38,7 @@ public:
 	void CullGameObjects(std::vector<GameObject*>& objVector);
 	void TestRayCollision(LineSegment& ray);
 
-	void LoadScene();
+	void LoadScene(const char* sceneName);
 	void SaveScene();
 
 	//TODO: this should be an event
@@ -44,6 +46,9 @@ public:
 	void OnGameEnd();
 
 	void GetAllGameObjects(std::vector<GameObject*>& vector) const;
+
+	const char* GetSceneName() const;
+	void SetSceneName(const char* name);
 
 private: 
 	void PreUpdateGameObjects(float dt);
@@ -55,6 +60,8 @@ private:
 
 private:
 	std::vector<GameObject*> gameObjects; //Game objects without parent
+
+	std::string sceneName;
 };
 
 #endif // !__M_SCEME_H__

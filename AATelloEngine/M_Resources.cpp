@@ -543,6 +543,11 @@ void M_Resources::InitResourcesFromModelMeta(Config& rootNode)
 		int id = node.GetNum("id");
 		PushResource(new R_Material(id, rootNode.GetString("asset_path"), RESOURCE_TYPE::MATERIAL), id);
 	}
+
+	Resource* resource = new R_Model(rootNode.GetNum("uid"), rootNode.GetString("asset_path"), RESOURCE_TYPE::MODEL);
+
+	if (CheckLibFileExists(rootNode.GetNum("uid"), (int)RESOURCE_TYPE::MODEL) == false)
+		ModelImporter::ImportFromMeta(rootNode.GetString("asset_path"), (R_Model*)resource, rootNode);
 }
 
 

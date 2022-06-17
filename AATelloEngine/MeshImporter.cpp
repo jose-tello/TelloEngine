@@ -10,7 +10,7 @@
 #include "Assimp/include/mesh.h"
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
-int MeshImporter::Import(aiMesh* mesh, const char* assetPath)
+int MeshImporter::Import(aiMesh* mesh, const char* assetPath, int uid)
 {
 	int numVertices = 0;
 	int numTexCoords = 0;
@@ -62,8 +62,19 @@ int MeshImporter::Import(aiMesh* mesh, const char* assetPath)
 		}
 	}
 
-	LCG random;
-	R_Mesh* resourceMesh = new R_Mesh(random.IntFast(), assetPath, RESOURCE_TYPE::MESH);
+	R_Mesh* resourceMesh = nullptr;
+
+	if (uid == 0)
+	{
+		LCG random;
+		resourceMesh = new R_Mesh(random.IntFast(), assetPath, RESOURCE_TYPE::MESH);
+	}
+	else
+	{
+		resourceMesh = new R_Mesh(uid, assetPath, RESOURCE_TYPE::MESH);
+	}
+
+	
 
 	Save(vertices, normals, texCoords, indices, resourceMesh->GetUid());
 	App->resourceManager->PushResource(resourceMesh, resourceMesh->GetUid());

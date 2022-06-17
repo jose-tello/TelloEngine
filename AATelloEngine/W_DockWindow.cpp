@@ -120,18 +120,9 @@ void W_DockWindow::DrawWindowsMenu()
 
 void W_DockWindow::DrawFileMenu()
 {
-	if (ImGui::BeginMenu("File"))
+	if (ImGui::Button("File"))
 	{
-		if (ImGui::MenuItem("Save Scene"))
-			App->scene->SaveScene();
-
-		if (ImGui::MenuItem("Load Scene"))
-		{
-			App->scene->LoadScene();
-			App->editor->QuitFocusedGameObject();
-		}
-			
-			ImGui::EndMenu();
+		App->editor->OpenWindow((int)E_WINDOW_TYPE::SCENE_MANAGER);
 	}
 }
 
