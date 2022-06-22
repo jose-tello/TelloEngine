@@ -338,6 +338,21 @@ void M_Scene::SetSceneName(const char* name)
 }
 
 
+void M_Scene::RemoveObjectFromVector(int uid)
+{
+	int objCount = gameObjects.size();
+
+	for (int i = 0; i < objCount; ++i)
+	{
+		if (gameObjects[i]->GetUuid() == uid)
+		{
+			gameObjects.erase(gameObjects.begin() + i);
+			return;
+		}
+	}
+}
+
+
 void M_Scene::PreUpdateGameObjects(float dt)
 {
 	std::stack<GameObject*> stack;

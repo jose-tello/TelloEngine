@@ -50,6 +50,8 @@ public:
 	const char* GetSceneName() const;
 	void SetSceneName(const char* name);
 
+	void RemoveObjectFromVector(int uid);
+
 private: 
 	void PreUpdateGameObjects(float dt);
 	void UpdateGameObjects(float dt);

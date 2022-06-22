@@ -148,10 +148,16 @@ void W_ObjectHierarchy::HandleDragAndDrop(GameObject* currGameObject)
 void W_ObjectHierarchy::ReparentGameObjects()
 {
 	GameObject* sceneChild = App->scene->GetGameObject(child->GetUuid());
-	if (sceneChild->parent->GetUuid() == parent->GetUuid() || sceneChild == nullptr)
+	if (sceneChild == nullptr)
 		return;
 
-	sceneChild->parent->RemoveChild(child->GetUuid());
+	if (sceneChild->parent != nullptr)
+		sceneChild->parent->RemoveChild(child->GetUuid());
+	else
+	{
+		App->scene->RemoveObjectFromVector(sceneChild->GetUuid());
+	}
+
 	sceneChild->parent = parent;
 
 	if (parent == nullptr)

@@ -48,7 +48,7 @@ M_Editor::M_Editor(bool startEnabled) : Module(startEnabled)
 	win = new W_ShaderEditor();
 	windowsVec.push_back(win);
 
-	win = new W_SceneManager(false);
+	win = new W_SceneManager(true);
 	windowsVec.push_back(win);
 }
 

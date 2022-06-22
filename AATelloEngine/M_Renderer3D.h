@@ -10,7 +10,7 @@
 #include <vector>
 
 #define LIGHT_LIMIT 1
-#define RAYTRACED_MESH_LIMIT 20
+#define RAYTRACED_MESH_LIMIT 30
 #define MAX_ABERRATION_LIMIT 5
 #define MAX_PORTAL_LIMIT 8
 

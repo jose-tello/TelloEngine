@@ -70,7 +70,7 @@ struct Portal
    mat4 connectedTransform;
 };
 
-uniform Mesh[20] meshArray;
+uniform Mesh[30] meshArray;
 uniform Aberration[5] aberrationArray;
 uniform Portal[8] portalArray;
 

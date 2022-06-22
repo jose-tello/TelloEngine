@@ -656,7 +656,13 @@ void W_Inspector::DrawPortalComp(C_Portal* portal)
 		else
 		{
 			GameObject* connectedGO = App->scene->GetGameObject(connectedUid);
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), connectedGO->GetName());
+			if (connectedGO == nullptr)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "No connection");
+				portal->Disconnect();
+			}
+			else
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), connectedGO->GetName());
 		}
 
 

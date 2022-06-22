@@ -51,17 +51,7 @@ C_Portal::~C_Portal()
 	App->renderer3D->PopPortals();
 	App->camera->PopPortals();
 
-	if (connectedGO != 0)
-	{
-		GameObject* prevConnection = App->scene->GetGameObject(connectedGO);
-
-		if (prevConnection != nullptr)
-		{
-			C_Portal* prevPortal = static_cast<C_Portal*>(prevConnection->GetComponent(COMPONENT_TYPE::PORTAL));
-			if (prevPortal != nullptr)
-				prevPortal->Disconnect();
-		}
-	}
+	connectedGO = 0;
 
 	if (planeMeshId != 0)
 	{
