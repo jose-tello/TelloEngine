@@ -326,6 +326,7 @@ void GameObject::Load(Config& node)
 			aberration->Load(componentNode);
 			AddComponent(aberration);
 		}
+			break;
 
 		case COMPONENT_TYPE::PORTAL:
 		{
@@ -333,6 +334,7 @@ void GameObject::Load(Config& node)
 			portal->Load(componentNode);
 			AddComponent(portal);
 		}
+			break;
 
 		default:
 			assert("Invalid component type");
