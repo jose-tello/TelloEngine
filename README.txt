@@ -1,10 +1,12 @@
-First release of an engine made for a university project.
+Last release of an engine made for a university project.
 
 Link to the website: https://jose-tello.github.io/TelloEngine/
 Link to the repository: https://github.com/jose-tello/TelloEngine
 
 Made by:
 	-Jose L. Redondo Tello, guithub account: jose-tello
+	-Linkedin: https://www.linkedin.com/in/joseluisredondotello/
+	-Portfolio: https://jose-tello.github.io/Portfolio/
 
 Usage:
 -Camera movement:
@@ -14,13 +16,19 @@ Usage:
 	Press the mouse wheel to move sideways.
 	Press F to look at the currentlly focused object.
 	Right click + ALT enables orvital camera movement.
+
+-Load scene window:
+	You can open the window by pressing the "File" button on the window.
+	In this window the user can rename the scene, save it, or load a scene.
+	Note that several demo scenes are created in order to test non euclidean spaces.
 	
 -The hierarchy window will show all the gameObjects in the scene. When clicking one, the inspector window will open, showing 
 the selected gameObject's components. 
 	·You can press backspace to delete the selected game objects and its childs.
 	·You can drag and drop game objects to change their hierarchy.
 
--You select any game object using left click;
+
+-You select any game object using left click.
 
 -You can modify game object propertyes in the inspector or using the gizmos (in the inspector the button add lets you add an empty child).
 
@@ -47,17 +55,10 @@ or will change the shader of the material if the game object allready has one.
 -You can edit the shader uniforms form the inspector.
 *Note that the build in uniforms will not be affected if they are edited.
 
--Build in uniforms: model_matrix, projection, view, material_color, light_position, timer, has_texture.
-*For more information about these uniforms, check the website.
-
 -Shaders can be editted using a text editor by pressing the edit shader button in the inspector, and will pe updated automatically when saved (using the text editor save button).
 *Note that the text editor highlighting is from outdated glsl versions.
 
--Load window: Can charge any asset/resource into the scene by double clicking it, or delete it hovering it with the mouse while using backspace (RESOURSES WILL NOT BE AFFECTED, ONLLY ASSETS). 
-	      To update the library and the assets, press the button update.
-*Load window can be opened by pressing "File"->"Load".
 
--
 Additional features:
 -Scene cameras are rendered in their own window (as they have the same name, if there are more than one camera it will be rendered in the same window but you will have to scroll down to see it
 this is due to ImGui limitations os pushing ids).
@@ -67,5 +68,4 @@ this is due to ImGui limitations os pushing ids).
 -Assets, library and resources will not be updated unless the button "update" in the Load window is pressed;
 
 To be noted:
-Despite being able to create more lights in the scene, the environment will onlly be affected by one light.
 Note that the streen environment game objects are using the default shader, but don't have a shader in its material, so unless you set it by drag and drop or load window, you will not be able to open it.
