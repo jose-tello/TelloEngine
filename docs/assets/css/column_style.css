@@ -1,0 +1,89 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  .column-four  {
+    float: left;
+    width: 25%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  @media only screen and (max-width: 900px) {
+    .column-four {
+      width: 33.33%;
+    }
+  }
+
+  @media only screen and (max-width: 766px) {
+    .column-four {
+      width: 50%;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .column-four {
+      width: 100%;
+    }
+  }
+
+  
+
+
+  /* Create three equal columns that floats next to each other */
+  .column-three  {
+    float: left;
+    width: 33.33%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 600px) {
+    .column-three {
+      width: 100%;
+    }
+  }
+
+  /* Create two equal columns that floats next to each other */
+.column-two {
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+
+.column-two img{
+  width: 100%;
+}
+
+.column-two .profile-pic img{
+  width: 60%;
+}
+
+/* Clear floats after the columns */
+.row:after-two {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column-two {
+    width: 100%;
+  }
+}
+
+.card {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #222222;
+}

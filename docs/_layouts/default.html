@@ -1,59 +1,124 @@
-<!doctype html>
-<html lang="{{ site.lang | default: "en-US" }}">
-  <head>
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-{% seo %}
-    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-    <script src="{{ '/assets/js/scale.fix.js' | relative_url }}"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">{{ site.title | default: site.github.repository_name }}</h1>
-        <p class="header">{{ site.description | default: site.github.project_tagline }}</p>
+    <title>Jose Tello</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
 
-        <ul>
+    <!-- Favicons -->
+    <link href="../assets/img/virtual_ragnarok/Logo_squared.ico" rel="icon">
+    <link href="../assets/img/virtual_ragnarok/Logo_squared.ico" rel="apple-touch-icon">
 
-	  <li><a class="buttons github" href="{{ site.github.releases_url }}">Latest release</a></li>
-          <li class="download"><a class="buttons" href="{{ site.github.zip_url }}">Download ZIP</a></li>
-          <li><a class="buttons github" href="{{ site.github.repository_url }}">View On GitHub</a></li>
-        </ul>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-        {% if site.github.is_project_page %}
-          <p class="header">This project is maintained by <a class="header name" href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-        {% endif %}
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-        {% if site.github.is_user_page %}
-          <ul>
-            <li><a class="buttons github" href="{{ site.github.owner_url }}">GitHub Profile</a></li>
-          </ul>
-        {% endif %}
-      </header>
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link href="../assets/css/column_style.css" rel="stylesheet">
+    <link href="../assets/css/team_individual_pages.css" rel="stylesheet">
 
-      <section>
-        {{ content }}
-      </section>
+    <!-- Social Media Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../assets/css/social_media_icons.css" rel="stylesheet">
 
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
-    </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    {% if site.google_analytics %}
-      <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', '{{ site.google_analytics }}', 'auto');
-        ga('send', 'pageview');
-      </script>
-    {% endif %}
-  </body>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7H72EFXZT3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-7H72EFXZT3');
+    </script>
+</head>
+
+
+<body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+        <div class="container d-flex align-items-center">
+
+        </div>
+    </header><!-- End Header -->
+    
+    <main id="main">
+        <br><br>
+        <section class="inner-page">
+            <div class="container">
+                <div class="column-two">
+                    <h2>Non-Euclidean render engine</h2>
+                    <h4>Jose L. Redondo Tello</h4>
+                    <hr>
+
+                    <h3>Project Overview</h3>
+                    <p>This engine is able to compress, expand and reconnect the space of a scene in real time using aberrations and portals.</p>
+                    <p>The scenes, meshes and space deformations can be edited throught the application menu. </p>
+                    <a href="https://www.linkedin.com/in/joseluisredondotello/" target="_blank" class="fa fa-linkedin"></a>
+                    <a href="https://github.com/jose-tello" target="_blank" class="fa fa-github"></a>
+                    <a href="https://github.com/jose-tello" target="_blank" class="fa"></a>
+
+                    <ul>
+                        <li class="download"><a class="buttons" href="{{ site.github.zip_url }}">Download ZIP</a></li>
+                        <li><a class="buttons github" href="{{ site.github.repository_url }}">Github repository</a></li>
+                    </ul>
+                </div>
+                <div class="column-two">
+                    <img src="../assets/img/AberrationRoomGif.gif" alt="" style="display: block;margin-left: auto; margin-right: auto;">
+                </div>
+            </div>
+        </section>
+
+        <section class="inner-page">
+            <div class="container">
+                <div>
+                    <h2 style="text-align: center;">Features</h2>
+                    <br />
+                    <br />
+
+                    <h3 style="text-align: center;"><strong>Aberrations</strong></h3>
+                    <hr>
+
+                    <h4>Aberrations can compress or expand the space within a certain area</h4>
+
+                    <p></p>
+                    <p>This effect is archieved by recasting and redirecting the camera rays that intersect with an aberration</p>
+                    <p>Note that in the next gifs the interior of the portals are being affected by two aberrations</p>
+                </div>
+                <div class="column-two">
+
+                    <img src="../assets/img/RedTunnelGif.gif" alt="" height="100%" width="auto">   <!-- red tunnel -->
+
+                </div>
+                <div class="column-two">
+
+                    <img src="../assets/img/BlueTunnelGif.gif" alt="" height="100%" width="auto">   <!-- blue tunnel -->
+
+                </div>
+
+                <div align="center">
+
+                    <h4>This video showcases one of the demo scenes in the engine</h4>
+                    <iframe width="510" height="322" src="https://youtu.be/AfMQ4SRBrhk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+    </body>
+
+
 </html>

@@ -1,0 +1,47 @@
+.fa {
+  padding: 20px;
+  font-size: 30px;
+  width: 70px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+}
+  
+  .fa:hover {
+      opacity: 0.7;
+  }
+  
+  .fa-twitter {
+    background: #55ACEE;
+    color: white;
+  }
+
+  .fa-youtube {
+    background: #bb0000;
+    color: white;
+  }
+
+  .github-style{
+    background: #4c00ff;
+    color: white;
+  }
+
+  .fa-twitter-contact {
+    background: transparent;
+    color: #55ACEE;
+  }
+
+  .fa-youtube-contact {
+    background: transparent;
+    color: #bb0000;
+  }
+
+  .github-style-contact{
+    background: transparent;
+    color: black;
+  }
+  
+  .fa-rss {
+    background: #ff6600;
+    color: white;
+  }
