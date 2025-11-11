@@ -45,7 +45,7 @@ M_Renderer3D::M_Renderer3D(bool start_enabled) : Module(start_enabled),
 	wireframeModeEnabled(false),
 	blendEnabled(false),
 	vsync(true),
-	rasterizationRender(false),
+	rasterizationRender(true),
 
 	buffersToUpdate(false),
 	vertexTextureBuffer(0),

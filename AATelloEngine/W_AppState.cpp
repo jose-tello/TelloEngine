@@ -34,7 +34,7 @@ W_AppState::W_AppState(bool open) :	E_Window(E_WINDOW_TYPE::APPLICATION_STATE, o
 	blendEnabled(false),
 	wireframeModeEnabled(false),
 	vsync(true),
-	rasterizationRender(false),
+	rasterizationRender(true),
 
 	//Cpu
 	cpuCores(0),

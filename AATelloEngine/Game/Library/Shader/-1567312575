@@ -1,0 +1,179 @@
+__COMPUTE_SHADER__
+#version 460
+
+layout(local_size_x = 1, local_size_y = 1) in;
+layout(rgba32f, binding = 0) uniform image2D imgOutput;
+layout(binding = 1) uniform sampler1D vertexTexture;
+layout(binding = 2) uniform sampler1D indexTexture;
+
+uniform int meshCount;
+
+uniform mat4 projection;
+uniform mat4 view;
+
+uniform float aspectRatio;
+uniform float verticalFov;
+
+struct Mesh
+{
+   mat4 transform;
+   vec3 maxPoint;
+   vec3 minPoint;
+   int indexOffset;
+   int vertexOffset;
+   int indexCount;
+};
+
+uniform Mesh[10] meshArray;
+
+vec4 triangleColor = vec4(0.2, 0.9, 0.3, 1.0);
+
+bool RayBoxIntersection(vec3 rayDirection, vec3 rayOrigin, vec3 minP, vec3 maxP)
+{
+   float tMin;
+   float tMax;
+   
+   float yMin;
+   float yMax;
+   
+   float zMin;
+   float zMax;
+   
+   if (rayDirection.x >= 0)
+   {
+      tMin = (minP.x - rayOrigin.x) / rayDirection.x;
+      tMax = (maxP.x - rayOrigin.x) / rayDirection.x;
+   }
+   else
+   {
+      tMin = (maxP.x - rayOrigin.x) / rayDirection.x;
+      tMax = (minP.x - rayOrigin.x) / rayDirection.x;
+   }
+   
+   if (rayDirection.y >= 0)
+   {
+      yMin = (minP.y - rayOrigin.y) / rayDirection.y;
+      yMax = (maxP.y - rayOrigin.y) / rayDirection.y;
+   }
+   else
+   {
+      yMin = (maxP.y - rayOrigin.y) / rayDirection.y;
+      yMax = (minP.y - rayOrigin.y) / rayDirection.y;
+   }
+   
+   if ((tMin > yMax) || (yMin > tMax))
+      return false;
+      
+   if (yMin > tMin)
+      tMin = yMin;
+      
+   if (yMax < tMax)
+      tMax = yMax;
+      
+      
+   if (rayDirection.z >= 0)
+   {
+      zMin = (minP.z - rayOrigin.z) / rayDirection.z;
+      zMax = (maxP.z - rayOrigin.z) / rayDirection.z;
+   }
+   else
+   {
+      zMin = (maxP.z - rayOrigin.z) / rayDirection.z;
+      zMax = (minP.z - rayOrigin.z) / rayDirection.z;
+   }
+   
+   if ((tMin > zMax) || (zMin > tMax))
+      return false;
+
+   return true;
+}
+
+bool RayTriangleIntersection(vec3 rayDirection, vec3 rayOrigin)
+{
+  for(int i = 0; i < meshCount; ++i)
+  {
+     if (RayBoxIntersection(rayDirection, rayOrigin, meshArray[i].minPoint, meshArray[i].maxPoint) == false)
+        continue;
+  
+     for (int j = 0; j < meshArray[i].indexCount / 3; ++j)  //index count / 3 = triangle count
+      {
+      
+       vec3 vertexPos = texelFetch(indexTexture, j + meshArray[i].indexOffset, 0).xyz;
+       int vertex1 = int(vertexPos.x) + meshArray[i].vertexOffset;
+       int vertex2 = int(vertexPos.y) + meshArray[i].vertexOffset;
+       int vertex3 = int(vertexPos.z) + meshArray[i].vertexOffset;
+    
+       vec3 v0 = (texelFetch(vertexTexture, vertex1, 0)).xyz;
+       vec3 v1 = (texelFetch(vertexTexture, vertex2, 0)).xyz;
+       vec3 v2 = (texelFetch(vertexTexture, vertex3, 0)).xyz;
+       
+       v0 = (meshArray[i].transform * vec4(v0, 1.0)).xyz;
+       v1 = (meshArray[i].transform * vec4(v1, 1.0)).xyz;
+       v2 = (meshArray[i].transform * vec4(v2, 1.0)).xyz;
+  
+       vec3 v0v1 = v1 - v0;
+       vec3 v1v2 = v2 - v1;
+       vec3 v2v0 = v0 - v2;
+  
+       vec3 triangleNormal = normalize(cross(v1 - v0, v2 - v0));
+  
+       float dtNDirection = dot(triangleNormal, rayDirection);
+       if (dtNDirection <= 0)  //Check ray paralel to the triangle
+         continue;
+
+       float D = -dot(triangleNormal, v0);
+  
+       float distToRay = -(dot(triangleNormal, rayOrigin) + D) / dtNDirection;
+
+       if (distToRay <= 0.0)  //Check triangle behind camera
+         continue;
+
+       vec3 P = rayOrigin + distToRay * rayDirection;
+  
+       if (dot(triangleNormal, cross(v0v1, P - v0)) <= 0.0)
+          continue;
+         
+       if (dot(triangleNormal, cross(v1v2, P - v1)) <= 0.0)
+          continue;
+         
+       if (dot(triangleNormal, cross(v2v0, P - v2)) <= 0.0)
+          continue;
+          
+       return true;
+       }
+    }
+  
+  return false;
+     
+}
+
+void main()
+{
+  vec4 pixelColor = vec4(0.8, 0.2, 0.4, 1.0);
+  
+  vec2 pixelCoords = vec2(gl_GlobalInvocationID.xy);
+  vec2 texSize = imageSize(imgOutput); // fetch image dimensions
+  
+  //collision tests
+  float pixCoordX = float(pixelCoords.x);
+  float pixCoordY = float(pixelCoords.y);
+  float xPos = 2 * ((pixCoordX + 0.5) / float(texSize.x)) - 1;
+  float yPos = 2 * ((pixCoordY + 0.5) / float(texSize.y)) - 1;
+  
+  xPos = xPos * aspectRatio * tan(verticalFov * 0.5);
+  yPos = yPos * tan(verticalFov * 0.5);
+  
+  mat4 cameraToWorld = inverse(view);
+  
+  vec3 rayOrigin = (cameraToWorld * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+  vec3 p = (cameraToWorld * vec4(xPos, yPos, -1.0, 1.0)).xyz;
+  
+  //vec3 rayDirection = (inverse(projection) * vec4(xPos, yPos, 0.0, 1.0)).xyz;
+  vec3 rayDirection = normalize(p - rayOrigin);
+  
+  if (RayTriangleIntersection(rayDirection, rayOrigin))
+     imageStore(imgOutput, ivec2(pixelCoords.xy), triangleColor);
+  
+  else
+     imageStore(imgOutput, ivec2(pixelCoords.xy), pixelColor);
+}

@@ -117,7 +117,7 @@ private:
 	bool wireframeModeEnabled;
 	bool blendEnabled;
 	bool vsync = true;
-	bool rasterizationRender = false;
+	bool rasterizationRender = true;
 
 	bool buffersToUpdate = false;
 	unsigned int vertexTextureBuffer = 0;
